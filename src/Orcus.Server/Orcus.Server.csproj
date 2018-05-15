@@ -9,11 +9,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="BCrypt.Net-Next" Version="2.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcus.Server.BusinessDataAccess\Orcus.Server.BusinessDataAccess.csproj" />
+    <ProjectReference Include="..\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Orcus.Server.Data\Orcus.Server.Data.csproj" />
+    <ProjectReference Include="..\submodules\CodeElements.BizRunner\CodeElements.BizRunner\CodeElements.BizRunner.csproj" />
   </ItemGroup>
 
 </Project>

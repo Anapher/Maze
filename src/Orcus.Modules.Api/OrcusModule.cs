@@ -84,5 +84,11 @@ namespace Orcus.Modules.Api
                 new FileStreamResult(fileStream, contentType) {FileDownloadName = fileDownloadName};
             return fileStreamResult;
         }
+
+        [NonAction]
+        public virtual ExceptionResult Exception(Exception exception)
+        {
+            return new ExceptionResult(exception);
+        }
     }
 }

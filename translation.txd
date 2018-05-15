@@ -2,6 +2,7 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
 		<text key="Tx:date.month.abbr">MMM.</text>
@@ -188,8 +189,10 @@
 		<text key="Tx:time.span neg.years" count="1">{#} Jahr</text>
 		<text key="Tx:time.span neg.years.single">{#} Jahren</text>
 		<text key="Tx:time.span neg.years.single" count="1">einem Jahr</text>
+		<text key="Username">Benutzername</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="Password">Password</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
 		<text key="Tx:date.day" comment="Default: %d" />
@@ -392,5 +395,6 @@
 		<text key="Tx:time.span neg.years" count="1">{#} year</text>
 		<text key="Tx:time.span neg.years.single">{#} years</text>
 		<text key="Tx:time.span neg.years.single" count="1">a year</text>
+		<text key="Username">Username</text>
 	</culture>
 </translation>

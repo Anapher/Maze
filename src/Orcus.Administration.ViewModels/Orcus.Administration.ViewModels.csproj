@@ -5,7 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
+    <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\translation.txd" Link="Resources\translation.txd" />
   </ItemGroup>
 
 </Project>
