@@ -3,18 +3,19 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Orcus.Administration.Extensions"
     xmlns:main="clr-namespace:Orcus.Administration.ViewModels.Main;assembly=Orcus.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     d:DataContext="{d:DesignInstance main:LoginViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="550"
+    d:DesignWidth="920"
     mc:Ignorable="d">
     <Grid>
         <Border>
             <Viewbox
-                MaxWidth="400"
-                MaxHeight="400"
+                MaxWidth="450"
+                MaxHeight="450"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Opacity=".1"
@@ -44,28 +45,15 @@
                                         <Storyboard>
                                             <DoubleAnimation
                                                 Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                                To="0"
-                                                Duration="0:0:4" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsLoggedIn}" Value="true">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                RepeatBehavior="Forever"
-                                                Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
                                                 To="-360"
-                                                Duration="0:0:1.5">
+                                                Duration="0:0:0.8">
                                                 <DoubleAnimation.EasingFunction>
-                                                    <CubicEase />
+                                                    <CubicEase EasingMode="EaseIn" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
                                         </Storyboard>
                                     </BeginStoryboard>
-                                </DataTrigger.EnterActions>
+                                </DataTrigger.ExitActions>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -101,27 +89,110 @@
             </Viewbox>
         </Border>
         <StackPanel
-            Width="200"
+            Width="300"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            IsEnabled="{Binding IsLoggingIn, Converter={StaticResource SwitchBooleanConverter}}"
             Orientation="Vertical">
+            <TextBlock Text="{tx:T Server}" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2" />
+                    <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox />
-                <Button
-                    Grid.Column="2"
-                    Padding="4,0,4,0"
-                    Content="{StaticResource AddIcon}"
-                    Style="{StaticResource MetroFlatButton}" />
+                <Button Grid.Column="2">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter Content="{StaticResource AddIcon}" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </Grid>
-            <TextBlock Margin="0,10,0,0" Text="{tx:T Username}" />
-            <TextBox Margin="0,2,0,0" />
-            <TextBlock Margin="0,10,0,0" Text="{tx:T Password}" />
-            <PasswordBox Margin="0,2,0,0" />
+            <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{tx:T Username}" />
+                    <TextBox
+                        x:Name="UsernameTextBox"
+                        Margin="0,2,0,0"
+                        Text="{Binding Username}">
+                        <TextBox.InputBindings>
+                            <KeyBinding
+                                Key="Enter"
+                                Command="{Binding LoginCommand}"
+                                CommandParameter="{Binding ElementName=PasswordBox, Path=(extensions:PasswordBoxExtensions.SecurePassword)}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Vertical">
+                    <TextBlock Text="{tx:T Password}" />
+                    <PasswordBox
+                        x:Name="PasswordBox"
+                        Margin="0,2,0,0"
+                        extensions:PasswordBoxExtensions.ListenToPasswordChange="True">
+                        <PasswordBox.InputBindings>
+                            <KeyBinding
+                                Key="Enter"
+                                Command="{Binding LoginCommand}"
+                                CommandParameter="{Binding ElementName=PasswordBox, Path=(extensions:PasswordBoxExtensions.SecurePassword)}" />
+                        </PasswordBox.InputBindings>
+                    </PasswordBox>
+                </StackPanel>
+            </Grid>
+            <Grid Margin="0,5,0,0">
+                <StackPanel Orientation="Vertical">
+                    <Button
+                        Command="{Binding LoginCommand}"
+                        CommandParameter="{Binding ElementName=PasswordBox, Path=(extensions:PasswordBoxExtensions.SecurePassword)}"
+                        Content="{tx:T Login}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource MetroButton}" TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=UsernameTextBox, Path=Text, Converter={StaticResource IsStringEmptyConverter}}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=PasswordBox, Path=(extensions:PasswordBoxExtensions.IsEmpty)}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsLoggingIn}" Value="true">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <TextBlock
+                        Margin="0,2,0,0"
+                        Foreground="{StaticResource ErrorBrush}"
+                        Text="{Binding ErrorMessage}"
+                        TextWrapping="Wrap">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsLoggingIn}" Value="true">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsLoggingIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{tx:T LoginView:LoggingIn}" />
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

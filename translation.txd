@@ -2,7 +2,15 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="Clients">Clients</text>
+		<text key="Clients" count="1">Client</text>
+		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
+		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
+		<text key="Login">Einloggen</text>
+		<text key="LoginView:LoggingIn">Einloggen...</text>
+		<text key="Modules">Module</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
+		<text key="Server">Server</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
 		<text key="Tx:date.month.abbr">MMM.</text>
@@ -192,7 +200,15 @@
 		<text key="Username">Benutzername</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="Clients">Clients</text>
+		<text key="Clients" count="1">Client</text>
+		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
+		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
+		<text key="Login">Login</text>
+		<text key="LoginView:LoggingIn">Logging in...</text>
+		<text key="Modules">Modules</text>
 		<text key="Password">Password</text>
+		<text key="Server">Server</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
 		<text key="Tx:date.day" comment="Default: %d" />

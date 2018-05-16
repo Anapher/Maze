@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NuGet.Client" Version="4.2.0" />
     <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
+    <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +21,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="..\..\translation.txd" Link="Resources\translation.txd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
 
 </Project>

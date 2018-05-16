@@ -9,8 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Orcus.Administration.ViewModels;assembly=Orcus.Administration.ViewModels"
     Title="Orcus Administration"
-    Width="800"
-    Height="450"
+    Width="920"
+    Height="550"
     ShowIconOnTitleBar="False"
     Style="{StaticResource Win10Window}"
     TitleAlignment="Center"
@@ -41,11 +41,17 @@
             </StackPanel>
         </DataTemplate>
     </mah:MetroWindow.TitleTemplate>
-    <ContentControl Content="{Binding ViewModel}" Focusable="False">
+    <mah:TransitioningContentControl
+        Content="{Binding ViewModel}"
+        Focusable="False"
+        Transition="Down">
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type mainViewModels:LoginViewModel}">
                 <mainViews:LoginView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type mainViewModels:OverviewViewModel}">
+                <mainViews:OverviewView />
+            </DataTemplate>
         </ContentControl.Resources>
-    </ContentControl>
+    </mah:TransitioningContentControl>
 </mah:MetroWindow>

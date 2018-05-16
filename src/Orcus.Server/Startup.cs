@@ -64,6 +64,13 @@ namespace Orcus.Server
 
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
+
+            //using (var beginLifetimeScope = container.BeginLifetimeScope())
+            //{
+            //    var appDbContext = beginLifetimeScope.Resolve<AppDbContext>();
+            //    appDbContext.Database.EnsureCreated();
+            //}
+
             return new AutofacServiceProvider(container);
         }
 

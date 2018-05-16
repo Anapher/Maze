@@ -8,7 +8,7 @@ namespace Orcus.Server.Data.EfCode
         public static PropertyBuilder<TProperty> IsCurrentTime<TProperty>(
             this PropertyBuilder<TProperty> propertyBuilder)
         {
-            return propertyBuilder.HasDefaultValueSql("GETUTCDATE()");
+            return propertyBuilder.HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
 
         public static PropertyBuilder<TProperty> IsSha256Hash<TProperty>(

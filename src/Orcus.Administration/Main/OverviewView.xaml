@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="Orcus.Administration.Main.OverviewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Orcus.Administration.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:main="clr-namespace:Orcus.Administration.ViewModels.Main;assembly=Orcus.Administration.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:txLib="http://unclassified.software/source/txtranslation"
+    d:DataContext="{d:DesignInstance main:OverviewViewModel}"
+    d:DesignHeight="550"
+    d:DesignWidth="920"
+    mc:Ignorable="d">
+    <controls:HeadFooterTabControl>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome
+                        Width="14"
+                        Height="14"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Kind="BarsSolid" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="{txLib:T Clients}" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome
+                        Width="14"
+                        Height="14"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Kind="PuzzlePieceSolid" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="{txLib:T Modules}" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome
+                        Width="14"
+                        Height="14"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Kind="ServerSolid" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="{txLib:T Server}" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+    </controls:HeadFooterTabControl>
+</UserControl>

@@ -8,6 +8,7 @@
         public LoginView()
         {
             InitializeComponent();
+            PasswordBox.Password = "test";
         }
     }
 }

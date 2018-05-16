@@ -4,4 +4,9 @@
     {
         //events are allowed
     }
+
+    public abstract class OrcusService
+    {
+
+    }
 }

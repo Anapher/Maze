@@ -29,7 +29,8 @@ namespace Orcus.Server.Authentication
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.AccountId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.GivenName, account.Username)
             };
 
             return new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.Add(_userTokenValidityPeriod),
