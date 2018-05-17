@@ -9,7 +9,7 @@ namespace PowerUserTools.ActiveConnections
         [OrcusGet]
         public IActionResult GetConnections()
         {
-            return Ok(Connections.GetTcpConnections());
+            return Ok(null);
         }
     }
 }

@@ -37,35 +37,35 @@ namespace Orcus.Administration.Core.Clients
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
         {
             var response = await _httpClient.SendAsync(request);
-                var result = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
-                    return response;
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return response;
 
-                RestError[] errors;
-                try
-                {
-                    errors = JsonConvert.DeserializeObject<RestError[]>(result);
-                }
-                catch (Exception)
-                {
-                    throw new HttpRequestException(result);
-                }
+            RestError[] errors;
+            try
+            {
+                errors = JsonConvert.DeserializeObject<RestError[]>(result);
+            }
+            catch (Exception)
+            {
+                throw new HttpRequestException(result);
+            }
 
-                if (errors == null)
-                    throw new HttpRequestException($"Invalid response (status code: {response.StatusCode}): {result}");
+            if (errors == null)
+                response.EnsureSuccessStatusCode();
 
-                var error = errors[0];
-                switch (error.Type)
-                {
-                    case ErrorTypes.ValidationError:
-                    case ErrorTypes.AuthenticationError:
-                        throw new RestAuthenticationException(error);
-                    case ErrorTypes.NotFoundError:
-                        throw new RestNotFoundException(error);
-                }
+            var error = errors[0];
+            switch (error.Type)
+            {
+                case ErrorTypes.ValidationError:
+                case ErrorTypes.AuthenticationError:
+                    throw new RestAuthenticationException(error);
+                case ErrorTypes.NotFoundError:
+                    throw new RestNotFoundException(error);
+            }
 
-                Debug.Fail($"The error type {error.Type} is not implemented.");
-                throw new NotSupportedException(error.Message);
+            Debug.Fail($"The error type {error.Type} is not implemented.");
+            throw new NotSupportedException(error.Message);
         }
 
         public async Task<HubConnection> CreateHubConnection(string resource)

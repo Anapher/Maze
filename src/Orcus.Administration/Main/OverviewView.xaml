@@ -7,6 +7,7 @@
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:main="clr-namespace:Orcus.Administration.ViewModels.Main;assembly=Orcus.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:overview="clr-namespace:Orcus.Administration.Main.Overview"
     xmlns:txLib="http://unclassified.software/source/txtranslation"
     d:DataContext="{d:DesignInstance main:OverviewViewModel}"
     d:DesignHeight="550"
@@ -46,6 +47,7 @@
                         Text="{txLib:T Modules}" />
                 </StackPanel>
             </TabItem.Header>
+            <overview:ModulesView />
         </TabItem>
         <TabItem>
             <TabItem.Header>

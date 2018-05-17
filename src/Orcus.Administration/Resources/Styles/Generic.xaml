@@ -118,4 +118,27 @@
     </Style>
     <!--#endregion-->
 
+    <!--#region-->
+
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="Width" Value="22" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="BackgroundBorder">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BackgroundBorder" Property="Background" Value="{StaticResource AccentColorBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
+
 </ResourceDictionary>

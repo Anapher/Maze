@@ -10,15 +10,23 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Orcus.Server.Authentication;
 using Orcus.Server.Data.EfCode;
+using Orcus.Server.Extensions;
+using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.Modules.Config;
+using Orcus.Server.Utilities;
 
 namespace Orcus.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
+            _logger = logger;
             Configuration = configuration;
         }
 
@@ -55,12 +63,13 @@ namespace Orcus.Server
                     .Build();
             });
 
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.Configure());
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterInstance(tokenProvider).AsImplementedInterfaces();
+            LoadModules(containerBuilder).Wait();
 
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
@@ -72,6 +81,25 @@ namespace Orcus.Server
             //}
 
             return new AutofacServiceProvider(container);
+        }
+
+        private async Task LoadModules(ContainerBuilder containerBuilder)
+        {
+            var config = Configuration.GetSection("Modules");
+            var logger = new NuGetLoggerWrapper(_logger);
+
+            var modulesConfig = new ModulesConfig(config["ModulesFile"]);
+            var repositories = new RepositorySourcesConfig(config["RepositorySources"]);
+            await repositories.Reload();
+
+            var modulesManager = new ModuleManager(config["Directory"], config["CacheDirectory"],
+                config["ConfigDirectory"], modulesConfig, repositories);
+
+            containerBuilder.RegisterInstance(modulesConfig).AsImplementedInterfaces();
+            containerBuilder.RegisterInstance(repositories).AsImplementedInterfaces();
+            containerBuilder.RegisterInstance(modulesManager).AsImplementedInterfaces();
+
+            await modulesManager.LoadModules(logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
