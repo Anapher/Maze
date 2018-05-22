@@ -13,21 +13,32 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.Config;
+using Orcus.Server.Service.ModulesV1.Config;
 
-namespace Orcus.Server.Service.Modules
+namespace Orcus.Server.Service.ModulesV1
 {
-    public class ModuleManager
+    //https://github.com/NuGet/Home/issues/5674
+    public interface IModuleManager
+    {
+        IModulesConfig ModulesConfig { get; }
+        IRepositorySourceConfig RepositorySourcesConfig { get; }
+        IImmutableList<ModuleInfo> LoadedModules { get; }
+        //IList<IGrouping<string, (PackageIdentity identity, string path)>> AvailableModules { get; }
+        Task InstallModule(PackageIdentity identity, ILogger logger);
+        Task InstallModule(SourcedPackageIdentity identity, ILogger logger);
+
+        void LoadModule(string path, ILogger logger);
+    }
+
+    public class ModuleManager : IModuleManager
     {
         private readonly string _modulesDirectory;
         private readonly string _cacheDirectory;
         private readonly string _configDirectory;
         private readonly object _modulesLock = new object();
-        private readonly IModulesConfig _modulesConfig;
-        private readonly IRepositorySourceConfig _repositorySourceConfig;
 
         public ModuleManager(string modulesDir, string cacheDir, string configDir, IModulesConfig modulesConfig,
-            IRepositorySourceConfig repositorySourceConfig)
+            IRepositorySourceConfig repositorySourcesConfig)
         {
             _modulesDirectory = modulesDir;
             Directory.CreateDirectory(_modulesDirectory);
@@ -36,27 +47,29 @@ namespace Orcus.Server.Service.Modules
             _configDirectory = configDir;
             Directory.CreateDirectory(_configDirectory);
 
-            _modulesConfig = modulesConfig;
-            _repositorySourceConfig = repositorySourceConfig;
+            ModulesConfig = modulesConfig;
+            RepositorySourcesConfig = repositorySourcesConfig;
         }
 
-        public IImmutableList<ModuleInfo> Modules { get; private set; } = new List<ModuleInfo>().ToImmutableList();
+        public IImmutableList<ModuleInfo> LoadedModules { get; private set; } = new List<ModuleInfo>().ToImmutableList();
+        public IModulesConfig ModulesConfig { get; }
+        public IRepositorySourceConfig RepositorySourcesConfig { get; }
 
         public async Task LoadModules(ILogger logger)
         {
             try
             {
-                await _modulesConfig.Reload();
+                await ModulesConfig.Reload();
             }
             catch (Exception e)
             {
-                logger.LogError($"Something went wrong when trying to read the file {Path.GetFileName(_modulesConfig.Path)}: {e.Message}");
+                logger.LogError($"Something went wrong when trying to read the file {Path.GetFileName(ModulesConfig.Path)}: {e.Message}");
             }
 
             var moduleFiles = new DirectoryInfo(_modulesDirectory).GetFiles("*", SearchOption.TopDirectoryOnly)
                 .ToDictionary(x => GetModuleFileIdentity(x.FullName), x => x).GroupBy(x => x.Key.Id).ToList();
 
-            foreach (var module in _modulesConfig.Items)
+            foreach (var module in ModulesConfig.Items)
             {
                 var versions = moduleFiles.FirstOrDefault(x => x.Key == module.Id);
                 if (versions == null)
@@ -82,13 +95,15 @@ namespace Orcus.Server.Service.Modules
                 }
             }
 
-            var unknownModules = moduleFiles.Where(x => Modules.All(y => y.Id.Id != x.Key));
+            var unknownModules = moduleFiles.Where(x => LoadedModules.All(y => y.Id.Id != x.Key));
             foreach (var unknownModule in unknownModules)
             {
                 logger.LogWarning(
-                    $"The module {unknownModule.Key} was not specified in the {Path.GetFileName(_modulesConfig.Path)} file. The module will be loaded anyways.");
+                    $"The module {unknownModule.Key} was not specified in the {Path.GetFileName(ModulesConfig.Path)} file. The module will be loaded anyways.");
                 LoadModule(unknownModule.OrderByDescending(x => x.Key.Version).First().Value.FullName, logger);
             }
+
+            logger.LogInformation($"{LoadedModules.Count} modules were loaded.");
         }
 
         public Task InstallModule(PackageIdentity identity, ILogger logger) =>
@@ -99,11 +114,11 @@ namespace Orcus.Server.Service.Modules
             SourceRepository sourceRepository;
 
             if (identity.SourceRepository == null || identity.SourceRepository == OfficalOrcusRepository.Uri)
-                sourceRepository = _repositorySourceConfig.OfficalRepository;
+                sourceRepository = RepositorySourcesConfig.OfficalRepository;
             else
             {
                 sourceRepository =
-                    _repositorySourceConfig.SourceRepositories.FirstOrDefault(x =>
+                    RepositorySourcesConfig.SourceRepositories.FirstOrDefault(x =>
                         x.PackageSource.SourceUri == identity.SourceRepository);
                 if (sourceRepository == null)
                     throw new ArgumentException(
@@ -113,7 +128,7 @@ namespace Orcus.Server.Service.Modules
             var moduleFile = await sourceRepository.DirectDownloadAsync(identity, _modulesDirectory,
                 logger, CancellationToken.None);
             
-            await _modulesConfig.AddItem(identity);
+            await ModulesConfig.AddItem(identity);
 
             LoadModule(moduleFile.FullName, logger);
         }
@@ -122,7 +137,7 @@ namespace Orcus.Server.Service.Modules
         {
             lock (_modulesLock)
             {
-                Modules = Modules.Add(module);
+                LoadedModules = LoadedModules.Add(module);
             }
         }
 
@@ -148,7 +163,7 @@ namespace Orcus.Server.Service.Modules
 
                 var references = reader.GetReferenceItems().ToList();
 
-                var moduleDto = new ModuleDto
+                var moduleDto = new InstalledModule
                 {
                     Id = identity,
                     Title = reader.NuspecReader.GetTitle(),

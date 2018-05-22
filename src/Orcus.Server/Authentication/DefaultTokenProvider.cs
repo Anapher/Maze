@@ -30,7 +30,9 @@ namespace Orcus.Server.Authentication
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.AccountId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, account.Username)
+                new Claim(JwtRegisteredClaimNames.GivenName, account.Username),
+                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.Role, "installingUser")
             };
 
             return new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.Add(_userTokenValidityPeriod),

@@ -7,7 +7,7 @@ namespace Orcus.Administration.ViewModels.Main.Overview
     {
         public ModulesViewModel(IOrcusRestClient client)
         {
-            
+
         }
     }
 

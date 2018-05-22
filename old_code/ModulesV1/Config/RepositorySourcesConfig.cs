@@ -7,8 +7,9 @@ using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection;
+using Orcus.Server.Service.Modules.Config;
 
-namespace Orcus.Server.Service.Modules.Config
+namespace Orcus.Server.Service.ModulesV1.Config
 {
     public interface IRepositorySourceConfig
     {

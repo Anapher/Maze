@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading.Tasks;
-using NuGet.Common;
-using NuGet.Packaging.Core;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.Config;
-
-namespace Orcus.Server.Service.Modules
+﻿namespace Orcus.Server.Service.ModulesV1
 {
     public class ModuleDependencyResolver
     {
@@ -38,14 +28,5 @@ namespace Orcus.Server.Service.Modules
         //}
     }
 
-    public interface IModuleManager
-    {
-        IModulesConfig ModulesConfig { get; }
-        IRepositorySourceConfig RepositorySourcesConfig { get; }
-        IImmutableList<ModuleInfo> LoadedModules { get; }
-        IList<IGrouping<string, (PackageIdentity identity, string path)>> AvailableModules { get; }
 
-        void LoadModule(string path, ILogger logger);
-        Task InstallModule(SourcedPackageIdentity packageIdentity);
-    }
 }

@@ -45,13 +45,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.BizRunner", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AE920D99-35EA-49D8-B97B-E744F7A49321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.Connection.Tests", "src\tests\Orcus.Server.Connection.Tests\Orcus.Server.Connection.Tests.csproj", "{AC91638B-14DE-466C-90F4-B39EFE519162}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Connection.Tests", "src\tests\Orcus.Server.Connection.Tests\Orcus.Server.Connection.Tests.csproj", "{AC91638B-14DE-466C-90F4-B39EFE519162}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.Service", "src\Orcus.Server.Service\Orcus.Server.Service.csproj", "{1A3DF103-07AA-42DE-AED4-40FD4D44635B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Service", "src\Orcus.Server.Service\Orcus.Server.Service.csproj", "{1A3DF103-07AA-42DE-AED4-40FD4D44635B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{79F56DAA-BA66-4917-9C6B-B1A489844169}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.Service.Tests", "src\tests\Orcus.Server.Service.Tests\Orcus.Server.Service.Tests.csproj", "{90B02200-B187-4045-B90E-637E467F594C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Service.Tests", "src\tests\Orcus.Server.Service.Tests\Orcus.Server.Service.Tests.csproj", "{90B02200-B187-4045-B90E-637E467F594C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration.Modules", "src\Orcus.Administration.Modules\Orcus.Administration.Modules.csproj", "{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{90B02200-B187-4045-B90E-637E467F594C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90B02200-B187-4045-B90E-637E467F594C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90B02200-B187-4045-B90E-637E467F594C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +145,7 @@ Global
 		{1A3DF103-07AA-42DE-AED4-40FD4D44635B} = {9C6E5247-3459-4ECF-9FE3-5E2044295099}
 		{79F56DAA-BA66-4917-9C6B-B1A489844169} = {9C6E5247-3459-4ECF-9FE3-5E2044295099}
 		{90B02200-B187-4045-B90E-637E467F594C} = {79F56DAA-BA66-4917-9C6B-B1A489844169}
+		{76F030BC-D0A6-44FC-8E0B-70216E7CE6C1} = {E7996DC9-7C33-4F35-9748-4A825DB56784}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

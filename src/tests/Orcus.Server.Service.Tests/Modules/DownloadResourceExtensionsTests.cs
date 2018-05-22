@@ -9,7 +9,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.ModulesV1;
 using Xunit;
 
 namespace Orcus.Server.Service.Tests.Modules

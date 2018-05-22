@@ -1,6 +1,6 @@
 ﻿using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.Modules
+namespace Orcus.Server.Service.ModulesV1
 {
     public static class PackageIdentityExtensions
     {

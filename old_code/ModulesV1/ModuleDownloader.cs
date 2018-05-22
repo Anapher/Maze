@@ -7,7 +7,7 @@ using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.Server.Service.Modules
+namespace Orcus.Server.Service.ModulesV1
 {
     public static class ModuleDownloader
     {

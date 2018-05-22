@@ -5,14 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.Client" Version="4.2.0" />
-    <PackageReference Include="NuGet.PackageManagement.NetStandard" Version="4.6.0" />
     <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
     <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
+    <ProjectReference Include="..\Orcus.Administration.Modules\Orcus.Administration.Modules.csproj" />
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
   </ItemGroup>
 
@@ -29,5 +28,4 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-
 </Project>

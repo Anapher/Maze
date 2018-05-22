@@ -14,9 +14,11 @@ using Microsoft.Extensions.Logging;
 using Orcus.Server.Authentication;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
-using Orcus.Server.Service.Modules;
-using Orcus.Server.Service.Modules.Config;
+using Orcus.Server.Hubs;
+using Orcus.Server.Service.ModulesV1;
+using Orcus.Server.Service.ModulesV1.Config;
 using Orcus.Server.Utilities;
+using ModuleManager = Orcus.Server.Service.ModulesV1.ModuleManager;
 
 namespace Orcus.Server
 {
@@ -61,11 +63,15 @@ namespace Orcus.Server
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
                     .Build();
+
+                options.AddPolicy("admin", builder => builder.RequireRole("admin"));
+                options.AddPolicy("installModules", builder => builder.RequireRole("installingUser"));
             });
 
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.Configure());
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSignalR();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterInstance(tokenProvider).AsImplementedInterfaces();
@@ -109,6 +115,7 @@ namespace Orcus.Server
 
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSignalR(routes => routes.MapHub<AdministrationHub>("v1/signalR"));
         }
     }
 }

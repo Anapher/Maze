@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Security;
 using Anapher.Wpf.Swan;
 using Orcus.Administration.Core;
@@ -62,7 +63,7 @@ namespace Orcus.Administration.ViewModels.Main
                     }
 
                     var viewModel = new OverviewViewModel(client);
-                    await viewModel.LoadData();
+                    await viewModel.LoadData(s => Debug.Print(s));
 
                     ShowView.Invoke(this, viewModel);
                 }));

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Versioning;
 
 namespace Orcus.Server.Connection.Modules
 {
-    public class ModuleDto
+    public class InstalledModule : PackageIdentity
     {
-        public PackageIdentity Id { get; set; }
+        public InstalledModule(string id, NuGetVersion version) : base(id, version)
+        {
+        }
+
         public string Title { get; set; }
         public string Authors { get; set; }
-        public string Owners { get; set; }
         public string LicenseUrl { get; set; }
         public string ProjectUrl { get; set; }
         public string IconUrl { get; set; }
