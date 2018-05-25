@@ -23,7 +23,7 @@ namespace Orcus.Administration.ViewModels.Main
         public async Task LoadData(Action<string> updateStatus)
         {
             updateStatus("Fetch modules...");
-            var modulesTask = ModulesResource.FetchModules(Client);
+            var modulesTask = ModulesResource.FetchInstalledModules(Client);
 
         }
 

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Orcus.Administration.ViewModels.Main.Overview.Modules.Feed
 {
-    public interface IModulesFeed
+    public interface IModulesFeed : IDisposable
     {
         string SearchText { get; set; }
         ICollectionView View { get; }

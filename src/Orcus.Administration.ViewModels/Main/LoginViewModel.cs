@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security;
 using Anapher.Wpf.Swan;
 using Orcus.Administration.Core;
 using Orcus.Administration.Core.Clients;
 using Orcus.Administration.Core.Exceptions;
+using Orcus.Administration.Core.Rest.Modules.V1;
 using Orcus.Administration.ViewModels.Utilities;
+using Orcus.Server.Connection.Modules;
+using Unclassified.TxLib;
 
 namespace Orcus.Administration.ViewModels.Main
 {
@@ -31,7 +36,15 @@ namespace Orcus.Administration.ViewModels.Main
         public string ErrorMessage
         {
             get => _errorMessage;
-            set => SetProperty(value, ref _errorMessage);
+            private set => SetProperty(value, ref _errorMessage);
+        }
+
+        private string _statusMessage;
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            private set => SetProperty(value, ref _statusMessage);
         }
 
         public AsyncRelayCommand<SecureString> LoginCommand
@@ -43,10 +56,24 @@ namespace Orcus.Administration.ViewModels.Main
                     IsLoggingIn = true;
 
                     IOrcusRestClient client;
+                    IReadOnlyList<SourcedPackageIdentity> modules;
+
                     try
                     {
+                        StatusMessage = Tx.T("LoginView:Status.Authenticating");
+
                         client = await OrcusRestConnector.TryConnect(Username, parameter,
                             new ServerInfo {ServerUri = new Uri("http://localhost:50485/")});
+
+                        StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
+
+                        modules = await ModulesResource.FetchModules(client);
+
+                        if (modules.Any())
+                        {
+                            StatusMessage = Tx.T("LoginView:Status.LoadModules");
+
+                        }
                     }
                     catch (RestAuthenticationException e)
                     {

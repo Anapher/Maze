@@ -16,6 +16,7 @@ using NuGet.Packaging.Signing;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
+using Orcus.Server.Connection;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
@@ -97,7 +98,7 @@ namespace Orcus.Server.Service.Modules
                 TargetFramework = framework,
                 PrimarySources = _project.Sources,
                 AllSources = _project.Sources,
-                PackagesFolderSource = _project.ModulesDirectory.Repository,
+                PackagesFolderSource = _project.LocalSourceRepository,
                 ResolutionContext = resolutionContext,
                 AllowDowngrades = downgradeAllowed,
                 ProjectContext = new EmptyNuGetProjectContext()
@@ -300,7 +301,6 @@ namespace Orcus.Server.Service.Modules
             // Also, always perform deletion of package directories, even in a rollback, so that there are no stale package directories
             foreach (var packageWithDirectoryToBeDeleted in packageWithDirectoriesToBeDeleted)
             {
-                var packageFolderPath = _project.ModulesDirectory.GetModuleFolderPath(packageWithDirectoryToBeDeleted);
                 try
                 {
                     await _project.ModulesDirectory.DeleteModule(packageWithDirectoryToBeDeleted);
@@ -338,7 +338,10 @@ namespace Orcus.Server.Service.Modules
                     else
                     {
                         packageWithDirectoriesToBeDeleted.Remove(action.PackageIdentity);
-                        var packagePath = _project.ModulesDirectory.GetModulePackagePath(action.PackageIdentity);
+                        var packagePath =
+                            _project.ModulesDirectory.VersionFolderPathResolver.GetPackageFilePath(
+                                action.PackageIdentity.Id, action.PackageIdentity.Version);
+
                         if (File.Exists(packagePath))
                         {
                             using (var downloadResourceResult = new DownloadResourceResult(File.OpenRead(packagePath), action.SourceRepository?.PackageSource?.Source))
@@ -368,7 +371,27 @@ namespace Orcus.Server.Service.Modules
         {
             await _project.InstallPackageAsync(packageIdentity, resourceResult, token);
 
-            packageWithDirectoriesToBeDeleted.Add(packageIdentity);
+            packageWithDirectoriesToBeDeleted.Remove(packageIdentity);
+        }
+
+        private async Task WriteModuleState(PackagesContext serverConext,
+            ISet<SourcedPackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+        {
+            var adminContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(), 
+                false, resolutionContext, OrcusFrameworks.Administration, logger, token);
+
+            var clientContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(),
+                false, resolutionContext, OrcusFrameworks.Client, logger, token);
+
+            await _project.SetModuleLock(primaryModules.ToList(), GetLock(serverConext), GetLock(adminContext),
+                GetLock(clientContext));
+        }
+
+        private static IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> GetLock(PackagesContext context)
+        {
+            return context.Packages.ToDictionary(x => x, x => (IReadOnlyList<PackageIdentity>) context
+                .PackageDependencies[x].Dependencies
+                .Select(y => context.Packages.First(z => z.Id == y.Id)).ToList());
         }
 
         private class PackagesContext

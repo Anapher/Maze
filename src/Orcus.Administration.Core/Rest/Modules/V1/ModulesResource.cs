@@ -13,12 +13,17 @@ namespace Orcus.Administration.Core.Rest.Modules.V1
         {
         }
 
+        public static Task<IReadOnlyList<SourcedPackageIdentity>> FetchModules(IOrcusRestClient client)
+        {
+            return CreateRequest().Execute(client).Return<IReadOnlyList<SourcedPackageIdentity>>();
+        }
+
         public static Task InstallModule(SourcedPackageIdentity package, IOrcusRestClient client)
         {
             return CreateRequest(HttpVerb.Post).WithBody(package).Execute(client);
         }
 
-        public static Task<List<InstalledModule>> FetchModules(IOrcusRestClient client)
+        public static Task<List<InstalledModule>> FetchInstalledModules(IOrcusRestClient client)
         {
             return CreateRequest().Execute(client).Return<List<InstalledModule>>();
         }

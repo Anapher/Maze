@@ -164,10 +164,6 @@
       <Project>{51db7965-8c8c-4e44-ba1e-0a157d2de6d9}</Project>
       <Name>Orcus.Administration.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Administration.Modules\Orcus.Administration.Modules.csproj">
-      <Project>{76f030bc-d0a6-44fc-8e0b-70216e7ce6c1}</Project>
-      <Name>Orcus.Administration.Modules</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj">
       <Project>{e5c4a573-37cf-4551-8964-547f1f0309bd}</Project>
       <Name>Orcus.Administration.ViewModels</Name>

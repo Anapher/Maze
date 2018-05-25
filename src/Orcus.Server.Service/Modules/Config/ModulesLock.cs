@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
@@ -17,7 +16,7 @@ namespace Orcus.Server.Service.Modules.Config
         /// <summary>
         ///     All modules including their dependencies
         /// </summary>
-        IImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>> Modules { get; }
+        IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> Modules { get; }
 
         /// <summary>
         ///     The local path to the module file
@@ -34,7 +33,7 @@ namespace Orcus.Server.Service.Modules.Config
         /// </summary>
         /// <param name="id">The module identity</param>
         /// <param name="dependencies">It's depdendencies</param>
-        Task Add(PackageIdentity id, IList<PackageDependencyGroup> dependencies);
+        Task Add(PackageIdentity id, IReadOnlyList<PackageIdentity> dependencies);
 
         /// <summary>
         ///     Remove a module
@@ -46,18 +45,18 @@ namespace Orcus.Server.Service.Modules.Config
         ///     Replace the whole module list
         /// </summary>
         /// <param name="modules">The new list</param>
-        Task Replace(IDictionary<PackageIdentity, IList<PackageDependencyGroup>> modules);
+        Task Replace(IDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> modules);
     }
 
-    public class ModulesLock : JsonObjectFile<IImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>>>,
+    public class ModulesLock : JsonObjectFile<IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>>,
         IModulesLock
     {
-        private readonly IImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>> _empty;
+        private readonly IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> _empty;
 
         public ModulesLock(string path) : base(path)
         {
             _empty =
-                new Dictionary<PackageIdentity, IList<PackageDependencyGroup>>().ToImmutableDictionary(PackageIdentity
+                new Dictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>().ToImmutableDictionary(PackageIdentity
                     .Comparer);
             Modules = _empty;
 
@@ -65,7 +64,7 @@ namespace Orcus.Server.Service.Modules.Config
             JsonSettings.Converters.Add(new NuGetVersionConverter());
         }
 
-        public IImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>> Modules { get; private set; }
+        public IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> Modules { get; private set; }
 
         public virtual async Task Reload()
         {
@@ -75,7 +74,7 @@ namespace Orcus.Server.Service.Modules.Config
                 : data.ToImmutableDictionary(PackageIdentity.Comparer);
         }
 
-        public virtual Task Add(PackageIdentity id, IList<PackageDependencyGroup> dependencies)
+        public virtual Task Add(PackageIdentity id, IReadOnlyList<PackageIdentity> dependencies)
         {
             Modules = Modules.Add(id, dependencies);
             return Save(Modules);
@@ -87,7 +86,7 @@ namespace Orcus.Server.Service.Modules.Config
             return Save(Modules);
         }
 
-        public Task Replace(IDictionary<PackageIdentity, IList<PackageDependencyGroup>> modules)
+        public Task Replace(IDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> modules)
         {
             Modules = modules.ToImmutableDictionary(PackageIdentity.Comparer);
             return Save(Modules);

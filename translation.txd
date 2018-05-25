@@ -9,6 +9,9 @@
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Login">Einloggen</text>
 		<text key="LoginView:LoggingIn">Einloggen...</text>
+		<text key="LoginView:Status.Authenticating">Authentifiziere...</text>
+		<text key="LoginView:Status.LoadModules">Module laden...</text>
+		<text key="LoginView:Status.RetrieveModules">Module abrufen...</text>
 		<text key="Modules">Module</text>
 		<text key="ModulesView:Source">Modul-Quelle</text>
 		<text key="ModulesView:Source.All">Alle</text>
@@ -210,6 +213,9 @@
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Login">Login</text>
 		<text key="LoginView:LoggingIn">Logging in...</text>
+		<text key="LoginView:Status.Authenticating">Authenticating...</text>
+		<text key="LoginView:Status.LoadModules">Load modules...</text>
+		<text key="LoginView:Status.RetrieveModules">Retrieve modules...</text>
 		<text key="Modules">Modules</text>
 		<text key="ModulesView:Source">Module source</text>
 		<text key="ModulesView:Source.All">All</text>

@@ -1,57 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.PackageManagement;
-using NuGet.Packaging;
 using NuGet.Packaging.Core;
-using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
+using Orcus.ModuleManagement;
 
 namespace Orcus.Server.Service.Modules
 {
-    public interface IModulesDirectory
-    {
-        string FolderPath { get; }
-        SourceRepository Repository { get; }
-        VersionFolderPathResolver VersionFolderPathResolver { get; }
-
-        string GetModuleFolderPath(PackageIdentity packageIdentity);
-        string GetModulePackagePath(PackageIdentity packageIdentity);
-        Task DeleteModule(PackageIdentity packageIdentity);
-    }
-
-    public class ModulesDirectory : IModulesDirectory
-    {
-        public string FolderPath { get; }
-        public SourceRepository Repository { get; }
-        public VersionFolderPathResolver VersionFolderPathResolver { get; }
-
-        public string GetModuleFolderPath(PackageIdentity packageIdentity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetModulePackagePath(PackageIdentity packageIdentity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteModule(PackageIdentity packageIdentity)
-        {
-            var moduleFile = GetModulePackagePath(packageIdentity);
-            if (File.Exists(moduleFile))
-            {
-
-            }
-            return Task.CompletedTask; //TODO
-        }
-    }
-
     public class PackageLoader
     {
         public static async Task<Dictionary<PackageIdentity, PackagePreFetcherResult>> GetPackagesAsync(
@@ -80,7 +39,8 @@ namespace Orcus.Server.Service.Modules
                     if (!uninstalledPackages.Contains(action.PackageIdentity))
                     {
                         // Check the packages folder for the id and version
-                        localFile = modulesDirectory.GetModulePackagePath(action.PackageIdentity);
+                        localFile = modulesDirectory.VersionFolderPathResolver.GetPackageFilePath(
+                            action.PackageIdentity.Id, action.PackageIdentity.Version);
 
                         // Verify the nupkg exists
                         if (localFile == null || !File.Exists(localFile))

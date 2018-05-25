@@ -22,5 +22,18 @@ namespace Orcus.Administration.ViewModels.Main.Overview.Modules
         }
 
         public Uri IconUri { get; set; }
+
+        private ModuleAdvancedInfoViewModel _advancedInfo;
+
+        public ModuleAdvancedInfoViewModel AdvancedInfo
+        {
+            get => _advancedInfo;
+            set => SetProperty(value, ref _advancedInfo);
+        }
+    }
+
+    public class ModuleAdvancedInfoViewModel
+    {
+
     }
 }

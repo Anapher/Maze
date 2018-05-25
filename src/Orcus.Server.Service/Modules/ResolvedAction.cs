@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection.Modules;
@@ -11,7 +9,6 @@ namespace Orcus.Server.Service.Modules
     public enum ResolvedActionType
     {
         Install,
-        InstallAsDependency,
         Uninstall
     }
 

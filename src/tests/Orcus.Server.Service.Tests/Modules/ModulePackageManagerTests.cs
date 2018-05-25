@@ -14,6 +14,7 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using Orcus.ModuleManagement;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Tests.Utils;
@@ -146,9 +147,9 @@ namespace Orcus.Server.Service.Tests.Modules
                 {
                     PrimaryPackages = new[] {jsonPackage}.ToImmutableArray(),
                     InstalledPackages =
-                        new Dictionary<PackageIdentity, IList<PackageDependencyGroup>>
+                        new Dictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>
                         {
-                            {jsonPackage, new List<PackageDependencyGroup>()}
+                            {jsonPackage, new List<PackageIdentity>()}
                         }.ToImmutableDictionary()
                 };
             var packageManager = new ModulePackageManager(testProject);
@@ -189,9 +190,9 @@ namespace Orcus.Server.Service.Tests.Modules
                 {
                     PrimaryPackages = new[] { jsonPackage }.ToImmutableArray(),
                     InstalledPackages =
-                        new Dictionary<PackageIdentity, IList<PackageDependencyGroup>>
+                        new Dictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>
                         {
-                            {jsonPackage, new List<PackageDependencyGroup>()}
+                            {jsonPackage, new List<PackageIdentity>()}
                         }.ToImmutableDictionary()
                 };
             var packageManager = new ModulePackageManager(testProject);
@@ -219,10 +220,12 @@ namespace Orcus.Server.Service.Tests.Modules
         {
             using (var testDir = TestDirectory.Create())
             {
+                var modulesDirectory = new ModulesDirectory(new VersionFolderPathResolverFlat(testDir.Path));
+
                 var sourceRepositoryProvider = TestSourceRepositoryUtility.CreateSourceRepositoryProvider(new[]
                 {
                     TestSourceRepositoryUtility.V3PackageSource,
-                    new PackageSource(new Uri(testDir.Path, UriKind.Absolute).AbsoluteUri)
+                    modulesDirectory.PackageSource
                 });
 
                 var token = CancellationToken.None;
@@ -240,10 +243,11 @@ namespace Orcus.Server.Service.Tests.Modules
                     {
                         PrimaryPackages = new[] { jsonPackage }.ToImmutableArray(),
                         InstalledPackages =
-                            new Dictionary<PackageIdentity, IList<PackageDependencyGroup>>
+                            new Dictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>
                             {
-                                {jsonPackage, new List<PackageDependencyGroup>()}
-                            }.ToImmutableDictionary()
+                                {jsonPackage, new List<PackageIdentity>()}
+                            }.ToImmutableDictionary(),
+                        ModulesDirectory = modulesDirectory
                     };
                 var packageManager = new ModulePackageManager(testProject);
 
@@ -266,7 +270,8 @@ namespace Orcus.Server.Service.Tests.Modules
         {
             Framework = framework;
             Sources = sources.ToImmutableList();
-            ModulesDirectory = new TestModulesDirectory(sources.First(x => x.PackageSource.IsLocal));
+
+            LocalSourceRepository = sources.First(x => x.PackageSource.IsLocal);
         }
 
         public NuGetFramework Framework { get; }
@@ -274,9 +279,11 @@ namespace Orcus.Server.Service.Tests.Modules
         public IImmutableList<SourcedPackageIdentity> PrimaryPackages { get; set; } =
             ImmutableList<SourcedPackageIdentity>.Empty;
 
-        public IImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>> InstalledPackages { get; set; } =
-            ImmutableDictionary<PackageIdentity, IList<PackageDependencyGroup>>.Empty;
+        public IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> InstalledPackages { get; set; } =
+            ImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>.Empty;
+
         public IImmutableList<SourceRepository> Sources { get; }
+        public SourceRepository LocalSourceRepository { get; }
         public IModulesDirectory ModulesDirectory { get; set; }
         public AsyncLock BatchLock { get; } = new AsyncLock();
 
@@ -290,46 +297,11 @@ namespace Orcus.Server.Service.Tests.Modules
         {
             return Task.FromResult(true);
         }
-    }
 
-    public class NoSubDirectoryVersionPathResolver : VersionFolderPathResolver
-    {
-        public NoSubDirectoryVersionPathResolver(string rootPath) : base(rootPath, false)
+        public Task SetModuleLock(IReadOnlyList<SourcedPackageIdentity> primaryPackages, IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> serverLock, IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> adminLock,
+            IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> clientLock)
         {
-        }
-
-        public override string GetPackageDirectory(string packageId, NuGetVersion version)
-        {
-            return GetVersionListDirectory(packageId) + "." + version.ToNormalizedString();
-        }
-    }
-
-    public class TestModulesDirectory : IModulesDirectory
-    {
-        public TestModulesDirectory(SourceRepository sourceRepository)
-        {
-            FolderPath = sourceRepository.PackageSource.SourceUri.AbsolutePath;
-            Repository = sourceRepository;
-            VersionFolderPathResolver = new NoSubDirectoryVersionPathResolver(FolderPath);
-        }
-
-        public string FolderPath { get; }
-        public SourceRepository Repository { get; }
-        public VersionFolderPathResolver VersionFolderPathResolver { get; }
-
-        public string GetModuleFolderPath(PackageIdentity packageIdentity)
-        {
-            return Path.Combine(FolderPath, packageIdentity.Id);
-        }
-
-        public string GetModulePackagePath(PackageIdentity packageIdentity)
-        {
-            return Path.Combine(GetModuleFolderPath(packageIdentity), "test.nuspec");
-        }
-
-        public Task DeleteModule(PackageIdentity packageIdentity)
-        {
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }

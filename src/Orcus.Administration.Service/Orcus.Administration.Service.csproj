@@ -5,13 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="NuGet.PackageManagement.NetStandard" Version="4.6.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
     <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
   </ItemGroup>
