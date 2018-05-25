@@ -7,10 +7,10 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.ModulesV2.Config.Base;
-using Orcus.Server.Service.ModulesV2.Extensions;
+using Orcus.Server.Service.Modules.Config.Base;
+using Orcus.Server.Service.Modules.Extensions;
 
-namespace Orcus.Server.Service.ModulesV2.Config
+namespace Orcus.Server.Service.Modules.Config
 {
     /// <summary>
     ///     Provides the primary modules only (user installed)

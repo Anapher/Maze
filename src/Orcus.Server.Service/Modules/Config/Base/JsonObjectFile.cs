@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Orcus.Server.Service.ModulesV2.Config.Base
+namespace Orcus.Server.Service.Modules.Config.Base
 {
     public abstract class JsonObjectFile<TObject> :SerializableObjectFile<TObject>
     {

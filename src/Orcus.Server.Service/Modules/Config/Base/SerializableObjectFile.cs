@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Orcus.Server.Service.ModulesV2.Config.Base
+namespace Orcus.Server.Service.Modules.Config.Base
 {
     public abstract class SerializableObjectFile<TObject>
     {

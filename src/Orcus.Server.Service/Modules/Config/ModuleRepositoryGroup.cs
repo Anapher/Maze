@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.ModulesV2.Config
+namespace Orcus.Server.Service.Modules.Config
 {
     public class ModuleRepositoryGroup
     {

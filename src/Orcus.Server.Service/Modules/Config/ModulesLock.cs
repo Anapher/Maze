@@ -5,9 +5,9 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
-using Orcus.Server.Service.ModulesV2.Config.Base;
+using Orcus.Server.Service.Modules.Config.Base;
 
-namespace Orcus.Server.Service.ModulesV2.Config
+namespace Orcus.Server.Service.Modules.Config
 {
     /// <summary>
     ///     Provides all required modules including their dependencies
