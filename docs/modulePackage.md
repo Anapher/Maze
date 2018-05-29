@@ -7,6 +7,7 @@
 | win   | client  |
 
 Sample nuspec:
+https://github.com/NuGet/NuGet.Server/blob/master/src/NuGet.Server/NuGet.Server.nuspec
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <package

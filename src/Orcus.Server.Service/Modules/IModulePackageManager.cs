@@ -2,10 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
-using NuGet.PackageManagement;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection.Modules;
+using Orcus.Server.Service.Modules.PackageManagement;
 
 namespace Orcus.Server.Service.Modules
 {

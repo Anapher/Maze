@@ -8,18 +8,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.Frameworks;
-using NuGet.PackageManagement;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Packaging.PackageExtraction;
 using NuGet.Packaging.Signing;
-using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
-using Orcus.Server.Connection;
+using Orcus.PackageManagement;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
+using Orcus.Server.Service.Modules.PackageManagement;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -39,7 +38,7 @@ namespace Orcus.Server.Service.Modules
                 throw new InvalidOperationException($"Package '{packageIdentity}' is already installed");
 
             if (resolutionContext.DependencyBehavior == DependencyBehavior.Ignore)
-                return ResolvedAction.CreateInstall(packageIdentity, _project.Sources).Yield();
+                return ResolvedAction.CreateInstall(packageIdentity, _project.PrimarySources).Yield();
 
             var resultingPackages = new HashSet<SourcedPackageIdentity>(_project.PrimaryPackages, PackageIdentity.Comparer);
 
@@ -74,7 +73,7 @@ namespace Orcus.Server.Service.Modules
             throw new NotImplementedException();
         }
 
-        private async Task<PackagesContext> GetRequiredPackages(ISet<SourcedPackageIdentity> primaryPackages, IList<PackageIdentity> targetPackages,
+        private async Task<PackagesContext> GetRequiredPackages(ISet<SourcedPackageIdentity> primaryPackages, ICollection<PackageIdentity> targetPackages,
             bool downgradeAllowed, ResolutionContext resolutionContext, NuGetFramework framework, ILogger logger, CancellationToken token)
         {
             /* ===> GatherContext
@@ -96,12 +95,11 @@ namespace Orcus.Server.Service.Modules
                 PrimaryTargets = targetPackages.ToList(),
                 PrimaryTargetIds = primaryPackages.Where(x => !targetPackages.Contains(x)).Select(x => x.Id).ToList(),
                 TargetFramework = framework,
-                PrimarySources = _project.Sources,
-                AllSources = _project.Sources,
+                PrimarySources = _project.PrimarySources,
+                AllSources = _project.AllSources,
                 PackagesFolderSource = _project.LocalSourceRepository,
                 ResolutionContext = resolutionContext,
-                AllowDowngrades = downgradeAllowed,
-                ProjectContext = new EmptyNuGetProjectContext()
+                AllowDowngrades = downgradeAllowed
             };
 
             var availablePackages = await ResolverGather.GatherAsync(gatherContext, token);
@@ -144,7 +142,7 @@ namespace Orcus.Server.Service.Modules
                 packagesConfig: Enumerable.Empty<PackageReference>(),
                 preferredVersions: primaryPackages,
                 availablePackages: prunedAvailablePackages,
-                packageSources: _project.Sources.Select(x => x.PackageSource),
+                packageSources: _project.AllSources.Select(x => x.PackageSource),
                 log: logger);
 
             var packageResolver = new PackageResolver();
@@ -226,19 +224,19 @@ namespace Orcus.Server.Service.Modules
                             var packageIdentity = await downloadPackageResult.PackageReader.GetIdentityAsync(token);
 
                             var signedPackageVerifier = new PackageSignatureVerifier(
-                                SignatureVerificationProviderFactory.GetSignatureVerificationProviders(),
-                                SignedPackageVerifierSettings.Default);
+                                SignatureVerificationProviderFactory.GetSignatureVerificationProviders());
 
                             var packageExtractionContext = new PackageExtractionContext(
                                 PackageSaveMode.Defaultv3,
                                 PackageExtractionBehavior.XmlDocFileSaveMode,
                                 NullLogger.Instance,
-                                signedPackageVerifier);
+                                signedPackageVerifier,
+                                SignedPackageVerifierSettings.GetDefault());
 
                             downloadPackageResult.PackageStream.Position = 0;
 
-                            await PackageExtractor.InstallFromSourceAsync(packageIdentity,
-                                stream => downloadPackageResult.PackageStream.CopyToAsync(stream),
+                            //  stream => downloadPackageResult.PackageStream.CopyToAsync(stream)
+                            await PackageExtractor.InstallFromSourceAsync(packageIdentity, new LocalPackageArchiveDownloader("", "", packageIdentity, null), 
                                 _project.ModulesDirectory.VersionFolderPathResolver, packageExtractionContext, token);
 
                             await ExecuteInstallAsync(packageIdentity, downloadPackageResult,
@@ -378,10 +376,10 @@ namespace Orcus.Server.Service.Modules
             ISet<SourcedPackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
             var adminContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(), 
-                false, resolutionContext, OrcusFrameworks.Administration, logger, token);
+                false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusAdministration, logger, token);
 
             var clientContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(),
-                false, resolutionContext, OrcusFrameworks.Client, logger, token);
+                false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusClient, logger, token);
 
             await _project.SetModuleLock(primaryModules.ToList(), GetLock(serverConext), GetLock(adminContext),
                 GetLock(clientContext));

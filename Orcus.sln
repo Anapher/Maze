@@ -53,9 +53,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{79F56DAA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Service.Tests", "src\tests\Orcus.Server.Service.Tests\Orcus.Server.Service.Tests.csproj", "{90B02200-B187-4045-B90E-637E467F594C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.ModuleManagement", "src\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj", "{42D5467F-20DB-4416-B673-0383304D098E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.ModuleManagement", "src\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj", "{42D5467F-20DB-4416-B673-0383304D098E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration.Service", "src\Orcus.Administration.Service\Orcus.Administration.Service.csproj", "{849B8885-2E2E-434F-9282-FB59B8FE6AA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Service", "src\Orcus.Administration.Service\Orcus.Administration.Service.csproj", "{849B8885-2E2E-434F-9282-FB59B8FE6AA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

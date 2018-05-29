@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="NuGet.PackageManagement.NetStandard" Version="4.6.0" />
+    <PackageReference Include="NuGet.Frameworks" Version="4.10.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
@@ -14,6 +14,45 @@
   <ItemGroup>
     <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NuGet.Commands">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Commands\15.0\bin\Release\netstandard1.6\NuGet.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Common">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Common\15.0\bin\Release\netstandard1.6\NuGet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Configuration">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Configuration\15.0\bin\Release\netstandard1.6\NuGet.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.DependencyResolver.Core">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.DependencyResolver.Core\15.0\bin\Release\netstandard1.6\NuGet.DependencyResolver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.LibraryModel">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.LibraryModel\15.0\bin\Release\netstandard1.6\NuGet.LibraryModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Packaging\15.0\bin\Release\netstandard1.6\NuGet.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Packaging.Core\15.0\bin\Release\netstandard1.6\NuGet.Packaging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.ProjectModel">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.ProjectModel\15.0\bin\Release\netstandard1.6\NuGet.ProjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Protocol">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Protocol\15.0\bin\Release\netstandard1.6\NuGet.Protocol.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Resolver">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Resolver\15.0\bin\Release\netstandard1.6\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

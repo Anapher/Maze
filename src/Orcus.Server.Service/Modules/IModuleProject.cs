@@ -18,7 +18,8 @@ namespace Orcus.Server.Service.Modules
         IImmutableList<SourcedPackageIdentity> PrimaryPackages { get; }
         IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> InstalledPackages { get; }
 
-        IImmutableList<SourceRepository> Sources { get; }
+        IImmutableList<SourceRepository> PrimarySources { get; }
+        IImmutableList<SourceRepository> AllSources { get; }
         SourceRepository LocalSourceRepository { get; }
         IModulesDirectory ModulesDirectory { get; }
 

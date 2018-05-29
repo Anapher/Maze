@@ -4,3 +4,6 @@
 [submodule "src/submodules/CodeElements.BizRunner"]
 	path = src/submodules/CodeElements.BizRunner
 	url = https://github.com/CodeElements/CodeElements.BizRunner
+[submodule "src/submodules/NuGet.Client"]
+	path = src/submodules/NuGet.Client
+	url = https://github.com/OrcusTechnologies/NuGet.Client.git

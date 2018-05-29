@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
-using NuGet.PackageManagement;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
+using Orcus.PackageManagement;
 
 namespace Orcus.Server.Service.Modules
 {
