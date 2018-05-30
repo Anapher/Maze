@@ -7,7 +7,6 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
-using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -15,24 +14,22 @@ namespace Orcus.Server.Service.Modules
     {
         NuGetFramework Framework { get; }
 
-        IImmutableList<SourcedPackageIdentity> PrimaryPackages { get; }
+        IImmutableList<PackageIdentity> PrimaryPackages { get; }
         IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> InstalledPackages { get; }
 
         IImmutableList<SourceRepository> PrimarySources { get; }
-        IImmutableList<SourceRepository> AllSources { get; }
+        IImmutableList<SourceRepository> DependencySources { get; }
         SourceRepository LocalSourceRepository { get; }
         IModulesDirectory ModulesDirectory { get; }
-
-        AsyncLock BatchLock { get; }
 
         Task<bool> InstallPackageAsync(PackageIdentity packageIdentity, DownloadResourceResult downloadResourceResult,
             CancellationToken token);
 
         Task<bool> UninstallPackageAsync(PackageIdentity packageIdentity, CancellationToken token);
 
-        Task SetModuleLock(IReadOnlyList<SourcedPackageIdentity> primaryPackages,
-            IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> serverLock,
-            IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> adminLock,
-            IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> clientLock);
+        //Task SetModuleLock(IReadOnlyList<SourcedPackageIdentity> primaryPackages,
+        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> serverLock,
+        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> adminLock,
+        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> clientLock);
     }
 }

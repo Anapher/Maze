@@ -3,8 +3,11 @@
   <PropertyGroup>
     <Version>1.0</Version>
     <LangVersion>latest</LangVersion>
-    <Authors>Vincent (Anapher)</Authors>
+    <Authors>Anapher</Authors>
+    <Owners>OrcusTechnologies</Owners>
     <Copyright>Copyright 2018 Orcus Technologies</Copyright>
     <Company>Orcus Technologies</Company>
+    <PackageProjectUrl>https://www.orcustechnologies.com/</PackageProjectUrl>
+    <PackageOutputPath>..\..\artifacts</PackageOutputPath>
   </PropertyGroup>
 </Project>

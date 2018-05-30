@@ -4,6 +4,7 @@ using System.Linq;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using Orcus.Server.Service.Modules.Extensions;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -29,6 +30,18 @@ namespace Orcus.Server.Service.Modules
             var installed = packageReferences.ToDictionary(x => x.Id, x => x.Version, StringComparer.OrdinalIgnoreCase);
             return packages.Where(package =>
                 !package.HasVersion || !installed.TryGetValue(package.Id, out var packageVersion) || packageVersion <= package.Version);
+        }
+
+        public static IEnumerable<SourcePackageDependencyInfo> RemoveLibraryPackage(ISet<SourcePackageDependencyInfo> packages, PackageIdentity libraryPackage)
+        {
+            var libraryVersions = packages.Where(x => x.IsSameId(libraryPackage)).ToList();
+            if (!libraryVersions.Any())
+                return packages;
+
+            if (!libraryVersions.Any(x => x.IsSameId(libraryPackage) && x.Version.Equals(libraryPackage.Version)))
+                throw new InvalidOperationException("The required library version was not found");
+
+            return packages.Where(x => !x.IsSameId(libraryPackage) || x.Version.Equals(libraryPackage.Version));
         }
     }
 }

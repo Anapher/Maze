@@ -2,12 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
@@ -15,23 +12,25 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
 using Orcus.PackageManagement;
+using Orcus.Server.Service.Modules.PackageManagement;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Orcus.Server.Service.Modules.Resolution
 {
     public class ResolverGather
     {
         private readonly GatherContext _context;
+        private readonly List<Task<GatherResult>> _workerTasks;
+        private int _maxDegreeOfParallelism;
+        private readonly GatherCache _cache;
         private readonly List<SourceResource> _primaryResources = new List<SourceResource>();
         private readonly List<SourceResource> _allResources = new List<SourceResource>();
         private DependencyInfoResource _packagesFolderResource;
-        private readonly Queue<GatherRequest> _gatherRequests = new Queue<GatherRequest>();
-        private readonly GatherCache _cache;
-        private readonly List<Task<GatherResult>> _workerTasks;
-        private int _lastRequestId = -1;
-        private readonly List<GatherResult> _results = new List<GatherResult>();
         private readonly HashSet<string> _idsSearched = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        private int _maxDegreeOfParallelism;
-        private readonly ConcurrentDictionary<string, TimeSpan> _timeTaken = new ConcurrentDictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
+        private int _lastRequestId = -1;
+        private readonly Queue<GatherRequest> _gatherRequests = new Queue<GatherRequest>();
+        private readonly ConcurrentDictionary<string, TimeSpan> _timeTaken =
+            new ConcurrentDictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
+        private readonly List<GatherResult> _results = new List<GatherResult>();
 
         private ResolverGather(GatherContext context)
         {
@@ -46,39 +45,32 @@ namespace Orcus.Server.Service.Modules.PackageManagement
         }
 
         /// <summary>
-        /// Maximum number of threads to use when gathering packages.
+        ///     Maximum number of threads to use when gathering packages.
         /// </summary>
         /// <remarks>The value must be >= 1.</remarks>
         public int MaxDegreeOfParallelism
         {
-            get
-            {
-                return _maxDegreeOfParallelism;
-            }
-
-            set
-            {
-                _maxDegreeOfParallelism = Math.Max(1, value);
-            }
+            get => _maxDegreeOfParallelism;
+            set => _maxDegreeOfParallelism = Math.Max(1, value);
         }
 
         /// <summary>
-        /// Timeout when waiting for source requests
+        ///     Timeout when waiting for source requests
         /// </summary>
         public TimeSpan RequestTimeout { get; set; }
 
         /// <summary>
         /// Gather packages
         /// </summary>
-        public static async Task<HashSet<SourcePackageDependencyInfo>> GatherAsync(
-            GatherContext context,
+        //Use static definition because instance can only be used once
+        public static async Task<HashSet<SourcePackageDependencyInfo>> GatherAsync(GatherContext context,
             CancellationToken token)
         {
             var engine = new ResolverGather(context);
             return await engine.GatherAsync(token);
         }
 
-        private async Task<HashSet<SourcePackageDependencyInfo>> GatherAsync(CancellationToken token)
+        public async Task<HashSet<SourcePackageDependencyInfo>> GatherAsync(CancellationToken token)
         {
             // preserve start time of gather api
             var stopWatch = new Stopwatch();
@@ -91,34 +83,14 @@ namespace Orcus.Server.Service.Modules.PackageManagement
             // Initialize dependency info resources in parallel
             await InitializeResourcesAsync(token);
 
-            var allPrimaryTargets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
             // resolve primary targets only from primary sources
             foreach (var primaryTarget in _context.PrimaryTargets)
             {
                 // Add the id to the search list to block searching for all versions
                 _idsSearched.Add(primaryTarget.Id);
-                allPrimaryTargets.Add(primaryTarget.Id);
 
                 QueueWork(_primaryResources, primaryTarget, ignoreExceptions: false, isInstalledPackage: false);
             }
-
-            // null can occur for scenarios with PackageIdentities only
-            if (_context.PrimaryTargetIds != null)
-            {
-                foreach (var primaryTargetId in _context.PrimaryTargetIds)
-                {
-                    allPrimaryTargets.Add(primaryTargetId);
-                    var identity = new PackageIdentity(primaryTargetId, version: null);
-                    QueueWork(_primaryResources, identity, ignoreExceptions: false, isInstalledPackage: false);
-                }
-            }
-
-            // Start fetching the primary targets
-            StartWorkerTasks(token);
-
-            // Gather installed packages
-            await GatherInstalledPackagesAsync(_context.InstalledPackages, allPrimaryTargets, token);
 
             // walk the dependency graph both upwards and downwards for the new package
             // this is done in multiple passes to find the complete closure when
@@ -138,18 +110,20 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 // exists in multiple sources the hashset will contain the package from the 
                 // source where it was requested from first.
                 var currentResults = new HashSet<SourcePackageDependencyInfo>(
-                    currentItems.OrderBy(item => item.Request.Order)
-                        .SelectMany(item => item.Packages),
+                    currentItems.OrderBy(item => item.Request.Order).SelectMany(item => item.Packages),
                     PackageIdentity.Comparer);
 
                 // Remove downgrades if the flag is not set, this will skip unneeded dependencies from older versions
                 if (!_context.AllowDowngrades)
                 {
-                    foreach (var installedPackage in _context.InstalledPackages)
+                    foreach (var primaryTarget in _context.PrimaryTargets)
                     {
+                        if (!primaryTarget.HasVersion)
+                            continue;
+
                         // Clear out all versions of the installed package which are less than the installed version
-                        currentResults.RemoveWhere(package => string.Equals(installedPackage.Id, package.Id, StringComparison.OrdinalIgnoreCase)
-                            && package.Version < installedPackage.Version);
+                        currentResults.RemoveWhere(package => string.Equals(primaryTarget.Id, package.Id, StringComparison.OrdinalIgnoreCase)
+                            && package.Version < primaryTarget.Version);
                     }
                 }
 
@@ -180,7 +154,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 // We are done when the queue is empty, and the number of finished requests matches the total request count
                 if (_gatherRequests.Count < 1 && _workerTasks.Count < 1)
                 {
-                    _context.Log.LogDebug(string.Format("Total number of results gathered : {0}", _results.Count));
+                    _context.Log.LogDebug($"Total number of results gathered : {_results.Count}");
                     break;
                 }
             }
@@ -194,50 +168,43 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 combinedResults.UnionWith(result.Packages);
             }
 
-            List<String> allPrimarySourcesList = new List<string>();
-            foreach (var src in _primaryResources)
-            {
-                allPrimarySourcesList.Add(src.Source.PackageSource.Source);
-            }
-
-            var allPrimarySources = String.Join(",", allPrimarySourcesList);
-
-            // When it's update all packages scenario, then ignore throwing error for missing primary targets in specified sources.
-            if (!_context.IsUpdateAll)
-            {
-                // Throw if a primary target was not found
-                // The primary package may be missing if there are network issues and the sources were unreachable
-                foreach (var targetId in allPrimaryTargets)
-                {
-                    if (!combinedResults.Any(package => string.Equals(package.Id, targetId, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        string packageIdentity = targetId;
-
-                        foreach (var pid in _context.PrimaryTargets)
-                        {
-                            if (string.Equals(targetId, pid.Id, StringComparison.OrdinalIgnoreCase))
-                            {
-                                packageIdentity = string.Format(CultureInfo.CurrentCulture, "{0} {1}", targetId, pid.Version);
-                                break;
-                            }
-                        }
-
-                        string message = String.Format("Package '{0}' is not found in the following primary source(s): '{1}'. Please verify all your online package sources are available (OR) package id, version are specified correctly.", packageIdentity, allPrimarySources);
-                        throw new InvalidOperationException(message);
-                    }
-                }
-            }
-            // calculate total time taken to gather all packages as well as with each source
-            stopWatch.Stop();
             _context.Log.LogMinimal(
-                string.Format("Gathering dependency information took {0}", DatetimeUtility.ToReadableTimeFormat(stopWatch.Elapsed)));
-            _context.Log.LogDebug("Summary of time taken to gather dependencies per source :");
-            foreach (var key in _timeTaken.Keys)
-            {
-                _context.Log.LogDebug(
-                    string.Format("{0}\t-\t{1}", key, DatetimeUtility.ToReadableTimeFormat(_timeTaken[key])));
-            }
+                $"Gathering information about {combinedResults.Count} packages took {stopWatch.ElapsedMilliseconds} ms");
+
             return combinedResults;
+        }
+
+        /// <summary>
+        /// Find the closure of required package ids
+        /// </summary>
+        private static HashSet<string> GetClosure(HashSet<SourcePackageDependencyInfo> combinedResults,
+            HashSet<SourcePackageDependencyInfo> installedPackages, HashSet<string> idsSearched)
+        {
+            var closureIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // find all dependencies of packages that we have expanded, and search those also
+            closureIds.UnionWith(combinedResults.Where(package => idsSearched.Contains(package.Id))
+                .SelectMany(package => package.Dependencies)
+                .Select(dependency => dependency.Id));
+
+            // expand all parents of expanded packages
+            closureIds.UnionWith(combinedResults.Where(
+                    package => package.Dependencies.Any(dependency => idsSearched.Contains(dependency.Id)))
+                .Select(package => package.Id));
+
+            // all unique ids gathered so far
+            var currentResultIds = new HashSet<string>(combinedResults.Select(package => package.Id),
+                StringComparer.OrdinalIgnoreCase);
+
+            // installed packages must be gathered to find a complete solution
+            closureIds.UnionWith(installedPackages.Select(package => package.Id)
+                .Where(id => !currentResultIds.Contains(id)));
+
+            // if any dependencies are completely missing they must be retrieved
+            closureIds.UnionWith(combinedResults.SelectMany(package => package.Dependencies)
+                .Select(dependency => dependency.Id).Where(id => !currentResultIds.Contains(id)));
+
+            return closureIds;
         }
 
         /// <summary>
@@ -271,78 +238,6 @@ namespace Orcus.Server.Service.Modules.PackageManagement
 
             // Start more tasks after processing
             StartWorkerTasks(token);
-        }
-
-        /// <summary>
-        /// Retrieve already installed packages
-        /// </summary>
-        private async Task GatherInstalledPackagesAsync(IEnumerable<PackageIdentity> installedPackages, HashSet<string> allPrimaryTargets, CancellationToken token)
-        {
-            foreach (var installedPackage in installedPackages)
-            {
-                // Skip installed packages which are targets, this is important for upgrade and reinstall
-                if (!allPrimaryTargets.Contains(installedPackage.Id))
-                {
-                    var packageInfo = await _packagesFolderResource.ResolvePackage(installedPackage, _context.TargetFramework, _context.ResolutionContext.SourceCacheContext, _context.Log, token);
-
-                    // Installed packages should exist, but if they do not an attempt will be made to find them in the sources.
-                    if (packageInfo != null)
-                    {
-                        // Create a request and result to match the other packages
-                        var request = new GatherRequest(
-                            source: null,
-                            package: installedPackage,
-                            ignoreExceptions: false,
-                            order: GetNextRequestId(),
-                            isInstalledPackage: true);
-
-                        var packages = new List<SourcePackageDependencyInfo>() { packageInfo };
-                        var result = new GatherResult(request, packages);
-
-                        _results.Add(result);
-                    }
-                    else
-                    {
-                        // retrieve the package info from another source if it does not exist in local
-                        QueueWork(_allResources, installedPackage, ignoreExceptions: true, isInstalledPackage: true);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Find the closure of required package ids
-        /// </summary>
-        private static HashSet<string> GetClosure(
-            HashSet<SourcePackageDependencyInfo> combinedResults,
-            HashSet<SourcePackageDependencyInfo> installedPackages,
-            HashSet<string> idsSearched)
-        {
-            var closureIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            // find all dependencies of packages that we have expanded, and search those also
-            closureIds.UnionWith(combinedResults.Where(package => idsSearched.Contains(package.Id))
-                .SelectMany(package => package.Dependencies)
-                .Select(dependency => dependency.Id));
-
-            // expand all parents of expanded packages
-            closureIds.UnionWith(combinedResults.Where(
-                package => package.Dependencies.Any(dependency => idsSearched.Contains(dependency.Id)))
-                .Select(package => package.Id));
-
-            // all unique ids gathered so far
-            var currentResultIds = new HashSet<string>(combinedResults.Select(package => package.Id),
-                StringComparer.OrdinalIgnoreCase);
-
-            // installed packages must be gathered to find a complete solution
-            closureIds.UnionWith(installedPackages.Select(package => package.Id)
-                .Where(id => !currentResultIds.Contains(id)));
-
-            // if any dependencies are completely missing they must be retrieved
-            closureIds.UnionWith(combinedResults.SelectMany(package => package.Dependencies)
-                .Select(dependency => dependency.Id).Where(id => !currentResultIds.Contains(id)));
-
-            return closureIds;
         }
 
         /// <summary>
@@ -396,19 +291,17 @@ namespace Orcus.Server.Service.Modules.PackageManagement
             if (_cache != null)
             {
                 if (request.Package.HasVersion)
-                {
-                    cacheResult = _cache.GetPackage(packageSource, request.Package, _context.TargetFramework);
-                }
+                    cacheResult = _cache.GetPackage(packageSource, request.Package, request.Framework);
                 else
-                {
-                    cacheResult = _cache.GetPackages(packageSource, request.Package.Id, _context.TargetFramework);
-                }
+                    cacheResult = _cache.GetPackages(packageSource, request.Package.Id, request.Framework);
             }
 
+            // ReSharper disable once PossibleNullReferenceException
             if (_cache != null && cacheResult.HasEntry)
             {
                 // Use cached packages
-                _context.Log.LogDebug(string.Format("Package {0} from source {1} gathered from cache.", request.Package.Id, request.Source.Source.PackageSource.Name));
+                _context.Log.LogDebug(
+                    $"Package {request.Package.Id} from source {request.Source.Source.PackageSource.Name} gathered from cache.");
                 packages.AddRange(cacheResult.Packages);
             }
             else
@@ -427,7 +320,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                             request.Package.Id,
                             request.Package.Version,
                             request.Source.Resource,
-                            _context.TargetFramework,
+                            request.Framework,
                             request.IgnoreExceptions,
                             linkedTokenSource.Token);
 
@@ -439,7 +332,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                                 _cache.AddPackageFromSingleVersionLookup(
                                     packageSource,
                                     request.Package,
-                                    _context.TargetFramework,
+                                    request.Framework,
                                     packages.FirstOrDefault());
                             }
                             else
@@ -447,7 +340,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                                 _cache.AddAllPackagesForId(
                                     packageSource,
                                     request.Package.Id,
-                                    _context.TargetFramework,
+                                    request.Framework,
                                     packages);
                             }
                         }
@@ -458,13 +351,15 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 {
                     if (!ex.CancellationToken.IsCancellationRequested)
                     {
-                        string message = String.Format("Unable to gather package '{0}' from source '{1}'. Please verify all your online package sources are available.", request.Package.Id, request.Source.Source.PackageSource.Source);
+                        string message =
+                            $"Unable to gather package '{request.Package.Id}' from source '{request.Source.Source.PackageSource.Source}'. Please verify all your online package sources are available.";
                         throw new InvalidOperationException(message, ex);
                     }
                 }
                 catch (Exception ex) when (ex is System.Net.Http.HttpRequestException || ex is OperationCanceledException || ex is TaskCanceledException)
                 {
-                    string message = String.Format("Unable to gather package '{0}' from source '{1}'. Please verify all your online package sources are available.", request.Package.Id, request.Source.Source.PackageSource.Source);
+                    string message =
+                        $"Unable to gather package '{request.Package.Id}' from source '{request.Source.Source.PackageSource.Source}'. Please verify all your online package sources are available.";
                     throw new InvalidOperationException(message, ex);
                 }
 
@@ -479,13 +374,9 @@ namespace Orcus.Server.Service.Modules.PackageManagement
         /// <summary>
         /// Call the DependencyInfoResource safely
         /// </summary>
-        private async Task<List<SourcePackageDependencyInfo>> GatherPackageFromSourceAsync(
-            string packageId,
-            NuGetVersion version,
-            DependencyInfoResource resource,
-            NuGetFramework targetFramework,
-            bool ignoreExceptions,
-            CancellationToken token)
+        private async Task<List<SourcePackageDependencyInfo>> GatherPackageFromSourceAsync(string packageId,
+            NuGetVersion version, DependencyInfoResource resource, NuGetFramework targetFramework,
+            bool ignoreExceptions, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -497,7 +388,8 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 if (version == null)
                 {
                     // find all versions of a package
-                    var packages = await resource.ResolvePackages(packageId, targetFramework, _context.ResolutionContext.SourceCacheContext, _context.Log, token);
+                    var packages = await resource.ResolvePackages(packageId, targetFramework,
+                        _context.ResolutionContext.SourceCacheContext, _context.Log, token);
 
                     results.AddRange(packages);
                 }
@@ -505,7 +397,8 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 {
                     // find a single package id and version
                     var identity = new PackageIdentity(packageId, version);
-                    var package = await resource.ResolvePackage(identity, targetFramework, _context.ResolutionContext.SourceCacheContext, _context.Log, token);
+                    var package = await resource.ResolvePackage(identity, targetFramework,
+                        _context.ResolutionContext.SourceCacheContext, _context.Log, token);
 
                     if (package != null)
                     {
@@ -543,8 +436,11 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 {
                     // Keep track of the order in which these were made
                     var requestId = GetNextRequestId();
+                    var isPrimarySource = IsPrimarySource(source);
+                    var framework = isPrimarySource ? _context.PrimaryFramework : _context.DependencyFramework;
 
-                    var request = new GatherRequest(source, package, ignoreExceptions, requestId, isInstalledPackage);
+                    var request = new GatherRequest(source, package, ignoreExceptions, requestId, isInstalledPackage,
+                        framework);
 
                     // Order is important here
                     _gatherRequests.Enqueue(request);
@@ -552,6 +448,19 @@ namespace Orcus.Server.Service.Modules.PackageManagement
             }
         }
 
+        private bool IsPrimarySource(SourceResource sourceResource) => _primaryResources.Contains(sourceResource);
+
+        /// <summary>
+        /// Get the current request id number, and increment it for the next count
+        /// </summary>
+        private int GetNextRequestId()
+        {
+            return ++_lastRequestId;
+        }
+
+        /// <summary>
+        /// Initialize the PackageSource resources to gather the dependencies
+        /// </summary>
         private async Task InitializeResourcesAsync(CancellationToken token)
         {
             var currentSource = string.Empty;
@@ -565,7 +474,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
 
                 allSources.AddRange(_context.PrimarySources);
                 allSources.Add(_context.PackagesFolderSource);
-                allSources.AddRange(_context.AllSources);
+                allSources.AddRange(_context.DependencySources);
 
                 var depResources = new Dictionary<SourceRepository, Task<DependencyInfoResource>>();
                 foreach (var source in allSources)
@@ -574,6 +483,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                     {
                         var task = Task.Run(async () => await source.GetResourceAsync<DependencyInfoResource>(token));
 
+                        getResourceTasks.Add(task);
                         depResources.Add(source, task);
 
                         // Limit the number of tasks to MaxThreads by awaiting each time we hit the limit
@@ -587,58 +497,40 @@ namespace Orcus.Server.Service.Modules.PackageManagement
                 }
 
                 var uniquePrimarySources = new HashSet<PackageSource>();
-
-                // a resource may be null, if it is exclude this source from the gather
                 foreach (var source in _context.PrimarySources)
                 {
                     if (uniquePrimarySources.Add(source.PackageSource))
                     {
-                        var resource = await depResources[source];
+                        currentSource = source.PackageSource.Source;
 
-                        if (source != null && !_primaryResources.Any(sourceResource => sourceResource.Source.PackageSource.Equals(source)))
-                        {
-                            _primaryResources.Add(new SourceResource(source, resource));
-                        }
+                        var resource = await depResources[source];
+                        _primaryResources.Add(new SourceResource(source, resource));
                     }
                 }
 
                 // All sources - for fallback
                 var uniqueAllSources = new HashSet<PackageSource>();
-
                 foreach (var source in allSources)
                 {
                     if (uniqueAllSources.Add(source.PackageSource))
                     {
-                        //var resource = await depResources[source];
-                        var resource = depResources[source];
+                        currentSource = source.PackageSource.Source;
 
-                        if (source != null && !_allResources.Any(sourceResource => sourceResource.Source.PackageSource.Equals(source)))
-                        {
-                            currentSource = source.PackageSource.Source;
-                            _allResources.Add(new SourceResource(source, resource.Result));
-                        }
+                        var resource = await depResources[source];
+                        _allResources.Add(new SourceResource(source, resource));
                     }
                 }
 
-
                 // Installed packages resource
-                _packagesFolderResource = await _context.PackagesFolderSource.GetResourceAsync<DependencyInfoResource>(token);
+                _packagesFolderResource = await depResources[_context.PackagesFolderSource];
             }
             catch (Exception ex) when (ex is System.Net.Http.HttpRequestException || ex is OperationCanceledException ||
-                                       ex is InvalidOperationException || ex is TaskCanceledException || ex is AggregateException)
+                                       ex is InvalidOperationException || ex is AggregateException)
             {
-                string message = String.Format("ExceptionWhenTryingToAddSource", ex.GetType().ToString(), currentSource);
+                var message =
+                    $"Exception '{ex.GetType()}' thrown when trying to add source '{currentSource}'. Please verify all your online package sources are available.";
                 throw new InvalidOperationException(message, ex);
             }
-
-        }
-
-        /// <summary>
-        /// Get the current request id number, and increment it for the next count
-        /// </summary>
-        private int GetNextRequestId()
-        {
-            return ++_lastRequestId;
         }
 
         /// <summary>
@@ -657,24 +549,22 @@ namespace Orcus.Server.Service.Modules.PackageManagement
         }
 
         /// <summary>
-        /// Request info
+        ///     Request info
         /// </summary>
         private class GatherRequest
         {
-            public GatherRequest(
-                SourceResource source,
-                PackageIdentity package,
-                bool ignoreExceptions,
-                int order,
-                bool isInstalledPackage)
+            public GatherRequest(SourceResource source, PackageIdentity package, bool ignoreExceptions, int order,
+                bool isInstalledPackage, NuGetFramework framework)
             {
                 Source = source;
                 Package = package;
                 IgnoreExceptions = ignoreExceptions;
                 Order = order;
                 IsInstalledPackage = isInstalledPackage;
+                Framework = framework;
             }
 
+            public NuGetFramework Framework { get; }
             public SourceResource Source { get; }
             public PackageIdentity Package { get; }
             public bool IgnoreExceptions { get; }
@@ -683,7 +573,7 @@ namespace Orcus.Server.Service.Modules.PackageManagement
         }
 
         /// <summary>
-        /// Contains the original request along with the resulting packages.
+        ///     Contains the original request along with the resulting packages.
         /// </summary>
         private class GatherResult
         {

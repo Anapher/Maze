@@ -11,7 +11,7 @@ namespace Orcus.Server.Service.Modules
 {
     public interface IModulePackageManager
     {
-        Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(SourcedPackageIdentity packageIdentity,
+        Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, ILogger logger, CancellationToken token);
 
         Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities,

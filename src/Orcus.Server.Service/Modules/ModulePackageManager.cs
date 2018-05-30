@@ -7,6 +7,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
+using NuGet.Configuration;
 using NuGet.Frameworks;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
@@ -14,11 +15,13 @@ using NuGet.Packaging.PackageExtraction;
 using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
+using NuGet.Versioning;
 using Orcus.PackageManagement;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
 using Orcus.Server.Service.Modules.PackageManagement;
+using Orcus.Server.Service.Modules.Resolution;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -31,18 +34,17 @@ namespace Orcus.Server.Service.Modules
             _project = project;
         }
 
-        public async Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(SourcedPackageIdentity packageIdentity,
+        public async Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
             if (_project.PrimaryPackages.Any(x => x.Equals(packageIdentity)))
                 throw new InvalidOperationException($"Package '{packageIdentity}' is already installed");
 
-            if (resolutionContext.DependencyBehavior == DependencyBehavior.Ignore)
-                return ResolvedAction.CreateInstall(packageIdentity, _project.PrimarySources).Yield();
+            //if (resolutionContext.DependencyBehavior == DependencyBehavior.Ignore)
+            //    return ResolvedAction.CreateInstall(packageIdentity, _project.PrimarySources).Yield();
 
-            var resultingPackages = new HashSet<SourcedPackageIdentity>(_project.PrimaryPackages, PackageIdentity.Comparer);
-
-            bool downgradeAllowed = false;
+            var resultingPackages = new HashSet<PackageIdentity>(_project.PrimaryPackages, PackageIdentity.Comparer);
+            var downgradeAllowed = false;
 
             //the final packages after the install completed
             var installedPackageWithSameId = resultingPackages.FirstOrDefault(x => x.IsSameId(packageIdentity));
@@ -56,8 +58,9 @@ namespace Orcus.Server.Service.Modules
 
             resultingPackages.Add(packageIdentity);
 
-            var requiredPackages = await GetRequiredPackages(resultingPackages, new List<PackageIdentity> {packageIdentity},
-                downgradeAllowed, resolutionContext, _project.Framework, logger, token);
+            var package = new PackageIdentity("Orcus.Server.Library", new NuGetVersion(1, 0, 0));
+            var requiredPackages = await GetRequiredPackages(resultingPackages, new HashSet<PackageIdentity>(){ packageIdentity }, 
+                downgradeAllowed, resolutionContext, _project.Framework, package, logger, token);
             return GetRequiredActions(requiredPackages);
         }
 
@@ -73,33 +76,25 @@ namespace Orcus.Server.Service.Modules
             throw new NotImplementedException();
         }
 
-        private async Task<PackagesContext> GetRequiredPackages(ISet<SourcedPackageIdentity> primaryPackages, ICollection<PackageIdentity> targetPackages,
-            bool downgradeAllowed, ResolutionContext resolutionContext, NuGetFramework framework, ILogger logger, CancellationToken token)
+        private async Task<PackagesContext> GetRequiredPackages(ISet<PackageIdentity> primaryPackages,
+            ISet<PackageIdentity> targetPackages, bool downgradeAllowed, ResolutionContext resolutionContext,
+            NuGetFramework primaryFramework, PackageIdentity libraryPackage, ILogger logger,
+            CancellationToken token)
         {
-            /* ===> GatherContext
-             * InstalledPackages    Just checked that these packages don't get downgraded if the flag is not set. Basically the primary packages
-             * PrimaryTargets       The parent elements of all depdendencies that should be searched for
-             * PrimarySources       Primary Targets must be found here
-             * AllSources           Depdendencies can be found here
-             * PackagesFolderSource Used to scan for existing packages to skip a network request
-             * ResolutionContext    Basic information about the package resolution. Only the cache is used here (and the DependencyBehavior, but the whole class wouldn't make sense with DependencyBehavior.Ignore)
-             * AllowDowngrades      Determine if the InstalledPackages may be downgraded
-             * ProjectContext       Only used for logging
-             * ========================================================================
-             * Return               A very huge list of all versions of PrimaryTargets aswell as all versions of it's dependencies (recursive!)
-             */
-
             var gatherContext = new GatherContext
             {
-                InstalledPackages = primaryPackages.ToList(), //these should not be downgraded in case of a different version
-                PrimaryTargets = targetPackages.ToList(),
-                PrimaryTargetIds = primaryPackages.Where(x => !targetPackages.Contains(x)).Select(x => x.Id).ToList(),
-                TargetFramework = framework,
-                PrimarySources = _project.PrimarySources,
-                AllSources = _project.AllSources,
-                PackagesFolderSource = _project.LocalSourceRepository,
                 ResolutionContext = resolutionContext,
-                AllowDowngrades = downgradeAllowed
+                PrimarySources = _project.PrimarySources,
+                DependencySources = _project.DependencySources,
+                PackagesFolderSource = _project.LocalSourceRepository,
+                PrimaryTargets =
+                    primaryPackages
+                        .Select(x => targetPackages.Contains(x) ? x : new PackageIdentity(x.Id, version: null))
+                        .ToList(),
+                AllowDowngrades = downgradeAllowed,
+                PrimaryFramework = primaryFramework,
+                DependencyFramework = OrcusFrameworks.MapToNetFramework(primaryFramework),
+                Log = logger
             };
 
             var availablePackages = await ResolverGather.GatherAsync(gatherContext, token);
@@ -109,18 +104,25 @@ namespace Orcus.Server.Service.Modules
             //available packages now contains all versions of the package and all versions of each depdendency (recursive)
             //we try to prune the results down to only what we would allow to be installed
 
-            //1. remove all versions of the package we want to install except the version we actually want to install
-            //   it is not a problem if other primary packages might need an update
+            //1. remove incorrect library packages
             var prunedAvailablePackages =
-                PrunePackageTreeExtensions.RemoveAllVersionsForIdExcept(availablePackages, targetPackages);
+                PrunePackageTreeExtensions.RemoveLibraryPackage(availablePackages, libraryPackage);
 
-            //2. remove the downgrades of primary packages
+            //2. remove all versions of the package we want to install except the version we actually want to install
+            //   it is not a problem if other primary packages might need an update
+            prunedAvailablePackages =
+                PrunePackageTreeExtensions.RemoveAllVersionsForIdExcept(prunedAvailablePackages, targetPackages);
+
+            //3. remove the downgrades of primary packages
             if (!downgradeAllowed)
-                prunedAvailablePackages = PrunePackageTreeExtensions.PruneDowngrades(prunedAvailablePackages, targetPackages);
+                prunedAvailablePackages =
+                    PrunePackageTreeExtensions.PruneDowngrades(prunedAvailablePackages, primaryPackages);
 
-            //3. remove prereleases
+            //4. remove prereleases
             if (!resolutionContext.IncludePrerelease)
-                prunedAvailablePackages = PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, primaryPackages, targetPackages);
+                prunedAvailablePackages =
+                    PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, primaryPackages,
+                        targetPackages);
 
             /* ===> PackageResolverContext
              * TargetIds            New packages to install or update. These will prefer the highest version.
@@ -142,14 +144,40 @@ namespace Orcus.Server.Service.Modules
                 packagesConfig: Enumerable.Empty<PackageReference>(),
                 preferredVersions: primaryPackages,
                 availablePackages: prunedAvailablePackages,
-                packageSources: _project.AllSources.Select(x => x.PackageSource),
+                packageSources: Enumerable.Empty<PackageSource>(),
                 log: logger);
 
             var packageResolver = new PackageResolver();
 
             //all final packages (including dependencies)
             var packages = packageResolver.Resolve(resolverContext, token).ToList(); //that's an array
-            return new PackagesContext(packages, availablePackages);
+            var dependencyMap = packages.ToDictionary(x => x, x => availablePackages.First(y => y.Equals(x)),
+                PackageIdentity.Comparer);
+
+            //remove library package and it's dependencies because they are always loaded
+            var foundLibraryPackage = packages.FirstOrDefault(libraryPackage.IsSameId);
+            if (foundLibraryPackage != null)
+            {
+                if (!foundLibraryPackage.Version.Equals(libraryPackage.Version))
+                    throw new InvalidOperationException($"Invalid version of {libraryPackage} found: {foundLibraryPackage}");
+
+                RemovePackage(foundLibraryPackage);
+
+                void RemovePackage(PackageIdentity packageIdentity)
+                {
+                    var sourceInfo = dependencyMap[packageIdentity];
+                    dependencyMap.Remove(packageIdentity);
+
+                    foreach (var dependency in sourceInfo.Dependencies)
+                    {
+                        var package = dependencyMap.FirstOrDefault(x => x.Key.IsSameId(dependency)).Key;
+                        if (package != null)
+                            RemovePackage(package);
+                    }
+                }
+            }
+
+            return new PackagesContext(dependencyMap);
         }
 
         private IEnumerable<ResolvedAction> GetRequiredActions(PackagesContext context)
@@ -375,14 +403,14 @@ namespace Orcus.Server.Service.Modules
         private async Task WriteModuleState(PackagesContext serverConext,
             ISet<SourcedPackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
-            var adminContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(), 
-                false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusAdministration, logger, token);
+            //var adminContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(), 
+            //    false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusAdministration10, logger, token);
 
-            var clientContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(),
-                false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusClient, logger, token);
+            //var clientContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(),
+            //    false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusClient10, logger, token);
 
-            await _project.SetModuleLock(primaryModules.ToList(), GetLock(serverConext), GetLock(adminContext),
-                GetLock(clientContext));
+            //await _project.SetModuleLock(primaryModules.ToList(), GetLock(serverConext), GetLock(adminContext),
+            //    GetLock(clientContext));
         }
 
         private static IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> GetLock(PackagesContext context)
@@ -394,15 +422,14 @@ namespace Orcus.Server.Service.Modules
 
         private class PackagesContext
         {
-            public PackagesContext(IReadOnlyCollection<PackageIdentity> packages, IReadOnlyCollection<SourcePackageDependencyInfo> sources)
+            public PackagesContext(IReadOnlyDictionary<PackageIdentity, SourcePackageDependencyInfo> packages)
             {
-                Packages = packages;
-                PackageDependencies = packages.ToDictionary(x => x, x => sources.First(y => y.Equals(x)),
-                    PackageIdentity.Comparer);
+                Packages = packages.Select(x => x.Key).ToList();
+                PackageDependencies = packages;
             }
 
-            public IEnumerable<PackageIdentity> Packages { get; }
-            public IDictionary<PackageIdentity, SourcePackageDependencyInfo> PackageDependencies { get; }
+            public IReadOnlyList<PackageIdentity> Packages { get; }
+            public IReadOnlyDictionary<PackageIdentity, SourcePackageDependencyInfo> PackageDependencies { get; }
         }
     }
 }
