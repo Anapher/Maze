@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Orcus.Server.Data.EfClasses;
+using Orcus.Server.Options;
 
 namespace Orcus.Server.Authentication
 {
@@ -15,12 +17,12 @@ namespace Orcus.Server.Authentication
         private readonly TimeSpan _userTokenValidityPeriod;
         private readonly JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
 
-        public DefaultTokenProvider(string issuer, string audience, byte[] key, TimeSpan userTokenValidityPeriod)
+        public DefaultTokenProvider(IOptions<AuthenticationOptions> options)
         {
-            _issuer = issuer;
-            _audience = audience;
-            _userTokenValidityPeriod = userTokenValidityPeriod;
-            _key = new SymmetricSecurityKey(key);
+            _issuer = options.Value.Issuer;
+            _audience = options.Value.Audience;
+            _userTokenValidityPeriod = TimeSpan.FromHours(options.Value.AccountTokenValidityHours);
+            _key = new SymmetricSecurityKey(Convert.FromBase64String(options.Value.Secret));
             _signingCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
         }
 

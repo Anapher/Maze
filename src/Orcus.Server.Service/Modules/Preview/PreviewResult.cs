@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.ModulesV2.Preview
+namespace Orcus.Server.Service.Modules.Preview
 {
     public class PreviewResult
     {

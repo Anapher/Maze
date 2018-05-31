@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using NuGet.Packaging.Core;
+using NuGet.Frameworks;
 using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Service.Modules.Config.Base;
@@ -16,7 +16,7 @@ namespace Orcus.Server.Service.Modules.Config
         /// <summary>
         ///     All modules including their dependencies
         /// </summary>
-        IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> Modules { get; }
+        IImmutableDictionary<NuGetFramework, PackagesLock> Modules { get; }
 
         /// <summary>
         ///     The local path to the module file
@@ -31,64 +31,58 @@ namespace Orcus.Server.Service.Modules.Config
         /// <summary>
         ///     Add a new module
         /// </summary>
-        /// <param name="id">The module identity</param>
-        /// <param name="dependencies">It's depdendencies</param>
-        Task Add(PackageIdentity id, IReadOnlyList<PackageIdentity> dependencies);
+        Task Add(NuGetFramework framework, PackagesLock packagesLock);
 
         /// <summary>
         ///     Remove a module
         /// </summary>
-        /// <param name="id">The module identity</param>
-        Task Remove(PackageIdentity id);
+        Task Remove(NuGetFramework framework);
 
         /// <summary>
         ///     Replace the whole module list
         /// </summary>
         /// <param name="modules">The new list</param>
-        Task Replace(IDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> modules);
+        Task Replace(IReadOnlyDictionary<NuGetFramework, PackagesLock> modules);
     }
 
-    public class ModulesLock : JsonObjectFile<IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>>,
-        IModulesLock
+    public class ModulesLock : JsonObjectFile<IImmutableDictionary<NuGetFramework, PackagesLock>>,  IModulesLock
     {
-        private readonly IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> _empty;
+        private readonly IImmutableDictionary<NuGetFramework, PackagesLock> _empty;
 
         public ModulesLock(string path) : base(path)
         {
-            _empty =
-                new Dictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>().ToImmutableDictionary(PackageIdentity
-                    .Comparer);
+            _empty = new Dictionary<NuGetFramework, PackagesLock>().ToImmutableDictionary(NuGetFramework.Comparer);
             Modules = _empty;
 
             JsonSettings.Converters.Add(new PackageIdentityConverter());
             JsonSettings.Converters.Add(new NuGetVersionConverter());
         }
 
-        public IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> Modules { get; private set; }
+        public IImmutableDictionary<NuGetFramework, PackagesLock> Modules { get; private set; }
 
         public virtual async Task Reload()
         {
             var data = await Load();
             Modules = data == null
                 ? _empty
-                : data.ToImmutableDictionary(PackageIdentity.Comparer);
+                : data.ToImmutableDictionary(NuGetFramework.Comparer);
         }
 
-        public virtual Task Add(PackageIdentity id, IReadOnlyList<PackageIdentity> dependencies)
+        public virtual Task Add(NuGetFramework framework, PackagesLock packagesLock)
         {
-            Modules = Modules.Add(id, dependencies);
+            Modules = Modules.Add(framework, packagesLock);
             return Save(Modules);
         }
 
-        public virtual Task Remove(PackageIdentity id)
+        public virtual Task Remove(NuGetFramework framework)
         {
-            Modules = Modules.Remove(id);
+            Modules = Modules.Remove(framework);
             return Save(Modules);
         }
 
-        public Task Replace(IDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> modules)
+        public Task Replace(IReadOnlyDictionary<NuGetFramework, PackagesLock> modules)
         {
-            Modules = modules.ToImmutableDictionary(PackageIdentity.Comparer);
+            Modules = modules.ToImmutableDictionary(NuGetFramework.Comparer);
             return Save(Modules);
         }
     }

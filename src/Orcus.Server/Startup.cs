@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Orcus.Server.Authentication;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
-using Orcus.Server.Service.ModulesV1;
-using Orcus.Server.Service.ModulesV1.Config;
-using Orcus.Server.Utilities;
-using ModuleManager = Orcus.Server.Service.ModulesV1.ModuleManager;
+using Orcus.Server.Options;
+using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.Modules.Config;
 
 namespace Orcus.Server
 {
@@ -37,11 +37,11 @@ namespace Orcus.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var authenticationConfig = Configuration.GetSection("Authentication");
-            var tokenProvider = new DefaultTokenProvider(authenticationConfig["Issuer"],
-                authenticationConfig["Audience"], Convert.FromBase64String(authenticationConfig["Secret"]),
-                TimeSpan.FromHours(double.Parse(authenticationConfig["AccountTokenValidityHours"],
-                    CultureInfo.InvariantCulture)));
+            services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
+            services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
+            services.AddSingleton<DefaultTokenProvider>();
+
+            var provider = services.BuildServiceProvider();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -55,7 +55,7 @@ namespace Orcus.Server
                         return Task.CompletedTask;
                     }
                 };
-                options.TokenValidationParameters = tokenProvider.GetValidationParameters();
+                options.TokenValidationParameters = provider.GetService<DefaultTokenProvider>().GetValidationParameters();
             });
             services.AddAuthorization(options =>
             {
@@ -74,38 +74,27 @@ namespace Orcus.Server
             services.AddSignalR();
 
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterInstance(tokenProvider).AsImplementedInterfaces();
-            LoadModules(containerBuilder).Wait();
+            LoadModules(containerBuilder, provider.GetService<IOptions<ModulesOptions>>()).Wait();
 
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
-
-            //using (var beginLifetimeScope = container.BeginLifetimeScope())
-            //{
-            //    var appDbContext = beginLifetimeScope.Resolve<AppDbContext>();
-            //    appDbContext.Database.EnsureCreated();
-            //}
-
             return new AutofacServiceProvider(container);
         }
 
-        private async Task LoadModules(ContainerBuilder containerBuilder)
+        private async Task LoadModules(ContainerBuilder containerBuilder, IOptions<ModulesOptions> modulesOptions)
         {
-            var config = Configuration.GetSection("Modules");
-            var logger = new NuGetLoggerWrapper(_logger);
+            var modulesConfig = new ModulesConfig(modulesOptions.Value.ModulesFile);
+            var modulesLock = new ModulesLock(modulesOptions.Value.ModulesLock);
 
-            var modulesConfig = new ModulesConfig(config["ModulesFile"]);
-            var repositories = new RepositorySourcesConfig(config["RepositorySources"]);
-            await repositories.Reload();
+            await modulesConfig.Reload();
+            await modulesLock.Reload();
 
-            var modulesManager = new ModuleManager(config["Directory"], config["CacheDirectory"],
-                config["ConfigDirectory"], modulesConfig, repositories);
+            var orcusProject = new OrcusProject(modulesOptions.Value.PrimarySources,
+                modulesOptions.Value.DependencySources, modulesOptions.Value.Directory, modulesConfig, modulesLock);
 
             containerBuilder.RegisterInstance(modulesConfig).AsImplementedInterfaces();
-            containerBuilder.RegisterInstance(repositories).AsImplementedInterfaces();
-            containerBuilder.RegisterInstance(modulesManager).AsImplementedInterfaces();
-
-            await modulesManager.LoadModules(logger);
+            containerBuilder.RegisterInstance(modulesLock).AsImplementedInterfaces();
+            containerBuilder.RegisterInstance(orcusProject).AsImplementedInterfaces();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

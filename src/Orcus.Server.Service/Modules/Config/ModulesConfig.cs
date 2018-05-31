@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
-using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Config.Base;
 using Orcus.Server.Service.Modules.Extensions;
 
@@ -20,7 +19,7 @@ namespace Orcus.Server.Service.Modules.Config
         /// <summary>
         ///     The primary modules
         /// </summary>
-        IImmutableList<SourcedPackageIdentity> Modules { get; }
+        IImmutableList<PackageIdentity> Modules { get; }
 
         /// <summary>
         ///     The local path to the module file
@@ -36,7 +35,7 @@ namespace Orcus.Server.Service.Modules.Config
         ///     Add a new module
         /// </summary>
         /// <param name="id">The module identity</param>
-        Task Add(SourcedPackageIdentity id);
+        Task Add(PackageIdentity id);
 
         /// <summary>
         ///     Remove a module
@@ -48,31 +47,28 @@ namespace Orcus.Server.Service.Modules.Config
         ///     Replace the whole module list
         /// </summary>
         /// <param name="modules">The new list</param>
-        Task Replace(IEnumerable<SourcedPackageIdentity> modules);
+        Task Replace(IEnumerable<PackageIdentity> modules);
     }
 
-    public class ModulesConfig : JsonObjectFile<IList<ModuleRepositoryGroup>>, IModulesConfig
+    public class ModulesConfig : JsonObjectFile<IReadOnlyList<PackageIdentity>>, IModulesConfig
     {
         public ModulesConfig(string path) : base(path)
         {
-            Modules = ImmutableList<SourcedPackageIdentity>.Empty;
+            Modules = ImmutableList<PackageIdentity>.Empty;
 
             JsonSettings.Converters.Add(new PackageIdentityConverter());
             JsonSettings.Converters.Add(new NuGetVersionConverter());
         }
 
-        public IImmutableList<SourcedPackageIdentity> Modules { get; private set; }
+        public IImmutableList<PackageIdentity> Modules { get; private set; }
 
         public virtual async Task Reload()
         {
             var data = await Load();
-            Modules = data == null
-                ? ImmutableList<SourcedPackageIdentity>.Empty
-                : data.SelectMany(x => x.Modules.Select(y => new SourcedPackageIdentity(y.Id, y.Version, x.Source)))
-                    .ToImmutableList();
+            Modules = data?.ToImmutableList() ?? ImmutableList<PackageIdentity>.Empty;
         }
 
-        public virtual Task Add(SourcedPackageIdentity id)
+        public virtual Task Add(PackageIdentity id)
         {
             if (Modules.Any(x => x.IsSameId(id)))
                 throw new ArgumentException($"Module '{id}' already exists.", nameof(id));
@@ -91,16 +87,10 @@ namespace Orcus.Server.Service.Modules.Config
             return Save(Modules);
         }
 
-        public Task Replace(IEnumerable<SourcedPackageIdentity> modules)
+        public Task Replace(IEnumerable<PackageIdentity> modules)
         {
             Modules = modules.ToImmutableList();
             return Save(Modules);
-        }
-
-        protected virtual Task Save(IEnumerable<SourcedPackageIdentity> ids)
-        {
-            return Save(ids.GroupBy(x => x.SourceRepository).Select(x =>
-                new ModuleRepositoryGroup {Source = x.Key, Modules = x.Cast<PackageIdentity>().ToList()}).ToList());
         }
     }
 }

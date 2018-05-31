@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Connection.Modules;
+using NuGet.Packaging.Core;
 using Orcus.Server.Hubs;
-using Orcus.Server.Service.ModulesV1;
-using Orcus.Server.Service.ModulesV1.Config;
+using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Utilities;
 
 namespace Orcus.Server.Controllers
@@ -25,59 +26,30 @@ namespace Orcus.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromServices] IModuleManager moduleManager)
+        public IActionResult GetAll([FromServices] IModuleProject project)
         {
-            return Ok(moduleManager.LoadedModules.Select(x => x.Dto).ToList());
+            return Ok(project.PrimaryPackages);
         }
 
         [HttpPost("installModules"), ValidateModelState]
-        public async Task<IActionResult> InstallModule([FromBody] SourcedPackageIdentity packageIdentity,
-            [FromServices] IModuleManager moduleManager, [FromServices] ILogger<ModulesController> logger)
+        public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
+            [FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
         {
             if (string.IsNullOrWhiteSpace(packageIdentity.Id))
                 return BadRequest();
 
-            await moduleManager.InstallModule(packageIdentity, new NuGetLoggerWrapper(logger));
-            await _hubContext.Clients.All.InvokeAsync("ModuleInstalled", packageIdentity);
+            await moduleManager.PreviewInstallPackageAsync(packageIdentity, new ResolutionContext(), new NuGetLoggerWrapper(logger),
+                CancellationToken.None);
+
+            await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
 
             return Ok();
         }
 
         [HttpGet("sources")]
-        public IActionResult GetSources([FromServices] IRepositorySourceConfig repositorySourceConfig)
+        public IActionResult GetSources([FromServices] IModuleProject project)
         {
-            return Ok(repositorySourceConfig.Items);
-        }
-
-        [HttpPost("sources")]
-        [ValidateModelState]
-        [Authorize("installModules")]
-        public async Task<IActionResult> AddSource([FromBody] Uri sourceRepository,
-            [FromServices] IRepositorySourceConfig repositorySourceConfig)
-        {
-            if (sourceRepository == null)
-                return BadRequest();
-
-            await repositorySourceConfig.AddItem(sourceRepository);
-            await _hubContext.Clients.All.InvokeAsync("RepositorySourceAdded", sourceRepository);
-            return Ok();
-        }
-
-        [HttpDelete("sources")]
-        [ValidateModelState]
-        [Authorize("installModules")]
-        public async Task<IActionResult> DeleteSource([FromBody] Uri sourceRepository,
-            [FromServices] IRepositorySourceConfig repositorySourceConfig)
-        {
-            if (sourceRepository == null)
-                return BadRequest();
-
-            if (repositorySourceConfig.Items.All(x => x != sourceRepository))
-                return NotFound();
-
-            await repositorySourceConfig.RemoveItem(sourceRepository);
-            await _hubContext.Clients.All.InvokeAsync("RepositorySourceRemoved", sourceRepository);
-            return Ok();
+            return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
         }
     }
 }

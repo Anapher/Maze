@@ -61,12 +61,12 @@ namespace Orcus.Server.Service.Tests.Modules
         public TestModuleProject()
         {
             PrimaryPackages = ImmutableList<PackageIdentity>.Empty;
-            InstalledPackages = ImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>>.Empty;
+            InstalledPackages = ImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>.Empty;
         }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
         public IImmutableList<PackageIdentity> PrimaryPackages { get; }
-        public IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> InstalledPackages { get; }
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages { get; }
         public IImmutableList<SourceRepository> PrimarySources { get; set; }
         public IImmutableList<SourceRepository> DependencySources { get; set; }
         public SourceRepository LocalSourceRepository { get; set; }
@@ -81,6 +81,16 @@ namespace Orcus.Server.Service.Tests.Modules
         public Task<bool> UninstallPackageAsync(PackageIdentity packageIdentity, CancellationToken token)
         {
             return Task.FromResult(true);
+        }
+
+        public Task SetServerModulesLock(IReadOnlyList<PackageIdentity> primaryModules, PackagesLock serverLock)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddModulesLock(NuGetFramework framework, PackagesLock packagesLock)
+        {
+            throw new NotImplementedException();
         }
     }
 }

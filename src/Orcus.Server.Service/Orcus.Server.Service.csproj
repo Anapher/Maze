@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <!-- <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />-->
   </ItemGroup>
 
   <ItemGroup>

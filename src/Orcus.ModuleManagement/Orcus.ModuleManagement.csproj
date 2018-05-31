@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="NuGet.Commands">
       <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Commands\15.0\bin\Release\netstandard1.6\NuGet.Commands.dll</HintPath>
     </Reference>

@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
@@ -15,7 +14,7 @@ namespace Orcus.Server.Service.Modules
         NuGetFramework Framework { get; }
 
         IImmutableList<PackageIdentity> PrimaryPackages { get; }
-        IImmutableDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> InstalledPackages { get; }
+        IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages { get; }
 
         IImmutableList<SourceRepository> PrimarySources { get; }
         IImmutableList<SourceRepository> DependencySources { get; }
@@ -26,10 +25,7 @@ namespace Orcus.Server.Service.Modules
             CancellationToken token);
 
         Task<bool> UninstallPackageAsync(PackageIdentity packageIdentity, CancellationToken token);
-
-        //Task SetModuleLock(IReadOnlyList<SourcedPackageIdentity> primaryPackages,
-        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> serverLock,
-        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> adminLock,
-        //    IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> clientLock);
+        Task SetServerModulesLock(IReadOnlyList<PackageIdentity> primaryModules, PackagesLock serverLock);
+        Task AddModulesLock(NuGetFramework framework, PackagesLock packagesLock);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,9 +17,9 @@ using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
+using Orcus.ModuleManagement;
 using Orcus.PackageManagement;
 using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Service.Modules.Resolution;
@@ -59,8 +60,9 @@ namespace Orcus.Server.Service.Modules
             resultingPackages.Add(packageIdentity);
 
             var package = new PackageIdentity("Orcus.Server.Library", new NuGetVersion(1, 0, 0));
-            var requiredPackages = await GetRequiredPackages(resultingPackages, new HashSet<PackageIdentity>(){ packageIdentity }, 
-                downgradeAllowed, resolutionContext, _project.Framework, package, logger, token);
+            var requiredPackages = await GetRequiredPackages(resultingPackages,
+                new HashSet<PackageIdentity> {packageIdentity}, downgradeAllowed, resolutionContext, _project.Framework,
+                package, logger, token);
             return GetRequiredActions(requiredPackages);
         }
 
@@ -163,6 +165,8 @@ namespace Orcus.Server.Service.Modules
 
                 RemovePackage(foundLibraryPackage);
 
+                //TODO remove package also from SourceDependencyInfo?
+
                 void RemovePackage(PackageIdentity packageIdentity)
                 {
                     var sourceInfo = dependencyMap[packageIdentity];
@@ -220,12 +224,8 @@ namespace Orcus.Server.Service.Modules
                     downloadTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
 
                     // Download all packages up front in parallel
-                    downloadTasks = await PackageLoader.GetPackagesAsync(
-                        actionsList,
-                        _project.ModulesDirectory,
-                        downloadContext,
-                        NullLogger.Instance,
-                        downloadTokenSource.Token);
+                    downloadTasks = await PackageLoader.GetPackagesAsync(actionsList, _project.ModulesDirectory,
+                        downloadContext, NullLogger.Instance, downloadTokenSource.Token);
                 }
 
                 foreach (var action in actionsList)
@@ -237,15 +237,15 @@ namespace Orcus.Server.Service.Modules
                     }
                 }
 
-                foreach (var nuGetProjectAction in actionsList)
+                foreach (var action in actionsList)
                 {
-                    if (nuGetProjectAction.Action == ResolvedActionType.Install)
+                    if (action.Action == ResolvedActionType.Install)
                     {
-                        executedActions.Push(nuGetProjectAction);
+                        executedActions.Push(action);
 
                         // Retrieve the downloaded package
                         // This will wait on the package if it is still downloading
-                        var preFetchResult = downloadTasks[nuGetProjectAction.PackageIdentity];
+                        var preFetchResult = downloadTasks[action.PackageIdentity];
                         using (var downloadPackageResult = await preFetchResult.GetResultAsync())
                         {
                             // use the version exactly as specified in the nuspec file
@@ -263,8 +263,8 @@ namespace Orcus.Server.Service.Modules
 
                             downloadPackageResult.PackageStream.Position = 0;
 
-                            //  stream => downloadPackageResult.PackageStream.CopyToAsync(stream)
-                            await PackageExtractor.InstallFromSourceAsync(packageIdentity, new LocalPackageArchiveDownloader("", "", packageIdentity, null), 
+                            await PackageExtractor.InstallFromSourceAsync(action.SourceRepository.PackageSource.Source, packageIdentity,
+                                stream => downloadPackageResult.PackageStream.CopyToAsync(stream),
                                 _project.ModulesDirectory.VersionFolderPathResolver, packageExtractionContext, token);
 
                             await ExecuteInstallAsync(packageIdentity, downloadPackageResult,
@@ -401,23 +401,19 @@ namespace Orcus.Server.Service.Modules
         }
 
         private async Task WriteModuleState(PackagesContext serverConext,
-            ISet<SourcedPackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+            IEnumerable<PackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
-            //var adminContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(), 
-            //    false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusAdministration10, logger, token);
-
-            //var clientContext = await GetRequiredPackages(primaryModules, new List<PackageIdentity>(),
-            //    false, resolutionContext, FrameworkConstants.CommonFrameworks.OrcusClient10, logger, token);
-
-            //await _project.SetModuleLock(primaryModules.ToList(), GetLock(serverConext), GetLock(adminContext),
-            //    GetLock(clientContext));
+            await _project.SetServerModulesLock(primaryModules.ToList(), GetLock(serverConext));
         }
 
-        private static IReadOnlyDictionary<PackageIdentity, IReadOnlyList<PackageIdentity>> GetLock(PackagesContext context)
+        private static PackagesLock GetLock(PackagesContext context)
         {
-            return context.Packages.ToDictionary(x => x, x => (IReadOnlyList<PackageIdentity>) context
-                .PackageDependencies[x].Dependencies
-                .Select(y => context.Packages.First(z => z.Id == y.Id)).ToList());
+            return new PackagesLock
+            {
+                Packages = context.Packages.ToImmutableDictionary(x => x, x => (IImmutableList<PackageIdentity>) context
+                    .PackageDependencies[x].Dependencies
+                    .Select(y => context.Packages.First(z => z.Id == y.Id)).ToImmutableList())
+            };
         }
 
         private class PackagesContext
