@@ -1,7 +1,6 @@
-﻿using System.Collections.Immutable;
-using System.Net.Http;
+﻿using System.Net.Http;
 
-namespace Orcus.Server.Library
+namespace Orcus.Server.Library.Services
 {
     public interface IHttpClientService
     {

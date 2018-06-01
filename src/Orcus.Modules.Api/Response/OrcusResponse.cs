@@ -1,14 +1,32 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Orcus.Modules.Api.Response
 {
-    public class OrcusResponse
+    /// <summary>
+    ///     Represents the outgoing side of an individual Orcus request.
+    /// </summary>
+    public abstract class OrcusResponse
     {
-        public Stream Body { get; set; }
-        public long? ContentLength { get; set; }
-        public string ContentType { get; set; }
-        public int StatusCode { get; set; }
-        public IDictionary<string, string> Headers { get; set; }
+        /// <summary>Gets or sets the Orcus response code.</summary>
+        public abstract int StatusCode { get; set; }
+
+        /// <summary>Gets the response headers.</summary>
+        public abstract IHeaderDictionary Headers { get; }
+
+        /// <summary>
+        ///     Gets or sets the response body <see cref="T:System.IO.Stream" />.
+        /// </summary>
+        public abstract Stream Body { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the value for the <c>Content-Length</c> response header.
+        /// </summary>
+        public abstract long? ContentLength { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the value for the <c>Content-Type</c> response header.
+        /// </summary>
+        public abstract string ContentType { get; set; }
     }
 }

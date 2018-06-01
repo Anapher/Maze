@@ -1,6 +1,6 @@
 ﻿namespace Orcus.Modules.Api.Routing
 {
-    public class OrcusGetAttribute : OrcusAttribute
+    public class OrcusGetAttribute : OrcusMethodAttribute
     {
         private const string _method = "GET";
 

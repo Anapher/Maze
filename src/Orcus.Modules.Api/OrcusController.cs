@@ -4,8 +4,10 @@ using Orcus.Modules.Api.Response;
 
 namespace Orcus.Modules.Api
 {
-    public abstract class OrcusModule : IDisposable
+    public abstract class OrcusController : IDisposable
     {
+        public OrcusContext OrcusContext { get; set; }
+
         [NonAction]
         public virtual void Dispose()
         {

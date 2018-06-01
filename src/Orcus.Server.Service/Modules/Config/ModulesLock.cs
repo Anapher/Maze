@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
 using NuGet.Protocol;
+using Orcus.ModuleManagement;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Service.Modules.Config.Base;
 
