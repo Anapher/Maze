@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web;
-using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
 using Orcus.Server.Service.Modules.Routing.Trie;
 
 namespace Orcus.Server.Service.Modules.Routing
 {
-    public class RouteResolver
+    public class RouteResolver : IRouteResolver
     {
         private readonly IRouteResolverTrie _routeResolverTrie;
 

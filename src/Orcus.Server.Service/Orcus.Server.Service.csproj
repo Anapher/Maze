@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\Infrastructure\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

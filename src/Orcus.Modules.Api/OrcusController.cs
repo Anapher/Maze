@@ -54,10 +54,12 @@ namespace Orcus.Modules.Api
         }
 
         /// <summary>
-        /// Returns a file in the specified <paramref name="fileStream" /> (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status200OK" />), with the
-        /// specified <paramref name="contentType" /> as the Content-Type.
-        /// This supports range requests (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status206PartialContent" /> or
-        /// <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status416RangeNotSatisfiable" /> if the range is not satisfiable).
+        ///     Returns a file in the specified <paramref name="fileStream" /> (
+        ///     <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status200OK" />), with the
+        ///     specified <paramref name="contentType" /> as the Content-Type.
+        ///     This supports range requests (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status206PartialContent" /> or
+        ///     <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status416RangeNotSatisfiable" /> if the range is not
+        ///     satisfiable).
         /// </summary>
         /// <param name="fileStream">The <see cref="T:System.IO.Stream" /> with the contents of the file.</param>
         /// <param name="contentType">The Content-Type of the file.</param>
@@ -69,11 +71,13 @@ namespace Orcus.Modules.Api
         }
 
         /// <summary>
-        /// Returns a file in the specified <paramref name="fileStream" /> (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status200OK" />) with the
-        /// specified <paramref name="contentType" /> as the Content-Type and the
-        /// specified <paramref name="fileDownloadName" /> as the suggested file name.
-        /// This supports range requests (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status206PartialContent" /> or
-        /// <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status416RangeNotSatisfiable" /> if the range is not satisfiable).
+        ///     Returns a file in the specified <paramref name="fileStream" /> (
+        ///     <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status200OK" />) with the
+        ///     specified <paramref name="contentType" /> as the Content-Type and the
+        ///     specified <paramref name="fileDownloadName" /> as the suggested file name.
+        ///     This supports range requests (<see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status206PartialContent" /> or
+        ///     <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status416RangeNotSatisfiable" /> if the range is not
+        ///     satisfiable).
         /// </summary>
         /// <param name="fileStream">The <see cref="T:System.IO.Stream" /> with the contents of the file.</param>
         /// <param name="contentType">The Content-Type of the file.</param>
@@ -82,7 +86,7 @@ namespace Orcus.Modules.Api
         [NonAction]
         public virtual FileStreamResult File(Stream fileStream, string contentType, string fileDownloadName)
         {
-            FileStreamResult fileStreamResult =
+            var fileStreamResult =
                 new FileStreamResult(fileStream, contentType) {FileDownloadName = fileDownloadName};
             return fileStreamResult;
         }

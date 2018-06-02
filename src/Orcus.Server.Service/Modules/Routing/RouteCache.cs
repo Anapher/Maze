@@ -9,21 +9,18 @@ using Orcus.Server.Service.Extensions;
 
 namespace Orcus.Server.Service.Modules.Routing
 {
-    public interface IRouteCache
-    {
-        IList<RouteDescription> Routes { get; set; }
-    }
-
+    /// <summary>
+    ///     Extracts the routes of package controllers
+    /// </summary>
     public class RouteCache : IRouteCache
     {
         private const string DefaultMethod = "GET";
 
         public RouteCache()
         {
-            
         }
 
-        public IList<RouteDescription> Routes { get; set; }
+        public IDictionary<RouteDescription, Route> Routes { get; set; }
 
         public void BuildCache(IReadOnlyDictionary<PackageIdentity, List<Type>> controllers)
         {
@@ -56,8 +53,8 @@ namespace Orcus.Server.Service.Modules.Routing
                             methodPath.Push(routeFragment);
 
                         var segments = GetSegments(methodPath, controllerType, methodInfo);
-                        var description = new RouteDescription(package, method, segments)
-                        Routes.Add();
+                        var description = new RouteDescription(package, method, segments);
+                        Routes.Add(description, new Route(description, controllerType, methodInfo));
                     }
                 }
             }

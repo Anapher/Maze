@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NuGet.Packaging.Core;
+﻿using NuGet.Packaging.Core;
 
 namespace Orcus.Server.Service.Modules.Routing
 {
@@ -26,7 +25,7 @@ namespace Orcus.Server.Service.Modules.Routing
         /// <summary>
         ///     Gets or set the segments for the route
         /// </summary>
-        /// <value>An <see cref="IEnumerable{T}" />, containing the segments for the route.</value>
+        /// <value>An <see cref="System.Collections.Generic.IEnumerable{T}" />, containing the segments for the route.</value>
         public string[] Segments { get; }
     }
 }

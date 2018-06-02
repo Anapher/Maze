@@ -5,23 +5,6 @@ using Orcus.Server.Service.Modules.Routing.Trie.Nodes;
 
 namespace Orcus.Server.Service.Modules.Routing.Trie
 {
-    public interface IRouteResolverTrie
-    {
-        /// <summary>
-        ///     Build the trie from the route cache
-        /// </summary>
-        /// <param name="cache">The route cache</param>
-        void BuildTrie(IRouteCache cache);
-
-        /// <summary>
-        ///     Get all matches for the given method and path
-        /// </summary>
-        /// <param name="method">HTTP method</param>
-        /// <param name="path">Requested path</param>
-        /// <returns>An array of <see cref="MatchResult" /> elements</returns>
-        MatchResult[] GetMatches(string method, string path);
-    }
-
     public class RouteResolverTrie : IRouteResolverTrie
     {
         private static readonly char[] SplitSeparators = {'/'};
@@ -35,13 +18,10 @@ namespace Orcus.Server.Service.Modules.Routing.Trie
             _routeTries = new Dictionary<string, TrieNode>(StringComparer.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        ///     Build the trie from the route cache
-        /// </summary>
-        /// <param name="cache">The route cache</param>
+        /// <inheritdoc />
         public void BuildTrie(IRouteCache cache)
         {
-            foreach (var routeDescription in cache.Routes)
+            foreach (var routeDescription in cache.Routes.Select(x => x.Key))
             {
                 if (!_routeTries.TryGetValue(routeDescription.Method, out var rootNode))
                 {
@@ -53,12 +33,7 @@ namespace Orcus.Server.Service.Modules.Routing.Trie
             }
         }
 
-        /// <summary>
-        ///     Get all matches for the given method and path
-        /// </summary>
-        /// <param name="method">HTTP method</param>
-        /// <param name="path">Requested path</param>
-        /// <returns>An array of <see cref="MatchResult" /> elements</returns>
+        /// <inheritdoc />
         public MatchResult[] GetMatches(string method, string path)
         {
             if (!_routeTries.TryGetValue(method, out var result))
