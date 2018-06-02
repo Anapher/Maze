@@ -35,7 +35,7 @@ namespace Orcus.Server.Service.Commanding
 
         public Task<OrcusResponse> ExecuteServerRequest(OrcusRequest request)
         {
-
+            throw new NotImplementedException();
         }
     }
 

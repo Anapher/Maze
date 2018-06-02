@@ -19,9 +19,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
         public ByteArrayModelBinder(ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
-            {
                 throw new ArgumentNullException(nameof(loggerFactory));
-            }
 
             _logger = loggerFactory.CreateLogger<ByteArrayModelBinder>();
         }

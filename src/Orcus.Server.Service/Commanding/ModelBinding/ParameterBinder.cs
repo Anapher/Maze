@@ -35,11 +35,8 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
             if (metadata == null)
                 throw new ArgumentNullException(nameof(metadata));
 
-            var modelBindingContext = DefaultModelBindingContext.CreateBindingContext(
-                actionContext,
-                valueProvider,
-                metadata,
-                parameter.Name);
+            var modelBindingContext =
+                DefaultModelBindingContext.CreateBindingContext(actionContext, valueProvider, metadata, parameter.Name);
             modelBindingContext.Model = value;
 
             var parameterModelName = metadata.BinderModelName;
@@ -51,7 +48,6 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
                 modelBindingContext.ModelName = string.Empty;
 
             await modelBinder.BindModelAsync(modelBindingContext);
-
             return modelBindingContext.Result;
         }
     }

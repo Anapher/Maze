@@ -32,7 +32,7 @@ namespace Orcus.Server.Service.Modules.Execution
                 return NotFound();
 
             var route = _routeCache.Routes[result.RouteDescription];
-            result.
+            throw new NotImplementedException();
         }
 
         private OrcusResponse NotFound()

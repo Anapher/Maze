@@ -22,6 +22,8 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
         /// <inheritdoc />
         public override ModelMetadata ModelMetadata { get; set; }
 
+        public override ModelErrorTracker ModelState { get; set; }
+
         /// <summary>
         ///     Creates a new <see cref="DefaultModelBindingContext" /> for top-level model binding operation.
         /// </summary>
@@ -60,7 +62,8 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
                 ModelName = binderModelName ?? modelName,
 
                 ModelMetadata = metadata,
-                ValueProvider = valueProvider
+                ValueProvider = valueProvider,
+                ModelState = null //TODO
             };
         }
     }

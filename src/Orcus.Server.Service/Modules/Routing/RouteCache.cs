@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using NuGet.Packaging.Core;
@@ -16,14 +17,12 @@ namespace Orcus.Server.Service.Modules.Routing
     {
         private const string DefaultMethod = "GET";
 
-        public RouteCache()
-        {
-        }
-
-        public IDictionary<RouteDescription, Route> Routes { get; set; }
+        public IImmutableDictionary<RouteDescription, Route> Routes { get; set; }
 
         public void BuildCache(IReadOnlyDictionary<PackageIdentity, List<Type>> controllers)
         {
+            var routes = new Dictionary<RouteDescription, Route>();
+
             foreach (var (package, types) in controllers)
             {
                 foreach (var controllerType in types)
@@ -54,10 +53,12 @@ namespace Orcus.Server.Service.Modules.Routing
 
                         var segments = GetSegments(methodPath, controllerType, methodInfo);
                         var description = new RouteDescription(package, method, segments);
-                        Routes.Add(description, new Route(description, controllerType, methodInfo));
+                        routes.Add(description, new Route(description, controllerType, methodInfo));
                     }
                 }
             }
+
+            Routes = routes.ToImmutableDictionary();
         }
 
         private static string[] GetSegments(IEnumerable<IRouteFragment> fragments, Type controllerType, MethodInfo methodInfo)
