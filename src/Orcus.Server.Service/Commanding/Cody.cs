@@ -1,41 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
+using Orcus.Server.Service.Modules.Execution;
 using Orcus.Server.Service.Modules.Routing;
 
 namespace Orcus.Server.Service.Commanding
 {
-    public class ActionContext : IActionContext
+    public class DefaultActionContext : ActionContext
     {
-        public Route Route { get; set; }
-        public OrcusContext OrcusContext { get; set; }
-        public IDictionary<string, object> RouteValues { get; set; }
+        public DefaultActionContext(OrcusContext context, Route route, IReadOnlyDictionary<string, object> routeData)
+        {
+            Context = context;
+            Route = route;
+            RouteData = routeData;
+        }
 
-        public IServiceProvider ServiceProvider { get; }
-        public OrcusResponse Response { get; }
+        public override OrcusContext Context { get; }
+        public Route Route { get; }
+        public override IReadOnlyDictionary<string, object> RouteData { get; }
     }
 
+    /// <summary>
+    ///     The commander
+    /// </summary>
     public class Cody : ICommander
     {
-        public Cody()
+        private readonly IOrcusRequestExecuter _requestExecuter;
+
+        public Cody(IOrcusRequestExecuter requestExecuter)
         {
-            
+            _requestExecuter = requestExecuter;
         }
 
         public Task<OrcusResponse> MakeRequest(OrcusRequest request, OrcusRequestTarget target)
         {
             if (target.IsServer)
-                return ExecuteServerRequest(request);
+                return _requestExecuter.Execute(request);
 
             throw new NotImplementedException();
         }
 
         public Task<OrcusResponse> ExecuteServerRequest(OrcusRequest request)
         {
-            throw new NotImplementedException();
+            return _requestExecuter.Execute(request);
         }
     }
 

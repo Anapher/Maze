@@ -1,8 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Orcus.Server.Service.Commanding;
 
 namespace Orcus.Server.Service.Modules.Routing
 {
@@ -13,8 +12,12 @@ namespace Orcus.Server.Service.Modules.Routing
             Description = description;
             ControllerType = controllerType;
             RouteMethod = routeMethod;
+
+            ActionInvoker = new Lazy<ActionInvoker>(() => new ActionInvoker(controllerType, routeMethod),
+                LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
+        public Lazy<ActionInvoker> ActionInvoker { get; }
         public RouteDescription Description { get; }
         public Type ControllerType { get; }
         public MethodInfo RouteMethod { get; }

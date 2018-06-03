@@ -1,6 +1,5 @@
 ﻿using System;
 using Orcus.Modules.Api;
-using Orcus.Server.Service.Commanding.Binders;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {

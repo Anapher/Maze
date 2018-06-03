@@ -20,7 +20,7 @@ namespace Orcus.Modules.Api.Response
         ///     information about the action that was executed and request information.
         /// </param>
         /// <returns>A task that represents the asynchronous execute operation.</returns>
-        public virtual Task ExecuteResultAsync(IActionContext context)
+        public virtual Task ExecuteResultAsync(ActionContext context)
         {
             ExecuteResult(context);
             return Task.CompletedTask;
@@ -34,7 +34,7 @@ namespace Orcus.Modules.Api.Response
         ///     The context in which the result is executed. The context information includes
         ///     information about the action that was executed and request information.
         /// </param>
-        public virtual void ExecuteResult(IActionContext context)
+        public virtual void ExecuteResult(ActionContext context)
         {
         }
     }

@@ -7,16 +7,23 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
-using Orcus.Server.Service.Commanding.Binders;
 using Orcus.Server.Service.Commanding.ModelBinding;
 
 namespace Orcus.Server.Service.Commanding
 {
+    /// <summary>
+    ///     Cached delegate for the controller method
+    /// </summary>
     public class ActionInvoker
     {
         private readonly ObjectMethodExecutor _objectMethodExecutor;
         private readonly ActionMethodExecutor _executor;
 
+        /// <summary>
+        /// Initialize a new instance of <see cref="ActionInvoker"/>
+        /// </summary>
+        /// <param name="controllerType">The controller type</param>
+        /// <param name="routeMethod">The action method that should be executed</param>
         public ActionInvoker(Type controllerType, MethodInfo routeMethod)
         {
             Metadata = new ActionMethodMetadata(controllerType, routeMethod);
@@ -44,13 +51,18 @@ namespace Orcus.Server.Service.Commanding
         public ObjectFactory ObjectFactory { get; }
         public IImmutableList<ParameterDescriptor> Parameters { get; }
 
-        public async Task<IActionResult> Invoke(IServiceProvider serviceProvider, ActionContext actionContext)
+        /// <summary>
+        /// Invoke the method with the given <see cref="ActionContext"/>
+        /// </summary>
+        /// <param name="actionContext">The action context that provides the information used to execute the method</param>
+        /// <returns>Return the action result of the method</returns>
+        public async Task<IActionResult> Invoke(ActionContext actionContext)
         {
-            var controller = (OrcusController) ObjectFactory.Invoke(serviceProvider, new object[0]);
-            controller.OrcusContext = actionContext.OrcusContext;
+            var controller = (OrcusController) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+            controller.OrcusContext = actionContext.Context;
 
             var parameterBindingInfo =
-                GetParameterBindingInfo(serviceProvider.GetRequiredService<IModelBinderFactory>());
+                GetParameterBindingInfo(actionContext.Context.RequestServices.GetRequiredService<IModelBinderFactory>());
 
             var arguments = new object[Parameters.Count];
             var parameterBinding = new ParameterBinder();

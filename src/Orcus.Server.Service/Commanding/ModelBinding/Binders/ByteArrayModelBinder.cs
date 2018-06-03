@@ -1,21 +1,23 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Service.Commanding.Binders;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
 {
     /// <summary>
-    /// ModelBinder to bind byte Arrays.
+    ///     ModelBinder to bind byte Arrays.
     /// </summary>
     public class ByteArrayModelBinder : IModelBinder
     {
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ByteArrayModelBinder"/>.
+        ///     Initializes a new instance of <see cref="ByteArrayModelBinder" />.
         /// </summary>
-        /// <param name="loggerFactory">The <see cref="ILoggerFactory"/>.</param>
+        /// <param name="loggerFactory">The <see cref="ILoggerFactory" />.</param>
         public ByteArrayModelBinder(ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
@@ -39,7 +41,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
                 _logger.LogWarning($"Value {bindingContext.ModelName} not found in request");
                 return Task.CompletedTask;
             }
-            
+
             // Check for missing data case 2: There was an <input ... /> element but it was left blank.
             var value = valueProviderResult.FirstValue;
             if (string.IsNullOrEmpty(value))
@@ -57,7 +59,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
             {
                 _logger.LogWarning(exception, "Exception occurred when trying to read base 64 string");
             }
-            
+
             _logger.LogDebug("Done");
             return Task.CompletedTask;
         }

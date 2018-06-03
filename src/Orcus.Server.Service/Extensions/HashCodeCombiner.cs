@@ -1,12 +1,14 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Orcus.Server.Service.Extensions
 {
     /// <summary>
-    /// Hash code creator, based on the original NuGet hash code combiner/ASP hash code combiner implementations
+    ///     Hash code creator, based on the original NuGet hash code combiner/ASP hash code combiner implementations
     /// </summary>
     internal struct HashCodeCombiner
     {
@@ -16,10 +18,7 @@ namespace Orcus.Server.Service.Extensions
         private bool _initialized;
         private long _combinedHash;
 
-        internal int CombinedHash
-        {
-            get { return _combinedHash.GetHashCode(); }
-        }
+        internal int CombinedHash => _combinedHash.GetHashCode();
 
         private void AddHashCode(int i)
         {
@@ -35,28 +34,19 @@ namespace Orcus.Server.Service.Extensions
         internal void AddObject<TValue>(TValue o, IEqualityComparer<TValue> comparer)
         {
             CheckInitialized();
-            if (o != null)
-            {
-                AddHashCode(comparer.GetHashCode(o));
-            }
+            if (o != null) AddHashCode(comparer.GetHashCode(o));
         }
 
         internal void AddObject<T>(T o)
         {
             CheckInitialized();
-            if (o != null)
-            {
-                AddHashCode(o.GetHashCode());
-            }
+            if (o != null) AddHashCode(o.GetHashCode());
         }
 
         internal void AddStringIgnoreCase(string s)
         {
             CheckInitialized();
-            if (s != null)
-            {
-                AddHashCode(StringComparer.OrdinalIgnoreCase.GetHashCode(s));
-            }
+            if (s != null) AddHashCode(StringComparer.OrdinalIgnoreCase.GetHashCode(s));
         }
 
         internal void AddSequence<T>(IEnumerable<T> sequence)
@@ -64,10 +54,7 @@ namespace Orcus.Server.Service.Extensions
             if (sequence != null)
             {
                 CheckInitialized();
-                foreach (var item in sequence)
-                {
-                    AddHashCode(item.GetHashCode());
-                }
+                foreach (var item in sequence) AddHashCode(item.GetHashCode());
             }
         }
 
@@ -76,10 +63,7 @@ namespace Orcus.Server.Service.Extensions
             if (array != null)
             {
                 CheckInitialized();
-                foreach (var item in array)
-                {
-                    AddHashCode(item.GetHashCode());
-                }
+                foreach (var item in array) AddHashCode(item.GetHashCode());
             }
         }
 
@@ -89,10 +73,7 @@ namespace Orcus.Server.Service.Extensions
             {
                 CheckInitialized();
                 var count = list.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    AddHashCode(list[i].GetHashCode());
-                }
+                for (var i = 0; i < count; i++) AddHashCode(list[i].GetHashCode());
             }
         }
 
@@ -103,10 +84,7 @@ namespace Orcus.Server.Service.Extensions
             {
                 CheckInitialized();
                 var count = list.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    AddHashCode(list[i].GetHashCode());
-                }
+                for (var i = 0; i < count; i++) AddHashCode(list[i].GetHashCode());
             }
         }
 #endif
@@ -124,7 +102,7 @@ namespace Orcus.Server.Service.Extensions
         }
 
         /// <summary>
-        /// Create a unique hash code for the given set of items
+        ///     Create a unique hash code for the given set of items
         /// </summary>
         internal static int GetHashCode<T1, T2>(T1 o1, T2 o2)
         {
@@ -138,7 +116,7 @@ namespace Orcus.Server.Service.Extensions
         }
 
         /// <summary>
-        /// Create a unique hash code for the given set of items
+        ///     Create a unique hash code for the given set of items
         /// </summary>
         internal static int GetHashCode<T1, T2, T3>(T1 o1, T2 o2, T3 o3)
         {

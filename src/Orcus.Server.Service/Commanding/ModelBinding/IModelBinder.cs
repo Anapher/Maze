@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
-using Orcus.Server.Service.Commanding.ModelBinding;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Orcus.Server.Service.Commanding.Binders
+using System.Threading.Tasks;
+
+namespace Orcus.Server.Service.Commanding.ModelBinding
 {
     /// <summary>
     ///     Defines an interface for model binders.

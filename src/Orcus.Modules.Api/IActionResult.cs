@@ -13,6 +13,6 @@ namespace Orcus.Modules.Api
         ///     information about the action that was executed and request information.
         /// </param>
         /// <returns>A task that represents the asynchronous execute operation.</returns>
-        Task ExecuteResultAsync(IActionContext context);
+        Task ExecuteResultAsync(ActionContext context);
     }
 }

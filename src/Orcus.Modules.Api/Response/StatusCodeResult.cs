@@ -18,11 +18,12 @@ namespace Orcus.Modules.Api.Response
         public int StatusCode { get; }
 
         /// <inheritdoc />
-        public override void ExecuteResult(IActionContext context)
+        public override void ExecuteResult(ActionContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-            context.Response.StatusCode = StatusCode;
+
+            context.Context.Response.StatusCode = StatusCode;
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Orcus.Modules.Api.Extensions;
+using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Services;
 
 namespace Orcus.Modules.Api.Response
@@ -12,11 +15,20 @@ namespace Orcus.Modules.Api.Response
         }
 
         public object Value { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the HTTP status code.
+        /// </summary>
         public int? StatusCode { get; set; }
 
-        public Task ExecuteResultAsync(IActionContext context)
+        public MediaTypeCollection ContentTypes { get; set; }
+        public Type DeclaredType { get; set; }
+        public IList<IOutputFormatter> Formatters { get; set; }
+
+        public Task ExecuteResultAsync(ActionContext context)
         {
-            return context.ServiceProvider.GetRequiredService<IObjectResultExecuter>().ExecuteAsync(context, this);
+            return context.Context.RequestServices.GetRequiredService<IActionResultExecutor<ObjectResult>>()
+                .ExecuteAsync(context, this);
         }
     }
 }

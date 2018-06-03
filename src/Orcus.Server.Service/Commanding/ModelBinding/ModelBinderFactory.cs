@@ -1,39 +1,42 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using Orcus.Server.Service.Commanding.Binders;
+using Microsoft.Extensions.Options;
 using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.ModelBinding.Binders;
 using Orcus.Server.Service.Extensions;
-using Orcus.Server.Service.Infrastructure;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {
+    /// <summary>
+    ///     A factory for <see cref="IModelBinder" /> instances.
+    /// </summary>
     public class ModelBinderFactory : IModelBinderFactory
     {
         private readonly ConcurrentDictionary<Key, IModelBinder> _cache;
         private readonly IModelBinderProvider[] _providers;
         private readonly IServiceProvider _serviceProvider;
 
-        public ModelBinderFactory(IServiceProvider serviceProvider)
+        /// <summary>
+        ///     Creates a new <see cref="ModelBinderFactory" />.
+        /// </summary>
+        /// <param name="options">The <see cref="IOptions{TOptions}" /> for <see cref="OrcusServerOptions" />.</param>
+        /// <param name="serviceProvider">The <see cref="IServiceProvider" />.</param>
+        public ModelBinderFactory(IOptions<OrcusServerOptions> options, IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
 
             var formatters = new List<IInputFormatter>();
 
-            _providers = new IModelBinderProvider[]
-            {
-                new ServicesModelBinderProvider(),
-                //TODO new BodyModelBinderProvider(formatters, new MemoryPoolHttpRequestStreamReaderFactory()),
-                new EnumTypeModelBinderProvider(),
-                new SimpleTypeModelBinderProvider(),
-                new ByteArrayModelBinderProvider()
-
-            };
+            _providers = options.Value.ModelBinderProviders.ToArray();
             _cache = new ConcurrentDictionary<Key, IModelBinder>();
         }
 
+        /// <inheritdoc />
         public IModelBinder CreateBinder(ModelBinderFactoryContext context)
         {
             if (TryGetCachedBinder(context.Metadata, context.CacheToken, out var binder))

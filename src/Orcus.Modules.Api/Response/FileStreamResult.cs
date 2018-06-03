@@ -50,12 +50,14 @@ namespace Orcus.Modules.Api.Response
         }
 
         /// <inheritdoc />
-        public override Task ExecuteResultAsync(IActionContext context)
+        public override Task ExecuteResultAsync(ActionContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-            return context.ServiceProvider.GetRequiredService<IFileStreamResultExecutor>()
-                .ExecuteAsync(context, this);
+
+            var executor = context.Context.RequestServices
+                .GetRequiredService<IActionResultExecutor<FileStreamResult>>();
+            return executor.ExecuteAsync(context, this);
         }
     }
 }

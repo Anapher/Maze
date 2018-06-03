@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Orcus.Server.Service.Commanding
 {
+    /// <summary>
+    ///     Provides the delegate for an action method
+    /// </summary>
     public class ObjectMethodExecutor
     {
         private readonly MethodExecutor _executor;
-
-        private delegate object MethodExecutor(object target, object[] parameters);
-        private delegate void VoidMethodExecutor(object target, object[] parameters);
 
         public ObjectMethodExecutor(MethodInfo methodInfo)
         {
@@ -17,16 +20,16 @@ namespace Orcus.Server.Service.Commanding
         }
 
         /// <summary>
-        /// Executes the configured method on <paramref name="target"/>. This can be used whether or not
-        /// the configured method is asynchronous.
+        ///     Executes the configured method on <paramref name="target" />. This can be used whether or not
+        ///     the configured method is asynchronous.
         /// </summary>
         /// <remarks>
-        /// Even if the target method is asynchronous, it's desirable to invoke it using Execute rather than
-        /// ExecuteAsync if you know at compile time what the return type is, because then you can directly
-        /// "await" that value (via a cast), and then the generated code will be able to reference the
-        /// resulting awaitable as a value-typed variable. If you use ExecuteAsync instead, the generated
-        /// code will have to treat the resulting awaitable as a boxed object, because it doesn't know at
-        /// compile time what type it would be.
+        ///     Even if the target method is asynchronous, it's desirable to invoke it using Execute rather than
+        ///     ExecuteAsync if you know at compile time what the return type is, because then you can directly
+        ///     "await" that value (via a cast), and then the generated code will be able to reference the
+        ///     resulting awaitable as a value-typed variable. If you use ExecuteAsync instead, the generated
+        ///     code will have to treat the resulting awaitable as a boxed object, because it doesn't know at
+        ///     compile time what type it would be.
         /// </remarks>
         /// <param name="target">The object whose method is to be executed.</param>
         /// <param name="parameters">Parameters to pass to the method.</param>
@@ -45,7 +48,7 @@ namespace Orcus.Server.Service.Commanding
             // Build parameter list
             var parameters = new List<Expression>();
             var paramInfos = methodInfo.GetParameters();
-            for (int i = 0; i < paramInfos.Length; i++)
+            for (var i = 0; i < paramInfos.Length; i++)
             {
                 var paramInfo = paramInfos[i];
                 var valueObj = Expression.ArrayIndex(parametersParameter, Expression.Constant(i));
@@ -78,11 +81,15 @@ namespace Orcus.Server.Service.Commanding
 
         private static MethodExecutor WrapVoidMethod(VoidMethodExecutor executor)
         {
-            return delegate (object target, object[] parameters)
+            return delegate(object target, object[] parameters)
             {
                 executor(target, parameters);
                 return null;
             };
         }
+
+        private delegate object MethodExecutor(object target, object[] parameters);
+
+        private delegate void VoidMethodExecutor(object target, object[] parameters);
     }
 }
