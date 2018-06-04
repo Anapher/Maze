@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Modules.Api.ModelBinding
 {
     public class ParameterDescriptor
     {

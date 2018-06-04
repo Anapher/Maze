@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Net.Http.Headers;
+using Microsoft.Net.Http.Headers;
 
 namespace Orcus.Modules.Api.Formatters
 {

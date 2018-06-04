@@ -3,6 +3,7 @@
 
 using System;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.ModelBinding;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {
@@ -26,7 +27,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
         /// <inheritdoc />
         public override ModelMetadata ModelMetadata { get; set; }
 
-        public override ModelErrorTracker ModelState { get; set; }
+        public override ModelStateDictionary ModelState { get; set; }
 
         /// <summary>
         ///     Creates a new <see cref="DefaultModelBindingContext" /> for top-level model binding operation.

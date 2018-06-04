@@ -13,6 +13,7 @@ using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.Service.Commanding.Formatters;
+using Orcus.Server.Service.Commanding.Formatters.Internal;
 using Orcus.Server.Service.Logging;
 
 namespace Orcus.Server.Service.Infrastructure
@@ -69,7 +70,7 @@ namespace Orcus.Server.Service.Infrastructure
 
             _logger.RegisteredOutputFormatters(formatters);
 
-            var request = context.Context.Request;
+            var request = context.OrcusContext.Request;
             var acceptableMediaTypes = GetAcceptableMediaTypes(request);
             var selectFormatterWithoutRegardingAcceptHeader = false;
 

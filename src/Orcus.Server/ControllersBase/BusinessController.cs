@@ -1,4 +1,5 @@
-﻿using CodeElements.BizRunner;
+﻿using System;
+using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Error;
@@ -19,6 +20,15 @@ namespace Orcus.Server.ControllersBase
         public IActionResult BizActionStatus(IBizActionStatus status)
         {
             return status.ToActionResult();
+        }
+
+        [NonAction]
+        public IActionResult BizActionStatus(IBizActionStatus status, Func<IActionResult> getNormalActionResult)
+        {
+            if (status.HasErrors)
+                return status.ToActionResult();
+
+            return getNormalActionResult();
         }
     }
 }

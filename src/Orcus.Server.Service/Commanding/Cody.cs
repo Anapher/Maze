@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;

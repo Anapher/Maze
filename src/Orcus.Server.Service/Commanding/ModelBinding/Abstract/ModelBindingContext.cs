@@ -1,24 +1,17 @@
 ﻿using System;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.ModelBinding;
 
+// ReSharper disable once CheckNamespace
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {
-    /// <summary>
-    ///     Represents the state of an attempt to bind values from an HTTP Request to an action method, which includes
-    ///     validation information.
-    /// </summary>
-    public abstract class ModelErrorTracker
-    {
-        public abstract void AddError(Exception exception, ModelMetadata metadata);
-    }
-
     /// <summary>
     ///     A context that contains operating information for model binding and validation.
     /// </summary>
     public abstract class ModelBindingContext
     {
         /// <summary>
-        ///     Represents the <see cref="Commanding.ActionContext" /> associated with this context.
+        ///     Represents the <see cref="Orcus.Modules.Api.ActionContext" /> associated with this context.
         /// </summary>
         /// <remarks>
         ///     The property setter is provided for unit testing purposes only.
@@ -28,7 +21,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
         /// <summary>
         ///     Gets the <see cref="OrcusContext" /> associated with this context.
         /// </summary>
-        public OrcusContext OrcusContext => ActionContext?.OrcusContext;
+        public OrcusContext OrcusContext => ActionContext?.Context;
 
         /// <summary>
         ///     Gets or sets the model value for the current operation.
@@ -78,6 +71,6 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
         /// <summary>
         ///     Represents the current error state
         /// </summary>
-        public abstract ModelErrorTracker ModelState { get; set; }
+        public abstract ModelStateDictionary ModelState { get; set; }
     }
 }

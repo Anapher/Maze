@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Orcus.Modules.Api.Parameters;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Modules.Api.ModelBinding
 {
     /// <summary>
     ///     A metadata representation of a model type, property or parameter.

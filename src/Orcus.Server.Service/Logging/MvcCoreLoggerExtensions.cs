@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Formatters;
+using Orcus.Modules.Api.ModelBinding;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.Service.Commanding.Formatters;
@@ -1017,7 +1018,7 @@ namespace Orcus.Server.Service.Logging
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                var contentType = formatterContext.HttpContext.Request.ContentType;
+                var contentType = formatterContext.OrcusContext.Request.ContentType;
                 _inputFormatterSelected(logger, inputFormatter, contentType, null);
             }
         }
@@ -1029,7 +1030,7 @@ namespace Orcus.Server.Service.Logging
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                var contentType = formatterContext.HttpContext.Request.ContentType;
+                var contentType = formatterContext.OrcusContext.Request.ContentType;
                 _inputFormatterRejected(logger, inputFormatter, contentType, null);
             }
         }
@@ -1040,9 +1041,9 @@ namespace Orcus.Server.Service.Logging
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                var contentType = formatterContext.HttpContext.Request.ContentType;
+                var contentType = formatterContext.OrcusContext.Request.ContentType;
                 _noInputFormatterSelected(logger, contentType, null);
-                if (formatterContext.HttpContext.Request.HasFormContentType)
+                if (formatterContext.OrcusContext.Request.HasFormContentType)
                 {
                     var modelType = formatterContext.ModelType.FullName;
                     var modelName = formatterContext.ModelName;

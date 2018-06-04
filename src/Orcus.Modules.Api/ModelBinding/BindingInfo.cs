@@ -3,7 +3,7 @@
 
 using Orcus.Modules.Api.Parameters;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Modules.Api.ModelBinding
 {
     /// <summary>
     ///     Binding info which represents metadata associated to an action parameter.

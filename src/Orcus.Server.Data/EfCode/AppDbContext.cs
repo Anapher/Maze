@@ -11,6 +11,7 @@ namespace Orcus.Server.Data.EfCode
         }
 
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Orcus.Modules.Api.ModelBinding;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
 {

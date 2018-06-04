@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Orcus.Server.Service.Commanding.Formatters;
+using Orcus.Server.Service.Commanding.Formatters.Abstractions;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {

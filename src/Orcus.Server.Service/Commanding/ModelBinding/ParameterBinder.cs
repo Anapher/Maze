@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.ModelBinding;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding
 {

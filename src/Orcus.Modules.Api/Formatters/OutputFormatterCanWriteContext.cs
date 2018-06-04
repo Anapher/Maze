@@ -14,18 +14,16 @@ namespace Orcus.Modules.Api.Formatters
         /// <summary>
         ///     Creates a new <see cref="OutputFormatterCanWriteContext" />.
         /// </summary>
-        /// <param name="context">The <see cref="Context" /> for the current request.</param>
+        /// <param name="context">The <see cref="OrcusContext" /> for the current request.</param>
         protected OutputFormatterCanWriteContext(OrcusContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
-            Context = context;
+            OrcusContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="Context" /> context associated with the current operation.
+        ///     Gets or sets the <see cref="OrcusContext" /> context associated with the current operation.
         /// </summary>
-        public virtual OrcusContext Context { get; protected set; }
+        public virtual OrcusContext OrcusContext { get; protected set; }
 
         /// <summary>
         ///     Gets or sets the content type to write to the response.

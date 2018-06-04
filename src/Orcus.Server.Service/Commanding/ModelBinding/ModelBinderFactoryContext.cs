@@ -1,4 +1,6 @@
-﻿namespace Orcus.Server.Service.Commanding.ModelBinding
+﻿using Orcus.Modules.Api.ModelBinding;
+
+namespace Orcus.Server.Service.Commanding.ModelBinding
 {
     /// <summary>
     ///     A context object for <see cref="IModelBinderFactory.CreateBinder" />.
@@ -6,7 +8,7 @@
     public class ModelBinderFactoryContext
     {
         /// <summary>
-        /// Gets or sets the <see cref="ModelBinding.BindingInfo"/>.
+        /// Gets or sets the <see cref="Orcus.Modules.Api.ModelBinding.BindingInfo"/>.
         /// </summary>
         public BindingInfo BindingInfo { get; set; }
 

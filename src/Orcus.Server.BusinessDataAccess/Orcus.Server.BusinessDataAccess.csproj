@@ -4,4 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcus.Server.Data\Orcus.Server.Data.csproj" />
+  </ItemGroup>
+
 </Project>

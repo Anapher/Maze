@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Orcus.Modules.Api.ModelBinding;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
 {

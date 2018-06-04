@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO;
@@ -6,65 +9,77 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
-using Orcus.Server.Service.Commanding.ModelBinding;
-using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
+using Orcus.Modules.Api.Formatters;
+using Orcus.Modules.Api.ModelBinding;
+using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Server.Service.Commanding.Formatters.Json
 {
     /// <summary>
-    ///     A <see cref="TextInputFormatter" /> for JSON content.
+    /// A <see cref="TextInputFormatter"/> for JSON content.
     /// </summary>
-    public class JsonInputFormatter : TextInputFormatter, IInputFormatterExceptionPolicy
+    public class JsonInputFormatter : TextInputFormatter
     {
-        private readonly bool _allowInputFormatterExceptionMessages;
         private readonly IArrayPool<char> _charPool;
-        private readonly MvcJsonOptions _jsonOptions;
         private readonly ILogger _logger;
         private readonly ObjectPoolProvider _objectPoolProvider;
-        private readonly MvcOptions _options;
+        private readonly MvcJsonOptions _jsonOptions;
 
         // These fields are used when one of the legacy constructors is called that doesn't provide the MvcOptions or
         // MvcJsonOptions.
         private readonly bool _suppressInputFormatterBuffering;
+        private readonly bool _allowInputFormatterExceptionMessages;
 
         private ObjectPool<JsonSerializer> _jsonSerializerPool;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="JsonInputFormatter" />.
+        /// Initializes a new instance of <see cref="JsonInputFormatter"/>.
         /// </summary>
-        /// <param name="logger">The <see cref="ILogger" />.</param>
+        /// <param name="logger">The <see cref="ILogger"/>.</param>
         /// <param name="serializerSettings">
-        ///     The <see cref="JsonSerializerSettings" />. Should be either the application-wide settings
-        ///     (<see cref="MvcJsonOptions.SerializerSettings" />) or an instance
-        ///     <see cref="JsonSerializerSettingsProvider.CreateSerializerSettings" /> initially returned.
+        /// The <see cref="JsonSerializerSettings"/>. Should be either the application-wide settings
+        /// (<see cref="MvcJsonOptions.SerializerSettings"/>) or an instance
+        /// <see cref="JsonSerializerSettingsProvider.CreateSerializerSettings"/> initially returned.
         /// </param>
-        /// <param name="charPool">The <see cref="ArrayPool{Char}" />.</param>
-        /// <param name="objectPoolProvider">The <see cref="ObjectPoolProvider" />.</param>
-        /// <param name="options">The <see cref="MvcOptions" />.</param>
-        /// <param name="jsonOptions">The <see cref="MvcJsonOptions" />.</param>
+        /// <param name="charPool">The <see cref="ArrayPool{Char}"/>.</param>
+        /// <param name="objectPoolProvider">The <see cref="ObjectPoolProvider"/>.</param>
+        /// <param name="options">The <see cref="MvcOptions"/>.</param>
+        /// <param name="jsonOptions">The <see cref="MvcJsonOptions"/>.</param>
         public JsonInputFormatter(
             ILogger logger,
             JsonSerializerSettings serializerSettings,
             ArrayPool<char> charPool,
             ObjectPoolProvider objectPoolProvider,
-            MvcOptions options,
             MvcJsonOptions jsonOptions)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
 
-            if (serializerSettings == null) throw new ArgumentNullException(nameof(serializerSettings));
+            if (serializerSettings == null)
+            {
+                throw new ArgumentNullException(nameof(serializerSettings));
+            }
 
-            if (charPool == null) throw new ArgumentNullException(nameof(charPool));
+            if (charPool == null)
+            {
+                throw new ArgumentNullException(nameof(charPool));
+            }
 
-            if (objectPoolProvider == null) throw new ArgumentNullException(nameof(objectPoolProvider));
+            if (objectPoolProvider == null)
+            {
+                throw new ArgumentNullException(nameof(objectPoolProvider));
+            }
 
             _logger = logger;
             SerializerSettings = serializerSettings;
             _charPool = new JsonArrayPool<char>(charPool);
             _objectPoolProvider = objectPoolProvider;
-            _options = options;
             _jsonOptions = jsonOptions;
 
             SupportedEncodings.Add(UTF8EncodingWithoutBOM);
@@ -75,23 +90,12 @@ namespace Orcus.Server.Service.Commanding.Formatters
             SupportedMediaTypes.Add(MediaTypeHeaderValues.ApplicationAnyJsonSyntax);
         }
 
-        /// <inheritdoc />
-        public virtual InputFormatterExceptionPolicy ExceptionPolicy
-        {
-            get
-            {
-                if (GetType() == typeof(JsonInputFormatter))
-                    return InputFormatterExceptionPolicy.MalformedInputExceptions;
-                return InputFormatterExceptionPolicy.AllExceptions;
-            }
-        }
-
         /// <summary>
-        ///     Gets the <see cref="JsonSerializerSettings" /> used to configure the <see cref="JsonSerializer" />.
+        /// Gets the <see cref="JsonSerializerSettings"/> used to configure the <see cref="JsonSerializer"/>.
         /// </summary>
         /// <remarks>
-        ///     Any modifications to the <see cref="JsonSerializerSettings" /> object after this
-        ///     <see cref="JsonInputFormatter" /> has been used will have no effect.
+        /// Any modifications to the <see cref="JsonSerializerSettings"/> object after this
+        /// <see cref="JsonInputFormatter"/> has been used will have no effect.
         /// </remarks>
         protected JsonSerializerSettings SerializerSettings { get; }
 
@@ -100,16 +104,15 @@ namespace Orcus.Server.Service.Commanding.Formatters
             InputFormatterContext context,
             Encoding encoding)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
 
-            if (encoding == null) throw new ArgumentNullException(nameof(encoding));
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
 
-            var request = context.HttpContext.Request;
+            var request = context.OrcusContext.Request;
 
-            var suppressInputFormatterBuffering =
-                _options?.SuppressInputFormatterBuffering ?? _suppressInputFormatterBuffering;
-
-            if (!request.Body.CanSeek && !suppressInputFormatterBuffering)
+            if (!request.Body.CanSeek)
             {
                 // JSON.Net does synchronous reads. In order to avoid blocking on the stream, we asynchronously
                 // read everything into a buffer, and then seek back to the beginning.
@@ -129,8 +132,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
 
                     var successful = true;
                     Exception exception = null;
-
-                    void ErrorHandler(object sender, ErrorEventArgs eventArgs)
+                    void ErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs eventArgs)
                     {
                         successful = false;
 
@@ -139,11 +141,17 @@ namespace Orcus.Server.Service.Commanding.Formatters
                         if (!string.IsNullOrEmpty(context.ModelName))
                         {
                             if (string.IsNullOrEmpty(eventArgs.ErrorContext.Path))
+                            {
                                 key = context.ModelName;
+                            }
                             else if (eventArgs.ErrorContext.Path[0] == '[')
+                            {
                                 key = context.ModelName + eventArgs.ErrorContext.Path;
+                            }
                             else
+                            {
                                 key = context.ModelName + "." + eventArgs.ErrorContext.Path;
+                            }
                         }
 
                         var metadata = GetPathMetadata(context.Metadata, eventArgs.ErrorContext.Path);
@@ -178,8 +186,17 @@ namespace Orcus.Server.Service.Commanding.Formatters
                     if (successful)
                     {
                         if (model == null && !context.TreatEmptyInputAsDefaultValue)
+                        {
+                            // Some nonempty inputs might deserialize as null, for example whitespace,
+                            // or the JSON-encoded value "null". The upstream BodyModelBinder needs to
+                            // be notified that we don't regard this as a real input so it can register
+                            // a model binding error.
                             return InputFormatterResult.NoValue();
-                        return InputFormatterResult.Success(model);
+                        }
+                        else
+                        {
+                            return InputFormatterResult.Success(model);
+                        }
                     }
 
                     if (!(exception is JsonException || exception is OverflowException))
@@ -194,42 +211,47 @@ namespace Orcus.Server.Service.Commanding.Formatters
         }
 
         /// <summary>
-        ///     Called during deserialization to get the <see cref="JsonSerializer" />.
+        /// Called during deserialization to get the <see cref="JsonSerializer"/>.
         /// </summary>
-        /// <returns>The <see cref="JsonSerializer" /> used during deserialization.</returns>
+        /// <returns>The <see cref="JsonSerializer"/> used during deserialization.</returns>
         /// <remarks>
-        ///     This method works in tandem with <see cref="ReleaseJsonSerializer(JsonSerializer)" /> to
-        ///     manage the lifetimes of <see cref="JsonSerializer" /> instances.
+        /// This method works in tandem with <see cref="ReleaseJsonSerializer(JsonSerializer)"/> to
+        /// manage the lifetimes of <see cref="JsonSerializer"/> instances.
         /// </remarks>
         protected virtual JsonSerializer CreateJsonSerializer()
         {
             if (_jsonSerializerPool == null)
+            {
                 _jsonSerializerPool = _objectPoolProvider.Create(new JsonSerializerObjectPolicy(SerializerSettings));
+            }
 
             return _jsonSerializerPool.Get();
         }
 
         /// <summary>
-        ///     Releases the <paramref name="serializer" /> instance.
+        /// Releases the <paramref name="serializer"/> instance.
         /// </summary>
-        /// <param name="serializer">The <see cref="JsonSerializer" /> to release.</param>
+        /// <param name="serializer">The <see cref="JsonSerializer"/> to release.</param>
         /// <remarks>
-        ///     This method works in tandem with <see cref="ReleaseJsonSerializer(JsonSerializer)" /> to
-        ///     manage the lifetimes of <see cref="JsonSerializer" /> instances.
+        /// This method works in tandem with <see cref="ReleaseJsonSerializer(JsonSerializer)"/> to
+        /// manage the lifetimes of <see cref="JsonSerializer"/> instances.
         /// </remarks>
         protected virtual void ReleaseJsonSerializer(JsonSerializer serializer)
-        {
-            _jsonSerializerPool.Return(serializer);
-        }
+            => _jsonSerializerPool.Return(serializer);
 
         private ModelMetadata GetPathMetadata(ModelMetadata metadata, string path)
         {
             var index = 0;
             while (index >= 0 && index < path.Length)
+            {
                 if (path[index] == '[')
                 {
                     // At start of "[0]".
-                    if (metadata.ElementMetadata == null) break;
+                    if (metadata.ElementMetadata == null)
+                    {
+                        // Odd case but don't throw just because ErrorContext had an odd-looking path.
+                        break;
+                    }
 
                     metadata = metadata.ElementMetadata;
                     index = path.IndexOf(']', index);
@@ -242,15 +264,23 @@ namespace Orcus.Server.Service.Commanding.Formatters
                 else
                 {
                     // At start of "property", "property." or "property[0]".
-                    var endIndex = path.IndexOfAny(new[] {'.', '['}, index);
-                    if (endIndex == -1) endIndex = path.Length;
+                    var endIndex = path.IndexOfAny(new[] { '.', '[' }, index);
+                    if (endIndex == -1)
+                    {
+                        endIndex = path.Length;
+                    }
 
                     var propertyName = path.Substring(index, endIndex - index);
-                    if (metadata.Properties[propertyName] == null) break;
+                    if (metadata.Properties[propertyName] == null)
+                    {
+                        // Odd case but don't throw just because ErrorContext had an odd-looking path.
+                        break;
+                    }
 
                     metadata = metadata.Properties[propertyName];
                     index = endIndex;
                 }
+            }
 
             return metadata;
         }
@@ -260,13 +290,20 @@ namespace Orcus.Server.Service.Commanding.Formatters
             // In 2.0 and earlier we always gave a generic error message for errors that come from JSON.NET
             // We only allow it in 2.1 and newer if the app opts-in.
             if (!(_jsonOptions?.AllowInputFormatterExceptionMessages ?? _allowInputFormatterExceptionMessages))
+            {
+                // This app is not opted-in to JSON.NET messages, return the original exception.
                 return exception;
+            }
 
             // It's not known that Json.NET currently ever raises error events with exceptions
             // other than these two types, but we're being conservative and limiting which ones
             // we regard as having safe messages to expose to clients
             if (exception is JsonReaderException || exception is JsonSerializationException)
+            {
+                // InputFormatterException specifies that the message is safe to return to a client, it will
+                // be added to model state.
                 return new InputFormatterException(exception.Message, exception);
+            }
 
             // Not a known exception type, so we're not going to assume that it's safe.
             return exception;

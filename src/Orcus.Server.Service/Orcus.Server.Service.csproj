@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commanding\Formatters\Json\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

@@ -1,10 +1,13 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
+using Orcus.Server.Service.Infrastructure;
 
+// ReSharper disable once CheckNamespace
 namespace Orcus.Server.Service.Commanding.Formatters
 {
     /// <summary>
@@ -19,8 +22,8 @@ namespace Orcus.Server.Service.Commanding.Formatters
     ///     </para>
     ///     <para>
     ///         The default implementation is controlled by settings on <see cref="MvcOptions" />, most notably:
-    ///         <see cref="MvcOptions.OutputFormatters" />, <see cref="MvcOptions.RespectBrowserAcceptHeader" />, and
-    ///         <see cref="MvcOptions.ReturnHttpNotAcceptable" />.
+    ///         <see cref="OutputFormatters" />, <see cref="RespectBrowserAcceptHeader" />, and
+    ///         <see cref="ReturnHttpNotAcceptable" />.
     ///     </para>
     /// </remarks>
     public abstract class OutputFormatterSelector

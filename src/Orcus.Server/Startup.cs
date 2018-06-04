@@ -104,6 +104,17 @@ namespace Orcus.Server
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("v1/signalR"));
+            app.UseWebSockets();
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/ws/client")
+                {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
+                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    }
+                }
+            });
         }
     }
 }

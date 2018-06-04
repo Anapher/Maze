@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Server.Service.Commanding.Formatters;
+using Orcus.Server.Service.Commanding.Formatters.Abstractions;
 using Orcus.Server.Service.Infrastructure;
 
 namespace Orcus.Server.Service.Commanding.ModelBinding.Binders

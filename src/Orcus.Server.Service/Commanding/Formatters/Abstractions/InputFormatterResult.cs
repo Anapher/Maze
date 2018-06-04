@@ -1,7 +1,9 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Orcus.Server.Service.Commanding.Formatters
 {
     /// <summary>
@@ -9,10 +11,12 @@ namespace Orcus.Server.Service.Commanding.Formatters
     /// </summary>
     public class InputFormatterResult
     {
+        // ReSharper disable InconsistentNaming
         private static readonly InputFormatterResult _failure = new InputFormatterResult(true);
         private static readonly InputFormatterResult _noValue = new InputFormatterResult(false);
         private static readonly Task<InputFormatterResult> _failureAsync = Task.FromResult(_failure);
         private static readonly Task<InputFormatterResult> _noValueAsync = Task.FromResult(_noValue);
+        // ReSharper restore InconsistentNaming
 
         private InputFormatterResult(bool hasError)
         {

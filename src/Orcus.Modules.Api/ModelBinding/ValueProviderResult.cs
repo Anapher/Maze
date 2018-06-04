@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Extensions.Primitives;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Modules.Api.ModelBinding
 {
     /// <summary>
     ///     Result of an <see cref="IValueProvider.GetValue(string)" /> operation.

@@ -1,12 +1,14 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
 using System;
 using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.ModelBinding;
 using Orcus.Server.Service.Commanding.ModelBinding;
 
+// ReSharper disable once CheckNamespace
 namespace Orcus.Server.Service.Commanding.Formatters
 {
     /// <summary>
@@ -22,7 +24,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
         /// </param>
         /// <param name="modelName">The name of the model.</param>
         /// <param name="modelState">
-        ///     The <see cref="ModelStateDictionary" /> for recording errors.
+        ///     The <see cref="Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary" /> for recording errors.
         /// </param>
         /// <param name="metadata">
         ///     The <see cref="ModelMetadata" /> of the model to deserialize.
@@ -33,7 +35,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
         public InputFormatterContext(
             OrcusContext httpContext,
             string modelName,
-            ModelErrorTracker modelState,
+            ModelStateDictionary modelState,
             ModelMetadata metadata,
             Func<Stream, Encoding, TextReader> readerFactory)
             : this(httpContext, modelName, modelState, metadata, readerFactory, false)
@@ -48,7 +50,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
         /// </param>
         /// <param name="modelName">The name of the model.</param>
         /// <param name="modelState">
-        ///     The <see cref="ModelStateDictionary" /> for recording errors.
+        ///     The <see cref="Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary" /> for recording errors.
         /// </param>
         /// <param name="metadata">
         ///     The <see cref="ModelMetadata" /> of the model to deserialize.
@@ -62,26 +64,16 @@ namespace Orcus.Server.Service.Commanding.Formatters
         public InputFormatterContext(
             OrcusContext httpContext,
             string modelName,
-            ModelErrorTracker modelState,
+            ModelStateDictionary modelState,
             ModelMetadata metadata,
             Func<Stream, Encoding, TextReader> readerFactory,
             bool treatEmptyInputAsDefaultValue)
         {
-            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
-
-            if (modelName == null) throw new ArgumentNullException(nameof(modelName));
-
-            if (modelState == null) throw new ArgumentNullException(nameof(modelState));
-
-            if (metadata == null) throw new ArgumentNullException(nameof(metadata));
-
-            if (readerFactory == null) throw new ArgumentNullException(nameof(readerFactory));
-
-            HttpContext = httpContext;
-            ModelName = modelName;
-            ModelState = modelState;
-            Metadata = metadata;
-            ReaderFactory = readerFactory;
+            OrcusContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
+            ModelName = modelName ?? throw new ArgumentNullException(nameof(modelName));
+            ModelState = modelState ?? throw new ArgumentNullException(nameof(modelState));
+            Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
+            ReaderFactory = readerFactory ?? throw new ArgumentNullException(nameof(readerFactory));
             TreatEmptyInputAsDefaultValue = treatEmptyInputAsDefaultValue;
             ModelType = metadata.ModelType;
         }
@@ -98,7 +90,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
         /// <summary>
         ///     Gets the <see cref="Microsoft.AspNetCore.Http.HttpContext" /> associated with the current operation.
         /// </summary>
-        public OrcusContext HttpContext { get; }
+        public OrcusContext OrcusContext { get; }
 
         /// <summary>
         ///     Gets the name of the model. Used as the key or key prefix for errors added to <see cref="ModelState" />.
@@ -108,7 +100,7 @@ namespace Orcus.Server.Service.Commanding.Formatters
         /// <summary>
         ///     Gets the <see cref="ModelStateDictionary" /> associated with the current operation.
         /// </summary>
-        public ModelErrorTracker ModelState { get; }
+        public ModelStateDictionary ModelState { get; }
 
         /// <summary>
         ///     Gets the requested <see cref="ModelMetadata" /> of the request body deserialization.

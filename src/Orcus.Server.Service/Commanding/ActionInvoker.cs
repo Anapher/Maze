@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.ModelBinding;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Server.Service.Commanding.ModelBinding;
 
