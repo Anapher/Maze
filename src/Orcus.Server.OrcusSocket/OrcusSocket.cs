@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net.WebSockets;
@@ -9,6 +10,81 @@ using Microsoft.AspNetCore.Http;
 
 namespace Orcus.Server.OrcusSockets
 {
+    public class OrcusMessage : IDisposable
+    {
+        private bool _disposed;
+
+        public ArraySegment<byte> Buffer { get; set; }
+        public uint ChannelId { get; set; }
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                ArrayPool<byte>.Shared.Return(Buffer.Array);
+                _disposed = true;
+            }
+        }
+    }
+
+    public abstract class OrcusChannel : IDisposable
+    {
+        public event EventHandler<ArraySegment<byte>> SendMessage;
+
+        public abstract void InvokeMessage(OrcusMessage message);
+
+        public virtual void Dispose()
+        {
+        }
+    }
+
+    public class OrcusServer
+    {
+        private readonly OrcusSocket _socket;
+        private readonly ConcurrentDictionary<uint, OrcusChannel> _channels;
+        private readonly ConcurrentDictionary<OrcusChannel, uint> _channelsReversed;
+
+        public OrcusServer(OrcusSocket socket)
+        {
+            _socket = socket;
+            _channels = new ConcurrentDictionary<uint, OrcusChannel>();
+            _channelsReversed = new ConcurrentDictionary<OrcusChannel, uint>();
+
+            socket.MessageReceived += SocketOnMessageReceived;
+            socket.RequestReceived += SocketOnRequestReceived;
+        }
+
+        private void SocketOnMessageReceived(object sender, OrcusMessage e)
+        {
+            _channels[e.ChannelId].InvokeMessage(e);
+        }
+
+        public void RegisterChannel(OrcusChannel channel, uint channelId)
+        {
+            channel.SendMessage += ChannelOnSendMessage;
+
+            _channels.TryAdd(channelId, channel);
+            _channelsReversed.TryAdd(channel, channelId);
+        }
+
+        private void ChannelOnSendMessage(object sender, ArraySegment<byte> e)
+        {
+            var channel = (OrcusChannel) sender;
+            var channelId = _channelsReversed[channel];
+            _socket.SendAsync(new OrcusMessage {ChannelId = channelId, Buffer = e});
+        }
+
+        private void SocketOnRequestReceived(object sender, ArraySegment<byte> e)
+        {
+
+        }
+
+        private void ReceiveRequest(HttpRequest request)
+        {
+
+        }
+    }
+
     public class OrcusSocket : IDisposable
     {
         private readonly Stream _stream;
@@ -16,7 +92,6 @@ namespace Orcus.Server.OrcusSockets
 
         /// <summary>CancellationTokenSource used to abort all current and future operations when anything is canceled or any error occurs.</summary>
         private readonly CancellationTokenSource _abortSource = new CancellationTokenSource();
-        private Memory<byte> _receiveBuffer;
 
         /// <summary>Lock used to protect update and check-and-update operations on _state.</summary>
         private object StateUpdateLock => _abortSource;
@@ -29,6 +104,15 @@ namespace Orcus.Server.OrcusSockets
 
         /// <summary>true if Dispose has been called; otherwise, false.</summary>
         private bool _disposed;
+
+        /// <summary>Buffer used for reading data from the network.</summary>
+        private byte[] _receiveBuffer;
+
+        /// <summary>The offset of the next available byte in the _receiveBuffer.</summary>
+        private int _receiveBufferOffset;
+
+        /// <summary>The number of bytes available in the _receiveBuffer.</summary>
+        private int _receiveBufferCount;
 
         public OrcusSocket(Stream stream, TimeSpan? keepAliveInterval)
         {
@@ -80,26 +164,11 @@ namespace Orcus.Server.OrcusSockets
                 }
             }
         }
-
-        public event EventHandler<HttpRequest> HttpRequestReceived;
+        
+        public event EventHandler<OrcusMessage> MessageReceived;
+        public event EventHandler<ArraySegment<byte>> RequestReceived;
 
         public WebSocketState State { get; private set; }
-
-        private void SendKeepAliveFrameAsync()
-        {
-            bool acquiredLock = _sendFrameAsyncLock.Wait(0);
-            if (acquiredLock)
-            {
-                // This exists purely to keep the connection alive; don't wait for the result, and ignore any failures.
-                // The call will handle releasing the lock.
-                SendFrameLockAcquiredNonCancelableAsync(MessageOpcode.Ping, new ArraySegment<byte>());
-            }
-            else
-            {
-                // If the lock is already held, something is already getting sent,
-                // so there's no need to send a keep-alive ping.
-            }
-        }
 
         public void Abort()
         {
@@ -107,9 +176,110 @@ namespace Orcus.Server.OrcusSockets
             Dispose(); // forcibly tear down connection
         }
 
-        public async Task SendHttpRequest()
+        public Task SendAsync(OrcusMessage message)
         {
+            return SendFrameAsync(MessageOpcode.Message, message.Buffer, CancellationToken.None);
+        }
 
+        public async Task ReceiveAsync()
+        {
+            while (true)
+            {
+                await EnsureBufferContainsAsync(2);
+                var opcode = (MessageOpcode) _receiveBuffer[0];
+                var length = ReadPayloadLength(_receiveBuffer[1]);
+
+                ArraySegment<byte> receiveBuffer = default;
+                if (length > 0)
+                {
+                    var buffer = ArrayPool<byte>.Shared.Rent(length);
+                    var count = length;
+                    
+                    int numRead = 0;
+                    do
+                    {
+                        int n = _stream.Read(buffer, numRead, count);
+                        if (n == 0)
+                            break;
+                        numRead += n;
+                        count -= n;
+                    } while (count > 0);
+
+                    if (numRead != length)
+                        ThrowIfEofUnexpected(throwOnPrematureClosure: true);
+
+                    receiveBuffer = new ArraySegment<byte>(buffer, 0, length);
+                }
+
+                if (opcode == MessageOpcode.Ping || opcode == MessageOpcode.Pong)
+                {
+                    await HandleReceivedPingPongAsync();
+                    continue;
+                }
+
+                if (opcode == MessageOpcode.Close)
+                {
+
+                }
+
+                if (opcode == MessageOpcode.Message)
+                {
+                    var channelId = BitConverter.ToUInt32(receiveBuffer.Array, receiveBuffer.Offset);
+                    MessageReceived?.Invoke(this,
+                        new OrcusMessage
+                        {
+                            ChannelId = channelId,
+                            Buffer = new ArraySegment<byte>(receiveBuffer.Array, receiveBuffer.Offset + 4,
+                                receiveBuffer.Count - 4)
+                        });
+                }
+
+                switch (opcode)
+                {
+                    case MessageOpcode.Request:
+                        RequestReceived?.Invoke(this, receiveBuffer);
+                        break;
+                    case MessageOpcode.RequestContinuation:
+                        break;
+                    case MessageOpcode.Response:
+                        break;
+                    case MessageOpcode.ResponseContinuation:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        private int ReadPayloadLength(byte firstByte)
+        {
+            var readNextByteFromStream = false;
+
+            // Read out an Int32 7 bits at a time.  The high bit
+            // of the byte when on means to continue reading more bytes.
+            int count = 0;
+            int shift = 0;
+            byte b;
+
+            do
+            {
+                // Check for a corrupted stream.  Read a max of 5 bytes.
+                // In a future version, add a DataFormatException.
+                if (shift == 5 * 7)  // 5 bytes max per Int32, shift += 7
+                    throw new FormatException("Invalid 7 Bit encoeded integer");
+
+                if (readNextByteFromStream)
+                    b = ReadByteSafe();
+                else
+                {
+                    b = firstByte;
+                    readNextByteFromStream = true;
+                }
+
+                count |= (b & 0x7F) << shift;
+                shift += 7;
+            } while ((b & 0x80) != 0);
+            return count;
         }
 
         /// <summary>Sends a websocket frame to the network.</summary>
@@ -249,9 +419,91 @@ namespace Orcus.Server.OrcusSockets
             }
         }
 
-        public async Task<HttpResponse> CreateEmptyResponse()
+        private async Task EnsureBufferContainsAsync(int minimumRequiredBytes, bool throwOnPrematureClosure = true)
         {
-            return null;
+            Debug.Assert(minimumRequiredBytes <= _receiveBuffer.Length, $"Requested number of bytes {minimumRequiredBytes} must not exceed {_receiveBuffer.Length}");
+
+            // If we don't have enough data in the buffer to satisfy the minimum required, read some more.
+            if (_receiveBufferCount < minimumRequiredBytes)
+            {
+                // If there's any data in the buffer, shift it down.  
+                if (_receiveBufferCount > 0)
+                {
+                    Buffer.BlockCopy(_receiveBuffer, _receiveBufferOffset, _receiveBuffer, 0, _receiveBufferCount);
+                }
+                _receiveBufferOffset = 0;
+
+                // While we don't have enough data, read more.
+                while (_receiveBufferCount < minimumRequiredBytes)
+                {
+                    int numRead = await _stream.ReadAsync(_receiveBuffer, _receiveBufferCount,
+                        _receiveBuffer.Length - _receiveBufferCount).ConfigureAwait(false);
+                    Debug.Assert(numRead >= 0, $"Expected non-negative bytes read, got {numRead}");
+                    _receiveBufferCount += numRead;
+                    if (numRead == 0)
+                    {
+                        // The connection closed before we were able to read everything we needed.
+                        // If it was due to use being disposed, fail.  If it was due to the connection
+                        // being closed and it wasn't expected, fail.  If it was due to the connection
+                        // being closed and that was expected, exit gracefully.
+                        if (_disposed)
+                        {
+                            throw new ObjectDisposedException(nameof(WebSocket));
+                        }
+                        else if (throwOnPrematureClosure)
+                        {
+                            throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ThrowIfEofUnexpected(bool throwOnPrematureClosure)
+        {
+            // The connection closed before we were able to read everything we needed.
+            // If it was due to us being disposed, fail.  If it was due to the connection
+            // being closed and it wasn't expected, fail.  If it was due to the connection
+            // being closed and that was expected, exit gracefully.
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(WebSocket));
+            }
+            if (throwOnPrematureClosure)
+            {
+                throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
+            }
+        }
+
+        private byte ReadByteSafe()
+        {
+            var result = _stream.ReadByte();
+            if (result == -1)
+                throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
+
+            return (byte) result;
+        }
+
+        private Task HandleReceivedPingPongAsync()
+        {
+            return SendFrameAsync(MessageOpcode.Pong, default, CancellationToken.None);
+        }
+
+        private void SendKeepAliveFrameAsync()
+        {
+            bool acquiredLock = _sendFrameAsyncLock.Wait(0);
+            if (acquiredLock)
+            {
+                // This exists purely to keep the connection alive; don't wait for the result, and ignore any failures.
+                // The call will handle releasing the lock.
+                SendFrameLockAcquiredNonCancelableAsync(MessageOpcode.Ping, new ArraySegment<byte>());
+            }
+            else
+            {
+                // If the lock is already held, something is already getting sent,
+                // so there's no need to send a keep-alive ping.
+            }
         }
 
         /// <summary>Creates an OperationCanceledException instance, using a default message and the specified inner exception and token.</summary>
@@ -266,6 +518,9 @@ namespace Orcus.Server.OrcusSockets
         {
             Message = 0x1,
             Request = 0x2,
+            RequestContinuation = 0x3,
+            Response = 0x4,
+            ResponseContinuation = 0x5,
             Close = 0x8,
             Ping = 0x9,
             Pong = 0xA
