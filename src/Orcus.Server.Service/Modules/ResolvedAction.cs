@@ -6,12 +6,6 @@ using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Server.Service.Modules
 {
-    public enum ResolvedActionType
-    {
-        Install,
-        Uninstall
-    }
-
     public class ResolvedAction
     {
         public ResolvedAction(PackageIdentity packageIdentity, SourceRepository sourceRepository,

@@ -16,4 +16,12 @@
     <ProjectReference Include="..\submodules\CodeElements.BizRunner\CodeElements.BizRunner\CodeElements.BizRunner.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="NuGet.Frameworks">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Versioning">
+      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using NuGet.Packaging.Core;
 using Orcus.Administration.Core.Clients;
-using Orcus.ModuleManagement;
 using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Administration.Core.Modules

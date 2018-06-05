@@ -350,6 +350,11 @@ namespace Orcus.Server.Service.Modules
             }
         }
 
+        public Task<PackagesLock> GetPackagesLock(NuGetFramework framework)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task Rollback(Stack<ResolvedAction> executedActions, ISet<PackageIdentity> packageWithDirectoriesToBeDeleted, CancellationToken token)
         {
             while (executedActions.Any())

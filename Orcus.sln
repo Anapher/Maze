@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus", "src\Orcus\Orcus.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.BusinessLogic.Tests", "test\Orcus.Server.BusinessLogic.Tests\Orcus.Server.BusinessLogic.Tests.csproj", "{B815C545-E86A-47E9-81F5-11CE7B2E141D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Service.Commander", "src\Orcus.Service.Commander\Orcus.Service.Commander.csproj", "{A671F822-E1D1-491F-A31D-5C24F5482F74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{B815C545-E86A-47E9-81F5-11CE7B2E141D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B815C545-E86A-47E9-81F5-11CE7B2E141D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B815C545-E86A-47E9-81F5-11CE7B2E141D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

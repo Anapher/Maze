@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using NuGet.Packaging.Core;
 
-namespace Orcus.ModuleManagement
+namespace Orcus.Server.Connection.Modules
 {
     public class PackagesLock
     {

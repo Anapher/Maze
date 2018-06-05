@@ -12,6 +12,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Orcus.ModuleManagement;
+using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Service.Tests.Utils;

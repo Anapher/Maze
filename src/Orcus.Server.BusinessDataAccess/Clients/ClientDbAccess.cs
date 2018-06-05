@@ -8,6 +8,7 @@ namespace Orcus.Server.BusinessDataAccess.Clients
     public interface IClientDbAccess
     {
         Task<Client> FindClientByHardwareId(string hardwareId);
+        void AddClient(Client client);
     }
 
     public class ClientDbAccess : IClientDbAccess
@@ -22,6 +23,11 @@ namespace Orcus.Server.BusinessDataAccess.Clients
         public Task<Client> FindClientByHardwareId(string hardwareId)
         {
             return _context.Clients.FirstOrDefaultAsync(x => x.HardwareId == hardwareId);
+        }
+
+        public void AddClient(Client client)
+        {
+            _context.Add(client);
         }
     }
 }

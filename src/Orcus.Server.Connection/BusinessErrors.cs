@@ -5,10 +5,19 @@ namespace Orcus.Server.Connection
     public static class BusinessErrors
     {
         public static RestError FieldNullOrEmpty(string name)
-        {
-            return new RestError(ErrorTypes.ValidationError, $"The field {name} must not be null or empty.",
+            => new RestError(ErrorTypes.ValidationError, $"The field {name} must not be null or empty.",
                 (int) ErrorCode.FieldNullOrEmpty);
-        }
+
+        public static RestError InvalidSha256Hash => CreateValidationError(
+            "The value must be a valid SHA256 hash. A SHA256 hash consists of 64 hexadecimal characeters.",
+            ErrorCode.InvalidSha256Hash);
+
+        public static RestError InvalidMacAddress => CreateValidationError(
+            "The value must be a valid mac address. A mac address must consist of 6 bytes.",
+            ErrorCode.InvalidSha256Hash);
+
+        public static RestError InvalidCultureName => CreateValidationError(
+            "The given culture is not supported.", ErrorCode.InvalidCultureName);
 
         public static class Account
         {
@@ -32,5 +41,8 @@ namespace Orcus.Server.Connection
                 return new RestError(ErrorTypes.AuthenticationError, message, (int) code);
             }
         }
+
+        private static RestError CreateValidationError(string message, ErrorCode code) =>
+            new RestError(ErrorTypes.ValidationError, message, (int) code);
     }
 }

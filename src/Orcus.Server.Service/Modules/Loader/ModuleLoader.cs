@@ -9,6 +9,7 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
+using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Extensions;
 
 namespace Orcus.Server.Service.Modules.Loader

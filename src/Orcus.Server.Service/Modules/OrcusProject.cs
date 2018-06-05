@@ -11,6 +11,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
+using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Config;
 
 namespace Orcus.Server.Service.Modules

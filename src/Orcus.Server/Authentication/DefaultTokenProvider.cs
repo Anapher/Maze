@@ -41,6 +41,18 @@ namespace Orcus.Server.Authentication
                 _signingCredentials);
         }
 
+        public JwtSecurityToken GetClientToken(Client client)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, client.ClientId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                new Claim(ClaimTypes.Role, "client")
+            };
+
+            return new JwtSecurityToken(_issuer, _audience, claims, null, null, _signingCredentials);
+        }
+
         public TokenValidationParameters GetValidationParameters()
         {
             return new TokenValidationParameters

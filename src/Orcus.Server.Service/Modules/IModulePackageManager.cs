@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
+using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection.Modules;
@@ -22,5 +23,7 @@ namespace Orcus.Server.Service.Modules
 
         Task ExecuteActionsAsync(IEnumerable<ResolvedAction> actions, PackageDownloadContext downloadContext,
             CancellationToken token);
+
+        Task<PackagesLock> GetPackagesLock(NuGetFramework framework);
     }
 }

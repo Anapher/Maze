@@ -6,6 +6,7 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
+using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Server.Service.Modules
 {

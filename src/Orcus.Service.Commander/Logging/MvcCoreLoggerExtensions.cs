@@ -14,6 +14,7 @@ using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.Service.Commanding.Formatters;
 using Orcus.Server.Service.Commanding.Formatters.Abstractions;
+using Orcus.Server.Service.Commanding.Formatters.Internal;
 using Orcus.Server.Service.Commanding.ModelBinding;
 
 namespace Orcus.Server.Service.Logging

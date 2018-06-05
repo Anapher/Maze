@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -18,6 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj" />
+
+    <Reference Include="NuGet.Versioning">
+      <HintPath>..\..\src\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

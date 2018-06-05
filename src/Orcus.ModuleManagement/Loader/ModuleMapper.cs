@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
+using Orcus.Server.Connection.Modules;
 
 namespace Orcus.ModuleManagement.Loader
 {

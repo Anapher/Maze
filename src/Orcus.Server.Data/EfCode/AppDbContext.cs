@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Orcus.Server.Data.EfClasses;
-using Orcus.Server.Data.EfCode.Configurations;
+using Orcus.Server.Data.Extensions;
 
 namespace Orcus.Server.Data.EfCode
 {
@@ -17,7 +20,7 @@ namespace Orcus.Server.Data.EfCode
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new AccountConfig());
+            modelBuilder.ApplyAllConfigurations();
         }
     }
 }

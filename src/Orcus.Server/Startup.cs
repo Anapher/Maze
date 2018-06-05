@@ -54,7 +54,8 @@ namespace Orcus.Server
                         return Task.CompletedTask;
                     }
                 };
-                options.TokenValidationParameters = provider.GetService<DefaultTokenProvider>().GetValidationParameters();
+                options.TokenValidationParameters =
+                    provider.GetService<DefaultTokenProvider>().GetValidationParameters();
             });
             services.AddAuthorization(options =>
             {

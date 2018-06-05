@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection;
@@ -27,6 +28,15 @@ namespace Orcus.Server.ControllersBase
         {
             if (status.HasErrors)
                 return status.ToActionResult();
+
+            return getNormalActionResult();
+        }
+
+        [NonAction]
+        public Task<IActionResult> BizActionStatus(IBizActionStatus status, Func<Task<IActionResult>> getNormalActionResult)
+        {
+            if (status.HasErrors)
+                return Task.FromResult(status.ToActionResult());
 
             return getNormalActionResult();
         }

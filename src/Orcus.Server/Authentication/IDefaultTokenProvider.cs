@@ -6,6 +6,7 @@ namespace Orcus.Server.Authentication
     public interface IDefaultTokenProvider : ITokenGenerator
     {
         JwtSecurityToken GetAccountToken(Account account);
+        JwtSecurityToken GetClientToken(Client client);
     }
 
     public interface ITokenGenerator
