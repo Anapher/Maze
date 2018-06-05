@@ -67,9 +67,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{67CFB4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus", "src\Orcus\Orcus.csproj", "{860BFB06-4FCD-494F-B7C3-1D53683FA988}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.BusinessLogic.Tests", "test\Orcus.Server.BusinessLogic.Tests\Orcus.Server.BusinessLogic.Tests.csproj", "{B815C545-E86A-47E9-81F5-11CE7B2E141D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.BusinessLogic.Tests", "test\Orcus.Server.BusinessLogic.Tests\Orcus.Server.BusinessLogic.Tests.csproj", "{B815C545-E86A-47E9-81F5-11CE7B2E141D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Service.Commander", "src\Orcus.Service.Commander\Orcus.Service.Commander.csproj", "{A671F822-E1D1-491F-A31D-5C24F5482F74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Service.Commander", "src\Orcus.Service.Commander\Orcus.Service.Commander.csproj", "{A671F822-E1D1-491F-A31D-5C24F5482F74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.OrcusSockets", "src\Orcus.Server.OrcusSocket\Orcus.Server.OrcusSockets.csproj", "{92894371-2AA8-43FB-865A-39E1DCE5BF03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -165,6 +167,10 @@ Global
 		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A671F822-E1D1-491F-A31D-5C24F5482F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92894371-2AA8-43FB-865A-39E1DCE5BF03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92894371-2AA8-43FB-865A-39E1DCE5BF03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92894371-2AA8-43FB-865A-39E1DCE5BF03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92894371-2AA8-43FB-865A-39E1DCE5BF03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{7B87BB5B-3BF8-4500-A416-687AF492781F} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
 		{860BFB06-4FCD-494F-B7C3-1D53683FA988} = {67CFB457-D51C-4F50-9F54-41EA955EA795}
 		{B815C545-E86A-47E9-81F5-11CE7B2E141D} = {22C4E303-30DF-41D2-86BA-906CD6BDE4F1}
+		{92894371-2AA8-43FB-865A-39E1DCE5BF03} = {9C6E5247-3459-4ECF-9FE3-5E2044295099}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

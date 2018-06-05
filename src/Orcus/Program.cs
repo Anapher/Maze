@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ namespace Orcus
         [STAThread]
         private static async Task Main()
         {
-
+            var httpClient = new HttpClient();
         }
     }
 }
