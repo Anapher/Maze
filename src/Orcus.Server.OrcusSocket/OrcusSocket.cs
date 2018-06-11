@@ -1,90 +1,13 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace Orcus.Server.OrcusSockets
 {
-    public class OrcusMessage : IDisposable
-    {
-        private bool _disposed;
-
-        public ArraySegment<byte> Buffer { get; set; }
-        public uint ChannelId { get; set; }
-
-        public void Dispose()
-        {
-            if (_disposed)
-            {
-                ArrayPool<byte>.Shared.Return(Buffer.Array);
-                _disposed = true;
-            }
-        }
-    }
-
-    public abstract class OrcusChannel : IDisposable
-    {
-        public event EventHandler<ArraySegment<byte>> SendMessage;
-
-        public abstract void InvokeMessage(OrcusMessage message);
-
-        public virtual void Dispose()
-        {
-        }
-    }
-
-    public class OrcusServer
-    {
-        private readonly OrcusSocket _socket;
-        private readonly ConcurrentDictionary<uint, OrcusChannel> _channels;
-        private readonly ConcurrentDictionary<OrcusChannel, uint> _channelsReversed;
-
-        public OrcusServer(OrcusSocket socket)
-        {
-            _socket = socket;
-            _channels = new ConcurrentDictionary<uint, OrcusChannel>();
-            _channelsReversed = new ConcurrentDictionary<OrcusChannel, uint>();
-
-            socket.MessageReceived += SocketOnMessageReceived;
-            socket.RequestReceived += SocketOnRequestReceived;
-        }
-
-        private void SocketOnMessageReceived(object sender, OrcusMessage e)
-        {
-            _channels[e.ChannelId].InvokeMessage(e);
-        }
-
-        public void RegisterChannel(OrcusChannel channel, uint channelId)
-        {
-            channel.SendMessage += ChannelOnSendMessage;
-
-            _channels.TryAdd(channelId, channel);
-            _channelsReversed.TryAdd(channel, channelId);
-        }
-
-        private void ChannelOnSendMessage(object sender, ArraySegment<byte> e)
-        {
-            var channel = (OrcusChannel) sender;
-            var channelId = _channelsReversed[channel];
-            _socket.SendAsync(new OrcusMessage {ChannelId = channelId, Buffer = e});
-        }
-
-        private void SocketOnRequestReceived(object sender, ArraySegment<byte> e)
-        {
-
-        }
-
-        private void ReceiveRequest(HttpRequest request)
-        {
-
-        }
-    }
-
     public class OrcusSocket : IDisposable
     {
         private readonly Stream _stream;
