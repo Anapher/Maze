@@ -37,6 +37,8 @@ namespace Orcus.Server.Wrappers
             set => _httpRequest.Query = value;
         }
 
+        public override IHeaderDictionary Headers => _httpRequest.Headers;
+
         public override long? ContentLength
         {
             get => _httpRequest.ContentLength;

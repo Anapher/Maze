@@ -6,11 +6,16 @@ namespace Orcus.Server.OrcusSockets.Internal.Http
 {
     internal class DecodedOrcusRequest : OrcusRequest
     {
+        public DecodedOrcusRequest()
+        {
+            Headers = new HeaderDictionary();
+        }
+
         public override string Method { get; set; }
         public override PathString Path { get; set; }
         public override QueryString QueryString { get; set; }
         public override IQueryCollection Query { get; set; }
-        public override IHeaderDictionary Headers { get; set; }
+        public override IHeaderDictionary Headers { get; }
 
         public override long? ContentLength
         {

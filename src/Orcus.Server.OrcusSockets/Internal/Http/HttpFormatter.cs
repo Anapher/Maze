@@ -78,15 +78,13 @@ namespace Orcus.Server.OrcusSockets.Internal.Http
             var uri = new Uri(requestLine.Substring(delimiterIndex + 1, requestLine.Length - delimiterIndex - 1));
             request.Path = PathString.FromUriComponent(uri);
             request.QueryString = QueryString.FromUriComponent(uri);
-            request.Headers = DecodeHeaders(textReader);
+            DecodeHeaders(request.Headers, textReader);
             
             return request;
         }
 
-        private static IHeaderDictionary DecodeHeaders(TextReader textReader)
+        private static void DecodeHeaders(IHeaderDictionary headers, TextReader textReader)
         {
-            var headers = new HeaderDictionary();
-
             string line;
             while ((line = textReader.ReadLine()) != null)
             {
@@ -96,8 +94,6 @@ namespace Orcus.Server.OrcusSockets.Internal.Http
 
                 headers.AppendCommaSeparatedValues(key, values);
             }
-
-            return headers;
         }
 
         private static void EncodeHeaders(IEnumerable<KeyValuePair<string, StringValues>> headers, TextWriter textWriter)
@@ -125,7 +121,8 @@ namespace Orcus.Server.OrcusSockets.Internal.Http
             var statusCode = int.Parse(textReader.ReadLine());
             response.StatusCode = (HttpStatusCode) statusCode;
 
-            var headers = DecodeHeaders(textReader);
+            var headers = new HeaderDictionary();
+            DecodeHeaders(headers, textReader);
             foreach (var header in headers)
                 response.Headers.Add(header.Key, (string[]) header.Value);
 

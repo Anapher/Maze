@@ -8,35 +8,76 @@ using System.Threading.Tasks;
 
 namespace Orcus.Server.OrcusSockets
 {
+    /// <summary>
+    ///     A websocket like implementation that provides the methods to send prefixed buffers over a stream
+    /// </summary>
     public class OrcusSocket : IDisposable
     {
-        private readonly Stream _stream;
+        /// <summary>
+        //   7 6 5 4 3 2 1 0
+        //  +-+-+-+-+-+-+-+-+
+        //  | | | | | | | | |
+        //  +-+-+-+-+-+-+-+-+
+        //   ^ ^ ^ ^     ^ ^
+        //   | | | |     | |
+        //   \ | | /     | +-- IS_FINISHED
+        //      |        +---- IS_CONTINUATION
+        //      +------------- TYPE
+        /// </summary>
+        public enum MessageOpcode : byte
+        {
+            Message = 0x1,
+            Request = 0x2,
+            Response = 0x4,
+            Close = 0x8,
+            Ping = 0x9,
+            Pong = 0xA,
+
+            RequestSinglePackage = Request | OpCodeModifier.IsFinished,
+            RequestContinuation = Request | OpCodeModifier.IsContinuation,
+            RequestContinuationFinished = Request | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation,
+
+            ResponseSinglePackage = Response | OpCodeModifier.IsFinished,
+            ResponseContinuation = Response | OpCodeModifier.IsContinuation,
+            ResponseContinuationFinished = Response | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation
+        }
+
         private const int MaxMessageHeaderLength = 6;
 
-        /// <summary>CancellationTokenSource used to abort all current and future operations when anything is canceled or any error occurs.</summary>
+        /// <summary>
+        ///     CancellationTokenSource used to abort all current and future operations when anything is canceled or any error
+        ///     occurs.
+        /// </summary>
         private readonly CancellationTokenSource _abortSource = new CancellationTokenSource();
-
-        /// <summary>Lock used to protect update and check-and-update operations on _state.</summary>
-        private object StateUpdateLock => _abortSource;
 
         /// <summary>Timer used to send periodic pings to the server, at the interval specified</summary>
         private readonly Timer _keepAliveTimer;
 
+        /// <summary>Buffer used for reading data from the network.</summary>
+        private readonly byte[] _receiveBuffer = new byte[2];
+
         /// <summary>Semaphore used to ensure that calls to SendFrameAsync don't run concurrently.</summary>
         private readonly SemaphoreSlim _sendFrameAsyncLock = new SemaphoreSlim(1, 1);
+
+        private readonly Stream _stream;
 
         /// <summary>true if Dispose has been called; otherwise, false.</summary>
         private bool _disposed;
 
-        /// <summary>Buffer used for reading data from the network.</summary>
-        private readonly byte[] _receiveBuffer = new byte[2];
+        /// <summary>The number of bytes available in the _receiveBuffer.</summary>
+        private int _receiveBufferCount;
 
         /// <summary>The offset of the next available byte in the _receiveBuffer.</summary>
         private int _receiveBufferOffset;
 
-        /// <summary>The number of bytes available in the _receiveBuffer.</summary>
-        private int _receiveBufferCount;
-
+        /// <summary>
+        ///     Initialize a new instance of <see cref="OrcusSocket" />
+        /// </summary>
+        /// <param name="stream">The stream that carries the underlying connection</param>
+        /// <param name="keepAliveInterval">
+        ///     The frequency the ping-pong messages should be send to verify that the underlying
+        ///     connection is still alive
+        /// </param>
         public OrcusSocket(Stream stream, TimeSpan? keepAliveInterval)
         {
             _stream = stream;
@@ -48,22 +89,23 @@ namespace Orcus.Server.OrcusSockets
 
                 lock (thisRef.StateUpdateLock)
                 {
-                    WebSocketState state = thisRef.State;
+                    var state = thisRef.State;
                     if (state != WebSocketState.Closed && state != WebSocketState.Aborted)
-                    {
-                        thisRef.State = state != WebSocketState.None && state != WebSocketState.Connecting ?
-                            WebSocketState.Aborted :
-                            WebSocketState.Closed;
-                    }
+                        thisRef.State = state != WebSocketState.None && state != WebSocketState.Connecting
+                            ? WebSocketState.Aborted
+                            : WebSocketState.Closed;
                 }
             }, this);
 
             if (keepAliveInterval.HasValue)
-            {
-                _keepAliveTimer = new Timer(s => ((OrcusSocket) s).SendKeepAliveFrameAsync(), this, keepAliveInterval.Value,
-                    keepAliveInterval.Value);
-            }
+                _keepAliveTimer = new Timer(s => ((OrcusSocket) s).SendKeepAliveFrameAsync(), this,
+                    keepAliveInterval.Value, keepAliveInterval.Value);
         }
+
+        /// <summary>Lock used to protect update and check-and-update operations on _state.</summary>
+        private object StateUpdateLock => _abortSource;
+
+        public WebSocketState State { get; private set; }
 
         public void Dispose()
         {
@@ -81,16 +123,11 @@ namespace Orcus.Server.OrcusSockets
                 _disposed = true;
                 _keepAliveTimer?.Dispose();
                 _stream?.Dispose();
-                if (State < WebSocketState.Aborted)
-                {
-                    State = WebSocketState.Closed;
-                }
+                if (State < WebSocketState.Aborted) State = WebSocketState.Closed;
             }
         }
-        
-        public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
-        public WebSocketState State { get; private set; }
+        public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public void Abort()
         {
@@ -111,11 +148,11 @@ namespace Orcus.Server.OrcusSockets
                 {
                     var buffer = ArrayPool<byte>.Shared.Rent(length);
                     var count = length;
-                    
-                    int numRead = 0;
+
+                    var numRead = 0;
                     do
                     {
-                        int n = _stream.Read(buffer, numRead, count);
+                        var n = _stream.Read(buffer, numRead, count);
                         if (n == 0)
                             break;
                         numRead += n;
@@ -123,7 +160,7 @@ namespace Orcus.Server.OrcusSockets
                     } while (count > 0);
 
                     if (numRead != length)
-                        ThrowIfEofUnexpected(throwOnPrematureClosure: true);
+                        ThrowIfEofUnexpected(true);
 
                     receiveBuffer = new ArraySegment<byte>(buffer, 0, length);
                 }
@@ -136,7 +173,6 @@ namespace Orcus.Server.OrcusSockets
 
                 if (opcode == MessageOpcode.Close)
                 {
-
                 }
 
                 DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(receiveBuffer, opcode));
@@ -149,19 +185,21 @@ namespace Orcus.Server.OrcusSockets
 
             // Read out an Int32 7 bits at a time.  The high bit
             // of the byte when on means to continue reading more bytes.
-            int count = 0;
-            int shift = 0;
+            var count = 0;
+            var shift = 0;
             byte b;
 
             do
             {
                 // Check for a corrupted stream.  Read a max of 5 bytes.
                 // In a future version, add a DataFormatException.
-                if (shift == 5 * 7)  // 5 bytes max per Int32, shift += 7
+                if (shift == 5 * 7) // 5 bytes max per Int32, shift += 7
                     throw new FormatException("Invalid 7 Bit encoeded integer");
 
                 if (readNextByteFromStream)
+                {
                     b = ReadByteSafe();
+                }
                 else
                 {
                     b = firstByte;
@@ -171,6 +209,7 @@ namespace Orcus.Server.OrcusSockets
                 count |= (b & 0x7F) << shift;
                 shift += 7;
             } while ((b & 0x80) != 0);
+
             return count;
         }
 
@@ -178,16 +217,11 @@ namespace Orcus.Server.OrcusSockets
         /// <param name="opcode">The opcode for the message.</param>
         /// <param name="payloadBuffer">The buffer containing the payload data fro the message.</param>
         /// <param name="cancellationToken">The CancellationToken to use to cancel the websocket.</param>
-        public Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer, CancellationToken cancellationToken)
-        {
-            // If a cancelable cancellation token was provided, that would require registering with it, which means more state we have to
-            // pass around (the CancellationTokenRegistration), so if it is cancelable, just immediately go to the fallback path.
-            // Similarly, it should be rare that there are multiple outstanding calls to SendFrameAsync, but if there are, again
-            // fall back to the fallback path.
-            return cancellationToken.CanBeCanceled || !_sendFrameAsyncLock.Wait(0) ?
-                SendFrameFallbackAsync(opcode, payloadBuffer, cancellationToken) :
-                SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer);
-        }
+        public Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
+            CancellationToken cancellationToken) =>
+            cancellationToken.CanBeCanceled || !_sendFrameAsyncLock.Wait(0)
+                ? SendFrameFallbackAsync(opcode, payloadBuffer, cancellationToken)
+                : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer);
 
         /// <summary>Sends a websocket frame to the network. The caller must hold the sending lock.</summary>
         /// <param name="opcode">The opcode for the message.</param>
@@ -197,7 +231,7 @@ namespace Orcus.Server.OrcusSockets
             // If we get here, the cancellation token is not cancelable so we don't have to worry about it,
             // and we own the semaphore, so we don't need to asynchronously wait for it.
             Task writeTask = default;
-            bool releaseSemaphoreAndSendBuffer = true;
+            var releaseSemaphoreAndSendBuffer = true;
             var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer);
 
             try
@@ -218,17 +252,13 @@ namespace Orcus.Server.OrcusSockets
             }
             catch (Exception exc)
             {
-                return Task.FromException(
-                    exc is OperationCanceledException ? exc :
+                return Task.FromException(exc is OperationCanceledException ? exc :
                     State == WebSocketState.Aborted ? CreateOperationCanceledException(exc) :
                     new WebSocketException(WebSocketError.ConnectionClosedPrematurely, exc));
             }
             finally
             {
-                if (releaseSemaphoreAndSendBuffer)
-                {
-                    _sendFrameAsyncLock.Release();
-                }
+                if (releaseSemaphoreAndSendBuffer) _sendFrameAsyncLock.Release();
             }
 
             // The write was not yet completed. Create and return a continuation that will
@@ -261,7 +291,7 @@ namespace Orcus.Server.OrcusSockets
 
             // Write out an int 7 bits at a time.  The high bit of the byte,
             // when on, tells reader to continue reading more bytes.
-            var v = (uint) payload.Length;   // support negative numbers
+            var v = (uint) payload.Length; // support negative numbers
             while (v >= 0x80)
             {
                 sendBuffer[offset++] = (byte) (v | 0x80);
@@ -280,12 +310,14 @@ namespace Orcus.Server.OrcusSockets
             var headerLength = WriteHeader(opcode, sendBuffer, payloadBuffer);
 
             if (payloadBuffer.Count > 0)
-                Buffer.BlockCopy(payloadBuffer.Array, payloadBuffer.Offset, sendBuffer, headerLength, payloadBuffer.Count);
+                Buffer.BlockCopy(payloadBuffer.Array, payloadBuffer.Offset, sendBuffer, headerLength,
+                    payloadBuffer.Count);
 
             return new ArraySegment<byte>(sendBuffer, 0, headerLength + payloadBuffer.Count);
         }
 
-        private async Task SendFrameFallbackAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer, CancellationToken cancellationToken)
+        private async Task SendFrameFallbackAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
+            CancellationToken cancellationToken)
         {
             var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer);
 
@@ -300,9 +332,9 @@ namespace Orcus.Server.OrcusSockets
             }
             catch (Exception exc)
             {
-                throw State == WebSocketState.Aborted ?
-                    CreateOperationCanceledException(exc, cancellationToken) :
-                    new WebSocketException(WebSocketError.ConnectionClosedPrematurely, exc);
+                throw State == WebSocketState.Aborted
+                    ? CreateOperationCanceledException(exc, cancellationToken)
+                    : new WebSocketException(WebSocketError.ConnectionClosedPrematurely, exc);
             }
             finally
             {
@@ -313,23 +345,23 @@ namespace Orcus.Server.OrcusSockets
 
         private async Task EnsureBufferContainsAsync(int minimumRequiredBytes, bool throwOnPrematureClosure = true)
         {
-            Debug.Assert(minimumRequiredBytes <= _receiveBuffer.Length, $"Requested number of bytes {minimumRequiredBytes} must not exceed {_receiveBuffer.Length}");
+            Debug.Assert(minimumRequiredBytes <= _receiveBuffer.Length,
+                $"Requested number of bytes {minimumRequiredBytes} must not exceed {_receiveBuffer.Length}");
 
             // If we don't have enough data in the buffer to satisfy the minimum required, read some more.
             if (_receiveBufferCount < minimumRequiredBytes)
             {
                 // If there's any data in the buffer, shift it down.  
                 if (_receiveBufferCount > 0)
-                {
                     Buffer.BlockCopy(_receiveBuffer, _receiveBufferOffset, _receiveBuffer, 0, _receiveBufferCount);
-                }
                 _receiveBufferOffset = 0;
 
                 // While we don't have enough data, read more.
                 while (_receiveBufferCount < minimumRequiredBytes)
                 {
-                    int numRead = await _stream.ReadAsync(_receiveBuffer, _receiveBufferCount,
-                        _receiveBuffer.Length - _receiveBufferCount).ConfigureAwait(false);
+                    var numRead = await _stream
+                        .ReadAsync(_receiveBuffer, _receiveBufferCount, _receiveBuffer.Length - _receiveBufferCount)
+                        .ConfigureAwait(false);
                     Debug.Assert(numRead >= 0, $"Expected non-negative bytes read, got {numRead}");
                     _receiveBufferCount += numRead;
                     if (numRead == 0)
@@ -339,13 +371,9 @@ namespace Orcus.Server.OrcusSockets
                         // being closed and it wasn't expected, fail.  If it was due to the connection
                         // being closed and that was expected, exit gracefully.
                         if (_disposed)
-                        {
                             throw new ObjectDisposedException(nameof(WebSocket));
-                        }
-                        else if (throwOnPrematureClosure)
-                        {
+                        if (throwOnPrematureClosure)
                             throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
-                        }
                         break;
                     }
                 }
@@ -358,14 +386,8 @@ namespace Orcus.Server.OrcusSockets
             // If it was due to us being disposed, fail.  If it was due to the connection
             // being closed and it wasn't expected, fail.  If it was due to the connection
             // being closed and that was expected, exit gracefully.
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(nameof(WebSocket));
-            }
-            if (throwOnPrematureClosure)
-            {
-                throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
-            }
+            if (_disposed) throw new ObjectDisposedException(nameof(WebSocket));
+            if (throwOnPrematureClosure) throw new WebSocketException(WebSocketError.ConnectionClosedPrematurely);
         }
 
         private byte ReadByteSafe()
@@ -377,62 +399,33 @@ namespace Orcus.Server.OrcusSockets
             return (byte) result;
         }
 
-        private Task HandleReceivedPingPongAsync()
-        {
-            return SendFrameAsync(MessageOpcode.Pong, default, CancellationToken.None);
-        }
+        private Task HandleReceivedPingPongAsync() =>
+            SendFrameAsync(MessageOpcode.Pong, default, CancellationToken.None);
 
         private void SendKeepAliveFrameAsync()
         {
-            bool acquiredLock = _sendFrameAsyncLock.Wait(0);
+            var acquiredLock = _sendFrameAsyncLock.Wait(0);
             if (acquiredLock)
             {
                 // This exists purely to keep the connection alive; don't wait for the result, and ignore any failures.
                 // The call will handle releasing the lock.
                 SendFrameLockAcquiredNonCancelableAsync(MessageOpcode.Ping, new ArraySegment<byte>());
             }
-            else
-            {
-                // If the lock is already held, something is already getting sent,
-                // so there's no need to send a keep-alive ping.
-            }
-        }
-
-        /// <summary>Creates an OperationCanceledException instance, using a default message and the specified inner exception and token.</summary>
-        private static Exception CreateOperationCanceledException(Exception innerException,
-            CancellationToken cancellationToken = default)
-        {
-            return new OperationCanceledException(new OperationCanceledException().Message, innerException,
-                cancellationToken);
         }
 
         /// <summary>
-        //   7 6 5 4 3 2 1 0
-        //  +-+-+-+-+-+-+-+-+
-        //  | | | | | | | | |
-        //  +-+-+-+-+-+-+-+-+
-        //   ^ ^ ^ ^     ^ ^
-        //   | | | |     | |
-        //   \ | | /     | +-- IS_FINISHED
-        //      |        +---- IS_CONTINUATION
-        //      +------------- TYPE
+        ///     Creates an OperationCanceledException instance, using a default message and the specified inner exception and
+        ///     token.
         /// </summary>
-        public enum MessageOpcode : byte
+        private static Exception CreateOperationCanceledException(Exception innerException,
+            CancellationToken cancellationToken = default) =>
+            new OperationCanceledException(new OperationCanceledException().Message, innerException, cancellationToken);
+
+        private byte[] AllocateSendBuffer(int minLength) => ArrayPool<byte>.Shared.Rent(minLength);
+
+        private void ReleaseSendBuffer(byte[] buffer)
         {
-            Message = 0x1,
-            Request = 0x2,
-            Response = 0x4,
-            Close = 0x8,
-            Ping = 0x9,
-            Pong = 0xA,
-
-            RequestSinglePackage = Request | OpCodeModifier.IsFinished,
-            RequestContinuation = Request | OpCodeModifier.IsContinuation,
-            RequestContinuationFinished = Request | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation,
-
-            ResponseSinglePackage = Response | OpCodeModifier.IsFinished,
-            ResponseContinuation = Response | OpCodeModifier.IsContinuation,
-            ResponseContinuationFinished = Response | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation,
+            ArrayPool<byte>.Shared.Return(buffer);
         }
 
         [Flags]
@@ -440,16 +433,6 @@ namespace Orcus.Server.OrcusSockets
         {
             IsFinished = 0b1000_0000,
             IsContinuation = 0b0100_0000
-        }
-
-        private byte[] AllocateSendBuffer(int minLength)
-        {
-            return ArrayPool<byte>.Shared.Rent(minLength);
-        }
-
-        private void ReleaseSendBuffer(byte[] buffer)
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
         }
     }
 }

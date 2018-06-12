@@ -12,6 +12,8 @@
     <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
     <ProjectReference Include="..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
+    <ProjectReference Include="..\Orcus.Server.OrcusSockets\Orcus.Server.OrcusSockets.csproj" />
+    <ProjectReference Include="..\Orcus.Service.Commander\Orcus.Service.Commander.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,10 +53,6 @@
     <Reference Include="NuGet.Versioning">
       <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

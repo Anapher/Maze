@@ -15,7 +15,9 @@ using Orcus.Server.Authentication;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
+using Orcus.Server.Middleware;
 using Orcus.Server.Options;
+using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.Config;
 
@@ -38,6 +40,7 @@ namespace Orcus.Server
         {
             services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
+            services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
             services.AddSingleton<DefaultTokenProvider>();
 
             var provider = services.BuildServiceProvider();
@@ -105,17 +108,7 @@ namespace Orcus.Server
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("v1/signalR"));
-            app.UseWebSockets();
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path == "/ws/client")
-                {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    }
-                }
-            });
+            app.Map("/ws", builder => builder.UseOrcusSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
         }
     }
 }

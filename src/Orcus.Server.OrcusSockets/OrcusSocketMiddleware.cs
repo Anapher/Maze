@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orcus.Server.OrcusSockets.Internal;
 
@@ -11,7 +12,7 @@ namespace Orcus.Server.OrcusSockets
     public class OrcusSocketMiddleware
     {
         private readonly RequestDelegate _next;
-        private OrcusSocketOptions _options;
+        private readonly OrcusSocketOptions _options;
 
         public OrcusSocketMiddleware(RequestDelegate next, IOptions<OrcusSocketOptions> options)
         {
@@ -25,18 +26,12 @@ namespace Orcus.Server.OrcusSockets
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Detect if an opaque upgrade is available. If so, add a websocket upgrade.
+            // Detect if an upgrade is available. If so, add a websocket upgrade.
             var upgradeFeature = context.Features.Get<IHttpUpgradeFeature>();
             if (upgradeFeature != null && IsOrcusSocketRequest(context, upgradeFeature))
             {
-                string key = string.Join(", ", context.Request.Headers[Headers.SecWebSocketKey]);
-
-                var responseHeaders = HandshakeHelpers.GenerateResponseHeaders(key);
-                foreach (var headerPair in responseHeaders)
-                    context.Response.Headers[headerPair.Key] = headerPair.Value;
-
-                var stream = await upgradeFeature.UpgradeAsync();
-
+                context.Features.Set<IOrcusSocketFeature>(new OrcusSocketUpgrader(context, upgradeFeature, _options));
+                return; //nothing comes next!
             }
 
             // Call the next delegate/middleware in the pipeline
@@ -57,6 +52,33 @@ namespace Orcus.Server.OrcusSockets
                 headers.Add(new KeyValuePair<string, string>(headerName, value));
 
             return HandshakeHelpers.CheckSupportedRequest(headers);
+        }
+
+        private class OrcusSocketUpgrader : IOrcusSocketFeature
+        {
+            private readonly HttpContext _context;
+            private readonly OrcusSocketOptions _options;
+            private readonly IHttpUpgradeFeature _upgradeFeature;
+
+            public OrcusSocketUpgrader(HttpContext context, IHttpUpgradeFeature upgradeFeature,
+                OrcusSocketOptions options)
+            {
+                _context = context;
+                _upgradeFeature = upgradeFeature;
+                _options = options;
+            }
+
+            public async Task<OrcusSocket> AcceptAsync()
+            {
+                var key = string.Join(", ", _context.Request.Headers[Headers.SecWebSocketKey]);
+
+                var responseHeaders = HandshakeHelpers.GenerateResponseHeaders(key);
+                foreach (var headerPair in responseHeaders)
+                    _context.Response.Headers[headerPair.Key] = headerPair.Value;
+
+                var stream = await _upgradeFeature.UpgradeAsync();
+                return new OrcusSocket(stream, _options.KeepAliveInterval);
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Orcus.Modules.Api.Request
 
         /// <summary>Gets the request headers.</summary>
         /// <returns>The request headers.</returns>
-        public abstract IHeaderDictionary Headers { get; set; }
+        public abstract IHeaderDictionary Headers { get; }
 
         /// <summary>Gets or sets the Content-Length header.</summary>
         /// <returns>The value of the Content-Length header, if any.</returns>

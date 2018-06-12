@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -101,10 +102,15 @@ namespace Orcus.Server.Service.Modules.Execution
 
     public class DefaultOrcusContext : OrcusContext
     {
+        private readonly CancellationTokenSource _requestCancellationTokenSource;
+
         public DefaultOrcusContext(OrcusRequest request, IServiceProvider serviceProvider)
         {
             Request = request;
             RequestServices = serviceProvider;
+
+            _requestCancellationTokenSource = new CancellationTokenSource();
+            RequestAborted = _requestCancellationTokenSource.Token;
         }
 
         public override OrcusResponse Response { get; set; }
@@ -112,5 +118,11 @@ namespace Orcus.Server.Service.Modules.Execution
         public override OrcusRequest Request { get; set; }
         public override ConnectionInfo Connection { get; set; }
         public override IServiceProvider RequestServices { get; set; }
+        public override CancellationToken RequestAborted { get; set; }
+
+        public override void Abort()
+        {
+            _requestCancellationTokenSource.Cancel();
+        }
     }
 }
