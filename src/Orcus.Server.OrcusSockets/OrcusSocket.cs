@@ -29,7 +29,7 @@ namespace Orcus.Server.OrcusSockets
         private bool _disposed;
 
         /// <summary>Buffer used for reading data from the network.</summary>
-        private byte[] _receiveBuffer;
+        private readonly byte[] _receiveBuffer = new byte[2];
 
         /// <summary>The offset of the next available byte in the _receiveBuffer.</summary>
         private int _receiveBufferOffset;
@@ -88,8 +88,7 @@ namespace Orcus.Server.OrcusSockets
             }
         }
         
-        public event EventHandler<OrcusMessage> MessageReceived;
-        public event EventHandler<ArraySegment<byte>> RequestReceived;
+        public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public WebSocketState State { get; private set; }
 
@@ -97,11 +96,6 @@ namespace Orcus.Server.OrcusSockets
         {
             _abortSource.Cancel();
             Dispose(); // forcibly tear down connection
-        }
-
-        public Task SendAsync(OrcusMessage message)
-        {
-            return SendFrameAsync(MessageOpcode.Message, message.Buffer, CancellationToken.None);
         }
 
         public async Task ReceiveAsync()
@@ -145,32 +139,7 @@ namespace Orcus.Server.OrcusSockets
 
                 }
 
-                if (opcode == MessageOpcode.Message)
-                {
-                    var channelId = BitConverter.ToUInt32(receiveBuffer.Array, receiveBuffer.Offset);
-                    MessageReceived?.Invoke(this,
-                        new OrcusMessage
-                        {
-                            ChannelId = channelId,
-                            Buffer = new ArraySegment<byte>(receiveBuffer.Array, receiveBuffer.Offset + 4,
-                                receiveBuffer.Count - 4)
-                        });
-                }
-
-                switch (opcode)
-                {
-                    case MessageOpcode.Request:
-                        RequestReceived?.Invoke(this, receiveBuffer);
-                        break;
-                    case MessageOpcode.RequestContinuation:
-                        break;
-                    case MessageOpcode.Response:
-                        break;
-                    case MessageOpcode.ResponseContinuation:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(receiveBuffer, opcode));
             }
         }
 
@@ -209,7 +178,7 @@ namespace Orcus.Server.OrcusSockets
         /// <param name="opcode">The opcode for the message.</param>
         /// <param name="payloadBuffer">The buffer containing the payload data fro the message.</param>
         /// <param name="cancellationToken">The CancellationToken to use to cancel the websocket.</param>
-        private Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer, CancellationToken cancellationToken)
+        public Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer, CancellationToken cancellationToken)
         {
             // If a cancelable cancellation token was provided, that would require registering with it, which means more state we have to
             // pass around (the CancellationTokenRegistration), so if it is cancelable, just immediately go to the fallback path.
@@ -262,7 +231,7 @@ namespace Orcus.Server.OrcusSockets
                 }
             }
 
-            // The write was not yet completed.  Create and return a continuation that will
+            // The write was not yet completed. Create and return a continuation that will
             // release the semaphore and translate any exception that occurred.
             return writeTask.ContinueWith((t, s) =>
             {
@@ -437,16 +406,40 @@ namespace Orcus.Server.OrcusSockets
                 cancellationToken);
         }
 
-        private enum MessageOpcode : byte
+        /// <summary>
+        //   7 6 5 4 3 2 1 0
+        //  +-+-+-+-+-+-+-+-+
+        //  | | | | | | | | |
+        //  +-+-+-+-+-+-+-+-+
+        //   ^ ^ ^ ^     ^ ^
+        //   | | | |     | |
+        //   \ | | /     | +-- IS_FINISHED
+        //      |        +---- IS_CONTINUATION
+        //      +------------- TYPE
+        /// </summary>
+        public enum MessageOpcode : byte
         {
             Message = 0x1,
             Request = 0x2,
-            RequestContinuation = 0x3,
             Response = 0x4,
-            ResponseContinuation = 0x5,
             Close = 0x8,
             Ping = 0x9,
-            Pong = 0xA
+            Pong = 0xA,
+
+            RequestSinglePackage = Request | OpCodeModifier.IsFinished,
+            RequestContinuation = Request | OpCodeModifier.IsContinuation,
+            RequestContinuationFinished = Request | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation,
+
+            ResponseSinglePackage = Response | OpCodeModifier.IsFinished,
+            ResponseContinuation = Response | OpCodeModifier.IsContinuation,
+            ResponseContinuationFinished = Response | OpCodeModifier.IsFinished | OpCodeModifier.IsContinuation,
+        }
+
+        [Flags]
+        private enum OpCodeModifier
+        {
+            IsFinished = 0b1000_0000,
+            IsContinuation = 0b0100_0000
         }
 
         private byte[] AllocateSendBuffer(int minLength)
