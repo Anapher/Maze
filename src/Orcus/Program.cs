@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using NuGet.Frameworks;
 
 namespace Orcus
 {

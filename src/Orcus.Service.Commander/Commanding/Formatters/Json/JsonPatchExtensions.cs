@@ -5,7 +5,7 @@ using System;
 using Microsoft.AspNetCore.JsonPatch;
 using Orcus.Modules.Api.ModelBinding;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// Extensions for <see cref="JsonPatchDocument{T}"/>

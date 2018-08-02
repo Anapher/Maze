@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// Helper class which provides <see cref="JsonSerializerSettings"/>.

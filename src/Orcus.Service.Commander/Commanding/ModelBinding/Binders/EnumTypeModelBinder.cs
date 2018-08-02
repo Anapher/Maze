@@ -5,8 +5,9 @@ using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api.ModelBinding;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     <see cref="IModelBinder" /> implementation to bind models for types deriving from <see cref="Enum" />.

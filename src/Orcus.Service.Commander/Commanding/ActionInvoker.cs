@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.ModelBinding;
 using Orcus.Modules.Api.Parameters;
-using Orcus.Server.Service.Commanding.ModelBinding;
+using Orcus.Service.Commander.Commanding.ModelBinding;
 
-namespace Orcus.Server.Service.Commanding
+namespace Orcus.Service.Commander.Commanding
 {
     /// <summary>
     ///     Cached delegate for the controller method

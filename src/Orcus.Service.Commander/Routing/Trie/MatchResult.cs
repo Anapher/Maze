@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orcus.Server.Service.Modules.Routing.Trie
+namespace Orcus.Service.Commander.Routing.Trie
 {
     public class MatchResult : NodeData
     {

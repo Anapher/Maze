@@ -5,7 +5,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     A <see cref="IModelBinderProvider" /> for types deriving from <see cref="Enum" />.

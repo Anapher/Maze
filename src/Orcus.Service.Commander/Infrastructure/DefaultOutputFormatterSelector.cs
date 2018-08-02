@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,11 +11,12 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Internal;
-using Orcus.Server.Service.Logging;
+using Orcus.Service.Commander.Commanding.Formatters;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Internal;
+using Orcus.Service.Commander.Logging;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     public class DefaultOutputFormatterSelector : OutputFormatterSelector
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,12 +13,12 @@ using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.ModelBinding;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
-using Orcus.Server.Service.Commanding.Formatters.Internal;
-using Orcus.Server.Service.Commanding.ModelBinding;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Internal;
+using Orcus.Service.Commander.Commanding.ModelBinding;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Logging
+namespace Orcus.Service.Commander.Logging
 {
     internal static class MvcCoreLoggerExtensions
     {
@@ -246,11 +247,6 @@ namespace Orcus.Server.Service.Logging
                 1,
                 "Request matched multiple actions resulting in ambiguity. Matching actions: {AmbiguousActions}");
 
-            _constraintMismatch = LoggerMessage.Define<string, string, IActionConstraint>(
-                LogLevel.Debug,
-                2,
-                "Action '{ActionName}' with id '{ActionId}' did not match the constraint '{ActionConstraint}'");
-
             _executingFileResult = LoggerMessage.Define<FileResult, string, string>(
                 LogLevel.Information,
                 1,
@@ -286,22 +282,6 @@ namespace Orcus.Server.Service.Logging
                 4,
                 "Request was short circuited at exception filter '{ExceptionFilter}'.");
 
-            _forbidResultExecuting = LoggerMessage.Define<string[]>(
-                LogLevel.Information,
-                eventId: 1,
-                formatString: $"Executing {nameof(ForbidResult)} with authentication schemes ({{Schemes}}).");
-
-            _signInResultExecuting = LoggerMessage.Define<string, ClaimsPrincipal>(
-                LogLevel.Information,
-                eventId: 1,
-                formatString:
-                $"Executing {nameof(SignInResult)} with authentication scheme ({{Scheme}}) and the following principal: {{Principal}}.");
-
-            _signOutResultExecuting = LoggerMessage.Define<string[]>(
-                LogLevel.Information,
-                eventId: 1,
-                formatString: $"Executing {nameof(SignOutResult)} with authentication schemes ({{Schemes}}).");
-
             _httpStatusCodeResultExecuting = LoggerMessage.Define<int>(
                 LogLevel.Information,
                 1,
@@ -336,11 +316,6 @@ namespace Orcus.Server.Service.Logging
                 LogLevel.Debug,
                 4,
                 "No information found on request to perform content negotiation.");
-
-            _noFormatterFromNegotiation = LoggerMessage.Define<IEnumerable<MediaTypeSegmentWithQuality>>(
-                LogLevel.Debug,
-                5,
-                "Could not find an output formatter based on content negotiation. Accepted types were ({AcceptTypes})");
 
             _inputFormatterSelected = LoggerMessage.Define<IInputFormatter, string>(
                 LogLevel.Debug,
@@ -709,264 +684,6 @@ namespace Orcus.Server.Service.Logging
             _selectingFirstCanWriteFormatter(logger, null);
         }
 
-        public static IDisposable ActionScope(this ILogger logger, ActionDescriptor action)
-        {
-            return logger.BeginScope(new ActionLogScope(action));
-        }
-
-        public static void ExecutingAction(this ILogger logger, ActionDescriptor action)
-        {
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                var routeKeys = action.RouteValues.Keys.ToArray();
-                var routeValues = action.RouteValues.Values.ToArray();
-                var stringBuilder = new StringBuilder();
-                stringBuilder.Append("{");
-                for (var i = 0; i < routeValues.Length; i++)
-                    if (i == routeValues.Length - 1)
-                        stringBuilder.Append($"{routeKeys[i]} = \"{routeValues[i]}\"}}");
-                    else
-                        stringBuilder.Append($"{routeKeys[i]} = \"{routeValues[i]}\", ");
-                if (action.RouteValues.TryGetValue("page", out var page) && page != null)
-                    _pageExecuting(logger, stringBuilder.ToString(), action.DisplayName, null);
-                else
-                    _actionExecuting(logger, stringBuilder.ToString(), action.DisplayName, null);
-            }
-        }
-
-        public static void AuthorizationFiltersExecutionPlan(this ILogger logger, IEnumerable<IFilterMetadata> filters)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var authorizationFilters = filters.Where(f => f is IAuthorizationFilter || f is IAsyncAuthorizationFilter);
-            LogFilterExecutionPlan(logger, "authorization", authorizationFilters);
-        }
-
-        public static void ResourceFiltersExecutionPlan(this ILogger logger, IEnumerable<IFilterMetadata> filters)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var resourceFilters = filters.Where(f => f is IResourceFilter || f is IAsyncResourceFilter);
-            LogFilterExecutionPlan(logger, "resource", resourceFilters);
-        }
-
-        public static void ActionFiltersExecutionPlan(this ILogger logger, IEnumerable<IFilterMetadata> filters)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var actionFilters = filters.Where(f => f is IActionFilter || f is IAsyncActionFilter);
-            LogFilterExecutionPlan(logger, "action", actionFilters);
-        }
-
-        public static void ExceptionFiltersExecutionPlan(this ILogger logger, IEnumerable<IFilterMetadata> filters)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var exceptionFilters = filters.Where(f => f is IExceptionFilter || f is IAsyncExceptionFilter);
-            LogFilterExecutionPlan(logger, "exception", exceptionFilters);
-        }
-
-        public static void ResultFiltersExecutionPlan(this ILogger logger, IEnumerable<IFilterMetadata> filters)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var resultFilters = filters.Where(f => f is IResultFilter || f is IAsyncResultFilter);
-            LogFilterExecutionPlan(logger, "result", resultFilters);
-        }
-
-        public static void BeforeExecutingMethodOnFilter(
-            this ILogger logger,
-            string filterType,
-            string methodName,
-            IFilterMetadata filter)
-        {
-            _beforeExecutingMethodOnFilter(logger, filterType, methodName, filter.GetType(), null);
-        }
-
-        public static void AfterExecutingMethodOnFilter(
-            this ILogger logger,
-            string filterType,
-            string methodName,
-            IFilterMetadata filter)
-        {
-            _afterExecutingMethodOnFilter(logger, filterType, methodName, filter.GetType(), null);
-        }
-
-        public static void ExecutedAction(this ILogger logger, ActionDescriptor action, TimeSpan timeSpan)
-        {
-            // Don't log if logging wasn't enabled at start of request as time will be wildly wrong.
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                if (action.RouteValues.TryGetValue("page", out var page) && page != null)
-                    _pageExecuted(logger, action.DisplayName, timeSpan.TotalMilliseconds, null);
-                else
-                    _actionExecuted(logger, action.DisplayName, timeSpan.TotalMilliseconds, null);
-            }
-        }
-
-        public static void NoActionsMatched(this ILogger logger, IDictionary<string, object> routeValueDictionary)
-        {
-            if (logger.IsEnabled(LogLevel.Debug))
-            {
-                string[] routeValues = null;
-                if (routeValueDictionary != null)
-                    routeValues = routeValueDictionary
-                        .Select(pair => pair.Key + "=" + Convert.ToString(pair.Value))
-                        .ToArray();
-                _noActionsMatched(logger, routeValues, null);
-            }
-        }
-
-        public static void ChallengeResultExecuting(this ILogger logger, IList<string> schemes)
-        {
-            if (logger.IsEnabled(LogLevel.Information)) _challengeResultExecuting(logger, schemes.ToArray(), null);
-        }
-
-        public static void ContentResultExecuting(this ILogger logger, string contentType)
-        {
-            _contentResultExecuting(logger, contentType, null);
-        }
-
-        public static void BeforeExecutingActionResult(this ILogger logger, IActionResult actionResult)
-        {
-            _beforeExecutingActionResult(logger, actionResult.GetType(), null);
-        }
-
-        public static void AfterExecutingActionResult(this ILogger logger, IActionResult actionResult)
-        {
-            _afterExecutingActionResult(logger, actionResult.GetType(), null);
-        }
-
-        public static void ActionMethodExecuting(this ILogger logger, ControllerContext context, object[] arguments)
-        {
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                var actionName = context.ActionDescriptor.DisplayName;
-
-                var validationState = context.ModelState.ValidationState;
-
-                string[] convertedArguments;
-                if (arguments == null)
-                {
-                    _actionMethodExecuting(logger, actionName, validationState, null);
-                }
-                else
-                {
-                    convertedArguments = new string[arguments.Length];
-                    for (var i = 0; i < arguments.Length; i++) convertedArguments[i] = Convert.ToString(arguments[i]);
-
-                    _actionMethodExecutingWithArguments(logger, actionName, convertedArguments, validationState, null);
-                }
-            }
-        }
-
-        public static void ActionMethodExecuted(this ILogger logger, ControllerContext context, IActionResult result,
-            TimeSpan timeSpan)
-        {
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                var actionName = context.ActionDescriptor.DisplayName;
-                _actionMethodExecuted(logger, actionName, Convert.ToString(result), timeSpan.TotalMilliseconds, null);
-            }
-        }
-
-        public static void AmbiguousActions(this ILogger logger, string actionNames)
-        {
-            _ambiguousActions(logger, actionNames, null);
-        }
-
-        public static void ConstraintMismatch(
-            this ILogger logger,
-            string actionName,
-            string actionId,
-            IActionConstraint actionConstraint)
-        {
-            _constraintMismatch(logger, actionName, actionId, actionConstraint, null);
-        }
-
-        public static void ExecutingFileResult(this ILogger logger, FileResult fileResult)
-        {
-            _executingFileResultWithNoFileName(logger, fileResult, fileResult.FileDownloadName, null);
-        }
-
-        public static void ExecutingFileResult(this ILogger logger, FileResult fileResult, string fileName)
-        {
-            _executingFileResult(logger, fileResult, fileName, fileResult.FileDownloadName, null);
-        }
-
-        public static void NotEnabledForRangeProcessing(this ILogger logger)
-        {
-            _notEnabledForRangeProcessing(logger, null);
-        }
-
-        public static void WritingRangeToBody(this ILogger logger)
-        {
-            _writingRangeToBody(logger, null);
-        }
-
-        public static void AuthorizationFailure(
-            this ILogger logger,
-            IFilterMetadata filter)
-        {
-            _authorizationFailure(logger, filter, null);
-        }
-
-        public static void ResourceFilterShortCircuited(
-            this ILogger logger,
-            IFilterMetadata filter)
-        {
-            _resourceFilterShortCircuit(logger, filter, null);
-        }
-
-        public static void ResultFilterShortCircuited(
-            this ILogger logger,
-            IFilterMetadata filter)
-        {
-            _resultFilterShortCircuit(logger, filter, null);
-        }
-
-        public static void ExceptionFilterShortCircuited(
-            this ILogger logger,
-            IFilterMetadata filter)
-        {
-            _exceptionFilterShortCircuit(logger, filter, null);
-        }
-
-        public static void ActionFilterShortCircuited(
-            this ILogger logger,
-            IFilterMetadata filter)
-        {
-            _actionFilterShortCircuit(logger, filter, null);
-        }
-
-        public static void ForbidResultExecuting(this ILogger logger, IList<string> authenticationSchemes)
-        {
-            if (logger.IsEnabled(LogLevel.Information))
-                _forbidResultExecuting(logger, authenticationSchemes.ToArray(), null);
-        }
-
-        public static void SignInResultExecuting(this ILogger logger, string authenticationScheme,
-            ClaimsPrincipal principal)
-        {
-            _signInResultExecuting(logger, authenticationScheme, principal, null);
-        }
-
-        public static void SignOutResultExecuting(this ILogger logger, IList<string> authenticationSchemes)
-        {
-            if (logger.IsEnabled(LogLevel.Information))
-                _signOutResultExecuting(logger, authenticationSchemes.ToArray(), null);
-        }
-
-        public static void HttpStatusCodeResultExecuting(this ILogger logger, int statusCode)
-        {
-            _httpStatusCodeResultExecuting(logger, statusCode, null);
-        }
-
-        public static void LocalRedirectResultExecuting(this ILogger logger, string destination)
-        {
-            _localRedirectResultExecuting(logger, destination, null);
-        }
-
         public static void ObjectResultExecuting(this ILogger logger, object value)
         {
             if (logger.IsEnabled(LogLevel.Information))
@@ -1006,12 +723,6 @@ namespace Orcus.Server.Service.Logging
             _noAcceptForNegotiation(logger, null);
         }
 
-        public static void NoFormatterFromNegotiation(this ILogger logger,
-            IList<MediaTypeSegmentWithQuality> acceptTypes)
-        {
-            _noFormatterFromNegotiation(logger, acceptTypes, null);
-        }
-
         public static void InputFormatterSelected(
             this ILogger logger,
             IInputFormatter inputFormatter,
@@ -1033,23 +744,6 @@ namespace Orcus.Server.Service.Logging
             {
                 var contentType = formatterContext.OrcusContext.Request.ContentType;
                 _inputFormatterRejected(logger, inputFormatter, contentType, null);
-            }
-        }
-
-        public static void NoInputFormatterSelected(
-            this ILogger logger,
-            InputFormatterContext formatterContext)
-        {
-            if (logger.IsEnabled(LogLevel.Debug))
-            {
-                var contentType = formatterContext.OrcusContext.Request.ContentType;
-                _noInputFormatterSelected(logger, contentType, null);
-                if (formatterContext.OrcusContext.Request.HasFormContentType)
-                {
-                    var modelType = formatterContext.ModelType.FullName;
-                    var modelName = formatterContext.ModelName;
-                    _removeFromBodyAttribute(logger, modelName, modelType, null);
-                }
             }
         }
 
@@ -1137,16 +831,6 @@ namespace Orcus.Server.Service.Logging
             _modelStateInvalidFilterExecuting(logger, null);
         }
 
-        public static void InferredParameterBindingSource(
-            this ILogger logger,
-            ParameterModel parameterModel,
-            BindingSource bindingSource)
-        {
-            if (logger.IsEnabled(LogLevel.Debug))
-                _inferredParameterSource(logger, parameterModel.Action.ActionMethod, parameterModel.ParameterName,
-                    bindingSource.DisplayName, null);
-        }
-
         public static void IfMatchPreconditionFailed(this ILogger logger, EntityTagHeaderValue etag)
         {
             _ifMatchPreconditionFailed(logger, etag, null);
@@ -1181,40 +865,6 @@ namespace Orcus.Server.Service.Logging
             _registeredModelBinderProviders(logger, providers, null);
         }
 
-        public static void FoundNoValueInRequest(this ILogger logger, ModelBindingContext bindingContext)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var modelMetadata = bindingContext.ModelMetadata;
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _foundNoValueForParameterInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        modelMetadata.ParameterName,
-                        bindingContext.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _foundNoValueForPropertyInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        bindingContext.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    _foundNoValueInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        bindingContext.ModelType,
-                        null);
-                    break;
-            }
-        }
-
         public static void NoPublicSettableProperties(this ILogger logger, ModelBindingContext bindingContext)
         {
             _noPublicSettableProperties(logger, bindingContext.ModelName, bindingContext.ModelType, null);
@@ -1247,230 +897,11 @@ namespace Orcus.Server.Service.Logging
             _noFilesFoundInRequest(logger, null);
         }
 
-        public static void AttemptingToBindModel(this ILogger logger, ModelBindingContext bindingContext)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var modelMetadata = bindingContext.ModelMetadata;
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _attemptingToBindParameterModel(
-                        logger,
-                        modelMetadata.ParameterName,
-                        modelMetadata.ModelType,
-                        bindingContext.ModelName,
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _attemptingToBindPropertyModel(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        bindingContext.ModelName,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    _attemptingToBindModel(logger, bindingContext.ModelType, bindingContext.ModelName, null);
-                    break;
-            }
-        }
-
-        public static void DoneAttemptingToBindModel(this ILogger logger, ModelBindingContext bindingContext)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var modelMetadata = bindingContext.ModelMetadata;
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _doneAttemptingToBindParameterModel(
-                        logger,
-                        modelMetadata.ParameterName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _doneAttemptingToBindPropertyModel(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    _doneAttemptingToBindModel(logger, bindingContext.ModelType, bindingContext.ModelName, null);
-                    break;
-            }
-        }
-
-        public static void AttemptingToBindParameterOrProperty(
-            this ILogger logger,
-            ParameterDescriptor parameter,
-            ModelMetadata modelMetadata)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _attemptingToBindParameter(logger, modelMetadata.ParameterName, modelMetadata.ModelType, null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _attemptingToBindProperty(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    if (parameter is ControllerParameterDescriptor parameterDescriptor)
-                        _attemptingToBindParameter(
-                            logger,
-                            parameterDescriptor.ParameterInfo.Name,
-                            modelMetadata.ModelType,
-                            null);
-                    else
-                        _attemptingToBindParameter(logger, parameter.Name, modelMetadata.ModelType, null);
-                    break;
-            }
-        }
-
-        public static void DoneAttemptingToBindParameterOrProperty(
-            this ILogger logger,
-            ParameterDescriptor parameter,
-            ModelMetadata modelMetadata)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _doneAttemptingToBindParameter(logger, modelMetadata.ParameterName, modelMetadata.ModelType, null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _doneAttemptingToBindProperty(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    if (parameter is ControllerParameterDescriptor parameterDescriptor)
-                        _doneAttemptingToBindParameter(
-                            logger,
-                            parameterDescriptor.ParameterInfo.Name,
-                            modelMetadata.ModelType,
-                            null);
-                    else
-                        _doneAttemptingToBindParameter(logger, parameter.Name, modelMetadata.ModelType, null);
-                    break;
-            }
-        }
-
-        public static void AttemptingToValidateParameterOrProperty(
-            this ILogger logger,
-            ParameterDescriptor parameter,
-            ModelMetadata modelMetadata)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _attemptingToValidateParameter(logger, modelMetadata.ParameterName, modelMetadata.ModelType, null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _attemptingToValidateProperty(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    if (parameter is ControllerParameterDescriptor parameterDescriptor)
-                        _attemptingToValidateParameter(
-                            logger,
-                            parameterDescriptor.ParameterInfo.Name,
-                            modelMetadata.ModelType,
-                            null);
-                    else
-                        _attemptingToValidateParameter(logger, parameter.Name, modelMetadata.ModelType, null);
-                    break;
-            }
-        }
-
-        public static void DoneAttemptingToValidateParameterOrProperty(
-            this ILogger logger,
-            ParameterDescriptor parameter,
-            ModelMetadata modelMetadata)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _doneAttemptingToValidateParameter(
-                        logger,
-                        modelMetadata.ParameterName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _doneAttemptingToValidateProperty(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        modelMetadata.ModelType,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    if (parameter is ControllerParameterDescriptor parameterDescriptor)
-                        _doneAttemptingToValidateParameter(
-                            logger,
-                            parameterDescriptor.ParameterInfo.Name,
-                            modelMetadata.ModelType,
-                            null);
-                    else
-                        _doneAttemptingToValidateParameter(logger, parameter.Name, modelMetadata.ModelType, null);
-                    break;
-            }
-        }
-
         public static void NoNonIndexBasedFormatFoundForCollection(this ILogger logger,
             ModelBindingContext bindingContext)
         {
             var modelName = bindingContext.ModelName;
             _noNonIndexBasedFormatFoundForCollection(logger, modelName, modelName, null);
-        }
-
-        public static void AttemptingToBindCollectionUsingIndices(this ILogger logger,
-            ModelBindingContext bindingContext)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            var modelName = bindingContext.ModelName;
-
-            var enumerableType =
-                ClosedGenericMatcher.ExtractGenericInterface(bindingContext.ModelType, typeof(IEnumerable<>));
-            if (enumerableType != null)
-            {
-                var elementType = enumerableType.GenericTypeArguments[0];
-                if (elementType.IsGenericType && elementType.GetGenericTypeDefinition().GetTypeInfo() ==
-                    typeof(KeyValuePair<,>).GetTypeInfo())
-                {
-                    _attemptingToBindCollectionOfKeyValuePair(logger, modelName, modelName, modelName, modelName,
-                        modelName, modelName, null);
-                    return;
-                }
-            }
-
-            _attemptingToBindCollectionUsingIndices(logger, modelName, modelName, modelName, modelName, modelName,
-                modelName, null);
         }
 
         public static void NoKeyValueFormatForDictionaryModelBinder(this ILogger logger,
@@ -1482,104 +913,6 @@ namespace Orcus.Server.Service.Logging
                 bindingContext.ModelName,
                 bindingContext.ModelName,
                 null);
-        }
-
-        public static void ParameterBinderRequestPredicateShortCircuit(
-            this ILogger logger,
-            ParameterDescriptor parameter,
-            ModelMetadata modelMetadata)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug)) return;
-
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _parameterBinderRequestPredicateShortCircuitOfParameter(
-                        logger,
-                        modelMetadata.ParameterName,
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _parameterBinderRequestPredicateShortCircuitOfProperty(
-                        logger,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    if (parameter is ControllerParameterDescriptor controllerParameterDescriptor)
-                        _parameterBinderRequestPredicateShortCircuitOfParameter(
-                            logger,
-                            controllerParameterDescriptor.ParameterInfo.Name,
-                            null);
-                    else
-                        _parameterBinderRequestPredicateShortCircuitOfParameter(logger, parameter.Name, null);
-                    break;
-            }
-        }
-
-        private static void LogFilterExecutionPlan(
-            ILogger logger,
-            string filterType,
-            IEnumerable<IFilterMetadata> filters)
-        {
-            var filterList = _noFilters;
-            if (filters.Any()) filterList = GetFilterList(filters);
-
-            _logFilterExecutionPlan(logger, filterType, filterList, null);
-        }
-
-        private static string[] GetFilterList(IEnumerable<IFilterMetadata> filters)
-        {
-            var filterList = new List<string>();
-            foreach (var filter in filters)
-                if (filter is IOrderedFilter orderedFilter)
-                    filterList.Add($"{filter.GetType()} (Order: {orderedFilter.Order})");
-                else
-                    filterList.Add(filter.GetType().ToString());
-            return filterList.ToArray();
-        }
-
-        private class ActionLogScope : IReadOnlyList<KeyValuePair<string, object>>
-        {
-            private readonly ActionDescriptor _action;
-
-            public ActionLogScope(ActionDescriptor action)
-            {
-                if (action == null) throw new ArgumentNullException(nameof(action));
-
-                _action = action;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            public KeyValuePair<string, object> this[int index]
-            {
-                get
-                {
-                    if (index == 0)
-                        return new KeyValuePair<string, object>("ActionId", _action.Id);
-                    if (index == 1) return new KeyValuePair<string, object>("ActionName", _action.DisplayName);
-                    throw new IndexOutOfRangeException(nameof(index));
-                }
-            }
-
-            public int Count => 2;
-
-            public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-            {
-                for (var i = 0; i < Count; ++i) yield return this[i];
-            }
-
-            public override string ToString()
-            {
-                // We don't include the _action.Id here because it's just an opaque guid, and if
-                // you have text logging, you can already use the requestId for correlation.
-                return _action.DisplayName;
-            }
         }
     }
 }

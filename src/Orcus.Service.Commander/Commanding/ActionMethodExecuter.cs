@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Response;
 
-namespace Orcus.Server.Service.Commanding
+#if NETSTANDARD
+using ReturnTask = System.Threading.Tasks.Task<Orcus.Modules.Api.IActionResult>;
+#else
+using ReturnTask = System.Threading.Tasks.ValueTask<Orcus.Modules.Api.IActionResult>;
+#endif
+
+namespace Orcus.Service.Commander.Commanding
 {
     /// <summary>
     ///     Executes different signatures of controller methods and unifies them
@@ -26,7 +32,7 @@ namespace Orcus.Server.Service.Commanding
 
         protected abstract bool CanExecute(ActionMethodMetadata metadata);
 
-        public abstract ValueTask<IActionResult> Execute(ObjectMethodExecutor executor, object controller,
+        public abstract ReturnTask Execute(ObjectMethodExecutor executor, object controller,
             object[] arguments, ActionMethodMetadata metadata);
 
         /// <summary>
@@ -59,11 +65,16 @@ namespace Orcus.Server.Service.Commanding
                 return !metadata.IsAsync && metadata.MethodReturnType == typeof(void);
             }
 
-            public override ValueTask<IActionResult> Execute(ObjectMethodExecutor executor, object controller,
+            public override ReturnTask Execute(ObjectMethodExecutor executor, object controller,
                 object[] arguments, ActionMethodMetadata metadata)
             {
                 executor.Execute(controller, arguments);
+
+#if NETSTANDARD
+                return Task.FromResult<IActionResult>(new OkResult());
+#else
                 return new ValueTask<IActionResult>(new OkResult());
+#endif
             }
         }
 
@@ -71,13 +82,17 @@ namespace Orcus.Server.Service.Commanding
         // CreatedAtResult Put(..)
         private class SyncActionResultExecutor : ActionMethodExecutor
         {
-            public override ValueTask<IActionResult> Execute(ObjectMethodExecutor executor, object controller,
+            public override ReturnTask Execute(ObjectMethodExecutor executor, object controller,
                 object[] arguments, ActionMethodMetadata metadata)
             {
                 var actionResult = (IActionResult) executor.Execute(controller, arguments);
                 EnsureActionResultNotNull(metadata, actionResult);
 
+#if NETSTANDARD
+                return Task.FromResult(actionResult);
+#else
                 return new ValueTask<IActionResult>(actionResult);
+#endif
             }
 
             protected override bool CanExecute(ActionMethodMetadata methodMetadata)
@@ -95,7 +110,7 @@ namespace Orcus.Server.Service.Commanding
                 return typeof(Task<IActionResult>).IsAssignableFrom(metadata.MethodReturnType);
             }
 
-            public override async ValueTask<IActionResult> Execute(ObjectMethodExecutor executor, object controller,
+            public override async ReturnTask Execute(ObjectMethodExecutor executor, object controller,
                 object[] arguments, ActionMethodMetadata metadata)
             {
                 // Async method returning Task<IActionResult>

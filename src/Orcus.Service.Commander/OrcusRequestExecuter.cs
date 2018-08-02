@@ -7,24 +7,10 @@ using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Commanding;
-using Orcus.Server.Service.Modules.Routing;
+using Orcus.Service.Commander.Routing;
 
-namespace Orcus.Server.Service.Modules.Execution
+namespace Orcus.Service.Commander
 {
-    /// <summary>
-    ///     Take an <see cref="OrcusRequest" /> and execute it, responding with an <see cref="OrcusResponse" />
-    /// </summary>
-    public interface IOrcusRequestExecuter
-    {
-        /// <summary>
-        ///     Execute the given <see cref="OrcusRequest" />
-        /// </summary>
-        /// <param name="request">The requested method</param>
-        /// <returns>Return the result of the request</returns>
-        Task<OrcusResponse> Execute(OrcusRequest request);
-    }
-
     /// <inheritdoc />
     public class OrcusRequestExecuter : IOrcusRequestExecuter
     {
@@ -97,32 +83,6 @@ namespace Orcus.Server.Service.Modules.Execution
         private OrcusResponse Exception(Exception e)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class DefaultOrcusContext : OrcusContext
-    {
-        private readonly CancellationTokenSource _requestCancellationTokenSource;
-
-        public DefaultOrcusContext(OrcusRequest request, IServiceProvider serviceProvider)
-        {
-            Request = request;
-            RequestServices = serviceProvider;
-
-            _requestCancellationTokenSource = new CancellationTokenSource();
-            RequestAborted = _requestCancellationTokenSource.Token;
-        }
-
-        public override OrcusResponse Response { get; set; }
-        public override object Caller { get; set; }
-        public override OrcusRequest Request { get; set; }
-        public override ConnectionInfo Connection { get; set; }
-        public override IServiceProvider RequestServices { get; set; }
-        public override CancellationToken RequestAborted { get; set; }
-
-        public override void Abort()
-        {
-            _requestCancellationTokenSource.Cancel();
         }
     }
 }

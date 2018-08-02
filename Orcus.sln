@@ -73,7 +73,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Service.Commander", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.OrcusSockets", "src\Orcus.Server.OrcusSockets\Orcus.Server.OrcusSockets.csproj", "{92894371-2AA8-43FB-865A-39E1DCE5BF03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Server.OrcusSockets.Tests", "test\Orcus.Server.OrcusSockets.Tests\Orcus.Server.OrcusSockets.Tests.csproj", "{EBD7E111-5370-4A34-B198-D01B28546A1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.OrcusSockets.Tests", "test\Orcus.Server.OrcusSockets.Tests\Orcus.Server.OrcusSockets.Tests.csproj", "{EBD7E111-5370-4A34-B198-D01B28546A1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

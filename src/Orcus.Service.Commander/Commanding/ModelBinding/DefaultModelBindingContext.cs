@@ -4,8 +4,9 @@
 using System;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.ModelBinding;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     public class DefaultModelBindingContext : ModelBindingContext
     {

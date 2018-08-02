@@ -3,7 +3,7 @@ using Orcus.Modules.Api;
 using Orcus.Modules.Api.ModelBinding;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Abstract
 {
     /// <summary>
     ///     A context that contains operating information for model binding and validation.

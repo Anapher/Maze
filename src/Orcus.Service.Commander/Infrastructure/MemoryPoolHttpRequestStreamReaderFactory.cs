@@ -6,7 +6,7 @@ using System.Buffers;
 using System.IO;
 using System.Text;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     An <see cref="IHttpRequestStreamReaderFactory" /> that uses pooled buffers.

@@ -3,7 +3,7 @@
 
 using Orcus.Modules.Api.ModelBinding;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     Defines the methods that are required for a value provider.

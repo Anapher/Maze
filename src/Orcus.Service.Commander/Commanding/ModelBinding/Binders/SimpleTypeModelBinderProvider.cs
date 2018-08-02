@@ -5,7 +5,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinderProvider" /> for binding simple data types.

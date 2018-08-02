@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Creates <see cref="TextWriter" /> instances for writing to <see cref="HttpResponse.Body" />.

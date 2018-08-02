@@ -6,9 +6,8 @@ using System.Reflection;
 using NuGet.Packaging.Core;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Routing;
-using Orcus.Server.Service.Extensions;
 
-namespace Orcus.Server.Service.Modules.Routing
+namespace Orcus.Service.Commander.Routing
 {
     /// <summary>
     ///     Extracts the routes of package controllers

@@ -5,9 +5,9 @@ using System;
 using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.Primitives;
-using Orcus.Server.Service.Commanding.Formatters.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// A media type value.

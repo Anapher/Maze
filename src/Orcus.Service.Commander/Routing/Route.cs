@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading;
-using Orcus.Server.Service.Commanding;
+using Orcus.Service.Commander.Commanding;
 
-namespace Orcus.Server.Service.Modules.Routing
+namespace Orcus.Service.Commander.Routing
 {
     public class Route
     {

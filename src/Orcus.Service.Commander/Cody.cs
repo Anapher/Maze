@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Modules.Execution;
-using Orcus.Server.Service.Modules.Routing;
+using Orcus.Service.Commander.Routing;
 
-namespace Orcus.Server.Service.Commanding
+namespace Orcus.Service.Commander
 {
     public class DefaultActionContext : ActionContext
     {

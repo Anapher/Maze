@@ -4,7 +4,7 @@
 using System;
 using Orcus.Modules.Api.ModelBinding;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     public abstract class ModelBinderProviderContext
     {

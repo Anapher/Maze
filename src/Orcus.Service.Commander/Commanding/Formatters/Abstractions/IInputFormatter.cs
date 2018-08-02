@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
 {
     /// <summary>
     /// Reads an object from the request body.

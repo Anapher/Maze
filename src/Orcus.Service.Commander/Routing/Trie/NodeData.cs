@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Service.Modules.Routing.Trie
+﻿namespace Orcus.Service.Commander.Routing.Trie
 {
     /// <summary>
     ///     Represents a route that ends at a particular node.

@@ -5,8 +5,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Modules.Api.Parameters;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinder" /> which binds models from the request services when a model

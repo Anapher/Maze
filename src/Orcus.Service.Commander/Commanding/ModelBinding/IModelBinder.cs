@@ -2,8 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     Defines an interface for model binders.

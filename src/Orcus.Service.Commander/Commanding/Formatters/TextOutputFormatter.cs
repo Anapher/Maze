@@ -10,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Formatters;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// Writes an object in a given text format to the output stream.

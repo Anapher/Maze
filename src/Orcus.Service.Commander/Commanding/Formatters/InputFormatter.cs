@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Orcus.Modules.Api.Formatters;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// Reads an object from the request body.

@@ -4,7 +4,7 @@
 using System.Diagnostics.Contracts;
 using System.Text;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Internal
+namespace Orcus.Service.Commander.Commanding.Formatters.Internal
 {
     public static class HttpTokenParsingRules
     {

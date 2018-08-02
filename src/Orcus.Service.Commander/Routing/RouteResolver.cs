@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Web;
 using Orcus.Modules.Api;
-using Orcus.Server.Service.Modules.Routing.Trie;
+using Orcus.Service.Commander.Routing.Trie;
 
-namespace Orcus.Server.Service.Modules.Routing
+namespace Orcus.Service.Commander.Routing
 {
     public class RouteResolver : IRouteResolver
     {

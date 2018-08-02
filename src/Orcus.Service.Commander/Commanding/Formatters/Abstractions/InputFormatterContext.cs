@@ -6,10 +6,9 @@ using System.IO;
 using System.Text;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.ModelBinding;
-using Orcus.Server.Service.Commanding.ModelBinding;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
 {
     /// <summary>
     ///     A context object used by an input formatter for deserializing the request body into an object.

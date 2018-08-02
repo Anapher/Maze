@@ -5,10 +5,11 @@ using System;
 using System.Buffers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json.Internal
+namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
 {
     /// <summary>
     /// Sets up JSON formatter options for <see cref="MvcOptions"/>.

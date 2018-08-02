@@ -1,6 +1,6 @@
 ﻿using Orcus.Modules.Api;
 
-namespace Orcus.Server.Service.Modules.Routing
+namespace Orcus.Service.Commander.Routing
 {
     public interface IRouteResolver
     {

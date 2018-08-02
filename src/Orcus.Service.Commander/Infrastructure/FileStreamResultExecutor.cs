@@ -2,16 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Response;
 using Orcus.Modules.Api.Services;
-using Orcus.Server.Service.Logging;
+using Orcus.Service.Commander.Logging;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     public class FileStreamResultExecutor : FileResultExecutorBase, IActionResultExecutor<FileStreamResult>
     {

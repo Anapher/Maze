@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orcus.Server.Service.Modules.Routing
+namespace Orcus.Service.Commander.Routing
 {
     public class ResolveResult
     {

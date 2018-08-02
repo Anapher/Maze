@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     ///     Reads an object from a request body with a text format.

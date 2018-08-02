@@ -10,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Provides a parser for the Range Header in an <see cref="OrcusContext.Request" />.

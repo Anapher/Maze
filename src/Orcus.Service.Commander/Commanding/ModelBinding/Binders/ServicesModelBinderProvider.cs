@@ -4,7 +4,7 @@
 using System;
 using Orcus.Modules.Api.Parameters;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinderProvider" /> for binding from the <see cref="IServiceProvider" />.

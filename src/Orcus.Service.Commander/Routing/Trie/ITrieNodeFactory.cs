@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Service.Modules.Routing.Trie.Nodes;
+﻿using Orcus.Service.Commander.Routing.Trie.Nodes;
 
-namespace Orcus.Server.Service.Modules.Routing.Trie
+namespace Orcus.Service.Commander.Routing.Trie
 {
     /// <summary>
     ///     Factory for creating trie nodes from route definition segments

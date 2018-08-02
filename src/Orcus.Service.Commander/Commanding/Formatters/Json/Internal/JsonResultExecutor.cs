@@ -10,9 +10,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Orcus.Modules.Api;
-using Orcus.Server.Service.Infrastructure;
+using Orcus.Service.Commander.Infrastructure;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json.Internal
+namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
 {
     /// <summary>
     /// Executes a <see cref="JsonResult"/> to write to the response.

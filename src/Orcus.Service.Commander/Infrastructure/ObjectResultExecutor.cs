@@ -11,11 +11,10 @@ using Orcus.Modules.Api;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
 using Orcus.Modules.Api.Services;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
-using Orcus.Server.Service.Logging;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Logging;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Executes an <see cref="ObjectResult" /> to write to the response.

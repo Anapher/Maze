@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Primitives;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Internal
+namespace Orcus.Service.Commander.Commanding.Formatters.Internal
 {
     /// <summary>
     /// A media type with its associated quality.

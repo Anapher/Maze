@@ -14,9 +14,9 @@ using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Extensions;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Logging;
+using Orcus.Service.Commander.Logging;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     public class FileResultExecutorBase
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using Orcus.Modules.Api.Formatters;
 
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// Writes an object to the output stream.

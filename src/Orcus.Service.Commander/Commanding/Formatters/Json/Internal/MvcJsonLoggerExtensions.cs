@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json.Internal
+namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
 {
     internal static class MvcJsonLoggerExtensions
     {

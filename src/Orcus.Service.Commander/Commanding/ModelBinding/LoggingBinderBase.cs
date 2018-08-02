@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     public abstract class LoggingBinderBase
     {

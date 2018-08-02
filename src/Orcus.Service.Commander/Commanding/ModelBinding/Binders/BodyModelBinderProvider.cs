@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api.Parameters;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
-using Orcus.Server.Service.Infrastructure;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Infrastructure;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
    public class BodyModelBinderProvider : IModelBinderProvider
     {

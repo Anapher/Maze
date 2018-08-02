@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json.DependencyInjection
+namespace Orcus.Service.Commander.Commanding.Formatters.Json.DependencyInjection
 {
     public static class MvcJsonMvcCoreBuilderExtensions
     {

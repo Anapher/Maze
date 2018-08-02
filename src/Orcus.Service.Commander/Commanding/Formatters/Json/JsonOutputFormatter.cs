@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Orcus.Modules.Api.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     ///     A <see cref="TextOutputFormatter" /> for JSON content.

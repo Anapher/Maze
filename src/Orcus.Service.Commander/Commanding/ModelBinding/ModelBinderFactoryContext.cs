@@ -1,6 +1,6 @@
 ﻿using Orcus.Modules.Api.ModelBinding;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     A context object for <see cref="IModelBinderFactory.CreateBinder" />.

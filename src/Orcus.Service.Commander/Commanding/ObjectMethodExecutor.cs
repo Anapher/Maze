@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Orcus.Server.Service.Commanding
+namespace Orcus.Service.Commander.Commanding
 {
     /// <summary>
     ///     Provides the delegate for an action method

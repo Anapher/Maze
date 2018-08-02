@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api.Parameters;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
-using Orcus.Server.Service.Infrastructure;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
+using Orcus.Service.Commander.Infrastructure;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinder" /> which binds models from the request body using an <see cref="IInputFormatter" />

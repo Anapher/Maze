@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orcus.Server.Service.Modules.Routing.Trie.Nodes
+namespace Orcus.Service.Commander.Routing.Trie.Nodes
 {
     public abstract class TrieNode
     {

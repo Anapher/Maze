@@ -6,22 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Orcus.NuGet.Packaging.Core" Version="1.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NuGet.Frameworks">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Common">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Common\15.0\bin\Release\netstandard1.6\NuGet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Versioning">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Packaging.Core">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Packaging.Core\15.0\bin\Release\netstandard1.6\NuGet.Packaging.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

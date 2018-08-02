@@ -15,9 +15,11 @@ using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.ModelBinding;
-using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Infrastructure;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// A <see cref="TextInputFormatter"/> for JSON content.
@@ -27,7 +29,6 @@ namespace Orcus.Server.Service.Commanding.Formatters.Json
         private readonly IArrayPool<char> _charPool;
         private readonly ILogger _logger;
         private readonly ObjectPoolProvider _objectPoolProvider;
-        private readonly MvcJsonOptions _jsonOptions;
 
         // These fields are used when one of the legacy constructors is called that doesn't provide the MvcOptions or
         // MvcJsonOptions.
@@ -53,34 +54,17 @@ namespace Orcus.Server.Service.Commanding.Formatters.Json
             ILogger logger,
             JsonSerializerSettings serializerSettings,
             ArrayPool<char> charPool,
-            ObjectPoolProvider objectPoolProvider,
-            MvcJsonOptions jsonOptions)
+            ObjectPoolProvider objectPoolProvider)
         {
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            if (serializerSettings == null)
-            {
-                throw new ArgumentNullException(nameof(serializerSettings));
-            }
-
             if (charPool == null)
             {
                 throw new ArgumentNullException(nameof(charPool));
             }
 
-            if (objectPoolProvider == null)
-            {
-                throw new ArgumentNullException(nameof(objectPoolProvider));
-            }
-
-            _logger = logger;
-            SerializerSettings = serializerSettings;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            SerializerSettings = serializerSettings ?? throw new ArgumentNullException(nameof(serializerSettings));
             _charPool = new JsonArrayPool<char>(charPool);
-            _objectPoolProvider = objectPoolProvider;
-            _jsonOptions = jsonOptions;
+            _objectPoolProvider = objectPoolProvider ?? throw new ArgumentNullException(nameof(objectPoolProvider));
 
             SupportedEncodings.Add(UTF8EncodingWithoutBOM);
             SupportedEncodings.Add(UTF16EncodingLittleEndian);

@@ -2,13 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Infrastructure;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Server.Service.Commanding.Formatters
+namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
 {
     /// <summary>
     ///     Selects an <see cref="IOutputFormatter" /> to write a response to the current request.

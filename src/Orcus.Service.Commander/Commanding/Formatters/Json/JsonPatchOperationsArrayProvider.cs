@@ -5,9 +5,8 @@ using System;
 using System.Reflection;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// Implements a provider of <see cref="ApiDescription"/> to change parameters of 

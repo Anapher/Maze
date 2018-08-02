@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,26 +11,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NuGet.Common">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Common\15.0\bin\Release\netstandard1.6\NuGet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Frameworks">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.LibraryModel">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.LibraryModel\15.0\bin\Release\netstandard1.6\NuGet.LibraryModel.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Packaging.Core">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Packaging.Core\15.0\bin\Release\netstandard1.6\NuGet.Packaging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Protocol">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Protocol\15.0\bin\Release\netstandard1.6\NuGet.Protocol.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Versioning">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Versioning\15.0\bin\Release\netstandard1.6\NuGet.Versioning.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

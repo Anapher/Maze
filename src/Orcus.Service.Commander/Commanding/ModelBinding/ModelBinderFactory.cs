@@ -8,11 +8,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Orcus.Modules.Api.ModelBinding;
-using Orcus.Server.Service.Commanding.Formatters;
-using Orcus.Server.Service.Commanding.Formatters.Abstractions;
-using Orcus.Server.Service.Extensions;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Extensions;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding
+namespace Orcus.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     A factory for <see cref="IModelBinder" /> instances.
@@ -26,7 +25,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
         /// <summary>
         ///     Creates a new <see cref="ModelBinderFactory" />.
         /// </summary>
-        /// <param name="options">The <see cref="IOptions{TOptions}" /> for <see cref="OrcusServerOptions" />.</param>
+        /// <param name="options">The <see cref="IOptions{TOptions}" /> for <see cref="Orcus.Service.Commander.OrcusServerOptions" />.</param>
         /// <param name="serviceProvider">The <see cref="IServiceProvider" />.</param>
         public ModelBinderFactory(IOptions<OrcusServerOptions> options, IServiceProvider serviceProvider)
         {
@@ -34,7 +33,7 @@ namespace Orcus.Server.Service.Commanding.ModelBinding
 
             var formatters = new List<IInputFormatter>();
 
-            _providers = options.Value.ModelBinderProviders.ToArray();
+            _providers = Enumerable.ToArray<IModelBinderProvider>(options.Value.ModelBinderProviders);
             _cache = new ConcurrentDictionary<Key, IModelBinder>();
         }
 

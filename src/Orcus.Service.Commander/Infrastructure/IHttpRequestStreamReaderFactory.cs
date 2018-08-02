@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Server.Service.Infrastructure
+namespace Orcus.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Creates <see cref="TextReader" /> instances for reading from <see cref="HttpRequest.Body" />.

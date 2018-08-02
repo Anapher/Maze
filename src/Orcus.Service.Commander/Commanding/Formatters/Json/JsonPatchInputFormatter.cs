@@ -8,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
-using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// A <see cref="TextInputFormatter"/> for JSON Patch (application/json-patch+json) content.

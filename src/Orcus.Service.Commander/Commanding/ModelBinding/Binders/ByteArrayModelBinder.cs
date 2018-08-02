@@ -5,8 +5,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api.ModelBinding;
+using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Server.Service.Commanding.ModelBinding.Binders
+namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     ModelBinder to bind byte Arrays.

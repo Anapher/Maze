@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json.DependencyInjection
+namespace Orcus.Service.Commander.Commanding.Formatters.Json.DependencyInjection
 {
     /// <summary>
     /// Extensions methods for configuring MVC via an <see cref="IMvcBuilder"/>.

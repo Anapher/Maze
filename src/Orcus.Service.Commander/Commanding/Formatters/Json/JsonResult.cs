@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.Service.Commanding.Formatters.Json.Internal;
+using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Server.Service.Commanding.Formatters.Json
+namespace Orcus.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// An action result which formats the given object as JSON.

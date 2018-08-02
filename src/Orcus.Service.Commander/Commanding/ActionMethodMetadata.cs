@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Orcus.Server.Service.Commanding
+namespace Orcus.Service.Commander.Commanding
 {
     /// <summary>
     ///     Metadata of an action method

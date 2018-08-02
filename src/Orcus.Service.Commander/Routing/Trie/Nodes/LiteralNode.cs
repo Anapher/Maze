@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orcus.Server.Service.Modules.Routing.Trie.Nodes
+namespace Orcus.Service.Commander.Routing.Trie.Nodes
 {
     public class LiteralNode : TrieNode
     {
