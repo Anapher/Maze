@@ -16,9 +16,25 @@ namespace Orcus.ModuleManagement.Loader
         }
 
         public PackageIdentity Package { get; }
+
+        /// <summary>
+        ///     The root directory of the package
+        /// </summary>
         public string PackageDirectory { get; }
+
+        /// <summary>
+        ///     The directory of the library (in the lib folder with the correct framework)
+        /// </summary>
         public string LibraryDirectory { get; }
+
+        /// <summary>
+        ///     The selected framework version for this library
+        /// </summary>
         public NuGetFramework Framework { get; }
+
+        /// <summary>
+        ///     True if the package is an Orcus module
+        /// </summary>
         public bool IsOrcusModule { get; }
     }
 }

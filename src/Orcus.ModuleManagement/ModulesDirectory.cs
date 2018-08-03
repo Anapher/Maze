@@ -3,31 +3,9 @@ using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
-using NuGet.Versioning;
 
 namespace Orcus.ModuleManagement
 {
-    public interface IModulesDirectory
-    {
-        PackageSource PackageSource { get; }
-        VersionFolderPathResolver VersionFolderPathResolver { get; }
-
-        bool ModuleExists(PackageIdentity packageIdentity);
-        Task DeleteModule(PackageIdentity packageIdentity);
-    }
-
-    public class VersionFolderPathResolverFlat : VersionFolderPathResolver
-    {
-        public VersionFolderPathResolverFlat(string rootPath) : base(rootPath, false)
-        {
-        }
-
-        public override string GetPackageDirectory(string packageId, NuGetVersion version)
-        {
-            return GetVersionListDirectory(packageId) + "." + version.ToNormalizedString();
-        }
-    }
-
     public class ModulesDirectory : IModulesDirectory
     {
         public ModulesDirectory(VersionFolderPathResolver versionFolderPathResolver)

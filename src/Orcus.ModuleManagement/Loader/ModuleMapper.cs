@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NuGet.Frameworks;
@@ -48,6 +49,9 @@ namespace Orcus.ModuleManagement.Loader
                         ModulesDirectory.VersionFolderPathResolver.GetPackageDirectory(packageIdentity.Id,
                             packageIdentity.Version);
                     var (libDirectory, framework) = GetFrameworkDirectory(packageDirectory);
+
+                    if (framework == null)
+                        throw new InvalidOperationException($"The library is not supported by {OrcusFramework}");
 
                     levelList.Add(new PackageLoadingContext(packageIdentity, packageDirectory, libDirectory.FullName,
                         framework, framework.Framework == OrcusFramework.Framework));

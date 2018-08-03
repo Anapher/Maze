@@ -75,6 +75,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.OrcusSockets",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.OrcusSockets.Tests", "test\Orcus.Server.OrcusSockets.Tests\Orcus.Server.OrcusSockets.Tests.csproj", "{EBD7E111-5370-4A34-B198-D01B28546A1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Client.Library", "src\Orcus.Client.Library\Orcus.Client.Library.csproj", "{F6268227-51AA-4C46-83E0-AF2D77FF5868}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,10 @@ Global
 		{EBD7E111-5370-4A34-B198-D01B28546A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBD7E111-5370-4A34-B198-D01B28546A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBD7E111-5370-4A34-B198-D01B28546A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6268227-51AA-4C46-83E0-AF2D77FF5868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6268227-51AA-4C46-83E0-AF2D77FF5868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6268227-51AA-4C46-83E0-AF2D77FF5868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6268227-51AA-4C46-83E0-AF2D77FF5868}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,6 +211,7 @@ Global
 		{B815C545-E86A-47E9-81F5-11CE7B2E141D} = {22C4E303-30DF-41D2-86BA-906CD6BDE4F1}
 		{92894371-2AA8-43FB-865A-39E1DCE5BF03} = {9C6E5247-3459-4ECF-9FE3-5E2044295099}
 		{EBD7E111-5370-4A34-B198-D01B28546A1B} = {22C4E303-30DF-41D2-86BA-906CD6BDE4F1}
+		{F6268227-51AA-4C46-83E0-AF2D77FF5868} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}
