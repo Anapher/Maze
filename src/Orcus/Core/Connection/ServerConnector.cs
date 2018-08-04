@@ -1,29 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Orcus.Core.Rest.Authentication.V1;
+using Orcus.Core.Services;
 using Orcus.Logging;
-using Orcus.Server.Connection.Authentication.Client;
 
 namespace Orcus.Core.Connection
 {
-    public class ServerConnector
+    public interface IServerConnector
     {
-        private static readonly ILog Logger = LogProvider.For<ServerConnector>();
+        Task<ServerConnection> TryConnect(Uri uri);
+    }
 
-        private readonly HttpClient _httpClient;
+    public class ServerConnector : IServerConnector
+    {
+        private readonly IClientInfoProvider _clientInfoProvider;
 
-        public ServerConnector(HttpClient httpClient)
+        private readonly IOrcusRestClientFactory _restClientFactory;
+
+        public ServerConnector(IOrcusRestClientFactory restClientFactory, IClientInfoProvider clientInfoProvider)
         {
-            _httpClient = httpClient;
+            _restClientFactory = restClientFactory;
+            _clientInfoProvider = clientInfoProvider;
         }
 
-        public async Task TryConnect()
+        public async Task<ServerConnection> TryConnect(Uri uri)
         {
-            AuthenticationResource.Authenticate(new ClientAuthenticationDto(), null);
+            var restClient = _restClientFactory.Create(uri);
+            var result =
+                await AuthenticationResource.Authenticate(_clientInfoProvider.GetAuthenticationDto(), restClient);
+            restClient.SetAuthenticated(result.Jwt);
+
+            return new ServerConnection(restClient, result.Modules);
         }
     }
 }

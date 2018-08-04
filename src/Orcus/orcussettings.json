@@ -1,11 +1,15 @@
 ﻿{
   "Modules": {
-    "LocalPath": "%appdata%/Orcus/modules",
-    "PrimaryModules": [
-      "Orcus.TrayIcon/1.0.1"
-    ],
-    "PackagesLock": {
-      "Orcus.TryIcon/1.0.1": [ "Json.Net/1.0", "WinForms.Metro/23.5" ]
-    }
-  }
+    "LocalPath": "%appdata%/Orcus/modules"
+    //"PrimaryModules": [
+    //  "Orcus.TrayIcon/1.0.1"
+    //],
+    //"PackagesLock": {
+    //  "Orcus.TryIcon/1.0.1": [ "Json.Net/1.0", "WinForms.Metro/23.5" ]
+    //}
+  },
+  "Connection": {
+    "ServerUris": [ "", "" ],
+    "ReconnectDelay": 5000 
+  } 
 }

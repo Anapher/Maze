@@ -37,9 +37,10 @@ namespace Orcus.Administration.Core.Clients
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
         {
             var response = await _httpClient.SendAsync(request);
-            var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
                 return response;
+
+            var result = await response.Content.ReadAsStringAsync();
 
             RestError[] errors;
             try

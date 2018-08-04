@@ -50,13 +50,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Connection\ClientInfoProvider.cs" />
+    <Compile Include="Core\Connection\CoreConnector.cs" />
+    <Compile Include="Core\Connection\ServerConnection.cs" />
     <Compile Include="Core\Connection\ServerConnector.cs" />
     <Compile Include="Core\IApplicationInfo.cs" />
     <Compile Include="Core\Modules\ClientModulesDirectory.cs" />
+    <Compile Include="Core\Modules\ConfigurationRootProvider.cs" />
+    <Compile Include="Core\Modules\IConfigurationRootProvider.cs" />
+    <Compile Include="Core\Modules\LocalModuleLoader.cs" />
     <Compile Include="Core\Modules\PackageCarrier.cs" />
     <Compile Include="Core\Modules\PackageLoader.cs" />
     <Compile Include="Core\Modules\ModulesCatalog.cs" />
+    <Compile Include="Core\Modules\PackagesRegistrar.cs" />
     <Compile Include="Core\Rest\Authentication\V1\AuthenticationResource.cs" />
+    <Compile Include="Core\Services\HttpClientService.cs" />
+    <Compile Include="Core\Connection\OrcusRestClient.cs" />
+    <Compile Include="Core\Services\OrcusRestClientFactory.cs" />
+    <Compile Include="Exceptions\RestAuthenticationException.cs" />
+    <Compile Include="Exceptions\RestException.cs" />
+    <Compile Include="Exceptions\RestNotFoundException.cs" />
+    <Compile Include="Options\ConnectionOptions.cs" />
     <Compile Include="Options\ModulesOptions.cs" />
     <Compile Include="OrcusContext.cs" />
     <Compile Include="Program.cs" />
