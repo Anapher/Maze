@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Configuration;
@@ -11,8 +12,10 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
+using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Config;
+using Architecture = Orcus.ModuleManagement.Loader.Architecture;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -35,9 +38,14 @@ namespace Orcus.Server.Service.Modules
 
             _modulesConfig = modulesConfig;
             _modulesLock = modulesLock;
+
+            Architecture = Environment.Is64BitProcess ? Architecture.x64 : Architecture.x86;
+            Runtime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Runtime.Windows : Runtime.Linux;
         }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
+        public Runtime Runtime { get; }
+        public Architecture Architecture { get; }
         public IImmutableList<PackageIdentity> PrimaryPackages => _modulesConfig.Modules;
 
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages =>

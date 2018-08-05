@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Services;
-using Orcus.Clients;
 using Orcus.Core.Connection;
 using Orcus.Core.Modules;
 using Orcus.Core.Services;

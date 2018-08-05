@@ -64,7 +64,7 @@ namespace Orcus.Server.Service.Modules
             }
 
             // Check if any packages are not already in the packages folder
-            if (toDownload.Count > 0)
+            if (toDownload.Any())
             {
                 var downloadResults = new List<PackagePreFetcherResult>(maxParallelTasks);
 

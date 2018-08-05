@@ -10,14 +10,18 @@ namespace Orcus.ModuleManagement.Loader
 {
     public class ModuleMapper
     {
-        public ModuleMapper(NuGetFramework orcusFramework, IModulesDirectory modulesDirectory)
+        public ModuleMapper(NuGetFramework orcusFramework, IModulesDirectory modulesDirectory, Runtime runtime, Architecture architecture)
         {
             OrcusFramework = orcusFramework;
             ModulesDirectory = modulesDirectory;
+            Runtime = runtime;
+            Architecture = architecture;
         }
 
         public NuGetFramework OrcusFramework { get; }
         public IModulesDirectory ModulesDirectory { get; }
+        public Runtime Runtime { get; }
+        public Architecture Architecture { get; }
 
         /// <summary>
         ///     Build a module loader map that determines in which order which packages must be loaded
@@ -46,9 +50,10 @@ namespace Orcus.ModuleManagement.Loader
                         throw new FileNotFoundException($"The package {packageIdentity} was not found.");
 
                     var packageDirectory =
-                        ModulesDirectory.VersionFolderPathResolver.GetPackageDirectory(packageIdentity.Id,
+                        ModulesDirectory.VersionFolderPathResolver.GetInstallPath(packageIdentity.Id,
                             packageIdentity.Version);
-                    var (libDirectory, framework) = GetFrameworkDirectory(packageDirectory);
+                    var (libDirectory, framework) =
+                        LoadResolver.ResolveNuGetFolder(packageDirectory, OrcusFramework, Runtime, Architecture);
 
                     if (framework == null)
                         throw new InvalidOperationException($"The library is not supported by {OrcusFramework}");
@@ -61,25 +66,6 @@ namespace Orcus.ModuleManagement.Loader
             }
 
             return result;
-        }
-
-        private (DirectoryInfo folder, NuGetFramework framework) GetFrameworkDirectory(string packageDirectory)
-        {
-            var libFolder = new DirectoryInfo(Path.Combine(packageDirectory, "lib"));
-            if (!libFolder.Exists)
-                return (null, null);
-
-            var frameworkFolders = libFolder.GetDirectories()
-                .ToDictionary(x => NuGetFramework.ParseFolder(x.Name), x => x, NuGetFramework.Comparer);
-            //if (frameworkFolders.TryGetValue(OrcusFramework, out var directory))
-            //    return (directory, OrcusFramework);
-
-            var bestFramework =
-                NuGetFrameworkUtility.GetNearest(frameworkFolders.Select(x => x.Key), OrcusFramework, x => x);
-            if (bestFramework == null)
-                return (null, null);
-
-            return (frameworkFolders[bestFramework], bestFramework);
         }
 
         private static void SearchDependencies(PackageIdentity packageIdentity, PackagesLock packagesLock,

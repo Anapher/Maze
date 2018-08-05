@@ -5,9 +5,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
-using NuGet.Frameworks;
 using NuGet.Packaging.Core;
-using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Extensions;
@@ -16,11 +14,11 @@ namespace Orcus.Server.Service.Modules.Loader
 {
     public class ModuleLoader
     {
-        private readonly IModulesDirectory _modulesDirectory;
+        private readonly IModuleProject _project;
 
-        public ModuleLoader(IModulesDirectory modulesDirectory)
+        public ModuleLoader(IModuleProject project)
         {
-            _modulesDirectory = modulesDirectory;
+            _project = project;
             ModuleTypeMap = new ModuleTypeMap();
         }
 
@@ -28,18 +26,17 @@ namespace Orcus.Server.Service.Modules.Loader
 
         public async Task Load(IEnumerable<PackageIdentity> primaryPackages, PackagesLock packagesLock)
         {
-            var mapper = new ModuleMapper(FrameworkConstants.CommonFrameworks.OrcusServer10, _modulesDirectory);
+            var mapper = new ModuleMapper(_project.Framework, _project.ModulesDirectory, _project.Runtime, _project.Architecture);
             var map = mapper.BuildMap(primaryPackages, packagesLock);
 
             var loadedAssemblies = new ConcurrentBag<Assembly>();
-            while (map.TryPop(out var packages))
+            while (map.TryPop(out var dependencyLayer))
             {
-                await TaskCombinators.ThrottledAsync(packages, (context, token) => Task.Run(() =>
+                await TaskCombinators.ThrottledAsync(dependencyLayer, (context, token) => Task.Run(() =>
                 {
                     foreach (var file in Directory.GetFiles(context.LibraryDirectory, "*.dll"))
                     {
-                        var assemblyName = AssemblyLoadContext.GetAssemblyName(file);
-                        var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName);
+                        var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
 
                         if (context.IsOrcusModule)
                         {

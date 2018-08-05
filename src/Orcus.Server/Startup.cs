@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.Config;
+using Orcus.Server.Service.Modules.Loader;
 
 namespace Orcus.Server
 {
@@ -87,6 +89,12 @@ namespace Orcus.Server
 
             var orcusProject = new OrcusProject(modulesOptions.Value.PrimarySources,
                 modulesOptions.Value.DependencySources, modulesOptions.Value.Directory, modulesConfig, modulesLock);
+
+            if (modulesConfig.Modules.Any())
+            {
+                var loader = new ModuleLoader(orcusProject);
+                await loader.Load(modulesConfig.Modules, modulesLock.Modules[orcusProject.Framework]);
+            }
 
             containerBuilder.RegisterInstance(modulesConfig).AsImplementedInterfaces();
             containerBuilder.RegisterInstance(modulesLock).AsImplementedInterfaces();
