@@ -11,7 +11,7 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.PackageManagement
+namespace Orcus.ModuleManagement.PackageManagement
 {
     /// <summary>
     /// Abstracts the logic to get a package stream for a given package identity from a given source repository

@@ -11,7 +11,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using Orcus.PackageManagement;
+using Orcus.ModuleManagement.PackageManagement;
 using Orcus.Server.Service.Modules.PackageManagement;
 
 namespace Orcus.Server.Service.Modules.Resolution

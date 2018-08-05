@@ -18,6 +18,7 @@ using Orcus.Server.Hubs;
 using Orcus.Server.Middleware;
 using Orcus.Server.Options;
 using Orcus.Server.OrcusSockets;
+using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.Config;
 
@@ -46,20 +47,9 @@ namespace Orcus.Server
             var provider = services.BuildServiceProvider();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        if (context.Request.Path.Value.EndsWith("signalR"))
-                            if (context.Request.Query.TryGetValue("signalRTokenHeader", out var token))
-                                context.Token = token;
-                        return Task.CompletedTask;
-                    }
-                };
                 options.TokenValidationParameters =
-                    provider.GetService<DefaultTokenProvider>().GetValidationParameters();
-            });
+                    provider.GetService<DefaultTokenProvider>().GetValidationParameters());
+
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -75,9 +65,12 @@ namespace Orcus.Server
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSignalR();
-
+            
             var containerBuilder = new ContainerBuilder();
             LoadModules(containerBuilder, provider.GetService<IOptions<ModulesOptions>>()).Wait();
+
+            containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>();
+            containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>();
 
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();
@@ -107,7 +100,7 @@ namespace Orcus.Server
 
             app.UseAuthentication();
             app.UseMvc();
-            app.UseSignalR(routes => routes.MapHub<AdministrationHub>("v1/signalR"));
+            app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/v1/signalR"));
             app.Map("/ws", builder => builder.UseOrcusSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Options;
+using Orcus.Core.Modules;
 using Orcus.Logging;
 using Orcus.Options;
 
@@ -13,11 +15,13 @@ namespace Orcus.Core.Connection
         private static readonly ILog Logger = LogProvider.For<CoreConnector>();
 
         private readonly IServerConnector _serverConnector;
+        private readonly IModuleDownloader _moduleDownloader;
         private readonly ConnectionOptions _options;
 
-        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector)
+        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector, IModuleDownloader moduleDownloader)
         {
             _serverConnector = serverConnector;
+            _moduleDownloader = moduleDownloader;
             _options = options.Value;
         }
 
@@ -41,6 +45,9 @@ namespace Orcus.Core.Connection
                     try
                     {
                         var connection = await _serverConnector.TryConnect(serverUri);
+                        Logger.Debug("Connection succeeded, initialize modules");
+
+                        await _moduleDownloader.Load(connection.PackagesLock, connection, CancellationToken.None);
                     }
                     catch (Exception e)
                     {

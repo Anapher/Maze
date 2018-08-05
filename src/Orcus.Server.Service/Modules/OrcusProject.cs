@@ -41,7 +41,9 @@ namespace Orcus.Server.Service.Modules
         public IImmutableList<PackageIdentity> PrimaryPackages => _modulesConfig.Modules;
 
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages =>
-            _modulesLock.Modules[Framework].Packages;
+            _modulesLock.Modules.TryGetValue(Framework, out var packagesLock)
+                ? packagesLock.Packages
+                : ImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>.Empty;
 
         public IImmutableList<SourceRepository> PrimarySources { get; }
         public IImmutableList<SourceRepository> DependencySources { get; }

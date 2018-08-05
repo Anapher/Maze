@@ -21,8 +21,8 @@ namespace Orcus.Server.Service.Modules
         Task<IEnumerable<ResolvedAction>> PreviewDeletePackagesAsync(List<PackageIdentity> packageIdentities,
             ResolutionContext resolutionContext, ILogger logger, CancellationToken token);
 
-        Task ExecuteActionsAsync(IEnumerable<ResolvedAction> actions, PackageDownloadContext downloadContext,
-            CancellationToken token);
+        Task InstallPackageAsync(PackageIdentity packageIdentity, ResolutionContext resolutionContext,
+            PackageDownloadContext downloadContext, ILogger logger, CancellationToken token);
 
         Task<PackagesLock> GetPackagesLock(NuGetFramework framework);
     }

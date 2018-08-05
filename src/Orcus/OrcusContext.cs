@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using Autofac;
 using NuGet.Frameworks;
+using NuGet.Versioning;
 using Orcus.Core;
 using Orcus.Core.Modules;
 
@@ -27,6 +28,7 @@ namespace Orcus
         public ILifetimeScope Container { get; }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusClient10;
+        public NuGetVersion Version { get; } = NuGetVersion.Parse("1.0");
 
         private ILifetimeScope LoadModules()
         {

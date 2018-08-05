@@ -35,6 +35,7 @@ namespace Orcus
             builder.RegisterType<HttpClientService>().As<IHttpClientService>().SingleInstance();
             builder.RegisterType<OrcusRestClientFactory>().As<IOrcusRestClientFactory>();
             builder.RegisterType<ServerConnector>().As<IServerConnector>();
+            builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
         }
     }
 }

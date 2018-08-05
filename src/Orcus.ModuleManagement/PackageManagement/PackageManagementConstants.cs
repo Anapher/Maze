@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orcus.PackageManagement
+namespace Orcus.ModuleManagement.PackageManagement
 {
     public static class PackageManagementConstants
     {

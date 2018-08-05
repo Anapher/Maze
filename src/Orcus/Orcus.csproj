@@ -59,6 +59,7 @@
     <Compile Include="Core\Modules\ConfigurationRootProvider.cs" />
     <Compile Include="Core\Modules\IConfigurationRootProvider.cs" />
     <Compile Include="Core\Modules\LocalModuleLoader.cs" />
+    <Compile Include="Core\Modules\ModuleDownloader.cs" />
     <Compile Include="Core\Modules\PackageCarrier.cs" />
     <Compile Include="Core\Modules\PackageLoader.cs" />
     <Compile Include="Core\Modules\ModulesCatalog.cs" />

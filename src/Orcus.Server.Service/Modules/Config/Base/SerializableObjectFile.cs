@@ -31,7 +31,7 @@ namespace Orcus.Server.Service.Modules.Config.Base
                     return Deserialize(File.ReadAllText(Path));
                 }
 
-            return default(TObject);
+            return default;
         }
         
         protected abstract TObject Deserialize(string content);

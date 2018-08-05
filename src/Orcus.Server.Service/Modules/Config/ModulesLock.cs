@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
+using NuGet.Packaging.Core;
 using NuGet.Protocol;
-using Orcus.ModuleManagement;
+using NuGet.Versioning;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Config.Base;
 
 namespace Orcus.Server.Service.Modules.Config
 {
-    public class ModulesLock : JsonObjectFile<IImmutableDictionary<NuGetFramework, PackagesLock>>,  IModulesLock
+    public class ModulesLock : JsonObjectFile<Dictionary<string, Dictionary<string, List<string>>>>,  IModulesLock
     {
         private readonly IImmutableDictionary<NuGetFramework, PackagesLock> _empty;
 
         public ModulesLock(string path) : base(path)
         {
-            _empty = new Dictionary<NuGetFramework, PackagesLock>().ToImmutableDictionary(NuGetFramework.Comparer);
+            _empty = ImmutableDictionary<NuGetFramework, PackagesLock>.Empty;
             Modules = _empty;
-
-            JsonSettings.Converters.Add(new PackageIdentityConverter());
-            JsonSettings.Converters.Add(new NuGetVersionConverter());
         }
 
         public IImmutableDictionary<NuGetFramework, PackagesLock> Modules { get; private set; }
@@ -30,7 +29,13 @@ namespace Orcus.Server.Service.Modules.Config
             var data = await Load();
             Modules = data == null
                 ? _empty
-                : data.ToImmutableDictionary(NuGetFramework.Comparer);
+                : data.ToImmutableDictionary(x => NuGetFramework.Parse(x.Key),
+                    x => new PackagesLock
+                    {
+                        Packages = x.Value.ToImmutableDictionary(y => PackageIdentityConverter.ToPackageIdentity(y.Key),
+                            y => (IImmutableList<PackageIdentity>) y.Value
+                                .Select(PackageIdentityConverter.ToPackageIdentity).ToImmutableList())
+                    }, NuGetFramework.Comparer);
         }
 
         public virtual Task Add(NuGetFramework framework, PackagesLock packagesLock)
@@ -49,6 +54,13 @@ namespace Orcus.Server.Service.Modules.Config
         {
             Modules = modules.ToImmutableDictionary(NuGetFramework.Comparer);
             return Save(Modules);
+        }
+
+        protected Task Save(IImmutableDictionary<NuGetFramework, PackagesLock> value)
+        {
+            return base.Save(value.ToDictionary(x => x.Key.ToString(),
+                x => x.Value.Packages.ToDictionary(y => PackageIdentityConverter.ToString(y.Key),
+                    y => y.Value.Select(PackageIdentityConverter.ToString).ToList())));
         }
     }
 }

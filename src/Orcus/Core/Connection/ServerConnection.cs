@@ -1,17 +1,16 @@
-﻿using Orcus.Clients;
-using Orcus.Server.Connection.Modules;
+﻿using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Core.Connection
 {
     public class ServerConnection
     {
-        public ServerConnection(IRestClient restClient, PackagesLock packagesLock)
+        public ServerConnection(IOrcusRestClient restClient, PackagesLock packagesLock)
         {
             RestClient = restClient;
             PackagesLock = packagesLock;
         }
 
-        public IRestClient RestClient { get; }
+        public IOrcusRestClient RestClient { get; }
         public PackagesLock PackagesLock { get; }
     }
 }

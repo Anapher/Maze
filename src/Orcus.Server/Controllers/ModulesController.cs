@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using NuGet.Packaging.Core;
+using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
 using Orcus.Server.Hubs;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
@@ -15,6 +17,7 @@ namespace Orcus.Server.Controllers
 {
     [Route("v1/[controller]")]
     [Authorize("admin")]
+    [ApiController]
     public class ModulesController : Controller
     {
         private readonly IHubContext<AdministrationHub> _hubContext;
@@ -30,14 +33,15 @@ namespace Orcus.Server.Controllers
             return Ok(project.PrimaryPackages);
         }
 
-        [HttpPost("installModules"), ValidateModelState]
+        [HttpPost("install")]
         public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
             [FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
         {
             if (string.IsNullOrWhiteSpace(packageIdentity.Id))
                 return BadRequest();
 
-            await moduleManager.PreviewInstallPackageAsync(packageIdentity, new ResolutionContext(), new NuGetLoggerWrapper(logger),
+            await moduleManager.InstallPackageAsync(packageIdentity, new ResolutionContext(),
+                new PackageDownloadContext(new SourceCacheContext()), new NuGetLoggerWrapper(logger),
                 CancellationToken.None);
 
             await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
@@ -49,6 +53,13 @@ namespace Orcus.Server.Controllers
         public IActionResult GetSources([FromServices] IModuleProject project)
         {
             return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
+        }
+
+        [HttpGet("install"), AllowAnonymous]
+        public Task<IActionResult> Install([FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
+        {
+            return InstallModule(new PackageIdentity("PowerUserTools", NuGetVersion.Parse("1.0")), moduleManager,
+                logger);
         }
     }
 }

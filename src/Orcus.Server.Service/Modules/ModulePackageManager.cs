@@ -17,8 +17,7 @@ using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using Orcus.ModuleManagement;
-using Orcus.PackageManagement;
+using Orcus.ModuleManagement.PackageManagement;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Extensions;
 using Orcus.Server.Service.Modules.PackageManagement;
@@ -38,11 +37,24 @@ namespace Orcus.Server.Service.Modules
         public async Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
+            var (context, _) = await GetPackageInstallContext(packageIdentity, resolutionContext, logger, token);
+            return GetRequiredActions(context);
+        }
+
+        public async Task InstallPackageAsync(PackageIdentity packageIdentity,
+            ResolutionContext resolutionContext, PackageDownloadContext downloadContext, ILogger logger, CancellationToken token)
+        {
+            var (context, primaryPackages) = await GetPackageInstallContext(packageIdentity, resolutionContext, logger, token);
+            var actions = GetRequiredActions(context);
+            await ExecuteActionsAsync(actions, downloadContext, token);
+            await WriteModuleState(context, primaryPackages);
+        }
+
+        private async Task<(PackagesContext, HashSet<PackageIdentity>)> GetPackageInstallContext(PackageIdentity packageIdentity,
+            ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+        {
             if (_project.PrimaryPackages.Any(x => x.Equals(packageIdentity)))
                 throw new InvalidOperationException($"Package '{packageIdentity}' is already installed");
-
-            //if (resolutionContext.DependencyBehavior == DependencyBehavior.Ignore)
-            //    return ResolvedAction.CreateInstall(packageIdentity, _project.PrimarySources).Yield();
 
             var resultingPackages = new HashSet<PackageIdentity>(_project.PrimaryPackages, PackageIdentity.Comparer);
             var downgradeAllowed = false;
@@ -63,7 +75,8 @@ namespace Orcus.Server.Service.Modules
             var requiredPackages = await GetRequiredPackages(resultingPackages,
                 new HashSet<PackageIdentity> {packageIdentity}, downgradeAllowed, resolutionContext, _project.Framework,
                 package, logger, token);
-            return GetRequiredActions(requiredPackages);
+
+            return (requiredPackages, resultingPackages);
         }
 
         public Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities, ResolutionContext resolutionContext, ILogger logger,
@@ -405,10 +418,9 @@ namespace Orcus.Server.Service.Modules
             packageWithDirectoriesToBeDeleted.Remove(packageIdentity);
         }
 
-        private async Task WriteModuleState(PackagesContext serverConext,
-            IEnumerable<PackageIdentity> primaryModules, ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+        private async Task WriteModuleState(PackagesContext serverContext,  IEnumerable<PackageIdentity> primaryModules)
         {
-            await _project.SetServerModulesLock(primaryModules.ToList(), GetLock(serverConext));
+            await _project.SetServerModulesLock(primaryModules.ToList(), GetLock(serverContext));
         }
 
         private static PackagesLock GetLock(PackagesContext context)
@@ -417,7 +429,7 @@ namespace Orcus.Server.Service.Modules
             {
                 Packages = context.Packages.ToImmutableDictionary(x => x, x => (IImmutableList<PackageIdentity>) context
                     .PackageDependencies[x].Dependencies
-                    .Select(y => context.Packages.First(z => z.Id == y.Id)).ToImmutableList())
+                    .Select(y => context.Packages.FirstOrDefault(z => z.Id == y.Id)).Where(y => y != null).ToImmutableList())
             };
         }
 

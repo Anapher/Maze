@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Packaging.Core;
-using NuGet.Protocol;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Service.Modules.Config.Base;
 using Orcus.Server.Service.Modules.Extensions;
@@ -17,8 +16,7 @@ namespace Orcus.Server.Service.Modules.Config
         {
             Modules = ImmutableList<PackageIdentity>.Empty;
 
-            JsonSettings.Converters.Add(new PackageIdentityConverter());
-            JsonSettings.Converters.Add(new NuGetVersionConverter());
+            JsonSettings.Converters.Add(new PackageIdentityConvertera());
         }
 
         public IImmutableList<PackageIdentity> Modules { get; private set; }

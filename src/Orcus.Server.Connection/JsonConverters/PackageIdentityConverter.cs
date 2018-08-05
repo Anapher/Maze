@@ -6,16 +6,11 @@ using Orcus.Server.Connection.Modules;
 
 namespace Orcus.Server.Connection.JsonConverters
 {
-    public class PackageIdentityConverter : JsonConverter<PackageIdentity>
+    public class PackageIdentityConvertera : JsonConverter<PackageIdentity>
     {
         public override void WriteJson(JsonWriter writer, PackageIdentity value, JsonSerializer serializer)
         {
-            //ignore property HasVersion
-            var wrapper = new PackageIdentityWrapper {Id = value.Id, Version = value.Version};
-            if (value is SourcedPackageIdentity sourcedPackageIdentity)
-                wrapper.SourceRepository = sourcedPackageIdentity.SourceRepository;
-
-            serializer.Serialize(writer, wrapper);
+            serializer.Serialize(writer, PackageIdentityConverter.ToString(value));
         }
 
         public override PackageIdentity ReadJson(JsonReader reader, Type objectType, PackageIdentity existingValue,
@@ -25,22 +20,29 @@ namespace Orcus.Server.Connection.JsonConverters
             if (reader.TokenType == JsonToken.Null)
                 return null;
 
-            var result = serializer.Deserialize<PackageIdentityWrapper>(reader);
-            if (objectType == typeof(SourcedPackageIdentity))
-                return new SourcedPackageIdentity(result.Id, result.Version, result.SourceRepository);
+            var token = serializer.Deserialize<string>(reader);
+            return PackageIdentityConverter.ToPackageIdentity(token);
+        }
+    }
 
-            return new PackageIdentity(result.Id, result.Version);
+    public class PackageIdentityConverter
+    {
+        public static string ToString(PackageIdentity packageIdentity)
+        {
+            var result = $"{packageIdentity.Id}";
+            if (packageIdentity.HasVersion)
+                result += "/" + packageIdentity.Version;
+
+            return result;
         }
 
-        private class PackageIdentityWrapper
+        public static PackageIdentity ToPackageIdentity(string s)
         {
-            public string Id { get; set; }
-            public NuGetVersion Version { get; set; }
+            if (!s.Contains("/"))
+                return new PackageIdentity(s, null);
 
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public Uri SourceRepository { get; set; } = OfficalOrcusRepository.Uri;
-
-            public bool ShouldSerializeSourceRepository() => SourceRepository != OfficalOrcusRepository.Uri;
+            var split = s.Split(new[] {'/'}, 2);
+            return new PackageIdentity(split[0], NuGetVersion.Parse(split[1]));
         }
     }
 }

@@ -7,7 +7,7 @@ using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
-using Orcus.PackageManagement;
+using Orcus.ModuleManagement.PackageManagement;
 
 namespace Orcus.Server.Service.Modules
 {
