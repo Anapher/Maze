@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <Title>Test Module</Title>
+    <PackageIconUrl>https://www.newtonsoft.com/content/images/nugeticon.png</PackageIconUrl>
+    <Description>A test module to test the plugin system</Description>
+    <PackageProjectUrl>https://github.com/Anapher/Orcus</PackageProjectUrl>
+    <PackageTags>test;orcus;module;plugin</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
+  </ItemGroup>
+
+</Project>

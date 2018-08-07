@@ -12,6 +12,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Orcus.ModuleManagement;
+using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
@@ -50,7 +51,7 @@ namespace Orcus.Server.Service.Tests.Modules
                 DependencySources = sources.Skip(1).Take(1).ToImmutableList(),
                 LocalSourceRepository = sources.Skip(2).First()
             };
-            var packageManager = new ModulePackageManager(testProject);
+            var packageManager = new ModulePackageManager(testProject, new Dictionary<NuGetFramework, PackageIdentity>());
             var actions =
                 await packageManager.PreviewInstallPackageAsync(package, new ResolutionContext(), _testLogger, token);
 
@@ -66,6 +67,8 @@ namespace Orcus.Server.Service.Tests.Modules
         }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
+        public Runtime Runtime { get; }
+        public Architecture Architecture { get; }
         public IImmutableList<PackageIdentity> PrimaryPackages { get; }
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages { get; }
         public IImmutableList<SourceRepository> PrimarySources { get; set; }

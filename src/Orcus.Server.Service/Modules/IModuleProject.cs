@@ -59,6 +59,11 @@ namespace Orcus.Server.Service.Modules
         IModulesDirectory ModulesDirectory { get; }
 
         /// <summary>
+        ///     The supported frameworks with their standard libraries
+        /// </summary>
+        IReadOnlyDictionary<NuGetFramework, PackageIdentity> FrameworkLibraries { get; }
+
+        /// <summary>
         ///     Complete the installation of a package
         /// </summary>
         /// <param name="packageIdentity"></param>

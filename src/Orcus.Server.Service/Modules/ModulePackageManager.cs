@@ -16,7 +16,6 @@ using NuGet.Packaging.PackageExtraction;
 using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
-using NuGet.Versioning;
 using Orcus.ModuleManagement.PackageManagement;
 using Orcus.Server.Connection.Modules;
 using Orcus.Server.Service.Modules.Extensions;
@@ -37,21 +36,40 @@ namespace Orcus.Server.Service.Modules
         public async Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
         {
-            var (context, _) = await GetPackageInstallContext(packageIdentity, resolutionContext, logger, token);
+            var (primaryPackages, downgradeAllowed) = GetPackageInstallContext(packageIdentity);
+            var context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
+                downgradeAllowed, resolutionContext, _project.Framework, logger, token);
+
             return GetRequiredActions(context);
         }
 
         public async Task InstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, PackageDownloadContext downloadContext, ILogger logger, CancellationToken token)
         {
-            var (context, primaryPackages) = await GetPackageInstallContext(packageIdentity, resolutionContext, logger, token);
+            var (primaryPackages, downgradeAllowed) = GetPackageInstallContext(packageIdentity);
+            
+            //Server
+            var context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
+                downgradeAllowed, resolutionContext, _project.Framework, logger, token);
+            
             var actions = GetRequiredActions(context);
             await ExecuteActionsAsync(actions, downloadContext, token);
             await WriteModuleState(context, primaryPackages);
+
+            //Other frameworks
+            foreach (var framework in _project.FrameworkLibraries.Keys)
+            {
+                context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
+                    downgradeAllowed, resolutionContext, framework, logger, token);
+
+                actions = GetRequiredActions(context);
+                await ExecuteActionsAsync(actions, downloadContext, token);
+
+                await _project.AddModulesLock(framework, GetLock(context));
+            }
         }
 
-        private async Task<(PackagesContext, HashSet<PackageIdentity>)> GetPackageInstallContext(PackageIdentity packageIdentity,
-            ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+        private (HashSet<PackageIdentity>, bool) GetPackageInstallContext(PackageIdentity packageIdentity)
         {
             if (_project.PrimaryPackages.Any(x => x.Equals(packageIdentity)))
                 throw new InvalidOperationException($"Package '{packageIdentity}' is already installed");
@@ -70,13 +88,7 @@ namespace Orcus.Server.Service.Modules
             }
 
             resultingPackages.Add(packageIdentity);
-
-            var package = new PackageIdentity("Orcus.Server.Library", new NuGetVersion(1, 0, 0));
-            var requiredPackages = await GetRequiredPackages(resultingPackages,
-                new HashSet<PackageIdentity> {packageIdentity}, downgradeAllowed, resolutionContext, _project.Framework,
-                package, logger, token);
-
-            return (requiredPackages, resultingPackages);
+            return (resultingPackages, downgradeAllowed);
         }
 
         public Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities, ResolutionContext resolutionContext, ILogger logger,
@@ -93,9 +105,10 @@ namespace Orcus.Server.Service.Modules
 
         private async Task<PackagesContext> GetRequiredPackages(ISet<PackageIdentity> primaryPackages,
             ISet<PackageIdentity> targetPackages, bool downgradeAllowed, ResolutionContext resolutionContext,
-            NuGetFramework primaryFramework, PackageIdentity libraryPackage, ILogger logger,
-            CancellationToken token)
+            NuGetFramework primaryFramework, ILogger logger,   CancellationToken token)
         {
+            var libraryPackage = GetFramworkLibrary(primaryFramework);
+
             var gatherContext = new GatherContext
             {
                 ResolutionContext = resolutionContext,
@@ -421,6 +434,21 @@ namespace Orcus.Server.Service.Modules
         private async Task WriteModuleState(PackagesContext serverContext,  IEnumerable<PackageIdentity> primaryModules)
         {
             await _project.SetServerModulesLock(primaryModules.ToList(), GetLock(serverContext));
+        }
+
+        private PackageIdentity GetFramworkLibrary(NuGetFramework framework)
+        {
+            if (_project.FrameworkLibraries.TryGetValue(framework, out var packageId))
+                return packageId;
+
+            var lowerFramework = _project.FrameworkLibraries.Keys
+                .Where(x => x.Framework == framework.Framework && x.Version < framework.Version)
+                .OrderByDescending(x => x.Version).FirstOrDefault();
+
+            if (lowerFramework == null)
+                throw new ArgumentException($"Framework {framework} not found");
+
+            return _project.FrameworkLibraries[lowerFramework];
         }
 
         private static PackagesLock GetLock(PackagesContext context)

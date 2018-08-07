@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
-using NuGet.Protocol;
 using NuGet.Versioning;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Connection.Modules;
@@ -12,7 +11,7 @@ using Orcus.Server.Service.Modules.Config.Base;
 
 namespace Orcus.Server.Service.Modules.Config
 {
-    public class ModulesLock : JsonObjectFile<Dictionary<string, Dictionary<string, List<string>>>>,  IModulesLock
+    public class ModulesLock : JsonObjectFile<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>,  IModulesLock
     {
         private readonly IImmutableDictionary<NuGetFramework, PackagesLock> _empty;
 
@@ -34,7 +33,7 @@ namespace Orcus.Server.Service.Modules.Config
                     {
                         Packages = x.Value.ToImmutableDictionary(y => PackageIdentityConverter.ToPackageIdentity(y.Key),
                             y => (IImmutableList<PackageIdentity>) y.Value
-                                .Select(PackageIdentityConverter.ToPackageIdentity).ToImmutableList())
+                                .Select(z => new PackageIdentity(z.Value, NuGetVersion.Parse(z.Value))).ToImmutableList())
                     }, NuGetFramework.Comparer);
         }
 
@@ -60,7 +59,7 @@ namespace Orcus.Server.Service.Modules.Config
         {
             return base.Save(value.ToDictionary(x => x.Key.ToString(),
                 x => x.Value.Packages.ToDictionary(y => PackageIdentityConverter.ToString(y.Key),
-                    y => y.Value.Select(PackageIdentityConverter.ToString).ToList())));
+                    y => y.Value.ToDictionary(z => z.Id, z => z.Version.ToString()))));
         }
     }
 }

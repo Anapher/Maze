@@ -14,6 +14,7 @@ using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Service.Modules.Config;
 using Architecture = Orcus.ModuleManagement.Loader.Architecture;
 
@@ -24,20 +25,21 @@ namespace Orcus.Server.Service.Modules
         private readonly IModulesConfig _modulesConfig;
         private readonly IModulesLock _modulesLock;
 
-        public OrcusProject(IEnumerable<Uri> primarySources, IEnumerable<Uri> dependencySources,
-            string modulesDirectory, IModulesConfig modulesConfig, IModulesLock modulesLock)
+        public OrcusProject(IModuleProjectConfig config, IModulesConfig modulesConfig, IModulesLock modulesLock)
         {
             var providers = Repository.Provider.GetCoreV3();
-            PrimarySources = primarySources
+            PrimarySources = config.PrimarySources
                 .Select(x => new SourceRepository(new PackageSource(x.AbsoluteUri), providers)).ToImmutableList();
-            DependencySources = dependencySources
+            DependencySources = config.DependencySources
                 .Select(x => new SourceRepository(new PackageSource(x.AbsoluteUri), providers)).ToImmutableList();
 
-            ModulesDirectory = new ModulesDirectory(new VersionFolderPathResolver(modulesDirectory));
+            ModulesDirectory = new ModulesDirectory(new VersionFolderPathResolver(config.Directory));
             LocalSourceRepository = new SourceRepository(ModulesDirectory.PackageSource, providers);
 
             _modulesConfig = modulesConfig;
             _modulesLock = modulesLock;
+            FrameworkLibraries = config.Frameworks.ToDictionary(x => NuGetFramework.Parse(x.Key),
+                x => PackageIdentityConvert.FromString(x.Value));
 
             Architecture = Environment.Is64BitProcess ? Architecture.x64 : Architecture.x86;
             Runtime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Runtime.Windows : Runtime.Linux;
@@ -57,6 +59,8 @@ namespace Orcus.Server.Service.Modules
         public IImmutableList<SourceRepository> DependencySources { get; }
         public SourceRepository LocalSourceRepository { get; }
         public IModulesDirectory ModulesDirectory { get; }
+        public IReadOnlyDictionary<NuGetFramework, PackageIdentity> FrameworkLibraries { get; }
+
 
         public Task<bool> InstallPackageAsync(PackageIdentity packageIdentity,
             DownloadResourceResult downloadResourceResult,

@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NuGet.Frameworks;
 using Orcus.Server.Authentication;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
@@ -69,7 +71,7 @@ namespace Orcus.Server
             services.AddSignalR();
             
             var containerBuilder = new ContainerBuilder();
-            LoadModules(containerBuilder, provider.GetService<IOptions<ModulesOptions>>()).Wait();
+            LoadModules(containerBuilder, provider.GetService<IOptions<ModulesOptions>>().Value).Wait();
 
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>();
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>();
@@ -79,17 +81,15 @@ namespace Orcus.Server
             return new AutofacServiceProvider(container);
         }
 
-        private async Task LoadModules(ContainerBuilder containerBuilder, IOptions<ModulesOptions> modulesOptions)
+        private async Task LoadModules(ContainerBuilder containerBuilder, ModulesOptions modulesOptions)
         {
-            var modulesConfig = new ModulesConfig(modulesOptions.Value.ModulesFile);
-            var modulesLock = new ModulesLock(modulesOptions.Value.ModulesLock);
+            var modulesConfig = new ModulesConfig(modulesOptions.ModulesFile);
+            var modulesLock = new ModulesLock(modulesOptions.ModulesLock);
 
             await modulesConfig.Reload();
             await modulesLock.Reload();
 
-            var orcusProject = new OrcusProject(modulesOptions.Value.PrimarySources,
-                modulesOptions.Value.DependencySources, modulesOptions.Value.Directory, modulesConfig, modulesLock);
-
+            var orcusProject = new OrcusProject(modulesOptions, modulesConfig, modulesLock);
             if (modulesConfig.Modules.Any())
             {
                 var loader = new ModuleLoader(orcusProject);
