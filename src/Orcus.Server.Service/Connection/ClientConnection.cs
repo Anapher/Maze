@@ -1,8 +1,9 @@
-﻿using Orcus.Server.OrcusSockets;
+﻿using Orcus.Server.Library.Services;
+using Orcus.Server.OrcusSockets;
 
 namespace Orcus.Server.Service.Connection
 {
-    public class ClientConnection
+    public class ClientConnection : IClientConnection
     {
         public ClientConnection(int clientId, OrcusServer orcusServer)
         {

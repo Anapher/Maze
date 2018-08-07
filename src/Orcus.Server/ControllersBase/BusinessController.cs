@@ -8,6 +8,7 @@ using Orcus.Server.Utilities;
 
 namespace Orcus.Server.ControllersBase
 {
+    [ApiController]
     public abstract class BusinessController : Controller
     {
         [NonAction]

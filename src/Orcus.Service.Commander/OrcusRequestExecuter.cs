@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;

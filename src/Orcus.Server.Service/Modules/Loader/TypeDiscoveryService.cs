@@ -23,14 +23,7 @@ namespace Orcus.Server.Service.Modules.Loader
             var controllers = types.Where(x => x.IsSubclassOf(typeof(OrcusController))).ToList();
             typeMap.Controllers.TryAdd(_packageIdentity, controllers);
 
-            var startupTypes = types.Where(x => x.Name == "Startup").ToList();
-            if (startupTypes.Count > 1)
-                throw new ModuleLoadingException(
-                    "More than one startup class found. Please make sure that only one public class called 'Startup' exists.",
-                    _assembly);
-
-            if (startupTypes.Any())
-                typeMap.Startup.Add(startupTypes.Single());
+            typeMap.Assemblies.Add(_assembly);
         }
     }
 }

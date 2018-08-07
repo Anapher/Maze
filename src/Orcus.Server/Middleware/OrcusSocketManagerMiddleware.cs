@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orcus.Server.Authentication;
+using Orcus.Server.Library.Services;
 using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Connection;
 

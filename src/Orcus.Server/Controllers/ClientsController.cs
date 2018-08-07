@@ -9,7 +9,6 @@ using Orcus.Server.Connection.Authentication.Client;
 using Orcus.Server.ControllersBase;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Service.Modules;
-using Orcus.Server.Utilities;
 
 namespace Orcus.Server.Controllers
 {
@@ -25,7 +24,6 @@ namespace Orcus.Server.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        [ValidateModelState]
         public async Task<IActionResult> Login([FromBody] ClientAuthenticationDto authenticationDto,
             [FromServices] IAuthenticateClientAction authenticateClientAction,
             [FromServices] IDefaultTokenProvider tokenProvider,

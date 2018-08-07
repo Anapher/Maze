@@ -331,3 +331,7 @@ ASALocalRun/
 
 # Orcus specific
 database.sqlite
+src/Orcus.Server/modules/
+src/Orcus.Server/tmp/
+src/Orcus.Server/modules.json
+src/Orcus.Server/modules.lock

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -12,12 +13,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NuGet.Frameworks;
 using Orcus.Server.Authentication;
-using Orcus.Server.Connection.Utilities;
+using Orcus.Server.ControllersBase;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
+using Orcus.Server.Library.Interfaces;
+using Orcus.Server.Library.Services;
 using Orcus.Server.Middleware;
 using Orcus.Server.Options;
 using Orcus.Server.OrcusSockets;
@@ -77,7 +79,10 @@ namespace Orcus.Server
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>();
 
             containerBuilder.Populate(services);
+
             var container = containerBuilder.Build();
+            container.Execute<IStartupAction>().Wait();
+
             return new AutofacServiceProvider(container);
         }
 
@@ -92,8 +97,17 @@ namespace Orcus.Server
             var orcusProject = new OrcusProject(modulesOptions, modulesConfig, modulesLock);
             if (modulesConfig.Modules.Any())
             {
-                var loader = new ModuleLoader(orcusProject);
+                var loader = new ModuleLoader(orcusProject, AssemblyLoadContext.Default);
                 await loader.Load(modulesConfig.Modules, modulesLock.Modules[orcusProject.Framework]);
+
+                loader.ModuleTypeMap.Configure(containerBuilder);
+
+                containerBuilder.RegisterInstance(new ModuleControllerProvider(loader.ModuleTypeMap))
+                    .AsImplementedInterfaces();
+            }
+            else
+            {
+                containerBuilder.RegisterInstance(new ModuleControllerProvider()).AsImplementedInterfaces();
             }
 
             containerBuilder.RegisterInstance(modulesConfig).AsImplementedInterfaces();
@@ -110,6 +124,9 @@ namespace Orcus.Server
             app.UseMvc();
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/v1/signalR"));
             app.Map("/ws", builder => builder.UseOrcusSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
+
+            app.ApplicationServices
+                .Execute<IConfigureServerPipelineAction, IApplicationBuilder, IHostingEnvironment>(app, env).Wait();
         }
     }
 }

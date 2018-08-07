@@ -57,7 +57,7 @@ namespace Orcus.Server.Service.Modules
             await WriteModuleState(context, primaryPackages);
 
             //Other frameworks
-            foreach (var framework in _project.FrameworkLibraries.Keys)
+            foreach (var framework in _project.FrameworkLibraries.Keys.Where(x => x != _project.Framework))
             {
                 context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
                     downgradeAllowed, resolutionContext, framework, logger, token);

@@ -8,6 +8,6 @@
     <Copyright>Copyright 2018 Orcus Technologies</Copyright>
     <Company>Orcus Technologies</Company>
     <PackageProjectUrl>https://www.orcustechnologies.com/</PackageProjectUrl>
-    <PackageOutputPath>$(SolutionDir)\artifacts</PackageOutputPath>
+    <PackageOutputPath>$(SolutionDir)artifacts</PackageOutputPath>
   </PropertyGroup>
 </Project>

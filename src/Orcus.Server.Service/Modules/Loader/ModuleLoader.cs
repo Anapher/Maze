@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
@@ -15,10 +15,15 @@ namespace Orcus.Server.Service.Modules.Loader
     public class ModuleLoader
     {
         private readonly IModuleProject _project;
+        private readonly AssemblyLoadContext _assemblyLoadContext;
+        private IReadOnlyDictionary<AssemblyName, AssemblyInfo> _dependencyAssemblies;
 
-        public ModuleLoader(IModuleProject project)
+        public ModuleLoader(IModuleProject project, AssemblyLoadContext assemblyLoadContext)
         {
             _project = project;
+            _assemblyLoadContext = assemblyLoadContext;
+            _assemblyLoadContext.Resolving += DefaultOnResolving;
+
             ModuleTypeMap = new ModuleTypeMap();
         }
 
@@ -28,26 +33,39 @@ namespace Orcus.Server.Service.Modules.Loader
         {
             var mapper = new ModuleMapper(_project.Framework, _project.ModulesDirectory, _project.Runtime, _project.Architecture);
             var map = mapper.BuildMap(primaryPackages, packagesLock);
+            
+            var dependencyPaths = new Dictionary<AssemblyName, AssemblyInfo>();
+            _dependencyAssemblies = dependencyPaths;
 
-            var loadedAssemblies = new ConcurrentBag<Assembly>();
             while (map.TryPop(out var dependencyLayer))
             {
-                await TaskCombinators.ThrottledAsync(dependencyLayer, (context, token) => Task.Run(() =>
+                foreach (var context in dependencyLayer.Where(x => !x.IsOrcusModule))
                 {
                     foreach (var file in Directory.GetFiles(context.LibraryDirectory, "*.dll"))
                     {
-                        var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file);
+                        dependencyPaths.Add(AssemblyName.GetAssemblyName(file), new AssemblyInfo(file));
+                    }
+                }
 
-                        if (context.IsOrcusModule)
-                        {
-                            var service = new TypeDiscoveryService(assembly, context.Package);
-                            service.DiscoverTypes(ModuleTypeMap);
-                        }
+                await TaskCombinators.ThrottledAsync(dependencyLayer.Where(x => x.IsOrcusModule), (context, token) => Task.Run(() =>
+                {
+                    foreach (var file in Directory.GetFiles(context.LibraryDirectory, "*.dll"))
+                    {
+                        var assembly = _assemblyLoadContext.LoadFromAssemblyPath(file);
 
-                        loadedAssemblies.Add(assembly);
+                        var typeDiscoveryService = new TypeDiscoveryService(assembly, context.Package);
+                        typeDiscoveryService.DiscoverTypes(ModuleTypeMap);
                     }
                 }), CancellationToken.None);
             }
+        }
+        
+        private Assembly DefaultOnResolving(AssemblyLoadContext arg1, AssemblyName arg2)
+        {
+            if (_dependencyAssemblies.TryGetValue(arg2, out var assemblyInfo))
+                return assemblyInfo.LoadAssembly(arg1);
+
+            return null;
         }
     }
 }

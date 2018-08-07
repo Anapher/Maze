@@ -5,7 +5,6 @@ using Orcus.Server.Authentication;
 using Orcus.Server.BusinessLogic.Authentication;
 using Orcus.Server.Connection.Authentication;
 using Orcus.Server.ControllersBase;
-using Orcus.Server.Utilities;
 
 namespace Orcus.Server.Controllers
 {
@@ -14,7 +13,6 @@ namespace Orcus.Server.Controllers
     {
         [HttpPost("login")]
         [AllowAnonymous]
-        [ValidateModelState]
         public async Task<IActionResult> Login([FromBody] LoginInfo loginInfo,
             [FromServices] IAuthenticateAdministrationAction authenticateAdministrationAction,
             [FromServices] IDefaultTokenProvider tokenProvider)

@@ -41,7 +41,7 @@ namespace Orcus.Server.Controllers
                 return BadRequest();
 
             await moduleManager.InstallPackageAsync(packageIdentity, new ResolutionContext(),
-                new PackageDownloadContext(new SourceCacheContext()), new NuGetLoggerWrapper(logger),
+                new PackageDownloadContext(new SourceCacheContext{DirectDownload = true, NoCache = true}, "tmp", true), new NuGetLoggerWrapper(logger),
                 CancellationToken.None);
 
             await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
@@ -58,7 +58,7 @@ namespace Orcus.Server.Controllers
         [HttpGet("install"), AllowAnonymous]
         public Task<IActionResult> Install([FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
         {
-            return InstallModule(new PackageIdentity("PowerUserTools", NuGetVersion.Parse("1.0")), moduleManager,
+            return InstallModule(new PackageIdentity("TestModule", NuGetVersion.Parse("1.0")), moduleManager,
                 logger);
         }
     }

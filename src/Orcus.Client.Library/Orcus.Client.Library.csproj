@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
