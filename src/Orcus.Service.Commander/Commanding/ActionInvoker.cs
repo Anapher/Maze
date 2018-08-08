@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Orcus.Modules.Api;
 using Orcus.Modules.Api.ModelBinding;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Service.Commander.Commanding.ModelBinding;
+using IValueProvider = Orcus.Service.Commander.Commanding.ModelBinding.IValueProvider;
 
 namespace Orcus.Service.Commander.Commanding
 {
@@ -67,13 +69,19 @@ namespace Orcus.Service.Commander.Commanding
 
             var arguments = new object[Parameters.Count];
             var parameterBinding = new ParameterBinder();
+            var valueProvider = new CompositeValueProvider(new List<IValueProvider>
+            {
+                new QueryStringValueProvider(BindingSource.Query, actionContext.Context.Request.Query,
+                    CultureInfo.InvariantCulture),
+                new RouteValueProvider(BindingSource.Path, actionContext.RouteData)
+            });
 
             for (var i = 0; i < Parameters.Count; i++)
             {
                 var parameterDescriptor = Parameters[i];
                 var bindingInfo = parameterBindingInfo[i];
 
-                var result = await parameterBinding.BindModelAsync(actionContext, bindingInfo.ModelBinder, null, parameterDescriptor,
+                var result = await parameterBinding.BindModelAsync(actionContext, bindingInfo.ModelBinder, valueProvider, parameterDescriptor,
                     bindingInfo.ModelMetadata, value: null);
 
                 if (result.IsModelSet)
@@ -107,10 +115,7 @@ namespace Orcus.Service.Commander.Commanding
             }
 
             if (bindingSource == null)
-            {
-                //TODO correct default
-                bindingSource = BindingSource.Header;
-            }
+                bindingSource = BindingSource.Path;
 
             result.BindingSource = bindingSource.Value;
             return result;
