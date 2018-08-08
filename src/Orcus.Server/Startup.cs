@@ -27,6 +27,7 @@ using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.Config;
 using Orcus.Server.Service.Modules.Loader;
+using Orcus.Service.Commander;
 
 namespace Orcus.Server
 {
@@ -104,10 +105,12 @@ namespace Orcus.Server
 
                 containerBuilder.RegisterInstance(new ModuleControllerProvider(loader.ModuleTypeMap))
                     .AsImplementedInterfaces();
+                containerBuilder.RegisterOrcusServices(cache => cache.BuildCache(loader.ModuleTypeMap.Controllers));
             }
             else
             {
                 containerBuilder.RegisterInstance(new ModuleControllerProvider()).AsImplementedInterfaces();
+                containerBuilder.RegisterOrcusServices(cache => cache.BuildEmpty());
             }
 
             containerBuilder.RegisterInstance(modulesConfig).AsImplementedInterfaces();

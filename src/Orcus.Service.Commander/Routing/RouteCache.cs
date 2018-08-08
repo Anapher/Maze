@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NuGet.Packaging.Core;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Routing;
@@ -49,11 +50,15 @@ namespace Orcus.Service.Commander.Routing
 
                         var methodAttributes = methodInfo.GetCustomAttributes().ToList();
 
-                        if (methodAttributes.OfType<NonActionAttribute>().Any())
+                        if (methodAttributes.OfType<NonActionAttribute>().Any() ||
+                            methodAttributes.OfType<CompilerGeneratedAttribute>().Any())
                             continue;
 
                         var methodAttribute = methodAttributes.OfType<IActionMethodProvider>().FirstOrDefault();
-                        var method = methodAttribute?.Method ?? DefaultMethod;
+                        if (methodAttribute == null)
+                            continue;
+
+                        var method = methodAttribute.Method;
 
                         foreach (var routeFragment in methodAttributes.OfType<IRouteFragment>())
                             methodPath.Push(routeFragment);
@@ -66,6 +71,11 @@ namespace Orcus.Service.Commander.Routing
             }
 
             Routes = routes.ToImmutableDictionary();
+        }
+
+        public void BuildEmpty()
+        {
+            Routes = ImmutableDictionary<RouteDescription, Route>.Empty;
         }
 
         private static string[] GetSegments(IEnumerable<IRouteFragment> fragments, Type controllerType, MethodInfo methodInfo)

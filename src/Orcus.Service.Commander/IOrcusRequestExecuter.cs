@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 
@@ -14,6 +15,6 @@ namespace Orcus.Service.Commander
         /// </summary>
         /// <param name="request">The requested method</param>
         /// <returns>Return the result of the request</returns>
-        Task<OrcusResponse> Execute(OrcusRequest request);
+        Task Execute(OrcusContext context);
     }
 }

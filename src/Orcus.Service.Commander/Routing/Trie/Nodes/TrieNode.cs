@@ -111,7 +111,11 @@ namespace Orcus.Service.Commander.Routing.Trie.Nodes
         /// <param name="routeDescription">The route description</param>
         public void Add(RouteDescription routeDescription)
         {
-            Add(routeDescription.Segments, -1, 0, 0, routeDescription);
+            var segments = new string[routeDescription.Segments.Length + 1];
+            segments[0] = routeDescription.PackageIdentity.Id;
+            Array.Copy(routeDescription.Segments, 0, segments, 1, routeDescription.Segments.Length);
+
+            Add(segments, -1, 0, 0, routeDescription);
         }
 
         /// <summary>

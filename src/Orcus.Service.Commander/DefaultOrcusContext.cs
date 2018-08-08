@@ -11,17 +11,22 @@ namespace Orcus.Service.Commander
     {
         private readonly CancellationTokenSource _requestCancellationTokenSource;
 
-        public DefaultOrcusContext(OrcusRequest request, IServiceProvider serviceProvider)
+        public DefaultOrcusContext(OrcusRequest request, OrcusResponse response, IServiceProvider serviceProvider)
         {
             Request = request;
+            Response = response;
+
+            Request.Context = this;
+
             RequestServices = serviceProvider;
 
             _requestCancellationTokenSource = new CancellationTokenSource();
             RequestAborted = _requestCancellationTokenSource.Token;
         }
 
-        public override OrcusResponse Response { get; set; }
         public override object Caller { get; set; }
+
+        public override OrcusResponse Response { get; set; }
         public override OrcusRequest Request { get; set; }
         public override ConnectionInfo Connection { get; set; }
         public override IServiceProvider RequestServices { get; set; }

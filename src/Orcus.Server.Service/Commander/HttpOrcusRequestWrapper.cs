@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Http;
+using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 
-namespace Orcus.Server.Wrappers
+namespace Orcus.Server.Service.Commander
 {
     public class HttpOrcusRequestWrapper : OrcusRequest
     {
@@ -12,6 +13,8 @@ namespace Orcus.Server.Wrappers
         {
             _httpRequest = httpRequest;
         }
+
+        public override OrcusContext Context { get; set; }
 
         public override string Method
         {

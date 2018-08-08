@@ -4,13 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
+using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.OrcusSockets.Internal;
+using HttpHeaders = System.Net.Http.Headers.HttpHeaders;
+using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace Orcus.Server.Service.Extensions
 {
@@ -27,7 +32,7 @@ namespace Orcus.Server.Service.Extensions
             return message;
         }
 
-        public static OrcusRequest ToOrcusRequest(this HttpRequestMessage message) => new MessageOrcusRequest(message);
+        public static MessageOrcusRequest ToOrcusRequest(this HttpRequestMessage message) => new MessageOrcusRequest(message);
 
         public static HttpResponseMessage ToHttpResponseMessage(this OrcusResponse response)
         {
@@ -42,7 +47,7 @@ namespace Orcus.Server.Service.Extensions
         {
             var requestMessage =
                 new HttpRequestMessage(new HttpMethod(httpRequest.Method),
-                    new Uri("http://www.localhost/" + path, UriKind.Absolute))
+                    new Uri("orcus://localhost/" + path, UriKind.Absolute))
                 {
                     Content = new RawStreamContent(httpRequest.Body)
                 };
@@ -85,17 +90,50 @@ namespace Orcus.Server.Service.Extensions
 
     public class MessageOrcusRequest : OrcusRequest
     {
+        private readonly HttpRequestMessage _requestMessage;
+
         public MessageOrcusRequest(HttpRequestMessage requestMessage)
         {
+            _requestMessage = requestMessage;
+            Method = requestMessage.Method.Method;
+            Path = requestMessage.RequestUri.AbsolutePath;
+            QueryString = new QueryString(requestMessage.RequestUri.Query);
+
+            Headers = new HeaderDictionary(
+                requestMessage.Headers.ToDictionary(x => x.Key, x => new StringValues(x.Value.ToArray())));
+
+            var queryCollection = requestMessage.RequestUri.ParseQueryString();
+            Query = new QueryCollection(queryCollection.AllKeys.ToDictionary(x => x,
+                x => new StringValues(queryCollection.GetValues(x))));
         }
 
+        public override OrcusContext Context { get; set; }
         public override string Method { get; set; }
         public override PathString Path { get; set; }
         public override QueryString QueryString { get; set; }
         public override IQueryCollection Query { get; set; }
         public override IHeaderDictionary Headers { get; }
-        public override long? ContentLength { get; set; }
-        public override string ContentType { get; set; }
+
+        public override long? ContentLength
+        {
+            get => Headers.ContentLength;
+            set => Headers.ContentLength = value;
+        }
+
+        public override string ContentType
+        {
+            get => Headers["Content-Type"];
+            set => Headers["Content-Type"] = value;
+        }
+
         public override Stream Body { get; set; }
+
+        public async Task InitializeBody()
+        {
+            if (_requestMessage.Content is RawStreamContent rawStreamContent)
+                Body = rawStreamContent.Stream;
+            else
+                Body = await _requestMessage.Content.ReadAsStreamAsync();
+        }
     }
 }

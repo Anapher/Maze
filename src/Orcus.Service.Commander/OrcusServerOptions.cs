@@ -1,9 +1,13 @@
 ﻿using System.Buffers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Orcus.Service.Commander.Commanding.Formatters.Json;
 using Orcus.Service.Commander.Commanding.ModelBinding;
 using Orcus.Service.Commander.Commanding.ModelBinding.Binders;
 using Orcus.Service.Commander.Infrastructure;
@@ -14,13 +18,29 @@ namespace Orcus.Service.Commander
     {
         public OrcusServerOptions()
         {
-            InputFormatters = new Collection<IInputFormatter>();
+            var loggerFactory = NullLoggerFactory.Instance;
+
+            var charPool = ArrayPool<char>.Shared;
+            var objectPool = new DefaultObjectPoolProvider();
+
+            InputFormatters = new Collection<IInputFormatter>
+            {
+                new JsonInputFormatter(loggerFactory.CreateLogger<JsonInputFormatter>(), SerializerSettings, charPool,
+                    objectPool),
+                new JsonPatchInputFormatter(loggerFactory.CreateLogger<JsonPatchInputFormatter>(), SerializerSettings,
+                    charPool, objectPool)
+            };
+
+            OutputFormatters = new List<IOutputFormatter>
+            {
+                new JsonOutputFormatter(SerializerSettings, charPool)
+            };
 
             ModelBinderProviders = new List<IModelBinderProvider>
             {
                 new ServicesModelBinderProvider(),
                 new BodyModelBinderProvider(InputFormatters,
-                    new MemoryPoolHttpRequestStreamReaderFactory(ArrayPool<byte>.Shared, ArrayPool<char>.Shared)),
+                    new MemoryPoolHttpRequestStreamReaderFactory(ArrayPool<byte>.Shared, charPool)),
                 new EnumTypeModelBinderProvider(),
                 new SimpleTypeModelBinderProvider(),
                 new ByteArrayModelBinderProvider()

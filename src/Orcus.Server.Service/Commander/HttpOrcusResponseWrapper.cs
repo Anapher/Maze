@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api.Response;
 
-namespace Orcus.Server.Wrappers
+namespace Orcus.Server.Service.Commander
 {
     public class HttpOrcusResponseWrapper : OrcusResponse
     {

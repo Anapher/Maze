@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Http;
+using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 
 namespace Orcus.Server.OrcusSockets.Internal.Http
@@ -11,6 +12,7 @@ namespace Orcus.Server.OrcusSockets.Internal.Http
             Headers = new HeaderDictionary();
         }
 
+        public override OrcusContext Context { get; set; }
         public override string Method { get; set; }
         public override PathString Path { get; set; }
         public override QueryString QueryString { get; set; }

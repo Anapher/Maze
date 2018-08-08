@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 using Orcus.Service.Commander.Routing;
 
@@ -27,16 +26,14 @@ namespace Orcus.Service.Commander
         }
 
         /// <inheritdoc />
-        public async Task<OrcusResponse> Execute(OrcusRequest request)
+        public async Task Execute(OrcusContext context)
         {
-            var context = new DefaultOrcusContext(request, _serviceProvider);
-
             _logger.LogDebug($"Resolve Orcus path {context.Request.Path}");
             var result = _routeResolver.Resolve(context);
             if (!result.Success)
             {
                 _logger.LogDebug("Path not found");
-                return NotFound();
+                return/* NotFound()*/;
             }
 
             _logger.LogDebug(
@@ -55,7 +52,7 @@ namespace Orcus.Service.Commander
             {
                 _logger.LogError(e,
                     $"Error occurred when invoking method {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
-                return Exception(e);
+                return /*Exception(e)*/;
             }
 
             try
@@ -66,11 +63,10 @@ namespace Orcus.Service.Commander
             {
                 _logger.LogError(e,
                     $"Error occurred when executing action result {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
-                return Exception(e);
+                return/* Exception(e)*/;
             }
 
             _logger.LogDebug("Request successfully executed.");
-            return actionContext.Context.Response;
         }
 
         private OrcusResponse NotFound()

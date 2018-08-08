@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Response;
+using Orcus.Service.Commander.Infrastructure;
 
 // ReSharper disable once CheckNamespace
 namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions

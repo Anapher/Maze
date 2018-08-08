@@ -31,9 +31,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding
         {
             _serviceProvider = serviceProvider;
 
-            var formatters = new List<IInputFormatter>();
-
-            _providers = Enumerable.ToArray<IModelBinderProvider>(options.Value.ModelBinderProviders);
+            _providers = options.Value.ModelBinderProviders.ToArray();
             _cache = new ConcurrentDictionary<Key, IModelBinder>();
         }
 

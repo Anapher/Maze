@@ -12,6 +12,7 @@ namespace Orcus.Modules.Api.Response
         public ObjectResult(object value)
         {
             Value = value;
+            ContentTypes = new MediaTypeCollection();
         }
 
         public object Value { get; set; }

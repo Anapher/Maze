@@ -22,44 +22,44 @@ namespace Orcus.Service.Commander
         public override IReadOnlyDictionary<string, object> RouteData { get; }
     }
 
-    /// <summary>
-    ///     The commander
-    /// </summary>
-    public class Cody : ICommander
-    {
-        private readonly IOrcusRequestExecuter _requestExecuter;
+    ///// <summary>
+    /////     The commander
+    ///// </summary>
+    //public class Cody : ICommander
+    //{
+    //    private readonly IOrcusRequestExecuter _requestExecuter;
 
-        public Cody(IOrcusRequestExecuter requestExecuter)
-        {
-            _requestExecuter = requestExecuter;
-        }
+    //    public Cody(IOrcusRequestExecuter requestExecuter)
+    //    {
+    //        _requestExecuter = requestExecuter;
+    //    }
 
-        public Task<OrcusResponse> MakeRequest(OrcusRequest request, OrcusRequestTarget target)
-        {
-            if (target.IsServer)
-                return _requestExecuter.Execute(request);
+    //    public Task<OrcusResponse> MakeRequest(OrcusRequest request, OrcusRequestTarget target)
+    //    {
+    //        if (target.IsServer)
+    //            return _requestExecuter.Execute(request);
 
-            throw new NotImplementedException();
-        }
+    //        throw new NotImplementedException();
+    //    }
 
-        public Task<OrcusResponse> ExecuteServerRequest(OrcusRequest request)
-        {
-            return _requestExecuter.Execute(request);
-        }
-    }
+    //    public Task<OrcusResponse> ExecuteServerRequest(OrcusRequest request)
+    //    {
+    //        return _requestExecuter.Execute(request);
+    //    }
+    //}
 
-    public interface ICommander
-    {
-        Task<OrcusResponse> MakeRequest(OrcusRequest request, OrcusRequestTarget target);
-    }
+    //public interface ICommander
+    //{
+    //    Task<OrcusResponse> MakeRequest(OrcusRequest request, OrcusRequestTarget target);
+    //}
 
-    public class OrcusRequestMetadata
-    {
-        public string Target { get; set; }
-    }
+    //public class OrcusRequestMetadata
+    //{
+    //    public string Target { get; set; }
+    //}
 
-    public class OrcusRequestTarget
-    {
-        public bool IsServer { get; set; }
-    }
+    //public class OrcusRequestTarget
+    //{
+    //    public bool IsServer { get; set; }
+    //}
 }

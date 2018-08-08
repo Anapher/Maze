@@ -12,10 +12,12 @@ namespace Orcus.Service.Commander.Routing.Trie
         private readonly ITrieNodeFactory _nodeFactory;
         private readonly IDictionary<string, TrieNode> _routeTries;
 
-        public RouteResolverTrie(ITrieNodeFactory nodeFactory)
+        public RouteResolverTrie(ITrieNodeFactory nodeFactory, IRouteCache cache)
         {
             _nodeFactory = nodeFactory;
             _routeTries = new Dictionary<string, TrieNode>(StringComparer.OrdinalIgnoreCase);
+
+            BuildTrie(cache);
         }
 
         /// <inheritdoc />
