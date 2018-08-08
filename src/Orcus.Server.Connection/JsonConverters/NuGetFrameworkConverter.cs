@@ -11,7 +11,7 @@ namespace Orcus.Server.Connection.JsonConverters
             if (value == null)
                 writer.WriteNull();
             else
-                serializer.Serialize(writer, value.Framework);
+                serializer.Serialize(writer, value.ToString());
         }
 
         public override NuGetFramework ReadJson(JsonReader reader, Type objectType, NuGetFramework existingValue, bool hasExistingValue,

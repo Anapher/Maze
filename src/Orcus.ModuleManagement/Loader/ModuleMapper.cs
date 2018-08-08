@@ -74,7 +74,7 @@ namespace Orcus.ModuleManagement.Loader
             if (!map.TryGetValue(packageIdentity, out var currentLevel) || level > currentLevel)
                 map[packageIdentity] = level;
 
-            foreach (var dependency in packagesLock.Packages[packageIdentity])
+            foreach (var dependency in packagesLock[packageIdentity])
                 SearchDependencies(dependency, packagesLock, map, level + 1);
         }
     }

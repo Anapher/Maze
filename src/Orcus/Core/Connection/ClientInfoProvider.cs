@@ -1,4 +1,8 @@
-﻿using Orcus.Server.Connection.Authentication.Client;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Windows.Forms;
+using Orcus.Server.Connection.Authentication.Client;
 
 namespace Orcus.Core.Connection
 {
@@ -18,7 +22,20 @@ namespace Orcus.Core.Connection
 
         public ClientAuthenticationDto GetAuthenticationDto()
         {
-            return new ClientAuthenticationDto {ClientVersion = _applicationInfo.Version};
+            var result = new ClientAuthenticationDto
+            {
+                ClientVersion = _applicationInfo.Version,
+                Framework = _applicationInfo.Framework,
+                Username = Environment.UserName,
+                OperatingSystem = Environment.OSVersion.ToString(),
+                SystemLanguage = CultureInfo.CurrentUICulture.ToString(),
+                IsAdministrator = false,
+                ClientPath = Application.StartupPath,
+                HardwareId = "FF",
+                MacAddress = new byte[] {1, 1, 1, 1, 1, 1}
+            };
+            
+            return result;
         }
     }
 }

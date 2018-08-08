@@ -15,7 +15,7 @@ namespace Orcus.Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginInfo loginInfo,
             [FromServices] IAuthenticateAdministrationAction authenticateAdministrationAction,
-            [FromServices] IDefaultTokenProvider tokenProvider)
+            [FromServices] ITokenProvider tokenProvider)
         {
             var account = await authenticateAdministrationAction.BizActionAsync(loginInfo);
             return BizActionStatus(authenticateAdministrationAction, () =>

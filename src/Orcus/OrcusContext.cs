@@ -3,6 +3,7 @@ using Autofac;
 using NuGet.Frameworks;
 using NuGet.Versioning;
 using Orcus.Core;
+using Orcus.Core.Connection;
 using Orcus.Core.Modules;
 
 namespace Orcus
@@ -15,6 +16,7 @@ namespace Orcus
             RootContainer = builder.Build();
 
             Container = LoadModules();
+            StartConnecting();
         }
 
         /// <summary>
@@ -44,6 +46,11 @@ namespace Orcus
             }
 
             return modulesScope;
+        }
+
+        private void StartConnecting()
+        {
+            Container.Resolve<ICoreConnector>().StartConnecting(Container);
         }
     }
 }

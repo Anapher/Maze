@@ -14,16 +14,13 @@ namespace Orcus.Options
         public Dictionary<string, string[]> PackagesLock { get; set; }
 
         public PackageIdentity[] GetPrimaryModules() =>
-            PrimaryModules?.Select(PackageIdentityConvert.FromString).ToArray();
+            PrimaryModules?.Select(PackageIdentityConvert.ToPackageIdentity).ToArray();
 
         public PackagesLock GetPackagesLock()
         {
-            return new PackagesLock
-            {
-                Packages = PackagesLock?.ToImmutableDictionary(x => PackageIdentityConvert.FromString(x.Key),
-                    x => (IImmutableList<PackageIdentity>) x.Value.Select(PackageIdentityConvert.FromString)
-                        .ToImmutableList())
-            };
+            return new PackagesLock(PackagesLock?.ToImmutableDictionary(x => PackageIdentityConvert.ToPackageIdentity(x.Key),
+                x => (IImmutableList<PackageIdentity>) x.Value.Select(PackageIdentityConvert.ToPackageIdentity)
+                    .ToImmutableList()));
         }
     }
 }

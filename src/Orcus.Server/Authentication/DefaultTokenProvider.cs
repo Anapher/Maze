@@ -8,7 +8,7 @@ using Orcus.Server.Options;
 
 namespace Orcus.Server.Authentication
 {
-    public class DefaultTokenProvider : IDefaultTokenProvider
+    public class DefaultTokenProvider : ITokenProvider
     {
         private readonly string _audience;
         private readonly string _issuer;

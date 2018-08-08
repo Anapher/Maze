@@ -8,6 +8,7 @@ using NuGet.Protocol.Core.Types;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
+using Orcus.Server.Service.Modules.Config;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -27,6 +28,11 @@ namespace Orcus.Server.Service.Modules
         ///     The architecture
         /// </summary>
         Architecture Architecture { get; }
+
+        /// <summary>
+        ///     The modules lock
+        /// </summary>
+        IModulesLock ModulesLock { get; }
 
         /// <summary>
         ///     The primary packages (root)

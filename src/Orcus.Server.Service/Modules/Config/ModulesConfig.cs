@@ -16,7 +16,7 @@ namespace Orcus.Server.Service.Modules.Config
         {
             Modules = ImmutableList<PackageIdentity>.Empty;
 
-            JsonSettings.Converters.Add(new PackageIdentityConvertera());
+            JsonSettings.Converters.Add(new PackageIdentityConverter());
         }
 
         public IImmutableList<PackageIdentity> Modules { get; private set; }

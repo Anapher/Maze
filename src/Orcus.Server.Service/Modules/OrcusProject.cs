@@ -23,7 +23,6 @@ namespace Orcus.Server.Service.Modules
     public class OrcusProject : IModuleProject
     {
         private readonly IModulesConfig _modulesConfig;
-        private readonly IModulesLock _modulesLock;
 
         public OrcusProject(IModuleProjectConfig config, IModulesConfig modulesConfig, IModulesLock modulesLock)
         {
@@ -37,9 +36,9 @@ namespace Orcus.Server.Service.Modules
             LocalSourceRepository = new SourceRepository(ModulesDirectory.PackageSource, providers);
 
             _modulesConfig = modulesConfig;
-            _modulesLock = modulesLock;
+            ModulesLock = modulesLock;
             FrameworkLibraries = config.Frameworks.ToDictionary(x => NuGetFramework.Parse(x.Key),
-                x => PackageIdentityConvert.FromString(x.Value));
+                x => PackageIdentityConvert.ToPackageIdentity(x.Value));
 
             Architecture = Environment.Is64BitProcess ? Architecture.x64 : Architecture.x86;
             Runtime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Runtime.Windows : Runtime.Linux;
@@ -49,10 +48,11 @@ namespace Orcus.Server.Service.Modules
         public Runtime Runtime { get; }
         public Architecture Architecture { get; }
         public IImmutableList<PackageIdentity> PrimaryPackages => _modulesConfig.Modules;
+        public IModulesLock ModulesLock { get; }
 
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages =>
-            _modulesLock.Modules.TryGetValue(Framework, out var packagesLock)
-                ? packagesLock.Packages
+            ModulesLock.Modules.TryGetValue(Framework, out var packagesLock)
+                ? (IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>) packagesLock
                 : ImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>.Empty;
 
         public IImmutableList<SourceRepository> PrimarySources { get; }
@@ -60,7 +60,6 @@ namespace Orcus.Server.Service.Modules
         public SourceRepository LocalSourceRepository { get; }
         public IModulesDirectory ModulesDirectory { get; }
         public IReadOnlyDictionary<NuGetFramework, PackageIdentity> FrameworkLibraries { get; }
-
 
         public Task<bool> InstallPackageAsync(PackageIdentity packageIdentity,
             DownloadResourceResult downloadResourceResult,
@@ -77,12 +76,12 @@ namespace Orcus.Server.Service.Modules
         public async Task SetServerModulesLock(IReadOnlyList<PackageIdentity> primaryModules, PackagesLock serverLock)
         {
             await _modulesConfig.Replace(primaryModules);
-            await _modulesLock.Replace(new Dictionary<NuGetFramework, PackagesLock>{{Framework, serverLock}});
+            await ModulesLock.Replace(new Dictionary<NuGetFramework, PackagesLock>{{Framework, serverLock}});
         }
 
         public Task AddModulesLock(NuGetFramework framework, PackagesLock packagesLock)
         {
-            return _modulesLock.Add(framework, packagesLock);
+            return ModulesLock.Add(framework, packagesLock);
         }
     }
 }

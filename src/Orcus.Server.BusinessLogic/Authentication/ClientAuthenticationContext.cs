@@ -3,7 +3,7 @@ using Orcus.Server.Connection.Authentication.Client;
 
 namespace Orcus.Server.BusinessLogic.Authentication
 {
-    public class ClientAuthenticationInfo
+    public class ClientAuthenticationContext
     {
         public ClientAuthenticationDto Dto { get; set; }
         public IPAddress IpAddress { get; set; }

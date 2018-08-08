@@ -7,11 +7,12 @@ using NuGet.Packaging.Core;
 using NuGet.Versioning;
 using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Connection.Modules;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Service.Modules.Config.Base;
 
 namespace Orcus.Server.Service.Modules.Config
 {
-    public class ModulesLock : JsonObjectFile<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>,  IModulesLock
+    public class ModulesLock : JsonObjectFile<Dictionary<string, PackagesLock>>,  IModulesLock
     {
         private readonly IImmutableDictionary<NuGetFramework, PackagesLock> _empty;
 
@@ -28,13 +29,7 @@ namespace Orcus.Server.Service.Modules.Config
             var data = await Load();
             Modules = data == null
                 ? _empty
-                : data.ToImmutableDictionary(x => NuGetFramework.Parse(x.Key),
-                    x => new PackagesLock
-                    {
-                        Packages = x.Value.ToImmutableDictionary(y => PackageIdentityConverter.ToPackageIdentity(y.Key),
-                            y => (IImmutableList<PackageIdentity>) y.Value
-                                .Select(z => new PackageIdentity(z.Value, NuGetVersion.Parse(z.Value))).ToImmutableList())
-                    }, NuGetFramework.Comparer);
+                : data.ToImmutableDictionary(x => NuGetFramework.Parse(x.Key), x => x.Value, NuGetFramework.Comparer);
         }
 
         public virtual Task Add(NuGetFramework framework, PackagesLock packagesLock)
@@ -57,9 +52,7 @@ namespace Orcus.Server.Service.Modules.Config
 
         protected Task Save(IImmutableDictionary<NuGetFramework, PackagesLock> value)
         {
-            return base.Save(value.ToDictionary(x => x.Key.ToString(),
-                x => x.Value.Packages.ToDictionary(y => PackageIdentityConverter.ToString(y.Key),
-                    y => y.Value.ToDictionary(z => z.Id, z => z.Version.ToString()))));
+            return base.Save(value.ToDictionary(x => x.Key.ToString(), x => x.Value));
         }
     }
 }

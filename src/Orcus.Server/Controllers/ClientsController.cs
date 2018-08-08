@@ -2,7 +2,6 @@
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Frameworks;
 using Orcus.Server.Authentication;
 using Orcus.Server.BusinessLogic.Authentication;
 using Orcus.Server.Connection.Authentication.Client;
@@ -26,10 +25,10 @@ namespace Orcus.Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] ClientAuthenticationDto authenticationDto,
             [FromServices] IAuthenticateClientAction authenticateClientAction,
-            [FromServices] IDefaultTokenProvider tokenProvider,
+            [FromServices] ITokenProvider tokenProvider,
             [FromServices] IModulePackageManager modulePackageManager)
         {
-            var client = await authenticateClientAction.ToRunner(_context).ExecuteAsync(new ClientAuthenticationInfo
+            var client = await authenticateClientAction.ToRunner(_context).ExecuteAsync(new ClientAuthenticationContext
             {
                 Dto = authenticationDto,
                 IpAddress = HttpContext.Connection.RemoteIpAddress
@@ -41,9 +40,7 @@ namespace Orcus.Server.Controllers
                 return Ok(new ClientAuthenticationResponse
                 {
                     Jwt = tokenProvider.TokenToString(token),
-                    Modules = await modulePackageManager.GetPackagesLock(new NuGetFramework(
-                        FrameworkConstants.CommonFrameworks.OrcusClient10.Framework,
-                        authenticationDto.ClientVersion.Version))
+                    Modules = await modulePackageManager.GetPackagesLock(authenticationDto.Framework)
                 });
             });
         }

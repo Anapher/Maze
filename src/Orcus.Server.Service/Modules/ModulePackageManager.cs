@@ -376,9 +376,12 @@ namespace Orcus.Server.Service.Modules
             }
         }
 
-        public Task<PackagesLock> GetPackagesLock(NuGetFramework framework)
+        public async Task<PackagesLock> GetPackagesLock(NuGetFramework framework)
         {
-            throw new NotImplementedException();
+            if (_project.ModulesLock.Modules.TryGetValue(framework, out var packagesLock))
+                return packagesLock;
+
+            throw new NotImplementedException(); //TODO create package lock
         }
 
         private async Task Rollback(Stack<ResolvedAction> executedActions, ISet<PackageIdentity> packageWithDirectoriesToBeDeleted, CancellationToken token)
@@ -453,12 +456,10 @@ namespace Orcus.Server.Service.Modules
 
         private static PackagesLock GetLock(PackagesContext context)
         {
-            return new PackagesLock
-            {
-                Packages = context.Packages.ToImmutableDictionary(x => x, x => (IImmutableList<PackageIdentity>) context
-                    .PackageDependencies[x].Dependencies
-                    .Select(y => context.Packages.FirstOrDefault(z => z.Id == y.Id)).Where(y => y != null).ToImmutableList())
-            };
+            return new PackagesLock(context.Packages.ToImmutableDictionary(x => x,
+                x => (IImmutableList<PackageIdentity>) context.PackageDependencies[x].Dependencies
+                    .Select(y => context.Packages.FirstOrDefault(z => z.Id == y.Id)).Where(y => y != null)
+                    .ToImmutableList()));
         }
 
         private class PackagesContext

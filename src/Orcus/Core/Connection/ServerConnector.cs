@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Orcus.Core.Rest.Authentication.V1;
 using Orcus.Core.Services;
-using Orcus.Logging;
 
 namespace Orcus.Core.Connection
 {
@@ -14,7 +13,6 @@ namespace Orcus.Core.Connection
     public class ServerConnector : IServerConnector
     {
         private readonly IClientInfoProvider _clientInfoProvider;
-
         private readonly IOrcusRestClientFactory _restClientFactory;
 
         public ServerConnector(IOrcusRestClientFactory restClientFactory, IClientInfoProvider clientInfoProvider)

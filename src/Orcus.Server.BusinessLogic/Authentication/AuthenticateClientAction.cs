@@ -9,7 +9,7 @@ using Orcus.Server.Data.EfClasses;
 
 namespace Orcus.Server.BusinessLogic.Authentication
 {
-    public interface IAuthenticateClientAction : IGenericActionWriteDbAsync<ClientAuthenticationInfo, Client>
+    public interface IAuthenticateClientAction : IGenericActionWriteDbAsync<ClientAuthenticationContext, Client>
     {
     }
 
@@ -23,7 +23,7 @@ namespace Orcus.Server.BusinessLogic.Authentication
             _dbAccess = dbAccess;
         }
 
-        public async Task<Client> BizActionAsync(ClientAuthenticationInfo inputData)
+        public async Task<Client> BizActionAsync(ClientAuthenticationContext inputData)
         {
             if (ValidateModelFailed(inputData.Dto))
                 return default;

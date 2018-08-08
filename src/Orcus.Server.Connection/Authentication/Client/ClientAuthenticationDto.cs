@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using NuGet.Frameworks;
 using NuGet.Versioning;
 using Orcus.Server.Connection.Extensions;
 using Orcus.Server.Connection.Utilities;
@@ -16,6 +17,7 @@ namespace Orcus.Server.Connection.Authentication.Client
         public byte[] MacAddress { get; set; }
         public string HardwareId { get; set; }
         public NuGetVersion ClientVersion { get; set; }
+        public NuGetFramework Framework { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -45,6 +47,9 @@ namespace Orcus.Server.Connection.Authentication.Client
 
             if (ClientVersion == null)
                 yield return BusinessErrors.FieldNullOrEmpty(nameof(ClientVersion));
+
+            if (Framework == null)
+                yield return BusinessErrors.FieldNullOrEmpty(nameof(Framework));
         }
     }
 }

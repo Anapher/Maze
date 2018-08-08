@@ -37,7 +37,7 @@ namespace Orcus.Core.Modules
                 throw new InvalidOperationException("Cannot load packages twice");
             _isLoaded = true;
 
-            var mapper = new ModuleMapper(_applicationInfo.Framework, _modulesDirectory);
+            var mapper = new ModuleMapper(_applicationInfo.Framework, _modulesDirectory, Runtime.Windows, Architecture.x86);
             var packageStack = mapper.BuildMap(packages, packagesLock);
 
             var loadedPackages = new List<PackageCarrier>();

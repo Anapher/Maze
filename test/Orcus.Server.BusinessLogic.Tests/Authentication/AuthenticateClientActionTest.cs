@@ -29,7 +29,7 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
             return new AuthenticateClientAction(mock.Object, Logger);
         }
 
-        protected ClientAuthenticationInfo DefaultAuthenticationInfo = new ClientAuthenticationInfo
+        protected ClientAuthenticationContext DefaultAuthenticationContext = new ClientAuthenticationContext
         {
             Dto = new ClientAuthenticationDto
             {
@@ -48,10 +48,10 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
         public async Task TestExistingHardwareId()
         {
             var action = CreateBusinessLogic(mock =>
-                mock.Setup(x => x.FindClientByHardwareId(DefaultAuthenticationInfo.Dto.HardwareId))
+                mock.Setup(x => x.FindClientByHardwareId(DefaultAuthenticationContext.Dto.HardwareId))
                     .ReturnsAsync(new Client {ClientSessions = new List<ClientSession>()}));
 
-            var result = await action.BizActionAsync(DefaultAuthenticationInfo);
+            var result = await action.BizActionAsync(DefaultAuthenticationContext);
             Assert.NotNull(result);
             Assert.False(action.HasErrors);
             Assert.Single(result.ClientSessions);

@@ -9,7 +9,7 @@
     //}
   },
   "Connection": {
-    "ServerUris": [ "", "" ],
+    "ServerUris": [ "http://localhost:50485/" ],
     "ReconnectDelay": 5000 
   } 
 }

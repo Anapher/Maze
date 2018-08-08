@@ -33,7 +33,7 @@ namespace Orcus.Core.Modules
         {
             var serverRepo = new ServerRepository(new Uri(serverConnection.RestClient.BaseUri, "nuget"));
 
-            var context = new PackageDownloadContext(new SourceCacheContext());
+            var context = new PackageDownloadContext(new SourceCacheContext{DirectDownload = true, NoCache = true}, "", true);
 
             var packageDownloadManager = new PackageDownloadManager(_modulesDirectory, serverRepo);
             var result =

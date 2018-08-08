@@ -24,6 +24,7 @@ namespace Orcus
             builder.AddOptions();
 
             builder.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
+            builder.Configure<ConnectionOptions>(Configuration.GetSection("Connection"));
 
             builder.RegisterType<ClientModulesDirectory>().As<IModulesDirectory>().SingleInstance();
             builder.RegisterType<PackageLoader>().As<IPackageLoader>().SingleInstance();
@@ -35,6 +36,8 @@ namespace Orcus
             builder.RegisterType<OrcusRestClientFactory>().As<IOrcusRestClientFactory>();
             builder.RegisterType<ServerConnector>().As<IServerConnector>();
             builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
+            builder.RegisterType<CoreConnector>().As<ICoreConnector>().SingleInstance();
+            builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
         }
     }
 }

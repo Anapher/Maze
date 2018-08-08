@@ -22,7 +22,7 @@ namespace Orcus.Server.BusinessDataAccess.Clients
 
         public Task<Client> FindClientByHardwareId(string hardwareId)
         {
-            return _context.Clients.FirstOrDefaultAsync(x => x.HardwareId == hardwareId);
+            return _context.Clients.Include(x => x.ClientSessions).FirstOrDefaultAsync(x => x.HardwareId == hardwareId);
         }
 
         public void AddClient(Client client)

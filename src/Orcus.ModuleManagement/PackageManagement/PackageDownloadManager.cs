@@ -23,7 +23,7 @@ namespace Orcus.ModuleManagement.PackageManagement
         public async Task<Dictionary<PackageIdentity, PackagePreFetcherResult>> DownloadPackages(
             PackagesLock packagesLock, PackageDownloadContext downloadContext, ILogger logger, CancellationToken token)
         {
-            var packages = packagesLock.Packages.Keys.Concat(packagesLock.Packages.SelectMany(x => x.Value)).Distinct();
+            var packages = packagesLock.Keys.Concat(packagesLock.SelectMany(x => x.Value)).Distinct();
             var toDownload = new Queue<PackageIdentity>();
             var result = new Dictionary<PackageIdentity, PackagePreFetcherResult>();
 

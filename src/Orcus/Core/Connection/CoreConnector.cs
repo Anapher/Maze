@@ -10,7 +10,13 @@ using Orcus.Options;
 
 namespace Orcus.Core.Connection
 {
-    public class CoreConnector
+    public interface ICoreConnector
+    {
+        ServerConnection CurrentConnection { get; }
+        Task StartConnecting(ILifetimeScope lifetimeScope);
+    }
+
+    public class CoreConnector : ICoreConnector
     {
         private static readonly ILog Logger = LogProvider.For<CoreConnector>();
 
