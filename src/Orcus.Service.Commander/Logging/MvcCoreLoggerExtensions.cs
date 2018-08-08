@@ -56,6 +56,7 @@ namespace Orcus.Service.Commander.Logging
         private static readonly Action<ILogger, object, Exception> _resultFilterShortCircuit;
         private static readonly Action<ILogger, object, Exception> _actionFilterShortCircuit;
         private static readonly Action<ILogger, object, Exception> _exceptionFilterShortCircuit;
+        private static readonly Action<ILogger, IEnumerable<MediaTypeSegmentWithQuality>, Exception> _noFormatterFromNegotiation;
 
         private static readonly Action<ILogger, string[], Exception> _forbidResultExecuting;
         private static readonly Action<ILogger, string, ClaimsPrincipal, Exception> _signInResultExecuting;
@@ -191,6 +192,11 @@ namespace Orcus.Service.Commander.Logging
                 LogLevel.Information,
                 2,
                 "Executed action {ActionName} in {ElapsedMilliseconds}ms");
+
+            _noFormatterFromNegotiation = LoggerMessage.Define<IEnumerable<MediaTypeSegmentWithQuality>>(
+                LogLevel.Debug,
+                5,
+                "Could not find an output formatter based on content negotiation. Accepted types were ({AcceptTypes})");
 
             _pageExecuting = LoggerMessage.Define<string, string>(
                 LogLevel.Information,
@@ -747,6 +753,11 @@ namespace Orcus.Service.Commander.Logging
             }
         }
 
+        public static void NotEnabledForRangeProcessing(this ILogger logger)
+        {
+            _notEnabledForRangeProcessing(logger, null);
+        }
+
         public static void RedirectResultExecuting(this ILogger logger, string destination)
         {
             _redirectResultExecuting(logger, destination, null);
@@ -770,6 +781,11 @@ namespace Orcus.Service.Commander.Logging
         public static void FeatureNotFound(this ILogger logger)
         {
             _featureNotFound(logger, null);
+        }
+
+        public static void NoFormatterFromNegotiation(this ILogger logger, IList<MediaTypeSegmentWithQuality> acceptTypes)
+        {
+            _noFormatterFromNegotiation(logger, acceptTypes, null);
         }
 
         public static void FeatureIsReadOnly(this ILogger logger)
@@ -801,6 +817,11 @@ namespace Orcus.Service.Commander.Logging
             Type policyType)
         {
             _notMostEffectiveFilter(logger, overridenFilter, overridingFilter, policyType, null);
+        }
+
+        public static void ExecutingFileResult(this ILogger logger, FileResult fileResult)
+        {
+            _executingFileResultWithNoFileName(logger, fileResult, fileResult.FileDownloadName, null);
         }
 
         public static void UnsupportedFormatFilterContentType(this ILogger logger, string format)

@@ -37,32 +37,17 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
             ILogger logger,
             JsonSerializerSettings serializerSettings,
             ArrayPool<char> charPool,
-            ObjectPoolProvider objectPoolProvider,
-            MvcOptions options,
-            MvcJsonOptions jsonOptions)
-            : base(logger, serializerSettings, charPool, objectPoolProvider, options, jsonOptions)
+            ObjectPoolProvider objectPoolProvider)
+            : base(logger, serializerSettings, charPool, objectPoolProvider)
         {
             // Clear all values and only include json-patch+json value.
             SupportedMediaTypes.Clear();
 
             SupportedMediaTypes.Add(MediaTypeHeaderValues.ApplicationJsonPatch);
         }
-        
-        /// <inheritdoc />
-        public override InputFormatterExceptionPolicy ExceptionPolicy
-        {
-            get
-            {
-                if (GetType() == typeof(JsonPatchInputFormatter))
-                {
-                    return InputFormatterExceptionPolicy.MalformedInputExceptions;
-                }
-                return InputFormatterExceptionPolicy.AllExceptions;
-            }
-        }
 
         /// <inheritdoc />
-        public async override Task<InputFormatterResult> ReadRequestBodyAsync(
+        public override async Task<InputFormatterResult> ReadRequestBodyAsync(
             InputFormatterContext context,
             Encoding encoding)
         {

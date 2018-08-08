@@ -91,7 +91,10 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
                     exception = ExceptionDispatchInfo.Capture(exception.InnerException).SourceException;
 
                 LogException(bindingContext, exception);
-                bindingContext.ModelState.AddError(exception, bindingContext.ModelMetadata);
+                bindingContext.ModelState.TryAddModelError(
+                    bindingContext.ModelName,
+                    exception,
+                    bindingContext.ModelMetadata);
 
                 // Were able to find a converter for the type but conversion failed.
                 return Task.CompletedTask;
@@ -107,8 +110,9 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
             // model (can't set a ValueType to null). This detects if a null model value is acceptable given the
             // current bindingContext. If not, an error is logged.
             if (model == null && !bindingContext.ModelMetadata.IsReferenceOrNullableType)
-                bindingContext.ModelState.AddError(new InvalidOperationException("Value must not be null."),
-                    bindingContext.ModelMetadata);
+                bindingContext.ModelState.TryAddModelError(
+                    bindingContext.ModelName,
+                    "Value must not be null");
             else
                 bindingContext.Result = ModelBindingResult.Success(model);
         }

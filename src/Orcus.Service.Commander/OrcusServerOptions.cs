@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 using Orcus.Service.Commander.Commanding.ModelBinding;
@@ -50,5 +51,7 @@ namespace Orcus.Service.Commander
         /// Gets a list of <see cref="IModelBinderProvider"/>s used by this application.
         /// </summary>
         public IList<IModelBinderProvider> ModelBinderProviders { get; }
+
+        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
     }
 }

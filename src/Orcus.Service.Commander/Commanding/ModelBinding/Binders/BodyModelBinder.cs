@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Orcus.Modules.Api.Formatters;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
@@ -85,7 +86,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
                 LogNoInputFormatterSelected(formatterContext);
                 
                 var exception = new ArgumentException($"Unsupported content type: {httpContext.Request.ContentType}");
-                bindingContext.ModelState.AddError(exception, bindingContext.ModelMetadata);
+                bindingContext.ModelState.AddModelError(modelBindingKey, exception, bindingContext.ModelMetadata);
                 LogDoneAttemptingToBindModel(bindingContext);
                 return;
             }
@@ -113,14 +114,13 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
                     // If instead the input formatter wants to treat the input as optional, it must do so by
                     // returning InputFormatterResult.Success(defaultForModelType), because input formatters
                     // are responsible for choosing a default value for the model type.
-                    bindingContext.ModelState.AddError(new ArgumentException("MissingRequestBodyRequiredValueAccessor"),
-                        bindingContext.ModelMetadata);
+
+                    bindingContext.ModelState.AddModelError(modelBindingKey, "MissingRequestBodyRequiredValueAccessor");
                 }
             }
             catch (Exception exception)
             {
-                bindingContext.ModelState.AddError(exception, bindingContext.ModelMetadata);
-                //bindingContext.ModelState.AddModelError(modelBindingKey, exception, bindingContext.ModelMetadata);
+                bindingContext.ModelState.AddModelError(modelBindingKey, exception, bindingContext.ModelMetadata);
             }
 
             LogDoneAttemptingToBindModel(bindingContext);

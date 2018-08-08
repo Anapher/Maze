@@ -51,8 +51,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
                 if (IsDefinedInEnum(model, bindingContext))
                     bindingContext.Result = ModelBindingResult.Success(model);
                 else
-                    bindingContext.ModelState.AddError(new ArgumentException("Value is not defined in enum."),
-                        bindingContext.ModelMetadata);
+                    bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, "Value is not defined in enum");
             }
         }
 

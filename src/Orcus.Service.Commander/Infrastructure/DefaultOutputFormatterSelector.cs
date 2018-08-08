@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Formatters;
+using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 using Orcus.Service.Commander.Commanding.Formatters;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
@@ -150,7 +151,7 @@ namespace Orcus.Service.Commander.Infrastructure
             return selectedFormatter;
         }
 
-        private List<MediaTypeSegmentWithQuality> GetAcceptableMediaTypes(HttpRequest request)
+        private List<MediaTypeSegmentWithQuality> GetAcceptableMediaTypes(OrcusRequest request)
         {
             var result = new List<MediaTypeSegmentWithQuality>();
             AcceptHeaderParser.ParseAcceptHeader(request.Headers[HeaderNames.Accept], result);

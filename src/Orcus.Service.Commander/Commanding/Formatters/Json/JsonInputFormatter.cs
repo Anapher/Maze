@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.ModelBinding;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
 using Orcus.Service.Commander.Infrastructure;
@@ -33,7 +32,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
         // These fields are used when one of the legacy constructors is called that doesn't provide the MvcOptions or
         // MvcJsonOptions.
         private readonly bool _suppressInputFormatterBuffering;
-        private readonly bool _allowInputFormatterExceptionMessages;
+        private readonly bool _allowInputFormatterExceptionMessages = true;
 
         private ObjectPool<JsonSerializer> _jsonSerializerPool;
 
@@ -137,10 +136,9 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
                                 key = context.ModelName + "." + eventArgs.ErrorContext.Path;
                             }
                         }
-
-                        var metadata = GetPathMetadata(context.Metadata, eventArgs.ErrorContext.Path);
+                        
                         var modelStateException = WrapExceptionForModelState(eventArgs.ErrorContext.Error);
-                        context.ModelState.TryAddModelError(key, modelStateException, metadata);
+                        context.ModelState.TryAddModelError(key, modelStateException, context.Metadata);
 
                         _logger.JsonInputException(eventArgs.ErrorContext.Error);
 
@@ -223,57 +221,11 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
         protected virtual void ReleaseJsonSerializer(JsonSerializer serializer)
             => _jsonSerializerPool.Return(serializer);
 
-        private ModelMetadata GetPathMetadata(ModelMetadata metadata, string path)
-        {
-            var index = 0;
-            while (index >= 0 && index < path.Length)
-            {
-                if (path[index] == '[')
-                {
-                    // At start of "[0]".
-                    if (metadata.ElementMetadata == null)
-                    {
-                        // Odd case but don't throw just because ErrorContext had an odd-looking path.
-                        break;
-                    }
-
-                    metadata = metadata.ElementMetadata;
-                    index = path.IndexOf(']', index);
-                }
-                else if (path[index] == '.' || path[index] == ']')
-                {
-                    // Skip '.' in "prefix.property" or "[0].property" or ']' in "[0]".
-                    index++;
-                }
-                else
-                {
-                    // At start of "property", "property." or "property[0]".
-                    var endIndex = path.IndexOfAny(new[] { '.', '[' }, index);
-                    if (endIndex == -1)
-                    {
-                        endIndex = path.Length;
-                    }
-
-                    var propertyName = path.Substring(index, endIndex - index);
-                    if (metadata.Properties[propertyName] == null)
-                    {
-                        // Odd case but don't throw just because ErrorContext had an odd-looking path.
-                        break;
-                    }
-
-                    metadata = metadata.Properties[propertyName];
-                    index = endIndex;
-                }
-            }
-
-            return metadata;
-        }
-
         private Exception WrapExceptionForModelState(Exception exception)
         {
             // In 2.0 and earlier we always gave a generic error message for errors that come from JSON.NET
             // We only allow it in 2.1 and newer if the app opts-in.
-            if (!(_jsonOptions?.AllowInputFormatterExceptionMessages ?? _allowInputFormatterExceptionMessages))
+            if (!_allowInputFormatterExceptionMessages)
             {
                 // This app is not opted-in to JSON.NET messages, return the original exception.
                 return exception;

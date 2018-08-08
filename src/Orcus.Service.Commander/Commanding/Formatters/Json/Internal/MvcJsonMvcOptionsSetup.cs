@@ -17,24 +17,17 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
     public class MvcJsonMvcOptionsSetup : IConfigureOptions<OrcusServerOptions>
     {
         private readonly ILoggerFactory _loggerFactory;
-        private readonly MvcJsonOptions _jsonOptions;
         private readonly ArrayPool<char> _charPool;
         private readonly ObjectPoolProvider _objectPoolProvider;
 
         public MvcJsonMvcOptionsSetup(
             ILoggerFactory loggerFactory,
-            IOptions<MvcJsonOptions> jsonOptions,
             ArrayPool<char> charPool,
             ObjectPoolProvider objectPoolProvider)
         {
             if (loggerFactory == null)
             {
                 throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            if (jsonOptions == null)
-            {
-                throw new ArgumentNullException(nameof(jsonOptions));
             }
 
             if (charPool == null)
@@ -48,14 +41,13 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
             }
 
             _loggerFactory = loggerFactory;
-            _jsonOptions = jsonOptions.Value;
             _charPool = charPool;
             _objectPoolProvider = objectPoolProvider;
         }
 
         public void Configure(OrcusServerOptions options)
         {
-            options.OutputFormatters.Add(new JsonOutputFormatter(_jsonOptions.SerializerSettings, _charPool));
+            options.OutputFormatters.Add(new JsonOutputFormatter(options.SerializerSettings, _charPool));
 
             // Register JsonPatchInputFormatter before JsonInputFormatter, otherwise
             // JsonInputFormatter would consume "application/json-patch+json" requests
@@ -63,25 +55,21 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
             var jsonInputPatchLogger = _loggerFactory.CreateLogger<JsonPatchInputFormatter>();
             options.InputFormatters.Add(new JsonPatchInputFormatter(
                 jsonInputPatchLogger,
-                _jsonOptions.SerializerSettings,
+                options.SerializerSettings,
                 _charPool,
-                _objectPoolProvider,
-                options,
-                _jsonOptions));
+                _objectPoolProvider));
 
             var jsonInputLogger = _loggerFactory.CreateLogger<JsonInputFormatter>();
             options.InputFormatters.Add(new JsonInputFormatter(
                 jsonInputLogger,
-                _jsonOptions.SerializerSettings,
+                options.SerializerSettings,
                 _charPool,
-                _objectPoolProvider,
-                options,
-                _jsonOptions));
+                _objectPoolProvider));
 
-            options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValues.ApplicationJson);
+            //options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValues.ApplicationJson);
 
-            options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(IJsonPatchDocument)));
-            options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(JToken)));
+            //options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(IJsonPatchDocument)));
+            //options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(JToken)));
         }
     }
 }

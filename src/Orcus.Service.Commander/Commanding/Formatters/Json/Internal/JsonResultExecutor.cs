@@ -36,8 +36,8 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
         public JsonResultExecutor(
             IHttpResponseStreamWriterFactory writerFactory,
             ILogger<JsonResultExecutor> logger,
-            IOptions<MvcJsonOptions> options,
-            ArrayPool<char> charPool)
+            ArrayPool<char> charPool,
+            OrcusServerOptions options)
         {
             if (writerFactory == null)
             {
@@ -61,7 +61,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
 
             WriterFactory = writerFactory;
             Logger = logger;
-            Options = options.Value;
+            Options = options;
             _charPool = new JsonArrayPool<char>(charPool);
         }
 
@@ -73,7 +73,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
         /// <summary>
         /// Gets the <see cref="MvcJsonOptions"/>.
         /// </summary>
-        protected MvcJsonOptions Options { get; }
+        protected OrcusServerOptions Options { get; }
 
         /// <summary>
         /// Gets the <see cref="IHttpResponseStreamWriterFactory"/>.

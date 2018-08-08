@@ -8,6 +8,8 @@ namespace Orcus.Modules.Api.Request
     /// </summary>
     public abstract class OrcusRequest
     {
+        public abstract OrcusContext Context { get; set; }
+
         /// <summary>Gets or sets the Orcus method.</summary>
         /// <returns>The HTTP method.</returns>
         public abstract string Method { get; set; }

@@ -38,7 +38,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
             var selectedEncoding = SelectCharacterEncoding(context);
             if (selectedEncoding == null)
             {
-                var message = Resources.FormatUnsupportedContentType(
+                var message = string.Format("Unsupported content type '{0}'.",
                     context.OrcusContext.Request.ContentType);
 
                 var exception = new UnsupportedContentTypeException(message);
@@ -75,7 +75,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
 
             if (SupportedEncodings.Count == 0)
             {
-                var message = Resources.FormatTextInputFormatter_SupportedEncodingsMustNotBeEmpty(
+                var message = string.Format("The list of '{0}' must not be empty. Add at least one supported encoding.",
                     nameof(SupportedEncodings));
                 throw new InvalidOperationException(message);
             }

@@ -6,6 +6,7 @@ using System.Reflection;
 using NuGet.Packaging.Core;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Routing;
+using Orcus.Service.Commander.Extensions;
 
 namespace Orcus.Service.Commander.Routing
 {
@@ -22,8 +23,15 @@ namespace Orcus.Service.Commander.Routing
         {
             var routes = new Dictionary<RouteDescription, Route>();
 
+#if NETCOREAPP
             foreach (var (package, types) in controllers)
             {
+#else
+            foreach (var keyValuePair in controllers)
+            {
+                var package = keyValuePair.Key;
+                var types = keyValuePair.Value;
+#endif
                 foreach (var controllerType in types)
                 {
                     if (controllerType.IsAbstract)
