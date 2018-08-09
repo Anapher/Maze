@@ -32,7 +32,7 @@ namespace Orcus.Server.Service.Modules.Loader
         public async Task Load(IEnumerable<PackageIdentity> primaryPackages, PackagesLock packagesLock)
         {
             var mapper = new ModuleMapper(_project.Framework, _project.ModulesDirectory, _project.Runtime, _project.Architecture);
-            var map = mapper.BuildMap(primaryPackages, packagesLock);
+            var map = mapper.BuildMap(packagesLock);
             
             var dependencyPaths = new Dictionary<AssemblyName, AssemblyInfo>();
             _dependencyAssemblies = dependencyPaths;

@@ -7,6 +7,7 @@ using Orcus.Core.Modules;
 using Orcus.Core.Services;
 using Orcus.ModuleManagement;
 using Orcus.Options;
+using Orcus.Service.Commander;
 
 namespace Orcus
 {
@@ -30,7 +31,7 @@ namespace Orcus
             builder.RegisterType<PackageLoader>().As<IPackageLoader>().SingleInstance();
             builder.RegisterType<ModulesCatalog>().As<IModulesCatalog>().SingleInstance();
             builder.RegisterInstance(new ConfigurationRootProvider(Configuration)).As<IConfigurationRootProvider>();
-            builder.RegisterType<LocalModuleLoader>().As<ILocalModuleLoader>();
+            builder.RegisterType<PackageLockLoader>().As<IPackageLockLoader>();
             builder.RegisterType<PackagesRegistrar>().As<IPackagesRegistrar>();
             builder.RegisterType<HttpClientService>().As<IHttpClientService>().SingleInstance();
             builder.RegisterType<OrcusRestClientFactory>().As<IOrcusRestClientFactory>();
@@ -38,6 +39,8 @@ namespace Orcus
             builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
+
+            builder.RegisterModule<ModuleManagementModule>();
         }
     }
 }

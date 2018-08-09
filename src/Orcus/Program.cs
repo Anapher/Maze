@@ -19,7 +19,7 @@ namespace Orcus
             var builder = new ContainerBuilder();
             startup.ConfigureServices(builder);
 
-            Application.Run(new OrcusContext(builder));
+            Application.Run(new AppContext(builder));
         }
     }
 }

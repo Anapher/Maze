@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Orcus.Sockets.Internal;
 
 namespace Orcus.Server.OrcusSockets.Internal
 {
@@ -11,10 +12,10 @@ namespace Orcus.Server.OrcusSockets.Internal
         private static readonly IReadOnlyDictionary<string, string> _headers =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                {Headers.Upgrade, Headers.UpgradeSocket},
-                {Headers.Connection, Headers.ConnectionUpgrade},
-                {Headers.SecWebSocketVersion, Headers.SupportedVersion},
-                {Headers.SecWebSocketKey, null}
+                {OrcusSocketHeaders.Upgrade, OrcusSocketHeaders.UpgradeSocket},
+                {OrcusSocketHeaders.Connection, OrcusSocketHeaders.ConnectionUpgrade},
+                {OrcusSocketHeaders.SecWebSocketVersion, OrcusSocketHeaders.SupportedVersion},
+                {OrcusSocketHeaders.SecWebSocketKey, null}
             };
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Orcus.Server.OrcusSockets.Internal
             var validation = _headers.ToDictionary(x => x.Key, x => false);
 
             foreach (var header in headers)
-                if (string.Equals(header.Key, Headers.SecWebSocketKey, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(header.Key, OrcusSocketHeaders.SecWebSocketKey, StringComparison.OrdinalIgnoreCase))
                 {
                     validation[header.Key] = IsRequestKeyValid(header.Value);
                 }
@@ -81,9 +82,9 @@ namespace Orcus.Server.OrcusSockets.Internal
 
         public static IEnumerable<KeyValuePair<string, string>> GenerateResponseHeaders(string key)
         {
-            yield return new KeyValuePair<string, string>(Headers.Connection, Headers.ConnectionUpgrade);
-            yield return new KeyValuePair<string, string>(Headers.Upgrade, Headers.UpgradeSocket);
-            yield return new KeyValuePair<string, string>(Headers.SecWebSocketAccept, CreateResponseKey(key));
+            yield return new KeyValuePair<string, string>(OrcusSocketHeaders.Connection, OrcusSocketHeaders.ConnectionUpgrade);
+            yield return new KeyValuePair<string, string>(OrcusSocketHeaders.Upgrade, OrcusSocketHeaders.UpgradeSocket);
+            yield return new KeyValuePair<string, string>(OrcusSocketHeaders.SecWebSocketAccept, CreateResponseKey(key));
         }
     }
 }

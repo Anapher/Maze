@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Microsoft.Extensions.Primitives;
-using Orcus.Server.OrcusSockets.Internal.Http;
+using Orcus.Sockets.Internal.Http;
 using Xunit;
 
 namespace Orcus.Server.OrcusSockets.Tests

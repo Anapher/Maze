@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
-using Microsoft.Extensions.Options;
-using Orcus.Options;
 
 namespace Orcus.Core.Modules
 {
@@ -32,19 +27,16 @@ namespace Orcus.Core.Modules
             moduleFinder.RegisterInstance(_configurationProvider.ConfigurationRoot);
 
             moduleFinder.RegisterAssemblyTypes(packages.Select(x => x.Assembly).ToArray())
-                .Where(t => typeof(IModule).IsAssignableFrom(t))
-                .As<IModule>();
+                .Where(t => typeof(IModule).IsAssignableFrom(t)).As<IModule>();
 
             IModuleRegistrar registrar = null;
             using (var moduleContainer = moduleFinder.Build())
             {
                 foreach (var module in moduleContainer.Resolve<IEnumerable<IModule>>())
-                {
                     if (registrar == null)
                         registrar = builder.RegisterModule(module);
                     else
                         registrar.RegisterModule(module);
-                }
             }
         }
     }

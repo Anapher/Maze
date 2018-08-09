@@ -33,8 +33,8 @@ namespace Orcus.Server.Authentication
                 new Claim(JwtRegisteredClaimNames.Sub, account.AccountId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.GivenName, account.Username),
-                new Claim(ClaimTypes.Role, "admin"),
-                new Claim(ClaimTypes.Role, "installingUser")
+                new Claim("role", "admin"),
+                new Claim("role", "installingUser")
             };
 
             return new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.Add(_userTokenValidityPeriod),
@@ -47,10 +47,10 @@ namespace Orcus.Server.Authentication
             {
                 new Claim(JwtRegisteredClaimNames.Sub, client.ClientId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
-                new Claim(ClaimTypes.Role, "client")
+                new Claim("role", "client")
             };
 
-            return new JwtSecurityToken(_issuer, _audience, claims, null, null, _signingCredentials);
+            return new JwtSecurityToken(_issuer, _audience, claims, null, DateTime.UtcNow.Add(_userTokenValidityPeriod), _signingCredentials);
         }
 
         public TokenValidationParameters GetValidationParameters()

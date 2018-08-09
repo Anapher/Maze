@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Orcus.ModuleManagement;
 using Orcus.Server.Authentication;
 using Orcus.Server.Autofac;
 using Orcus.Server.Data.EfCode;
@@ -22,6 +23,7 @@ using Orcus.Server.Options;
 using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
+using Orcus.Sockets;
 
 namespace Orcus.Server
 {
@@ -74,7 +76,8 @@ namespace Orcus.Server
             containerBuilder
                 .RegisterModule<DataAccessModule>()
                 .RegisterModule<BusinessLogicModule>()
-                .RegisterModule(new PackagesModule(provider.GetService<IOptions<ModulesOptions>>().Value));
+                .RegisterModule(new PackagesModule(provider.GetService<IOptions<ModulesOptions>>().Value))
+                .RegisterModule<ModuleManagementModule>();
 
             containerBuilder.Populate(services);
 
@@ -102,8 +105,8 @@ namespace Orcus.Server
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/v1/signalR"));
             app.Map("/ws", builder => builder.UseOrcusSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
 
-            app.ApplicationServices
-                .Execute<IConfigureServerPipelineAction, IApplicationBuilder, IHostingEnvironment>(app, env).Wait();
+            app.ApplicationServices.Execute<IConfigureServerPipelineAction, PipelineInfo>(new PipelineInfo(app, env))
+                .Wait();
         }
     }
 }

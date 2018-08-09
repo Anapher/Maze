@@ -5,12 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="LibLog" Version="5.0.2" />
     <PackageReference Include="Orcus.NuGet.Commands" Version="1.0.0" />
     <PackageReference Include="Orcus.NuGet.Resolver" Version="1.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
   </ItemGroup>
 

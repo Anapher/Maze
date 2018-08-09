@@ -79,11 +79,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestModule", "TestModule", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestModule.Server", "src\modules\TestModule\TestModule.Server\TestModule.Server.csproj", "{0230F843-0B3F-4887-AF5D-A8EAC7A88D17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule.Client", "src\modules\TestModule\TestModule.Client\TestModule.Client.csproj", "{F90696CB-DB87-4931-AAC1-AF452727E5E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestModule.Client", "src\modules\TestModule\TestModule.Client\TestModule.Client.csproj", "{F90696CB-DB87-4931-AAC1-AF452727E5E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule.Administration", "src\modules\TestModule\TestModule.Administration\TestModule.Administration.csproj", "{19CEE9CF-58B2-4AF3-88F9-58EEF81D6571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestModule.Administration", "src\modules\TestModule\TestModule.Administration\TestModule.Administration.csproj", "{19CEE9CF-58B2-4AF3-88F9-58EEF81D6571}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModulePacker", "src\ModulePacker\ModulePacker.csproj", "{7E96E342-C1DC-4DF2-B775-2CDD532402FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModulePacker", "src\ModulePacker\ModulePacker.csproj", "{7E96E342-C1DC-4DF2-B775-2CDD532402FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Sockets", "src\Orcus.Sockets\Orcus.Sockets.csproj", "{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -203,6 +205,10 @@ Global
 		{7E96E342-C1DC-4DF2-B775-2CDD532402FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E96E342-C1DC-4DF2-B775-2CDD532402FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E96E342-C1DC-4DF2-B775-2CDD532402FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

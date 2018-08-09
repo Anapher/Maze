@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orcus.Server.OrcusSockets.Internal;
+using Orcus.Sockets;
+using Orcus.Sockets.Internal;
 
 namespace Orcus.Server.OrcusSockets
 {
@@ -31,7 +32,6 @@ namespace Orcus.Server.OrcusSockets
             if (upgradeFeature != null && IsOrcusSocketRequest(context, upgradeFeature))
             {
                 context.Features.Set<IOrcusSocketFeature>(new OrcusSocketUpgrader(context, upgradeFeature, _options));
-                return; //nothing comes next!
             }
 
             // Call the next delegate/middleware in the pipeline
@@ -70,7 +70,7 @@ namespace Orcus.Server.OrcusSockets
 
             public async Task<OrcusSocket> AcceptAsync()
             {
-                var key = string.Join(", ", _context.Request.Headers[Headers.SecWebSocketKey]);
+                var key = string.Join(", ", _context.Request.Headers[OrcusSocketHeaders.SecWebSocketKey]);
 
                 var responseHeaders = HandshakeHelpers.GenerateResponseHeaders(key);
                 foreach (var headerPair in responseHeaders)

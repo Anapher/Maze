@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,14 +7,15 @@ using Orcus.Server.Authentication;
 using Orcus.Server.Library.Services;
 using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Connection;
+using Orcus.Sockets;
 
 namespace Orcus.Server.Middleware
 {
     public class OrcusSocketManagerMiddleware
     {
+        private readonly IConnectionManager _connectionManager;
         private readonly ILoggerFactory _loggerFactory;
         private readonly RequestDelegate _next;
-        private readonly IConnectionManager _connectionManager;
         private readonly OrcusSocketOptions _options;
 
         public OrcusSocketManagerMiddleware(RequestDelegate next, IConnectionManager connectionManager,
@@ -34,9 +36,14 @@ namespace Orcus.Server.Middleware
                 return;
             }
 
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                return;
+            }
+
             var socket = await socketFeature.AcceptAsync();
-            var server = new OrcusServer(socket, _loggerFactory.CreateLogger<OrcusServer>(), _options.PackageBufferSize,
-                _options.MaxHeaderSize);
+            var server = new OrcusServer(socket, _options.PackageBufferSize, _options.MaxHeaderSize);
 
             if (context.User.IsAdministrator())
             {
@@ -44,7 +51,7 @@ namespace Orcus.Server.Middleware
             else
             {
                 var clientId = context.User.GetClientId();
-                var connection = new ClientConnection(clientId, server);
+                var connection = new ClientConnection(clientId, socket, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
             }
         }

@@ -14,6 +14,7 @@ using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.OrcusSockets.Internal;
+using Orcus.Sockets.Internal;
 using HttpHeaders = System.Net.Http.Headers.HttpHeaders;
 using HttpMethod = System.Net.Http.HttpMethod;
 

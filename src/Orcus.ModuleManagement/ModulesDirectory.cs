@@ -19,8 +19,8 @@ namespace Orcus.ModuleManagement
 
         public bool ModuleExists(PackageIdentity packageIdentity)
         {
-            return File.Exists(
-                VersionFolderPathResolver.GetPackageFilePath(packageIdentity.Id, packageIdentity.Version));
+            var path = VersionFolderPathResolver.GetPackageFilePath(packageIdentity.Id, packageIdentity.Version);
+            return File.Exists(path);
         }
 
         public Task DeleteModule(PackageIdentity packageIdentity)

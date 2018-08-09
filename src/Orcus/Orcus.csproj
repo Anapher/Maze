@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Commanding\ServerCommandListener.cs" />
+    <Compile Include="Core\Commanding\WebSocketOrcusContext.cs" />
     <Compile Include="Core\Connection\ClientInfoProvider.cs" />
     <Compile Include="Core\Connection\CoreConnector.cs" />
     <Compile Include="Core\Connection\ServerConnection.cs" />
@@ -58,7 +60,7 @@
     <Compile Include="Core\Modules\ClientModulesDirectory.cs" />
     <Compile Include="Core\Modules\ConfigurationRootProvider.cs" />
     <Compile Include="Core\Modules\IConfigurationRootProvider.cs" />
-    <Compile Include="Core\Modules\LocalModuleLoader.cs" />
+    <Compile Include="Core\Modules\PackageLockLoader.cs" />
     <Compile Include="Core\Modules\ModuleDownloader.cs" />
     <Compile Include="Core\Modules\PackageCarrier.cs" />
     <Compile Include="Core\Modules\PackageLoader.cs" />
@@ -71,9 +73,11 @@
     <Compile Include="Exceptions\RestAuthenticationException.cs" />
     <Compile Include="Exceptions\RestException.cs" />
     <Compile Include="Exceptions\RestNotFoundException.cs" />
+    <Compile Include="Extensions\AutofacServiceProvider.cs" />
+    <Compile Include="Utilities\TaskCombinators.cs" />
     <Compile Include="Options\ConnectionOptions.cs" />
     <Compile Include="Options\ModulesOptions.cs" />
-    <Compile Include="OrcusContext.cs" />
+    <Compile Include="AppContext.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -119,6 +123,14 @@
       <Project>{b0f87c73-910b-41dd-8f00-3a33a85a707c}</Project>
       <Name>Orcus.Server.Connection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orcus.Service.Commander\Orcus.Service.Commander.csproj">
+      <Project>{a671f822-e1d1-491f-a31d-5c24f5482f74}</Project>
+      <Name>Orcus.Service.Commander</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj">
+      <Project>{9c1c6607-7f2e-4f28-8629-2552d3bbfb38}</Project>
+      <Name>Orcus.Sockets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">
@@ -144,9 +156,6 @@
     </PackageReference>
     <PackageReference Include="Orcus.NuGet.Frameworks">
       <Version>1.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="WebSocketSharp">
-      <Version>1.0.3-rc11</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

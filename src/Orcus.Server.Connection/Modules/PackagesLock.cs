@@ -34,20 +34,33 @@ namespace Orcus.Server.Connection.Modules
         public IEnumerable<IImmutableList<PackageIdentity>> Values => _dictionary.Values;
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> Clear() => _dictionary.Clear();
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> Add(PackageIdentity key, IImmutableList<PackageIdentity> value) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> Add(PackageIdentity key,
+            IImmutableList<PackageIdentity> value) =>
+            _dictionary.Add(key, value);
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> AddRange(IEnumerable<KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>>> pairs) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> AddRange(
+            IEnumerable<KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>>> pairs) =>
+            _dictionary.AddRange(pairs);
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> SetItem(PackageIdentity key, IImmutableList<PackageIdentity> value) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> SetItem(PackageIdentity key,
+            IImmutableList<PackageIdentity> value) =>
+            _dictionary.SetItem(key, value);
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> SetItems(IEnumerable<KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>>> items) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> SetItems(
+            IEnumerable<KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>>> items) =>
+            _dictionary.SetItems(items);
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> RemoveRange(IEnumerable<PackageIdentity> keys) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> RemoveRange(
+            IEnumerable<PackageIdentity> keys) =>
+            _dictionary.RemoveRange(keys);
 
-        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> Remove(PackageIdentity key) => throw new System.NotImplementedException();
+        public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> Remove(PackageIdentity key) =>
+            _dictionary.Remove(key);
 
-        public bool Contains(KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>> pair) => throw new System.NotImplementedException();
+        public bool Contains(KeyValuePair<PackageIdentity, IImmutableList<PackageIdentity>> pair) =>
+            _dictionary.Contains(pair);
 
-        public bool TryGetKey(PackageIdentity equalKey, out PackageIdentity actualKey) => throw new System.NotImplementedException();
+        public bool TryGetKey(PackageIdentity equalKey, out PackageIdentity actualKey) =>
+            _dictionary.TryGetKey(equalKey, out actualKey);
     }
 }

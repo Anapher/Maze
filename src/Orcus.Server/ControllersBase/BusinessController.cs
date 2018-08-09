@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Error;
@@ -8,7 +9,7 @@ using Orcus.Server.Utilities;
 
 namespace Orcus.Server.ControllersBase
 {
-    [ApiController]
+    [ApiController, Authorize]
     public abstract class BusinessController : Controller
     {
         [NonAction]

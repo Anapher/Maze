@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using NuGet.Packaging.Core;
+using System.Threading;
+using System.Threading.Tasks;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
+using Orcus.Utilities;
 
 namespace Orcus.Core.Modules
 {
     public interface IModulesCatalog
     {
         IImmutableList<PackageCarrier> Packages { get; }
-        IReadOnlyList<PackageCarrier> Load(IReadOnlyList<PackageIdentity> packages, PackagesLock packagesLock);
+        Task<IReadOnlyList<PackageCarrier>> Load(PackagesLock packagesLock);
     }
 
     public class ModulesCatalog : IModulesCatalog
@@ -20,7 +23,6 @@ namespace Orcus.Core.Modules
         private readonly IApplicationInfo _applicationInfo;
         private readonly IPackageLoader _packageLoader;
         private readonly IModulesDirectory _modulesDirectory;
-        private bool _isLoaded;
 
         public ModulesCatalog(IModulesDirectory modulesDirectory, IApplicationInfo applicationInfo, IPackageLoader packageLoader)
         {
@@ -29,34 +31,30 @@ namespace Orcus.Core.Modules
             _packageLoader = packageLoader;
         }
 
-        public IImmutableList<PackageCarrier> Packages { get; private set; } = new ImmutableArray<PackageCarrier>();
+        public IImmutableList<PackageCarrier> Packages { get; private set; } = ImmutableList<PackageCarrier>.Empty;
 
-        public IReadOnlyList<PackageCarrier> Load(IReadOnlyList<PackageIdentity> packages, PackagesLock packagesLock)
+        public async Task<IReadOnlyList<PackageCarrier>> Load(PackagesLock packagesLock)
         {
-            if (_isLoaded)
-                throw new InvalidOperationException("Cannot load packages twice");
-            _isLoaded = true;
-
             var mapper = new ModuleMapper(_applicationInfo.Framework, _modulesDirectory, Runtime.Windows, Architecture.x86);
-            var packageStack = mapper.BuildMap(packages, packagesLock);
+            var packageStack = mapper.BuildMap(packagesLock);
 
-            var loadedPackages = new List<PackageCarrier>();
-
+            var loadedPackages = new ConcurrentBag<PackageCarrier>();
             while (packageStack.Any())
             {
                 var dependencyLayer = packageStack.Pop();
-                foreach (var package in dependencyLayer)
-                {
-                    if (Packages.Any(x => x.Context.PackageDirectory == package.PackageDirectory))
-                        continue;
 
-                    loadedPackages.Add(_packageLoader.Load(package));
-                }
+                await TaskCombinators.ThrottledAsync(dependencyLayer, (context, token) =>
+                {
+                    if (Packages.Any(x => x.Context.PackageDirectory == context.PackageDirectory))
+                        return Task.CompletedTask;
+
+                    return Task.Run(() => loadedPackages.Add(_packageLoader.Load(context)));
+                }, CancellationToken.None);
             }
 
             Packages = Packages.AddRange(loadedPackages);
 
-            return loadedPackages;
+            return loadedPackages.ToList();
         }
     }
 }

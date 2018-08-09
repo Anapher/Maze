@@ -26,15 +26,13 @@ namespace Orcus.ModuleManagement.Loader
         /// <summary>
         ///     Build a module loader map that determines in which order which packages must be loaded
         /// </summary>
-        /// <param name="primaryPackages">The primary packages</param>
         /// <param name="packagesLock">The packages lock</param>
         /// <returns>Return a stack of dependency lists that can be loaded in parallel</returns>
-        public Stack<List<PackageLoadingContext>> BuildMap(IEnumerable<PackageIdentity> primaryPackages,
-            PackagesLock packagesLock)
+        public Stack<List<PackageLoadingContext>> BuildMap(PackagesLock packagesLock)
         {
             var levelMap = new Dictionary<PackageIdentity, int>(PackageIdentity.Comparer);
 
-            foreach (var packageIdentity in primaryPackages)
+            foreach (var packageIdentity in packagesLock.Keys)
                 SearchDependencies(packageIdentity, packagesLock, levelMap, 0);
 
             var result = new Stack<List<PackageLoadingContext>>();

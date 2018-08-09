@@ -2,7 +2,7 @@
 
 namespace Orcus.Server.Library.Interfaces
 {
-    public interface IStartupAction : IExecutableInterface
+    public interface IStartupAction : IActionInterface
     {
     }
 }

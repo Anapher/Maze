@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Orcus.Client.Library.Services;
 using Orcus.Clients;
 using Orcus.Exceptions;
 using Orcus.Server.Connection;
@@ -11,15 +12,9 @@ using Orcus.Server.Connection.Error;
 
 namespace Orcus.Core.Connection
 {
-    public interface IOrcusRestClient : IRestClient
-    {
-        Uri BaseUri { get; }
-    }
-
-    public class OrcusRestClient : IOrcusRestClient
+    public class OrcusRestClient : IRestClient, IOrcusRestClient
     {
         private readonly HttpClient _httpClient;
-        private string _jwt;
 
         public OrcusRestClient(HttpClient httpClient, Uri baseUri)
         {
@@ -28,10 +23,11 @@ namespace Orcus.Core.Connection
         }
 
         public Uri BaseUri { get; }
+        public string Jwt { get; private set; }
 
         public void SetAuthenticated(string jwt)
         {
-            _jwt = jwt;
+            Jwt = jwt;
         }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
@@ -39,8 +35,8 @@ namespace Orcus.Core.Connection
             if (!request.RequestUri.IsAbsoluteUri)
                 request.RequestUri = new Uri(BaseUri, request.RequestUri);
 
-            if (_jwt != null)
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer ", _jwt);
+            if (Jwt != null)
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Jwt);
 
             var response = await _httpClient.SendAsync(request);
             if (response.IsSuccessStatusCode)

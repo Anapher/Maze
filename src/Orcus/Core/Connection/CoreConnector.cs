@@ -4,9 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Options;
+using Orcus.Client.Library.Interfaces;
 using Orcus.Core.Modules;
 using Orcus.Logging;
+using Orcus.ModuleManagement;
 using Orcus.Options;
+using Orcus.Service.Commander;
 
 namespace Orcus.Core.Connection
 {
@@ -22,16 +25,20 @@ namespace Orcus.Core.Connection
 
         private readonly IServerConnector _serverConnector;
         private readonly IModuleDownloader _moduleDownloader;
+        private readonly IPackageLockLoader _packageLockLoader;
         private readonly ConnectionOptions _options;
 
-        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector, IModuleDownloader moduleDownloader)
+        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector,
+            IModuleDownloader moduleDownloader, IPackageLockLoader packageLockLoader)
         {
             _serverConnector = serverConnector;
             _moduleDownloader = moduleDownloader;
+            _packageLockLoader = packageLockLoader;
             _options = options.Value;
         }
 
         public ServerConnection CurrentConnection { get; private set; }
+        public ILifetimeScope CurrentConnectionScope { get; private set; }
 
         public async Task StartConnecting(ILifetimeScope lifetimeScope)
         {
@@ -54,6 +61,24 @@ namespace Orcus.Core.Connection
                         Logger.Debug("Connection succeeded, initialize modules");
 
                         await _moduleDownloader.Load(connection.PackagesLock, connection, CancellationToken.None);
+
+                        var loadedContext = await _packageLockLoader.Load(connection.PackagesLock);
+                        var controllers = await loadedContext.GetControllers();
+
+                        CurrentConnectionScope = lifetimeScope.BeginLifetimeScope(builder =>
+                        {
+                            if (loadedContext.PackagesLoaded)
+                                loadedContext.Configure(builder);
+                            
+                            builder.RegisterOrcusServices(cache => cache.BuildCache(controllers));
+                        });
+
+                        CurrentConnection = connection;
+
+                        await CurrentConnectionScope.Execute<IConnectedAction>();
+                        await CurrentConnection.InitializeWebSocket(CurrentConnectionScope);
+
+                        break;
                     }
                     catch (Exception e)
                     {

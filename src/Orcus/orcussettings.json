@@ -1,6 +1,7 @@
 ﻿{
   "Modules": {
-    "LocalPath": "%appdata%/Orcus/modules"
+    "LocalPath": "%appdata%/Orcus/modules",
+    "TempPath": "%appdata%/Orcus/tmp"
     //"PrimaryModules": [
     //  "Orcus.TrayIcon/1.0.1"
     //],
@@ -10,6 +11,6 @@
   },
   "Connection": {
     "ServerUris": [ "http://localhost:50485/" ],
-    "ReconnectDelay": 5000 
+    "ReconnectDelay": 5000
   } 
 }

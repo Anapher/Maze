@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NuGet.Common;
 using NuGet.Frameworks;
 using NuGet.Packaging;
-using NuGet.RuntimeModel;
 
 namespace Orcus.ModuleManagement.Loader
 {
