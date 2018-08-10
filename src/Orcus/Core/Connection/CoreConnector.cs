@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Orcus.Client.Library.Interfaces;
 using Orcus.Core.Modules;
@@ -71,6 +72,7 @@ namespace Orcus.Core.Connection
                                 loadedContext.Configure(builder);
                             
                             builder.RegisterOrcusServices(cache => cache.BuildCache(controllers));
+                            builder.RegisterType<AutofacServiceProvider>().AsImplementedInterfaces();
                         });
 
                         CurrentConnection = connection;
@@ -85,6 +87,9 @@ namespace Orcus.Core.Connection
                         Logger.Warn(e, "Error occurred when trying to connect to {uri}", serverUri);
                     }
                 }
+
+                if (CurrentConnection != null)
+                    break;
 
                 await Task.Delay(_options.ReconnectDelay);
             }

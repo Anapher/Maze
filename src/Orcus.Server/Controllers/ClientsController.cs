@@ -44,11 +44,5 @@ namespace Orcus.Server.Controllers
                 });
             });
         }
-
-        [HttpGet]
-        public IActionResult Test()
-        {
-            return Json("Hello");
-        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 
@@ -27,8 +28,8 @@ namespace Orcus.Sockets.Internal.Http
 
         public override string ContentType
         {
-            get => Headers["Content-Type"];
-            set => Headers["Content-Type"] = value;
+            get => Headers[HeaderNames.ContentType];
+            set => Headers[HeaderNames.ContentType] = value;
         }
 
         public override Stream Body { get; set; }

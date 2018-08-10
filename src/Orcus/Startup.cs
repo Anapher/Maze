@@ -1,13 +1,15 @@
-﻿using Autofac;
+﻿using System.Buffers;
+using Autofac;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Services;
 using Orcus.Core.Connection;
 using Orcus.Core.Modules;
 using Orcus.Core.Services;
+using Orcus.Extensions;
 using Orcus.ModuleManagement;
 using Orcus.Options;
-using Orcus.Service.Commander;
 
 namespace Orcus
 {
@@ -40,6 +42,11 @@ namespace Orcus
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
 
+            builder.RegisterInstance(new SerilogLoggerFactory(null)).As<ILoggerFactory>().SingleInstance();
+            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
+            builder.RegisterInstance(ArrayPool<char>.Create());
+            builder.RegisterInstance(ArrayPool<byte>.Create());
+            
             builder.RegisterModule<ModuleManagementModule>();
         }
     }

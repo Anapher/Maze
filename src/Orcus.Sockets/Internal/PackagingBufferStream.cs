@@ -31,7 +31,7 @@ namespace Orcus.Sockets.Internal
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
             if (_packageBufferOffset == 0)
-                return Task.CompletedTask;
+                return _sendPackageDelegate(new ArraySegment<byte>());
 
             var packageBufferOffset = _packageBufferOffset;
             _packageBufferOffset = 0;

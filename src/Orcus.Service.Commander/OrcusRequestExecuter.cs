@@ -14,14 +14,12 @@ namespace Orcus.Service.Commander
         private readonly ILogger<OrcusRequestExecuter> _logger;
         private readonly IRouteCache _routeCache;
         private readonly IRouteResolver _routeResolver;
-        private readonly IServiceProvider _serviceProvider;
 
         public OrcusRequestExecuter(IRouteResolver routeResolver, IRouteCache routeCache,
-            IServiceProvider serviceProvider, ILogger<OrcusRequestExecuter> logger)
+            ILogger<OrcusRequestExecuter> logger)
         {
             _routeResolver = routeResolver;
             _routeCache = routeCache;
-            _serviceProvider = serviceProvider;
             _logger = logger;
         }
 

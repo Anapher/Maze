@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
@@ -75,9 +77,11 @@ namespace Orcus.Sockets.Internal.Http
             var delimiterIndex = requestLine.IndexOf(' ');
 
             request.Method = requestLine.Substring(0, delimiterIndex);
-            var uri = new Uri(requestLine.Substring(delimiterIndex + 1, requestLine.Length - delimiterIndex - 1));
-            request.Path = PathString.FromUriComponent(uri);
+            var uri = new Uri("orcus://localhost" + requestLine.Substring(delimiterIndex + 1, requestLine.Length - delimiterIndex - 1), UriKind.Absolute);
+            request.Path = PathString.FromUriComponent(uri.LocalPath);
             request.QueryString = QueryString.FromUriComponent(uri);
+            request.Query = new QueryCollection(QueryHelpers.ParseNullableQuery(uri.Query));
+
             DecodeHeaders(request.Headers, textReader);
             
             return request;
@@ -86,7 +90,7 @@ namespace Orcus.Sockets.Internal.Http
         private static void DecodeHeaders(IHeaderDictionary headers, TextReader textReader)
         {
             string line;
-            while ((line = textReader.ReadLine()) != null)
+            while (!string.IsNullOrEmpty(line = textReader.ReadLine()))
             {
                 var keyEnd = line.IndexOf(": ");
                 var key = line.Substring(0, keyEnd);

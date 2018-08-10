@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NuGet.Frameworks;
 using NuGet.Versioning;
@@ -41,20 +42,16 @@ namespace Orcus
         private ILifetimeScope LoadModules()
         {
             var loader = RootContainer.Resolve<IPackageLockLoader>();
-            var packagesLoaded = false;
 
             var modulesConfig = RootContainer.Resolve<IOptions<ModulesOptions>>().Value;
 
-            var modulesScope = RootContainer.BeginLifetimeScope(builder =>
-                packagesLoaded = loader.Load(modulesConfig.PackagesLock, builder));
-
-            if (!packagesLoaded)
+            var loadContext = loader.Load(modulesConfig.PackagesLock).Result;
+            if (loadContext.PackagesLoaded)
             {
-                modulesScope.Dispose();
-                return RootContainer;
+                return RootContainer.BeginLifetimeScope(builder => loadContext.Configure(builder));
             }
 
-            return modulesScope;
+            return RootContainer;
         }
 
         private void StartConnecting()

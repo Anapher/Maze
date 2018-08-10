@@ -8,10 +8,14 @@ using Microsoft.Extensions.Logging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using Orcus.Modules.Api;
 using Orcus.Server.Hubs;
+using Orcus.Server.Service;
+using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Utilities;
+using IActionResult = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace Orcus.Server.Controllers
 {
@@ -56,10 +60,12 @@ namespace Orcus.Server.Controllers
         }
 
         [HttpGet("install"), AllowAnonymous]
-        public Task<IActionResult> Install([FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
+        public async Task Install([FromServices] ICommandDistributer moduleManager)
         {
-            return InstallModule(new PackageIdentity("TestModule", NuGetVersion.Parse("1.0")), moduleManager,
-                logger);
+            var response = await moduleManager.Execute(Request.ToHttpRequestMessage("/TestModule"),
+                new CommandTarget(CommandTargetType.Client) {Id = 1});
+
+            response.CopyToHttpResponse(Response);
         }
     }
 }

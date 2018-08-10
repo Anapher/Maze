@@ -21,6 +21,7 @@ using Orcus.Server.Library.Services;
 using Orcus.Server.Middleware;
 using Orcus.Server.Options;
 using Orcus.Server.OrcusSockets;
+using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
 using Orcus.Sockets;
@@ -46,6 +47,7 @@ namespace Orcus.Server
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
+            services.AddLogging();
 
             var provider = services.BuildServiceProvider();
 
@@ -70,8 +72,9 @@ namespace Orcus.Server
             services.AddSignalR();
             
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>();
+            containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>();
+            containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()

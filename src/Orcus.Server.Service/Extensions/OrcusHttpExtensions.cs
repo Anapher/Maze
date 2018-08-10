@@ -48,7 +48,7 @@ namespace Orcus.Server.Service.Extensions
         {
             var requestMessage =
                 new HttpRequestMessage(new HttpMethod(httpRequest.Method),
-                    new Uri("orcus://localhost/" + path, UriKind.Absolute))
+                    new Uri("http://localhost/" + path, UriKind.Absolute))
                 {
                     Content = new RawStreamContent(httpRequest.Body)
                 };
@@ -123,8 +123,8 @@ namespace Orcus.Server.Service.Extensions
 
         public override string ContentType
         {
-            get => Headers["Content-Type"];
-            set => Headers["Content-Type"] = value;
+            get => Headers[HeaderNames.ContentType];
+            set => Headers[HeaderNames.ContentType] = value;
         }
 
         public override Stream Body { get; set; }

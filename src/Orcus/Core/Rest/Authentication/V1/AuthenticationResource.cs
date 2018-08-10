@@ -24,10 +24,5 @@ namespace Orcus.Core.Rest.Authentication.V1
                 settings.Converters.Add(new PackageIdentityConverter());
             }).ToResult();
         }
-
-        public static Task<string> Test(IRestClient client)
-        {
-            return CreateRequest().Execute(client).Return<string>();
-        }
     }
 }

@@ -13,7 +13,6 @@ namespace Orcus.Sockets
     /// </summary>
     public class OrcusSocket : IDisposable
     {
-        /// <summary>
         //   7 6 5 4 3 2 1 0
         //  +-+-+-+-+-+-+-+-+
         //  | | | | | | | | |
@@ -23,7 +22,7 @@ namespace Orcus.Sockets
         //   \ | | /     | +-- IS_FINISHED
         //      |        +---- IS_CONTINUATION
         //      +------------- TYPE
-        /// </summary>
+        /// 
         public enum MessageOpcode : byte
         {
             Message = 0x1,

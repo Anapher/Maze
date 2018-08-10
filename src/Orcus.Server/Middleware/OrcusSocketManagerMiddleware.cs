@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -53,6 +54,11 @@ namespace Orcus.Server.Middleware
                 var clientId = context.User.GetClientId();
                 var connection = new ClientConnection(clientId, socket, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
+
+                connection.BeginListen();
+
+                await Task.Delay(1000);
+                var result = await connection.SendRequest(new HttpRequestMessage(HttpMethod.Get, "http://localhost/TestModule"));
             }
         }
     }

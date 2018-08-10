@@ -3,17 +3,21 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Orcus.Service.Commander;
 using Orcus.Sockets;
+using Orcus.Sockets.Client;
 
 namespace Orcus.Core.Commanding
 {
     public class ServerCommandListener
     {
+        private readonly OrcusSocketConnector _connector;
         private readonly OrcusSocket _orcusSocket;
         private readonly OrcusServer _orcusServer;
         private readonly ILifetimeScope _container;
 
-        public ServerCommandListener(OrcusSocket orcusSocket, OrcusServer orcusServer, ILifetimeScope container)
+        public ServerCommandListener(OrcusSocketConnector connector, OrcusSocket orcusSocket, OrcusServer orcusServer,
+            ILifetimeScope container)
         {
+            _connector = connector;
             _orcusSocket = orcusSocket;
             _orcusServer = orcusServer;
             _container = container;
@@ -25,10 +29,16 @@ namespace Orcus.Core.Commanding
             return _orcusSocket.ReceiveAsync();
         }
 
-        private void OrcusServerOnRequestReceived(object sender, OrcusRequestReceivedEventArgs e)
+        private async void OrcusServerOnRequestReceived(object sender, OrcusRequestReceivedEventArgs e)
         {
-            var context = new WebSocketOrcusContext(e) {RequestServices = new AutofacServiceProvider(_container)};
-            _container.Resolve<IOrcusRequestExecuter>().Execute(context);
+            var context = new WebSocketOrcusContext(e)
+            {
+                RequestServices = new AutofacServiceProvider(_container),
+                Connection = new WebSocketConnectionInfo(_connector)
+            };
+
+            await _container.Resolve<IOrcusRequestExecuter>().Execute(context);
+            await _orcusServer.FinishResponse(e);
         }
     }
 }

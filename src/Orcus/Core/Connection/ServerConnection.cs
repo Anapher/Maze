@@ -40,7 +40,8 @@ namespace Orcus.Core.Connection
             var socket = await connector.ConnectAsync(_options.KeepAliveInterval);
             var server = new OrcusServer(socket, _options.PackageBufferSize, _options.MaxHeaderSize);
 
-            Listener = new ServerCommandListener(socket, server, lifetimeScope);
+            Listener = new ServerCommandListener(connector, socket, server, lifetimeScope);
+            Listener.Listen();
         }
     }
 }

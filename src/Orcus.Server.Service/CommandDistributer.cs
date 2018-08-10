@@ -37,12 +37,15 @@ namespace Orcus.Server.Service
             CommandExecutionPolicy executionPolicy) =>
             throw new NotImplementedException();
 
-        public async Task<HttpResponseMessage> Execute(HttpRequestMessage request, CommandTarget target)
+        public Task<HttpResponseMessage> Execute(HttpRequestMessage request, CommandTarget target)
         {
-            var orcusRequest = request.ToOrcusRequest();
-            await orcusRequest.InitializeBody();
-
-            //var orcusResponse = new DefaultOrcusResponse(1);
+            //var orcusRequest = request.ToOrcusRequest();
+            //await orcusRequest.InitializeBody();
+            
+            if (_connectionManager.ClientConnections.TryGetValue(target.Id, out var clientConnection))
+            {
+                return clientConnection.SendRequest(request);
+            }
             //orcusResponse.Body = new PackagingBufferStream(data => );
 
             //var context = new DefaultOrcusContext(orcusRequest, new DefaultOrcusResponse(1), null );

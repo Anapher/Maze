@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Orcus.Modules.Api.Response;
 using Orcus.Sockets.Internal;
 using Orcus.Sockets.Internal.Http;
 using Orcus.Sockets.Logging;
@@ -73,17 +75,41 @@ namespace Orcus.Sockets
             var maxReadLength = sendBuffer.Length - offset;
             var opCode = OrcusSocket.MessageOpcode.Request;
 
-            using (var bodyStream = await requestMessage.Content.ReadAsStreamAsync())
-            {
-                var read = await bodyStream.ReadAsync(sendBuffer, offset, maxReadLength);
+            Stream bodyStream;
+            if (requestMessage.Content != null)
+                bodyStream = await requestMessage.Content.ReadAsStreamAsync();
+            else bodyStream = null;
 
-                if (read < maxReadLength)
+            using (bodyStream)
+            {
+                int read;
+
+                if (bodyStream == null) //no body, single package, easy
                 {
-                    var read2 = await bodyStream.ReadAsync(sendBuffer, offset + read, maxReadLength - read);
-                    if (read2 == 0)
-                        opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
-                    else
-                        read += read2;
+                    opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                    read = 0;
+                }
+                else
+                {
+                    //read something
+                    read = await bodyStream.ReadAsync(sendBuffer, offset, maxReadLength);
+                    if (read < maxReadLength)
+                    {
+                        if (read == 0)
+                        {
+                            //no data in the stream
+                            opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                        }
+                        else
+                        {
+                            //we read less than requested. check if we already reached the end
+                            var read2 = await bodyStream.ReadAsync(sendBuffer, offset + read, maxReadLength - read);
+                            if (read2 == 0)
+                                opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                            else
+                                read += read2;
+                        }
+                    }
                 }
 
                 await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, read + offset),
@@ -121,6 +147,15 @@ namespace Orcus.Sockets
             }
 
             return await requestWaiter.Task;
+        }
+
+        public async Task FinishResponse(OrcusRequestReceivedEventArgs e)
+        {
+            var defaultResponse = (DefaultOrcusResponse) e.Response;
+            defaultResponse.IsCompleted = true;
+            await defaultResponse.Body.FlushAsync();
+
+            e.Request.Body.Dispose();
         }
 
         private void SocketOnDataReceivedEventArgs(object sender, DataReceivedEventArgs e)
@@ -282,7 +317,7 @@ namespace Orcus.Sockets
                     var opCode = OrcusSocket.MessageOpcode.Response;
                     if (orcusResponse.IsCompleted)
                         opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
-
+                    
                     await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, offset + data.Count),
                         CancellationToken.None);
 

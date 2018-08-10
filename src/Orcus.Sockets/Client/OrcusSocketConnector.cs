@@ -16,13 +16,12 @@ namespace Orcus.Sockets.Client
     public class OrcusSocketConnector
     {
         private readonly Uri _serverUri;
-        private readonly TcpClient _tcpClient;
         private readonly string _base64Key;
 
         public OrcusSocketConnector(Uri serverUri)
         {
             _serverUri = serverUri;
-            _tcpClient = new TcpClient();
+            TcpClient = new TcpClient();
 
             SslConfig = new ClientSslConfiguration(serverUri.DnsSafeHost);
             _base64Key = CreateBase64Key();
@@ -30,6 +29,7 @@ namespace Orcus.Sockets.Client
 
         public ClientSslConfiguration SslConfig { get; set; }
         public AuthenticationHeaderValue AuthenticationHeaderValue { get; set; }
+        public TcpClient TcpClient { get; }
 
         public async Task<OrcusSocket> ConnectAsync(TimeSpan? keepAliveInterval)
         {
@@ -71,9 +71,9 @@ namespace Orcus.Sockets.Client
 
         private async Task<Stream> GetClientStream()
         {
-            await _tcpClient.ConnectAsync(_serverUri.DnsSafeHost, _serverUri.Port);
+            await TcpClient.ConnectAsync(_serverUri.DnsSafeHost, _serverUri.Port);
 
-            Stream stream = _tcpClient.GetStream();
+            Stream stream = TcpClient.GetStream();
 
             if (_serverUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
