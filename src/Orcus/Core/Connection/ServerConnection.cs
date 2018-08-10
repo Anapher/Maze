@@ -2,7 +2,6 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Orcus.Core.Commanding;
 using Orcus.Server.Connection.Modules;
 using Orcus.Sockets;
@@ -41,7 +40,7 @@ namespace Orcus.Core.Connection
             var server = new OrcusServer(socket, _options.PackageBufferSize, _options.MaxHeaderSize);
 
             Listener = new ServerCommandListener(connector, socket, server, lifetimeScope);
-            Listener.Listen();
+            await Listener.Listen();
         }
     }
 }

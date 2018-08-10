@@ -25,11 +25,12 @@ namespace Orcus.Sockets.Internal
         protected override Task<Stream> CreateContentReadStreamAsync() => Task.FromResult(Stream);
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context) =>
-            throw new NotSupportedException();
+            Stream.CopyToAsync(stream);
 
         protected override bool TryComputeLength(out long length)
         {
-            throw new NotSupportedException();
+            length = 0;
+            return false;
         }
 
         protected override void Dispose(bool disposing)

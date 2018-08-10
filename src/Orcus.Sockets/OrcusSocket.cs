@@ -175,6 +175,7 @@ namespace Orcus.Sockets
                 }
 
                 DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(receiveBuffer, opcode));
+                _receiveBufferCount = 0;
             }
         }
 
@@ -193,7 +194,7 @@ namespace Orcus.Sockets
                 // Check for a corrupted stream.  Read a max of 5 bytes.
                 // In a future version, add a DataFormatException.
                 if (shift == 5 * 7) // 5 bytes max per Int32, shift += 7
-                    throw new FormatException("Invalid 7 Bit encoeded integer");
+                    throw new FormatException("Invalid 7 Bit encoded integer");
 
                 if (readNextByteFromStream)
                 {

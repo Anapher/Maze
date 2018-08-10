@@ -87,7 +87,7 @@ namespace Orcus.Sockets.Internal
                         break;
 
                     if (IsCompleted)
-                        return -1;
+                        return 0;
                 }
 
                 _bufferWaitingAutoResetEvent.Wait();

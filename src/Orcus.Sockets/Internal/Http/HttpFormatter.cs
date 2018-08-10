@@ -23,10 +23,10 @@ namespace Orcus.Sockets.Internal.Http
         public static int FormatRequest(HttpRequestMessage request, ArraySegment<byte> buffer)
         {
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, true);
-            var streamWriter = new StreamWriter(memoryStream, Encoding);
-            EncodeRequest(request, streamWriter);
-            streamWriter.Flush();
 
+            using (var streamWriter = new StreamWriter(memoryStream, Encoding, 8192, true))
+                EncodeRequest(request, streamWriter);
+            
             return (int) memoryStream.Position;
         }
 
@@ -35,15 +35,16 @@ namespace Orcus.Sockets.Internal.Http
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, false);
             var streamReader = new StreamReader(memoryStream, Encoding);
             request = DecodeRequest(streamReader);
-            return (int) memoryStream.Position;
+
+            return GetBodyPosition(buffer);
         }
 
         public static int FormatResponse(OrcusResponse orcusResponse, ArraySegment<byte> buffer)
         {
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, true);
-            var streamWriter = new StreamWriter(memoryStream, Encoding);
-            EncodeResponse(orcusResponse, streamWriter);
-            streamWriter.Flush();
+
+            using (var streamWriter = new StreamWriter(memoryStream, Encoding, 8192, true))
+                EncodeResponse(orcusResponse, streamWriter);
 
             return (int) memoryStream.Position;
         }
@@ -53,7 +54,8 @@ namespace Orcus.Sockets.Internal.Http
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, false);
             var streamReader = new StreamReader(memoryStream, Encoding);
             response = DecodeResponse(streamReader);
-            return (int) memoryStream.Position;
+
+            return GetBodyPosition(buffer);
         }
 
         private static void EncodeRequest(HttpRequestMessage request, TextWriter textWriter)
@@ -65,6 +67,11 @@ namespace Orcus.Sockets.Internal.Http
 
             EncodeHeaders(request.Headers.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToArray())),
                 textWriter);
+            if (request.Content != null)
+            {
+                var foo = request.Content.Headers.ContentLength;
+                EncodeHeaders(request.Content.Headers.Select(
+                        x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToArray())), textWriter);}
 
             textWriter.WriteLine(); //finish
         }
@@ -131,6 +138,29 @@ namespace Orcus.Sockets.Internal.Http
                 response.Headers.Add(header.Key, (string[]) header.Value);
 
             return response;
+        }
+
+        private static int GetBodyPosition(ArraySegment<byte> bytes)
+        {
+            var needle = new byte[] {0x0D, 0x0A, 0x0D, 0x0A}; //crLF crLF
+            return SearchBytes(bytes, needle) + 4;
+        }
+
+        //https://stackoverflow.com/a/26880541
+        private static int SearchBytes(ArraySegment<byte> haystack, byte[] needle)
+        {
+            var len = needle.Length;
+            var limit = haystack.Count - len;
+            for (var i = haystack.Offset; i <= limit; i++)
+            {
+                var k = 0;
+                for (; k < len; k++)
+                {
+                    if (needle[k] != haystack.Array[i + k]) break;
+                }
+                if (k == len) return i;
+            }
+            return -1;
         }
     }
 }

@@ -55,10 +55,10 @@ namespace Orcus.Server.Middleware
                 var connection = new ClientConnection(clientId, socket, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
 
-                connection.BeginListen();
+                await connection.BeginListen();
 
-                await Task.Delay(1000);
-                var result = await connection.SendRequest(new HttpRequestMessage(HttpMethod.Get, "http://localhost/TestModule"));
+                //await Task.Delay(1000);
+                //var result = await connection.SendRequest(new HttpRequestMessage(HttpMethod.Get, "http://localhost/TestModule"));
             }
         }
     }
