@@ -10,11 +10,11 @@ namespace Orcus.Core.Commanding
     public class ServerCommandListener
     {
         private readonly OrcusSocketConnector _connector;
-        private readonly OrcusSocket _orcusSocket;
+        private readonly WebSocketWrapper _orcusSocket;
         private readonly OrcusServer _orcusServer;
         private readonly ILifetimeScope _container;
 
-        public ServerCommandListener(OrcusSocketConnector connector, OrcusSocket orcusSocket, OrcusServer orcusServer,
+        public ServerCommandListener(OrcusSocketConnector connector, WebSocketWrapper orcusSocket, OrcusServer orcusServer,
             ILifetimeScope container)
         {
             _connector = connector;

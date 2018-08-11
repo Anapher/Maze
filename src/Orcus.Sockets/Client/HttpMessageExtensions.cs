@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Orcus.Sockets.Client.WebSocketSharp;
+using Orcus.Sockets.Internal;
 
 namespace Orcus.Sockets.Client
 {
@@ -64,7 +65,8 @@ namespace Orcus.Sockets.Client
 
             foreach (var header in headers)
             {
-                response.Headers.TryAddWithoutValidation(header.Key, (IEnumerable<string>) header.Value);
+                if (!HeadersHelper.IsContentHeader(header.Key)) //ignore content headers
+                    response.Headers.Add(header.Key, (IEnumerable<string>) header.Value);
             }
 
             return response;

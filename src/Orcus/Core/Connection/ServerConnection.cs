@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http.Headers;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Autofac;
 using Orcus.Core.Commanding;
@@ -36,10 +37,14 @@ namespace Orcus.Core.Connection
             {
                 AuthenticationHeaderValue = new AuthenticationHeaderValue("Bearer", RestClient.Jwt)
             };
-            var socket = await connector.ConnectAsync(_options.KeepAliveInterval);
-            var server = new OrcusServer(socket, _options.PackageBufferSize, _options.MaxHeaderSize);
+            var dataStream = await connector.ConnectAsync();
+            var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, _options.PackageBufferSize, _options.PackageBufferSize, _options.KeepAliveInterval,
+                true, WebSocket.CreateClientBuffer(_options.PackageBufferSize, _options.PackageBufferSize));
 
-            Listener = new ServerCommandListener(connector, socket, server, lifetimeScope);
+            var wrapper = new WebSocketWrapper(webSocket, _options.PackageBufferSize);
+            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize);
+
+            Listener = new ServerCommandListener(connector, wrapper, server, lifetimeScope);
             await Listener.Listen();
         }
     }

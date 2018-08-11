@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
@@ -13,7 +14,6 @@ using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
-using Orcus.Server.OrcusSockets.Internal;
 using Orcus.Sockets.Internal;
 using HttpHeaders = System.Net.Http.Headers.HttpHeaders;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -26,9 +26,13 @@ namespace Orcus.Server.Service.Extensions
         {
             var builder = new UriBuilder {Path = request.Path, Query = request.QueryString.Value};
 
-            var message = new HttpRequestMessage(new HttpMethod(request.Method), builder.Uri);
-            request.Headers.CopyHeadersTo(message.Headers);
-            message.Content = new RawStreamContent(request.Body);
+            var message =
+                new HttpRequestMessage(new HttpMethod(request.Method), builder.Uri)
+                {
+                    Content = new RawStreamContent(request.Body)
+                };
+
+            request.Headers.CopyHeadersTo(message.Headers, message.Content.Headers);
 
             return message;
         }
@@ -37,9 +41,12 @@ namespace Orcus.Server.Service.Extensions
 
         public static HttpResponseMessage ToHttpResponseMessage(this OrcusResponse response)
         {
-            var message = new HttpResponseMessage((HttpStatusCode) response.StatusCode);
-            response.Headers.CopyHeadersTo(message.Headers);
-            message.Content = new RawStreamContent(response.Body);
+            var message =
+                new HttpResponseMessage((HttpStatusCode) response.StatusCode)
+                {
+                    Content = new RawStreamContent(response.Body)
+                };
+            response.Headers.CopyHeadersTo(message.Headers, message.Content.Headers);
 
             return message;
         }
@@ -64,11 +71,12 @@ namespace Orcus.Server.Service.Extensions
             return requestMessage;
         }
 
-        public static void CopyToHttpResponse(this HttpResponseMessage responseMessage, HttpResponse httpResponse)
+        public static async Task CopyToHttpResponse(this HttpResponseMessage responseMessage, HttpResponse httpResponse)
         {
             httpResponse.StatusCode = (int) responseMessage.StatusCode;
             responseMessage.Headers.CopyHeadersTo(httpResponse.Headers);
-            httpResponse.Body = responseMessage.Content.AsStream();
+
+            await responseMessage.Content.AsStream().CopyToAsync(httpResponse.Body);
         }
 
         public static Stream AsStream(this HttpContent content)
@@ -76,10 +84,14 @@ namespace Orcus.Server.Service.Extensions
             return ((RawStreamContent) content).Stream;
         }
 
-        public static void CopyHeadersTo(this IHeaderDictionary headerDictionary, HttpHeaders httpHeaders)
+        public static void CopyHeadersTo(this IHeaderDictionary headerDictionary, HttpHeaders httpHeaders,
+            HttpContentHeaders contentHeaders)
         {
             foreach (var requestHeader in headerDictionary)
-                httpHeaders.Add(requestHeader.Key, (IEnumerable<string>) requestHeader.Value);
+                if (HeadersHelper.IsContentHeader(requestHeader.Key))
+                    contentHeaders.Add(requestHeader.Key, (IEnumerable<string>) requestHeader.Value);
+                else
+                    httpHeaders.Add(requestHeader.Key, (IEnumerable<string>) requestHeader.Value);
         }
 
         public static void CopyHeadersTo(this HttpHeaders httpHeaders, IHeaderDictionary headerDictionary)

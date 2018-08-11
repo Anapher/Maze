@@ -30,8 +30,7 @@ namespace Orcus.Server.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var socketFeature = context.Features.Get<IOrcusSocketFeature>();
-            if (socketFeature == null)
+            if (!context.WebSockets.IsWebSocketRequest)
             {
                 await _next(context);
                 return;
@@ -43,8 +42,9 @@ namespace Orcus.Server.Middleware
                 return;
             }
 
-            var socket = await socketFeature.AcceptAsync();
-            var server = new OrcusServer(socket, _options.PackageBufferSize, _options.MaxHeaderSize);
+            var socket = await context.WebSockets.AcceptWebSocketAsync();
+            var wrapper = new WebSocketWrapper(socket, _options.PackageBufferSize);
+            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize);
 
             if (context.User.IsAdministrator())
             {
@@ -52,13 +52,10 @@ namespace Orcus.Server.Middleware
             else
             {
                 var clientId = context.User.GetClientId();
-                var connection = new ClientConnection(clientId, socket, server);
+                var connection = new ClientConnection(clientId, wrapper, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
 
                 await connection.BeginListen();
-
-                //await Task.Delay(1000);
-                //var result = await connection.SendRequest(new HttpRequestMessage(HttpMethod.Get, "http://localhost/TestModule"));
             }
         }
     }

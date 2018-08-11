@@ -65,7 +65,7 @@ namespace Orcus.Server.Controllers
             var response = await moduleManager.Execute(Request.ToHttpRequestMessage("/TestModule"),
                 new CommandTarget(CommandTargetType.Client) {Id = 1});
 
-            response.CopyToHttpResponse(Response);
+            await response.CopyToHttpResponse(Response);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Orcus.Server.Library.Services;
 using Orcus.Sockets;
@@ -8,26 +9,26 @@ namespace Orcus.Server.Service.Connection
 {
     public class ClientConnection : IClientConnection, IDisposable
     {
-        public ClientConnection(int clientId, OrcusSocket orcusSocket, OrcusServer orcusServer)
+        public ClientConnection(int clientId, WebSocketWrapper webSocket, OrcusServer orcusServer)
         {
             ClientId = clientId;
-            OrcusSocket = orcusSocket;
+            WebSocketWrapper = webSocket;
             OrcusServer = orcusServer;
         }
 
         public void Dispose()
         {
-            OrcusSocket?.Dispose();
+            WebSocketWrapper?.Dispose();
             OrcusServer?.Dispose();
         }
 
         public int ClientId { get; }
-        public OrcusSocket OrcusSocket { get; }
+        public WebSocketWrapper WebSocketWrapper { get; }
         public OrcusServer OrcusServer { get; }
 
         public Task BeginListen()
         {
-            return OrcusSocket.ReceiveAsync();
+            return WebSocketWrapper.ReceiveAsync();
         }
 
         public Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage) =>

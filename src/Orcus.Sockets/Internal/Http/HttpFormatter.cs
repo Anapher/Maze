@@ -36,7 +36,7 @@ namespace Orcus.Sockets.Internal.Http
             var streamReader = new StreamReader(memoryStream, Encoding);
             request = DecodeRequest(streamReader);
 
-            return GetBodyPosition(buffer);
+            return GetBodyPosition(buffer) - buffer.Offset;
         }
 
         public static int FormatResponse(OrcusResponse orcusResponse, ArraySegment<byte> buffer)
@@ -49,13 +49,13 @@ namespace Orcus.Sockets.Internal.Http
             return (int) memoryStream.Position;
         }
 
-        public static int ParseResponse(ArraySegment<byte> buffer, out HttpResponseMessage response)
+        public static int ParseResponse(ArraySegment<byte> buffer, out HttpResponseMessage response, out IHeaderDictionary contentHeaders)
         {
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, false);
             var streamReader = new StreamReader(memoryStream, Encoding);
-            response = DecodeResponse(streamReader);
+            (response, contentHeaders) = DecodeResponse(streamReader);
 
-            return GetBodyPosition(buffer);
+            return GetBodyPosition(buffer) - buffer.Offset;
         }
 
         private static void EncodeRequest(HttpRequestMessage request, TextWriter textWriter)
@@ -126,18 +126,25 @@ namespace Orcus.Sockets.Internal.Http
             textWriter.WriteLine(); //finish
         }
 
-        private static HttpResponseMessage DecodeResponse(TextReader textReader)
+        private static (HttpResponseMessage, IHeaderDictionary) DecodeResponse(TextReader textReader)
         {
             var response = new HttpResponseMessage();
+            var contentHeaders = new HeaderDictionary();
+
             var statusCode = int.Parse(textReader.ReadLine());
             response.StatusCode = (HttpStatusCode) statusCode;
 
             var headers = new HeaderDictionary();
             DecodeHeaders(headers, textReader);
             foreach (var header in headers)
-                response.Headers.Add(header.Key, (string[]) header.Value);
+            {
+                if (HeadersHelper.IsContentHeader(header.Key))
+                    contentHeaders.Add(header);
+                else
+                    response.Headers.Add(header.Key, (string[]) header.Value);
+            }
 
-            return response;
+            return (response, contentHeaders);
         }
 
         private static int GetBodyPosition(ArraySegment<byte> bytes)

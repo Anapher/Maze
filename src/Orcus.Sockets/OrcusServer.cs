@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Response;
 using Orcus.Sockets.Internal;
 using Orcus.Sockets.Internal.Http;
 using Orcus.Sockets.Logging;
@@ -26,10 +26,10 @@ namespace Orcus.Sockets
         private readonly ConcurrentDictionary<int, OrcusChannel> _channels;
         private readonly ConcurrentDictionary<OrcusChannel, int> _channelsReversed;
 
-        private readonly OrcusSocket _socket;
+        private readonly IDataSocket _socket;
         private int _requestCounter;
 
-        public OrcusServer(OrcusSocket socket, int packageBufferSize, int maxHeaderSize)
+        public OrcusServer(IDataSocket socket, int packageBufferSize, int maxHeaderSize)
         {
             _socket = socket;
             _packageBufferSize = packageBufferSize;
@@ -359,7 +359,7 @@ namespace Orcus.Sockets
             Logger.Debug("Response received (isCompleted = {isCompleted}), total length = {length}",
                 isCompleted, buffer.Count);
 
-            var headerLength = HttpFormatter.ParseResponse(buffer, out var response);
+            var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
             var requestId = int.Parse(response.Headers.GetValues(OrcusSocketRequestIdHeader).First());
             var bufferSegment =
                 new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength, buffer.Count - headerLength);
@@ -367,6 +367,9 @@ namespace Orcus.Sockets
             if (isCompleted)
             {
                 response.Content = new RawStreamContent(new ArrayPoolMemoryStream(bufferSegment));
+
+                foreach (var contentHeader in contentHeaders)
+                    response.Content.Headers.Add(contentHeader.Key, (IEnumerable<string>) contentHeader.Value);
             }
             else
             {

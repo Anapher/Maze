@@ -11,7 +11,7 @@ namespace Orcus.Sockets
     /// <summary>
     ///     A websocket like implementation that provides the methods to send prefixed buffers over a stream
     /// </summary>
-    public class OrcusSocket : IDisposable
+    public class OrcusSocket : IDataSocket
     {
         //   7 6 5 4 3 2 1 0
         //  +-+-+-+-+-+-+-+-+
@@ -26,9 +26,9 @@ namespace Orcus.Sockets
         public enum MessageOpcode : byte
         {
             Message = 0x1,
-            Request = 0x2,
+            Close = 0x2,
+            Request = 0x3,
             Response = 0x4,
-            Close = 0x8,
             Ping = 0x9,
             Pong = 0xA,
 
@@ -258,7 +258,11 @@ namespace Orcus.Sockets
             }
             finally
             {
-                if (releaseSemaphoreAndSendBuffer) _sendFrameAsyncLock.Release();
+                if (releaseSemaphoreAndSendBuffer)
+                {
+                    _sendFrameAsyncLock.Release();
+                    ReleaseSendBuffer(sendBuffer.Array);
+                }
             }
 
             // The write was not yet completed. Create and return a continuation that will

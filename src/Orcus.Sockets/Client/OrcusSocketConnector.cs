@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -31,12 +32,12 @@ namespace Orcus.Sockets.Client
         public AuthenticationHeaderValue AuthenticationHeaderValue { get; set; }
         public TcpClient TcpClient { get; }
 
-        public async Task<OrcusSocket> ConnectAsync(TimeSpan? keepAliveInterval)
+        public async Task<Stream> ConnectAsync()
         {
             var stream = await GetClientStream();
             await SendHandshakeRequest(stream);
 
-            return new OrcusSocket(stream, keepAliveInterval);
+            return stream;
         }
 
         private async Task SendHandshakeRequest(Stream stream)
@@ -51,7 +52,7 @@ namespace Orcus.Sockets.Client
         {
             var httpString = await message.GetHttpString();
             var buffer = Encoding.UTF8.GetBytes(httpString);
-            stream.Write(buffer, 0, buffer.Length);
+            await stream.WriteAsync(buffer, 0, buffer.Length);
 
             return await stream.DeserializeResponse();
         }

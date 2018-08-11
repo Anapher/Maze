@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -77,6 +79,20 @@ namespace Orcus.Server.OrcusSockets
                     _context.Response.Headers[headerPair.Key] = headerPair.Value;
 
                 var stream = await _upgradeFeature.UpgradeAsync();
+                await Task.Delay(500);
+
+                string result;
+                using (var streamReader = new StreamReader(stream))
+                {
+                    result = await streamReader.ReadLineAsync();
+                }
+
+                Debug.Print("Result Server: " + result);
+
+                using (var streamWriter = new StreamWriter(stream))
+                {
+                    await streamWriter.WriteLineAsync("Hey other");
+                }
                 return new OrcusSocket(stream, _options.KeepAliveInterval);
             }
         }

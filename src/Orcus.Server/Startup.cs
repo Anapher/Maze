@@ -20,7 +20,6 @@ using Orcus.Server.Library.Interfaces;
 using Orcus.Server.Library.Services;
 using Orcus.Server.Middleware;
 using Orcus.Server.Options;
-using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
@@ -106,7 +105,7 @@ namespace Orcus.Server
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/v1/signalR"));
-            app.Map("/ws", builder => builder.UseOrcusSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
+            app.Map("/ws", builder => builder.UseWebSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
 
             app.ApplicationServices.Execute<IConfigureServerPipelineAction, PipelineInfo>(new PipelineInfo(app, env))
                 .Wait();
