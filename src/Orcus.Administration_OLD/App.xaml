@@ -1,0 +1,25 @@
+﻿<Application
+    x:Class="Orcus.Administration.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="Resources/Themes/Light.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Win10Window.xaml" />
+                <ResourceDictionary Source="Resources/VectorGraphics.xaml" />
+                <ResourceDictionary Source="Resources/VisualStudioIcons.xaml" />
+                <ResourceDictionary Source="Resources/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converter:SwitchBooleanConverter x:Key="SwitchBooleanConverter" />
+            <converter:IsStringEmptyConverter x:Key="IsStringEmptyConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

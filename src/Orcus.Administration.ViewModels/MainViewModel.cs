@@ -1,47 +1,18 @@
-﻿using Anapher.Wpf.Swan;
-using Orcus.Administration.ViewModels.Main;
-using Unclassified.TxLib;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Prism.Mvvm;
+using Prism.Regions;
 
 namespace Orcus.Administration.ViewModels
 {
-    public class MainViewModel : PropertyChangedBase
+    public class MainViewModel : BindableBase
     {
-        private IMainViewModel _viewModel;
+        private readonly IRegionManager _regionManager;
 
-        public MainViewModel()
+        public MainViewModel(IRegionManager regionManager)
         {
-            Tx.LoadFromEmbeddedResource("Orcus.Administration.ViewModels.Resources.translation.txd");
-            ViewModel = new LoginViewModel();
-        }
-
-        public IMainViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                if (value != _viewModel)
-                {
-                    if (_viewModel != null)
-                    {
-                        _viewModel.ShowView -= ViewModelOnShowView;
-                        _viewModel.UnloadViewModel();
-                    }
-
-                    if (value != null)
-                    {
-                        value.ShowView += ViewModelOnShowView;
-                        value.LoadViewModel();
-                    }
-
-                    _viewModel = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private void ViewModelOnShowView(object sender, IMainViewModel mainViewModel)
-        {
-            ViewModel = mainViewModel;
+            _regionManager = regionManager;
         }
     }
 }

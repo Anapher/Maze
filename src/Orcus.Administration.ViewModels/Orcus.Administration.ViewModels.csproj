@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
-    <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
+    <EmbeddedResource Include="..\..\translation.txd" Link="Resources\translation.txd" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
-    <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
+    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
+    <PackageReference Include="Prism.Wpf" Version="6.3.0" />
+    <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,12 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\..\translation.txd" Link="Resources\translation.txd" />
+    <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
 </Project>

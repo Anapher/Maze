@@ -76,7 +76,11 @@ namespace Orcus.Server.Service.Extensions
             httpResponse.StatusCode = (int) responseMessage.StatusCode;
             responseMessage.Headers.CopyHeadersTo(httpResponse.Headers);
 
-            await responseMessage.Content.AsStream().CopyToAsync(httpResponse.Body);
+            if (responseMessage.Content != null)
+            {
+                responseMessage.Content.Headers.CopyHeadersTo(httpResponse.Headers);
+                await responseMessage.Content.AsStream().CopyToAsync(httpResponse.Body);
+            }
         }
 
         public static Stream AsStream(this HttpContent content)

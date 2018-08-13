@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Orcus.Server.Library.Services;
 using Orcus.Sockets;

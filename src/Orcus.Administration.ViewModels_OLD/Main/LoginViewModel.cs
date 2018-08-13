@@ -3,65 +3,49 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security;
+using Anapher.Wpf.Swan;
+using Orcus.Administration.Core;
+using Orcus.Administration.Core.Clients;
+using Orcus.Administration.Core.Exceptions;
+using Orcus.Administration.Core.Rest.Modules.V1;
 using Orcus.Administration.ViewModels.Utilities;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
+using Orcus.Server.Connection.Modules;
 using Unclassified.TxLib;
 
 namespace Orcus.Administration.ViewModels.Main
 {
-    public class LoginViewModel : BindableBase
+    public class LoginViewModel : PropertyChangedBase, IMainViewModel
     {
-        private readonly IRegionManager _regionManager;
         private string _errorMessage;
         private bool _isLoggingIn;
-        private string _statusMessage;
-        private string _username;
-
-        public LoginViewModel(IRegionManager regionManager)
-        {
-            _regionManager = regionManager;
-        }
-
-        private DelegateCommand _testCommand;
-
-        public DelegateCommand TestCommand
-        {
-            get
-            {
-                return _testCommand ?? (_testCommand = new DelegateCommand(() =>
-                {
-                    
-                }));
-            }
-        }
+        private AsyncRelayCommand<SecureString> _loginCommand;
+        private string _username = "vince";
 
         public bool IsLoggingIn
         {
             get => _isLoggingIn;
-            set => SetProperty(ref _isLoggingIn, value);
+            set => SetProperty(value, ref _isLoggingIn);
         }
 
         public string Username
         {
             get => _username;
-            set => SetProperty(ref _username, value);
+            set => SetProperty(value, ref _username);
         }
 
         public string ErrorMessage
         {
             get => _errorMessage;
-            private set => SetProperty(ref _errorMessage, value);
+            private set => SetProperty(value, ref _errorMessage);
         }
+
+        private string _statusMessage;
 
         public string StatusMessage
         {
             get => _statusMessage;
-            private set => SetProperty(ref _statusMessage, value);
+            private set => SetProperty(value, ref _statusMessage);
         }
-
-        private AsyncRelayCommand<SecureString> _loginCommand;
 
         public AsyncRelayCommand<SecureString> LoginCommand
         {
@@ -79,7 +63,7 @@ namespace Orcus.Administration.ViewModels.Main
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
                         client = await OrcusRestConnector.TryConnect(Username, parameter,
-                            new ServerInfo { ServerUri = new Uri("http://localhost:50485/") });
+                            new ServerInfo {ServerUri = new Uri("http://localhost:50485/")});
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
 
@@ -111,6 +95,16 @@ namespace Orcus.Administration.ViewModels.Main
                     ShowView.Invoke(this, viewModel);
                 }));
             }
+        }
+
+        public event EventHandler<IMainViewModel> ShowView;
+
+        public void LoadViewModel()
+        {
+        }
+
+        public void UnloadViewModel()
+        {
         }
     }
 }
