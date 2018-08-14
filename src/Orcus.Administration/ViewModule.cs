@@ -1,6 +1,7 @@
-﻿using Autofac;
+﻿using Orcus.Administration.Library;
 using Orcus.Administration.Views.Main;
 using Orcus.Administration.Views.Main.Overview;
+using Orcus.Administration.Views.Main.Overview.Clients;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -19,8 +20,10 @@ namespace Orcus.Administration
         {
             _regionManager.RegisterViewWithRegion("MainContent", typeof(OverviewView));
 
-            _regionManager.RegisterViewWithRegion("OverviewTabs", typeof(ClientsView));
-            _regionManager.RegisterViewWithRegion("OverviewTabs", typeof(ModulesView));
+            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ClientsView));
+            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ModulesView));
+
+            _regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));
         }
     }
 }

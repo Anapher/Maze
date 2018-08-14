@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Orcus.Administration.Core.Exceptions;
@@ -33,6 +34,7 @@ namespace Orcus.Administration.Core.Clients
         }
 
         public string Username { get; private set; }
+        public HubConnection HubConnection { get; private set; }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
         {
@@ -69,15 +71,9 @@ namespace Orcus.Administration.Core.Clients
             throw new NotSupportedException(error.Message);
         }
 
-        public async Task<HubConnection> CreateHubConnection(string resource)
+        private void ConfigureHttpConnection(HttpConnectionOptions obj)
         {
-            var connection = new HubConnectionBuilder()
-                .WithUrl(new Uri(_httpClient.BaseAddress,
-                    resource + "?signalRTokenHeader=" + _httpClient.DefaultRequestHeaders.Authorization.Parameter))
-                .Build();
-
-            await connection.StartAsync();
-            return connection;
+            obj.Headers.Add("Authorization", _httpClient.DefaultRequestHeaders.Authorization.ToString());
         }
 
         public async Task Initialize()
@@ -103,6 +99,12 @@ namespace Orcus.Administration.Core.Clients
                     Username = _jwtSecurityToken.Claims.First(x => x.Type == JwtRegisteredClaimNames.GivenName)
                         .Value; //because the username is case insensitive
                 }
+
+                HubConnection = new HubConnectionBuilder()
+                    .WithUrl(new Uri(_httpClient.BaseAddress, "signalR"), ConfigureHttpConnection)
+                    .Build();
+
+                await HubConnection.StartAsync();
             }
         }
 

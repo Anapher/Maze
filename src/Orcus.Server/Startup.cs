@@ -104,7 +104,7 @@ namespace Orcus.Server
 
             app.UseAuthentication();
             app.UseMvc();
-            app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/v1/signalR"));
+            app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/signalR"));
             app.Map("/ws", builder => builder.UseWebSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
 
             app.ApplicationServices.Execute<IConfigureServerPipelineAction, PipelineInfo>(new PipelineInfo(app, env))

@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Prism\ViewModelResolver.cs" />
+    <Compile Include="Services\AppDispatcher.cs" />
     <Compile Include="ViewModule.cs" />
     <Compile Include="Views\Main\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -69,6 +70,9 @@
     </Compile>
     <Compile Include="Views\Main\Overview\ClientsView.xaml.cs">
       <DependentUpon>ClientsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\Clients\DefaultClientListView.xaml.cs">
+      <DependentUpon>DefaultClientListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\Overview\ModulesView.xaml.cs">
       <DependentUpon>ModulesView.xaml</DependentUpon>
@@ -128,6 +132,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Main\Overview\Clients\DefaultClientListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Main\Overview\ModulesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -169,6 +177,10 @@
     <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj">
       <Project>{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}</Project>
       <Name>Orcus.Administration.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj">
+      <Project>{8b7888a3-a402-4d7c-82bb-e1a2494c023d}</Project>
+      <Name>Orcus.Administration.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj">
       <Project>{34b39498-66bc-45a3-8502-44f15d28d670}</Project>

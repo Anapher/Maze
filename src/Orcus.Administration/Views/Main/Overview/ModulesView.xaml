@@ -19,7 +19,7 @@
             <RowDefinition Height="1" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Margin="10,0">
+        <Grid Margin="5,0">
             <TabControl>
                 <TabControl.Resources>
                     <Style BasedOn="{StaticResource MetroTabItem}" TargetType="TabItem">
@@ -32,7 +32,7 @@
             </TabControl>
         </Grid>
         <Grid Grid.Row="2">
-            <StackPanel Margin="15,0,0,0" Orientation="Horizontal">
+            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                 <TextBox Width="300" mah:TextBoxHelper.Watermark="Search..." />
                 <Button
                     Margin="4,0,0,0"

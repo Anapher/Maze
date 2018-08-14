@@ -3,7 +3,7 @@ using Unclassified.TxLib;
 
 namespace Orcus.Administration.ViewModels
 {
-    public class ViewModelModule : IModule
+    public class PrismModule : IModule
     {
         public void Initialize()
         {

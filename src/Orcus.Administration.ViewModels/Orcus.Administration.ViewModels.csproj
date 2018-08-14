@@ -21,6 +21,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj" />
+    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
 
 </Project>

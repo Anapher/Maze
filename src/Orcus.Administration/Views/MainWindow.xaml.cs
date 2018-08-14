@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security;
+﻿using System.Security;
 using Orcus.Administration.Core.Modules;
 using Orcus.Administration.ViewModels;
 using Orcus.Administration.ViewModels.Main;
 using Orcus.Administration.Views.Main;
-using Orcus.ModuleManagement.Loader;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -20,14 +17,14 @@ namespace Orcus.Administration.Views
         {
             InitializeComponent();
 
-            var module = new ViewModelModule();
+            var module = new PrismModule();
             module.Initialize();
 
             DataContext = new LoginViewModel(LoadAppAction);
             MainContentControl.Content = new LoginView();
 
 #if DEBUG
-            var loginVm = (LoginViewModel)DataContext;
+            var loginVm = (LoginViewModel) DataContext;
             loginVm.Username = "test";
             var pw = new SecureString();
             foreach (var c in "test")

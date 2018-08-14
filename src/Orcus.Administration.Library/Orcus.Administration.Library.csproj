@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
+    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+</Project>

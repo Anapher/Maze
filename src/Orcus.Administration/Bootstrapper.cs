@@ -3,9 +3,10 @@ using System.Reflection;
 using System.Windows;
 using Autofac;
 using Orcus.Administration.Core.Modules;
+using Orcus.Administration.Library.Services;
 using Orcus.Administration.Prism;
+using Orcus.Administration.Services;
 using Orcus.Administration.ViewModels;
-using Orcus.Administration.ViewModels.Main;
 using Orcus.Administration.Views;
 using Orcus.Administration.Views.Main;
 using Prism.Autofac;
@@ -49,6 +50,8 @@ namespace Orcus.Administration
 
             builder.RegisterInstance(_appLoadContext.RestClient);
             builder.RegisterTypeForNavigation<LoginView>();
+            builder.RegisterType<AppDispatcher>().As<IAppDispatcher>().SingleInstance();
+            builder.RegisterModule<AutofacModule>();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

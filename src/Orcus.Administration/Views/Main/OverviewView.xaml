@@ -5,17 +5,16 @@
     xmlns:controls="clr-namespace:Orcus.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:library="clr-namespace:Orcus.Administration.Library;assembly=Orcus.Administration.Library"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:overview="clr-namespace:Orcus.Administration.ViewModels.Overview;assembly=Orcus.Administration.ViewModels"
     xmlns:regions="http://prismlibrary.com/"
-    xmlns:txLib="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Orcus.Administration.ViewModels;assembly=Orcus.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
     d:DesignHeight="550"
     d:DesignWidth="920"
     mc:Ignorable="d">
     <Grid>
-        <controls:HeadFooterTabControl regions:RegionManager.RegionName="OverviewTabs">
+        <controls:HeadFooterTabControl regions:RegionManager.RegionName="{x:Static library:RegionNames.OverviewTabs}">
             <controls:HeadFooterTabControl.ItemContainerStyle>
                 <Style BasedOn="{StaticResource VerticalMetroTabItem}" TargetType="TabItem">
                     <Setter Property="Header" Value="{Binding DataContext}" />
