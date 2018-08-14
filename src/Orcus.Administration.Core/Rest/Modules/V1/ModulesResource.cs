@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NuGet.Frameworks;
 using Orcus.Administration.Core.Clients;
 using Orcus.Administration.Core.Clients.Helpers;
 using Orcus.Server.Connection.Modules;
@@ -13,9 +14,9 @@ namespace Orcus.Administration.Core.Rest.Modules.V1
         {
         }
 
-        public static Task<IReadOnlyList<SourcedPackageIdentity>> FetchModules(IOrcusRestClient client)
+        public static Task<PackagesLock> FetchModules(NuGetFramework framework, IOrcusRestClient client)
         {
-            return CreateRequest().Execute(client).Return<IReadOnlyList<SourcedPackageIdentity>>();
+            return CreateRequest().AddQueryParam("framework", framework.ToString()).Execute(client).Return<PackagesLock>();
         }
 
         public static Task InstallModule(SourcedPackageIdentity package, IOrcusRestClient client)

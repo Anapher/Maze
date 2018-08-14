@@ -6,7 +6,6 @@ namespace Orcus.Server.Connection.Authentication
     public class LoginInfo : IValidatableObject
     {
         [Required] public string Username { get; set; }
-
         [Required] public string Password { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

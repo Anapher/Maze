@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Autofac;
+using Orcus.Administration.Core.Modules;
 using Orcus.Administration.Prism;
 using Orcus.Administration.ViewModels;
+using Orcus.Administration.ViewModels.Main;
 using Orcus.Administration.Views;
 using Orcus.Administration.Views.Main;
 using Prism.Autofac;
@@ -13,12 +16,19 @@ namespace Orcus.Administration
 {
     internal class Bootstrapper : AutofacBootstrapper
     {
-        protected override DependencyObject CreateShell() => Container.Resolve<MainWindow>();
+        private readonly AppLoadContext _appLoadContext;
 
-        protected override void InitializeShell()
+        public Bootstrapper(AppLoadContext appLoadContext)
         {
-            // ReSharper disable once PossibleNullReferenceException
-            Application.Current.MainWindow.Show();
+            _appLoadContext = appLoadContext;
+        }
+
+        protected override DependencyObject CreateShell()
+        {
+            var mainWindow = (MainWindow) Application.Current.MainWindow;
+            mainWindow.InitializePrism();
+
+            return mainWindow;
         }
 
         protected override void ConfigureModuleCatalog()
@@ -26,13 +36,22 @@ namespace Orcus.Administration
             var moduleCatalog = (ModuleCatalog) ModuleCatalog;
 
             moduleCatalog.AddModule(typeof(ViewModule));
-            moduleCatalog.AddModule(typeof(ViewModelModule));
+
+            foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
+            foreach (var type in packageCarrier.Assembly.GetExportedTypes()
+                .Where(x => typeof(IModule).IsAssignableFrom(x)))
+                moduleCatalog.AddModule(type);
         }
 
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
             base.ConfigureContainerBuilder(builder);
+
+            builder.RegisterInstance(_appLoadContext.RestClient);
             builder.RegisterTypeForNavigation<LoginView>();
+
+            foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
+                builder.RegisterAssemblyModules(packageCarrier.Assembly);
         }
 
         protected override void ConfigureViewModelLocator()

@@ -32,6 +32,7 @@
                                 Margin="15,12,25,12"
                                 VerticalAlignment="Center"
                                 Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
                                 Foreground="White" />
                         </Grid>
                     </Border>

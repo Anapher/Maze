@@ -8,11 +8,9 @@ namespace Orcus.Administration.ViewModels
 {
     public class MainViewModel : BindableBase
     {
-        private readonly IRegionManager _regionManager;
-
-        public MainViewModel(IRegionManager regionManager)
+        public MainViewModel()
         {
-            _regionManager = regionManager;
+            
         }
     }
 }

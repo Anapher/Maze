@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -63,6 +66,12 @@
     </Compile>
     <Compile Include="Views\Main\OverviewView.xaml.cs">
       <DependentUpon>OverviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\ClientsView.xaml.cs">
+      <DependentUpon>ClientsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\ModulesView.xaml.cs">
+      <DependentUpon>ModulesView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +124,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Main\Overview\ClientsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\Overview\ModulesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -143,18 +160,31 @@
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>
+    <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome">
+      <Version>2.3.0</Version>
+    </PackageReference>
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj">
+      <Project>{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}</Project>
+      <Name>Orcus.Administration.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj">
       <Project>{34b39498-66bc-45a3-8502-44f15d28d670}</Project>
       <Name>Orcus.Administration.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj">
+      <Project>{42D5467F-20DB-4416-B673-0383304D098E}</Project>
+      <Name>Orcus.ModuleManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj">
       <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>
       <Name>Anapher.Wpf.Swan</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,6 +10,7 @@
 		<text key="Login">Einloggen</text>
 		<text key="LoginView:LoggingIn">Einloggen...</text>
 		<text key="LoginView:Status.Authenticating">Authentifiziere...</text>
+		<text key="LoginView:Status.DownloadModules">Module herunterladen...</text>
 		<text key="LoginView:Status.LoadModules">Module laden...</text>
 		<text key="LoginView:Status.RetrieveModules">Module abrufen...</text>
 		<text key="LoginView:Status.SynchronizeModules">Module synchronisieren</text>
@@ -215,6 +216,7 @@
 		<text key="Login">Login</text>
 		<text key="LoginView:LoggingIn">Logging in...</text>
 		<text key="LoginView:Status.Authenticating">Authenticating...</text>
+		<text key="LoginView:Status.DownloadModules">Download modules...</text>
 		<text key="LoginView:Status.LoadModules">Load modules...</text>
 		<text key="LoginView:Status.RetrieveModules">Retrieve modules...</text>
 		<text key="LoginView:Status.SynchronizeModules">Synchronize modules</text>

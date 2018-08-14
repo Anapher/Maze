@@ -3,11 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:prism="http://prismlibrary.com/"
+    xmlns:regions="http://prismlibrary.com/"
     Title="Orcus Administration"
     Width="920"
     Height="550"
-    prism:ViewModelLocator.AutoWireViewModel="True"
     ShowIconOnTitleBar="False"
     Style="{StaticResource Win10Window}"
     TitleAlignment="Center"
@@ -35,7 +34,7 @@
         </DataTemplate>
     </mah:MetroWindow.TitleTemplate>
     <mah:TransitioningContentControl
-        prism:RegionManager.RegionName="MainContent"
+        x:Name="MainContentControl"
         Focusable="False"
         Transition="Down" />
 </mah:MetroWindow>

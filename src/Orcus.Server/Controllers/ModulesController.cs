@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using Orcus.Modules.Api;
@@ -31,9 +32,12 @@ namespace Orcus.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromServices] IModuleProject project)
+        public async Task<IActionResult> GetAll([FromQuery] string framework,
+            [FromServices] IModulePackageManager modulePackageManager)
         {
-            return Ok(project.PrimaryPackages);
+            var nugetFramework = NuGetFramework.Parse(framework);
+            var modules = await modulePackageManager.GetPackagesLock(nugetFramework);
+            return Ok(modules);
         }
 
         [HttpPost("install")]

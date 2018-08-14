@@ -1,40 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Security;
+using System.Threading;
+using NuGet.Frameworks;
+using Orcus.Administration.Core;
+using Orcus.Administration.Core.Clients;
+using Orcus.Administration.Core.Exceptions;
+using Orcus.Administration.Core.Modules;
+using Orcus.Administration.Core.Rest.Modules.V1;
 using Orcus.Administration.ViewModels.Utilities;
-using Prism.Commands;
+using Orcus.ModuleManagement;
 using Prism.Mvvm;
-using Prism.Regions;
 using Unclassified.TxLib;
 
 namespace Orcus.Administration.ViewModels.Main
 {
     public class LoginViewModel : BindableBase
     {
-        private readonly IRegionManager _regionManager;
+        private static readonly NuGetFramework
+            Framework = FrameworkConstants.CommonFrameworks.OrcusAdministration10; //TODO move somewhere else
+
+        private readonly Action<AppLoadContext> _loadAppAction;
         private string _errorMessage;
         private bool _isLoggingIn;
+        private AsyncRelayCommand<SecureString> _loginCommand;
         private string _statusMessage;
         private string _username;
 
-        public LoginViewModel(IRegionManager regionManager)
+        public LoginViewModel(Action<AppLoadContext> loadAppAction)
         {
-            _regionManager = regionManager;
-        }
-
-        private DelegateCommand _testCommand;
-
-        public DelegateCommand TestCommand
-        {
-            get
-            {
-                return _testCommand ?? (_testCommand = new DelegateCommand(() =>
-                {
-                    
-                }));
-            }
+            _loadAppAction = loadAppAction;
         }
 
         public bool IsLoggingIn
@@ -61,8 +56,6 @@ namespace Orcus.Administration.ViewModels.Main
             private set => SetProperty(ref _statusMessage, value);
         }
 
-        private AsyncRelayCommand<SecureString> _loginCommand;
-
         public AsyncRelayCommand<SecureString> LoginCommand
         {
             get
@@ -71,44 +64,48 @@ namespace Orcus.Administration.ViewModels.Main
                 {
                     IsLoggingIn = true;
 
-                    IOrcusRestClient client;
-                    IReadOnlyList<SourcedPackageIdentity> modules;
-
                     try
                     {
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
-                        client = await OrcusRestConnector.TryConnect(Username, parameter,
-                            new ServerInfo { ServerUri = new Uri("http://localhost:50485/") });
+                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:50485/")};
+                        var client = await OrcusRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
 
-                        modules = await ModulesResource.FetchModules(client);
+                        var modules = await ModulesResource.FetchModules(Framework, client);
+
+                        var options = new ModulesOptions {LocalPath = "packages", TempPath = "temp"};
+                        var directory = new ModulesDirectory(
+                            new VersionFolderPathResolverFlat(
+                                Environment.ExpandEnvironmentVariables(options.LocalPath)));
+                        var catalog = new ModulesCatalog(directory, Framework);
 
                         if (modules.Any())
                         {
+                            StatusMessage = Tx.T("LoginView:Status.DownloadModules");
+
+                            var downloader = new ModuleDownloader(directory, options);
+                            await downloader.Load(modules, serverInfo, CancellationToken.None);
+
                             StatusMessage = Tx.T("LoginView:Status.LoadModules");
 
+                            await catalog.Load(modules);
                         }
+
+                        _loadAppAction(new AppLoadContext {ModulesCatalog = catalog, RestClient = client});
                     }
                     catch (RestAuthenticationException e)
                     {
-                        ErrorMessage = e.GetRestExceptionMessage();
+                        //ErrorMessage = e.GetRestExceptionMessage();
                         IsLoggingIn = false;
-                        return;
                     }
                     catch (Exception e)
                     {
                         ErrorMessage = e.Message;
                         IsLoggingIn = false;
-                        e.ShowMessageBox();
-                        return;
+                        //e.ShowMessageBox();
                     }
-
-                    var viewModel = new OverviewViewModel(client);
-                    await viewModel.LoadData(s => Debug.Print(s));
-
-                    ShowView.Invoke(this, viewModel);
                 }));
             }
         }
