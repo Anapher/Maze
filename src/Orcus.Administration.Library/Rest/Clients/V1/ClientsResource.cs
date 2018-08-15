@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orcus.Administration.Core.Clients;
-using Orcus.Administration.Core.Clients.Helpers;
+using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Clients.Helpers;
 using Orcus.Server.Connection.Clients;
 
-namespace Orcus.Administration.Core.Rest.Clients.V1
+namespace Orcus.Administration.Library.Rest.Clients.V1
 {
     public class ClientsResource : VersionedResource<ClientsResource>
     {

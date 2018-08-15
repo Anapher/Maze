@@ -1,6 +1,6 @@
 ﻿using Orcus.Server.Connection;
 
-namespace Orcus.Administration.Core.Exceptions
+namespace Orcus.Administration.Library.Exceptions
 {
     public class RestAuthenticationException : RestException
     {

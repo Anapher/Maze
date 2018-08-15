@@ -5,9 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CodeElements.Clients" Version="1.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>

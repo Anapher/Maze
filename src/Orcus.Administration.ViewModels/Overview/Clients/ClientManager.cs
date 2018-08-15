@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using Orcus.Administration.Core.Clients;
-using Orcus.Administration.Core.Rest.Clients.V1;
+using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Models;
+using Orcus.Administration.Library.Rest.Clients.V1;
 using Orcus.Administration.Library.Services;
 using Orcus.Server.Connection.Clients;
 

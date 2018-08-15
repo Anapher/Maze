@@ -8,10 +8,7 @@ using Microsoft.Extensions.Logging;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Modules.Api;
 using Orcus.Server.Hubs;
-using Orcus.Server.Service;
-using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Utilities;
@@ -60,15 +57,6 @@ namespace Orcus.Server.Controllers
         public IActionResult GetSources([FromServices] IModuleProject project)
         {
             return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
-        }
-
-        [HttpGet("install"), AllowAnonymous]
-        public async Task Install([FromServices] ICommandDistributer moduleManager)
-        {
-            var response = await moduleManager.Execute(Request.ToHttpRequestMessage("/TestModule"),
-                new CommandTarget(CommandTargetType.Client) {Id = 1});
-
-            await response.CopyToHttpResponse(Response);
         }
     }
 }

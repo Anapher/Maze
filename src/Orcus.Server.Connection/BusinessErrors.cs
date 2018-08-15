@@ -42,7 +42,24 @@ namespace Orcus.Server.Connection
             }
         }
 
+        public static class Commander
+        {
+            public static RestError ClientNotFound =>
+                CreateInvalidOperationError("The client was not found.", ErrorCode.Commander_ClientNotFound);
+
+            public static RestError SingleCommandTargetRequired =>
+                CreateValidationError("A single command target is required for this operation.",
+                    ErrorCode.SingleCommandTargetRequired);
+
+            public static RestError CommandTransmissionFailed =>
+                CreateInvalidOperationError("The transmission of the command failed. Maybe the client disconnected.",
+                    ErrorCode.CommandTransmissionFailed);
+        }
+
         private static RestError CreateValidationError(string message, ErrorCode code) =>
             new RestError(ErrorTypes.ValidationError, message, (int) code);
+
+        private static RestError CreateInvalidOperationError(string message, ErrorCode code) =>
+            new RestError(ErrorTypes.InvalidOperationError, message, (int)code);
     }
 }

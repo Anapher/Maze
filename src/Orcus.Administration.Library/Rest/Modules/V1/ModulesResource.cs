@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
-using Orcus.Administration.Core.Clients;
-using Orcus.Administration.Core.Clients.Helpers;
+using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Clients.Helpers;
 using Orcus.Server.Connection.Modules;
 
-namespace Orcus.Administration.Core.Rest.Modules.V1
+namespace Orcus.Administration.Library.Rest.Modules.V1
 {
     public class ModulesResource : VersionedResource<ModulesResource>
     {

@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CodeElements.Clients" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
   </ItemGroup>

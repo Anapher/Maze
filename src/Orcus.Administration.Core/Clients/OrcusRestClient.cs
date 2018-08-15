@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
-using Orcus.Administration.Core.Exceptions;
 using Orcus.Administration.Core.Extensions;
+using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Exceptions;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Authentication;
 using Orcus.Server.Connection.Error;
@@ -61,10 +62,13 @@ namespace Orcus.Administration.Core.Clients
             switch (error.Type)
             {
                 case ErrorTypes.ValidationError:
+                    throw new RestArgumentException(error);
                 case ErrorTypes.AuthenticationError:
                     throw new RestAuthenticationException(error);
                 case ErrorTypes.NotFoundError:
                     throw new RestNotFoundException(error);
+                case ErrorTypes.InvalidOperationError:
+                    throw new RestInvalidOperationException(error);
             }
 
             Debug.Fail($"The error type {error.Type} is not implemented.");

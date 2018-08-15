@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
+using Orcus.Administration.Library.Clients;
 
 namespace Orcus.Administration.Core.Clients
 {

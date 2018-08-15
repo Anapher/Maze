@@ -10,6 +10,10 @@ namespace Orcus.Server.Connection.Error
         Account_InvalidJwt = 1000,
         Account_UsernameNotFound,
         Account_InvalidPassword,
-        Account_Disabled
+        Account_Disabled,
+
+        Commander_ClientNotFound = 2000,
+        SingleCommandTargetRequired,
+        CommandTransmissionFailed,
     }
 }

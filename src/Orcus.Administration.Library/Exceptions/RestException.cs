@@ -1,7 +1,7 @@
 ﻿using System;
 using Orcus.Server.Connection;
 
-namespace Orcus.Administration.Core.Exceptions
+namespace Orcus.Administration.Library.Exceptions
 {
     public abstract class RestException : Exception
     {

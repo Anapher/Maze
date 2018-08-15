@@ -22,6 +22,8 @@ namespace Orcus.Server.Service.Extensions
 {
     public static class OrcusHttpExtensions
     {
+        private static readonly Uri DummyBaseUri = new Uri("http://localhost/", UriKind.Absolute);
+
         public static HttpRequestMessage ToHttpRequestMessage(this OrcusRequest request)
         {
             var builder = new UriBuilder {Path = request.Path, Query = request.QueryString.Value};
@@ -55,7 +57,7 @@ namespace Orcus.Server.Service.Extensions
         {
             var requestMessage =
                 new HttpRequestMessage(new HttpMethod(httpRequest.Method),
-                    new Uri("http://localhost/" + path, UriKind.Absolute))
+                    new Uri(DummyBaseUri, path))
                 {
                     Content = new RawStreamContent(httpRequest.Body)
                 };
