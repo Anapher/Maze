@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Orcus.ModuleManagement;
 using Orcus.Server.Authentication;
 using Orcus.Server.Autofac;
+using Orcus.Server.BusinessDataAccess;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
@@ -69,6 +71,8 @@ namespace Orcus.Server
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSignalR();
+
+            Mapper.Initialize(options => options.AddProfile<AutoMapperProfile>());
             
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();

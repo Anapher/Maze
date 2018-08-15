@@ -1,12 +1,16 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Orcus.Server.Authentication;
 using Orcus.Server.BusinessLogic.Authentication;
 using Orcus.Server.Connection.Authentication.Client;
+using Orcus.Server.Connection.Clients;
 using Orcus.Server.ControllersBase;
 using Orcus.Server.Data.EfCode;
+using Orcus.Server.Library.Services;
 using Orcus.Server.Service.Modules;
 
 namespace Orcus.Server.Controllers
@@ -43,6 +47,16 @@ namespace Orcus.Server.Controllers
                     Modules = await modulePackageManager.GetPackagesLock(authenticationDto.Framework)
                 });
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromServices] IConnectionManager connectionManager)
+        {
+            var clients = await _context.Clients.ProjectTo<ClientDto>().ToListAsync();
+            foreach (var clientDto in clients)
+                clientDto.IsSocketConnected = connectionManager.ClientConnections.ContainsKey(clientDto.ClientId);
+
+            return Ok(clients);
         }
     }
 }

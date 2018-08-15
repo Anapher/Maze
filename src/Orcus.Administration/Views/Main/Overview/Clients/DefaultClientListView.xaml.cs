@@ -1,28 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Orcus.Administration.Library.Menu;
+using Orcus.Administration.Library.Menu.MenuBase;
+using Orcus.Administration.Library.Models;
+using Prism.Commands;
 
 namespace Orcus.Administration.Views.Main.Overview.Clients
 {
     /// <summary>
-    /// Interaction logic for DefaultClientListView.xaml
+    ///     Interaction logic for DefaultClientListView.xaml
     /// </summary>
     public partial class DefaultClientListView : UserControl
     {
-        public DefaultClientListView()
+        public DefaultClientListView(ClientsContextMenu clientsContextMenu, IMenuFactory menuFactory)
         {
             InitializeComponent();
+
+            clientsContextMenu.ClientCommands.Add(new CommandMenuEntry<ClientViewModel>{Header = "Hello World", Command = new DelegateCommand<ClientViewModel>(ExecuteMethod)});
+
+            var contextMenu = (ContextMenu) ClientsDataGrid.Resources["ItemContextMenu"];
+            var items = menuFactory.Create(clientsContextMenu);
+            foreach (var item in items)
+                contextMenu.Items.Add(item);
+        }
+
+        private void ExecuteMethod(ClientViewModel obj)
+        {
+            MessageBox.Show("Hello");
         }
     }
 }

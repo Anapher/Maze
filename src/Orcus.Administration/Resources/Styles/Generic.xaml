@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Orcus.Administration.Controls">
+    xmlns:controls="clr-namespace:Orcus.Administration.Controls"
+    xmlns:converter="clr-namespace:Orcus.Administration.Converter">
 
     <!--#region HeadFooterTabControl-->
     <SolidColorBrush x:Key="TabControlBackgroundBrush" Color="#2b579a" />
@@ -119,7 +120,7 @@
     </Style>
     <!--#endregion-->
 
-    <!--#region-->
+    <!--#region CommonControls-->
 
     <Style x:Key="IconButton" TargetType="Button">
         <Setter Property="Width" Value="22" />
@@ -141,5 +142,70 @@
     </Style>
 
     <!--#endregion-->
+
+    <!--#region asd-->
+
+    <converter:SelectedItemsCountFromChildConverter x:Key="SelectedItemsCountFromChildConverter" />
+    <converter:SelectedItemsFromChildConverter x:Key="SelectedItemsFromChildConverter" />
+
+    <Style
+        x:Key="SeparatorVisibleForSingleSelection"
+        BasedOn="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}"
+        TargetType="Separator">
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="SeparatorVisibleForMultipleSelection"
+        BasedOn="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}"
+        TargetType="Separator">
+        <Setter Property="Visibility" Value="Visible" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="MenuItemVisibleForSingleSelection"
+        BasedOn="{StaticResource MetroMenuItem}"
+        TargetType="MenuItem">
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Setter Property="CommandParameter" Value="{Binding}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="MenuItemVisibleForMultipleSelection"
+        BasedOn="{StaticResource MetroMenuItem}"
+        TargetType="MenuItem">
+        <Setter Property="Visibility" Value="Visible" />
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsFromChildConverter}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="MenuItemVisibleEverything"
+        BasedOn="{StaticResource MetroMenuItem}"
+        TargetType="MenuItem">
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsFromChildConverter}}" />
+    </Style>
+
+    <!--#endregion-->
+
 
 </ResourceDictionary>

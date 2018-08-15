@@ -3,13 +3,97 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Orcus.Administration.Library.Models;assembly=Orcus.Administration.Library"
     xmlns:mvvm="http://prismlibrary.com/"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:Orcus.Administration.ViewModels.Overview.Clients;assembly=Orcus.Administration.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:DefaultClientListViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
-        <DataGrid />
-    </Grid>
+    <DataGrid
+        x:Name="ClientsDataGrid"
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
+        CanUserDeleteRows="False"
+        CanUserReorderColumns="True"
+        CanUserResizeColumns="True"
+        CanUserResizeRows="False"
+        CanUserSortColumns="True"
+        ItemsSource="{Binding ClientsView}">
+        <DataGrid.Resources>
+            <ContextMenu x:Key="ItemContextMenu" MinWidth="230" />
+        </DataGrid.Resources>
+        <DataGrid.RowStyle>
+            <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">
+                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+            </Style>
+        </DataGrid.RowStyle>
+        <DataGrid.Columns>
+            <DataGridTemplateColumn
+                Width="*"
+                MaxWidth="95"
+                Header="{tx:T DefaultClientListView:Connected,
+                              Default=Connected}"
+                IsReadOnly="True">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type models:ClientViewModel}">
+                        <iconPacks:PackIconFontAwesome HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <iconPacks:PackIconFontAwesome.Style>
+                                <Style TargetType="iconPacks:PackIconFontAwesome">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSocketConnected}" Value="true">
+                                            <Setter Property="Kind" Value="CheckCircleSolid" />
+                                            <Setter Property="Foreground" Value="#27ae60" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSocketConnected}" Value="false">
+                                            <Setter Property="Kind" Value="TimesCircleSolid" />
+                                            <Setter Property="Foreground" Value="#c0392b" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="true">
+                                            <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </iconPacks:PackIconFontAwesome.Style>
+                        </iconPacks:PackIconFontAwesome>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn
+                Width="40"
+                Binding="{Binding ClientId, Mode=OneWay}"
+                Header="{tx:T ID}"
+                IsReadOnly="True" />
+            <DataGridTextColumn
+                Width="4*"
+                Binding="{Binding Username, Mode=OneWay}"
+                Header="{tx:T Username}"
+                IsReadOnly="True" />
+            <DataGridTextColumn
+                Width="2*"
+                Binding="{Binding LatestSession.IpAddress, Mode=OneWay}"
+                Header="{tx:T DefaultClientListView:IpAddress}"
+                IsReadOnly="True" />
+            <DataGridTextColumn
+                Width="4*"
+                Binding="{Binding OperatingSystem, Mode=OneWay}"
+                Header="{tx:T OperatingSystem}"
+                IsReadOnly="True" />
+            <DataGridTextColumn
+                Width="2*"
+                Binding="{Binding SystemLanguageCulture.DisplayName, Mode=OneWay}"
+                Header="{tx:T DefaultClientListView:SystemLanguage}"
+                IsReadOnly="True" />
+            <DataGridTextColumn
+                Width="2*"
+                MaxWidth="150"
+                Binding="{Binding LatestSession.ClientVersion, Mode=OneWay}"
+                Header="{tx:T Version}"
+                IsReadOnly="True" />
+        </DataGrid.Columns>
+    </DataGrid>
 </UserControl>

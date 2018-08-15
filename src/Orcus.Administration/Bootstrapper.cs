@@ -3,6 +3,9 @@ using System.Reflection;
 using System.Windows;
 using Autofac;
 using Orcus.Administration.Core.Modules;
+using Orcus.Administration.Factories;
+using Orcus.Administration.Library.Menu;
+using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Prism;
 using Orcus.Administration.Services;
@@ -52,6 +55,8 @@ namespace Orcus.Administration
             builder.RegisterTypeForNavigation<LoginView>();
             builder.RegisterType<AppDispatcher>().As<IAppDispatcher>().SingleInstance();
             builder.RegisterModule<AutofacModule>();
+            builder.RegisterType<MenuFactory>().As<IMenuFactory>().SingleInstance();
+            builder.RegisterType<ClientsContextMenu>().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);
