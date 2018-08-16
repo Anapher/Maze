@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="UserInteraction:MessageBox">Message Box</text>
+		<text key="UserInteraction:MessageBox.Buttons">Buttons</text>
+		<text key="UserInteraction:MessageBox.Buttons.Abort">Abbrechen</text>
+		<text key="UserInteraction:MessageBox.Buttons.Cancel">Abbrechen</text>
+		<text key="UserInteraction:MessageBox.Buttons.Ignore">Ignorieren</text>
+		<text key="UserInteraction:MessageBox.Buttons.No">Nein</text>
+		<text key="UserInteraction:MessageBox.Buttons.Ok">Ok</text>
+		<text key="UserInteraction:MessageBox.Buttons.Retry">Wiederholen</text>
+		<text key="UserInteraction:MessageBox.Buttons.Yes">Ja</text>
+		<text key="UserInteraction:MessageBox.Caption">Titel</text>
+		<text key="UserInteraction:MessageBox.Icon">Icon</text>
+		<text key="UserInteraction:MessageBox.Send">Senden</text>
+		<text key="UserInteraction:MessageBox.Test">Testen</text>
+		<text key="UserInteraction:MessageBox.Text">Text</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="UserInteraction:MessageBox">Message Box</text>
+		<text key="UserInteraction:MessageBox.Buttons">Buttons</text>
+		<text key="UserInteraction:MessageBox.Buttons.Abort">Abort</text>
+		<text key="UserInteraction:MessageBox.Buttons.Cancel">Cancel</text>
+		<text key="UserInteraction:MessageBox.Buttons.Ignore">Ignore</text>
+		<text key="UserInteraction:MessageBox.Buttons.No">No</text>
+		<text key="UserInteraction:MessageBox.Buttons.Ok">Ok</text>
+		<text key="UserInteraction:MessageBox.Buttons.Retry">Retry</text>
+		<text key="UserInteraction:MessageBox.Buttons.Yes">Yes</text>
+		<text key="UserInteraction:MessageBox.Caption">Caption</text>
+		<text key="UserInteraction:MessageBox.Icon">Icon</text>
+		<text key="UserInteraction:MessageBox.Send">Send</text>
+		<text key="UserInteraction:MessageBox.Test">Test</text>
+		<text key="UserInteraction:MessageBox.Text">Text</text>
+	</culture>
+</translation>

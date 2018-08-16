@@ -1,0 +1,223 @@
+﻿<UserControl
+    x:Class="UserInteraction.Administration.Views.MessageBoxView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:converters="clr-namespace:UserInteraction.Administration.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Anapher.Wpf.Swan.Extensions;assembly=Anapher.Wpf.Swan"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:messageBox="clr-namespace:UserInteraction.Dtos"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:UserInteraction.Administration.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:MessageBoxViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:SystemIconConverter x:Key="SystemIconConverter" />
+
+        <SolidColorBrush x:Key="MessageBoxBottomBrush" Color="#FFF5F5F5" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Margin="10">
+            <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                <Run Text="{tx:T UserInteraction:MessageBox.Icon}" /><Run Text=":" />
+            </TextBlock>
+            <ComboBox
+                Width="150"
+                DisplayMemberPath="Description"
+                ItemsSource="{Binding Source={extensions:Enumeration {x:Type messageBox:SystemIcon}}}"
+                SelectedValue="{Binding MessageBoxIcon}"
+                SelectedValuePath="Value" />
+            <TextBlock Margin="20,0,10,0" VerticalAlignment="Center">
+                <Run Text="{tx:T UserInteraction:MessageBox.Buttons}" /><Run Text=":" />
+            </TextBlock>
+            <ComboBox
+                Width="150"
+                DisplayMemberPath="Description"
+                ItemsSource="{Binding Source={extensions:Enumeration {x:Type messageBox:SystemButtons}}}"
+                SelectedValue="{Binding MessageBoxButtons}"
+                SelectedValuePath="Value" />
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                    Width="75"
+                    Command="{Binding TestCommand}"
+                    Content="{tx:T UserInteraction:MessageBox.Test}" />
+                <Button
+                    Width="75"
+                    Margin="10,0,0,0"
+                    Command="{Binding SendCommand}"
+                    Content="{tx:T UserInteraction:MessageBox.Send}" />
+            </StackPanel>
+        </DockPanel>
+        <Grid
+            Grid.Row="1"
+            Width="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            UseLayoutRounding="True">
+            <Border Background="{StaticResource WhiteBrush}" BorderBrush="Black">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="25"
+                        Opacity="0.2"
+                        RenderingBias="Quality"
+                        ShadowDepth="0"
+                        Color="Black" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="55" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            Margin="10,5,50,0"
+                            VerticalAlignment="Center"
+                            controls:TextBoxHelper.Watermark="{tx:T UserInteraction:MessageBox.Caption}"
+                            Text="{Binding Caption}" />
+                        <Button
+                            Grid.Column="1"
+                            Width="46"
+                            Height="40"
+                            VerticalAlignment="Top"
+                            UseLayoutRounding="True">
+                            <Grid>
+                                <Line
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    SnapsToDevicePixels="True"
+                                    Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    X1="0"
+                                    X2="10"
+                                    Y1="0"
+                                    Y2="10" />
+                                <Line
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    SnapsToDevicePixels="True"
+                                    Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    X1="0"
+                                    X2="10"
+                                    Y1="10"
+                                    Y2="0" />
+                            </Grid>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Source="{Binding MessageBoxIcon, Converter={StaticResource SystemIconConverter}}" />
+                        <TextBox
+                            x:Name="MessageTextBox"
+                            Grid.Column="1"
+                            MinHeight="75"
+                            MaxHeight="150"
+                            controls:TextBoxHelper.Watermark="{tx:T UserInteraction:MessageBox.Text}"
+                            AcceptsReturn="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Text="{Binding Text}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+                    <Grid Grid.Row="2" Background="{StaticResource MessageBoxBottomBrush}">
+                        <Grid.Resources>
+                            <Style TargetType="Button">
+                                <Setter Property="MinWidth" Value="80" />
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </Grid.Resources>
+                        <ContentControl
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="AbortRetryIgnore">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Abort}" />
+                                                        <Button Margin="10,0" Content="{tx:T UserInteraction:MessageBox.Buttons.Retry}" />
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Ignore}" />
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="OK">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Ok}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="OKCancel">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="0,0,10,0" Content="{tx:T UserInteraction:MessageBox.Buttons.Ok}" />
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Cancel}" />
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="RetryCancel">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="0,0,10,0" Content="{tx:T UserInteraction:MessageBox.Buttons.Retry}" />
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Cancel}" />
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="YesNo">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="0,0,10,0" Content="{tx:T UserInteraction:MessageBox.Buttons.Yes}" />
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.No}" />
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MessageBoxButtons}" Value="YesNoCancel">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Yes}" />
+                                                        <Button Margin="10,0,10,0" Content="{tx:T UserInteraction:MessageBox.Buttons.No}" />
+                                                        <Button Content="{tx:T UserInteraction:MessageBox.Buttons.Cancel}" />
+                                                    </StackPanel>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

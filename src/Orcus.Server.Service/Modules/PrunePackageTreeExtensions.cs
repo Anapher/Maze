@@ -32,7 +32,7 @@ namespace Orcus.Server.Service.Modules
                 !package.HasVersion || !installed.TryGetValue(package.Id, out var packageVersion) || packageVersion <= package.Version);
         }
 
-        public static IEnumerable<SourcePackageDependencyInfo> RemoveLibraryPackage(ISet<SourcePackageDependencyInfo> packages, PackageIdentity libraryPackage)
+        public static IEnumerable<SourcePackageDependencyInfo> RemoveLibraryPackage(IReadOnlyList<SourcePackageDependencyInfo> packages, PackageIdentity libraryPackage)
         {
             var libraryVersions = packages.Where(x => x.IsSameId(libraryPackage)).ToList();
             if (!libraryVersions.Any())

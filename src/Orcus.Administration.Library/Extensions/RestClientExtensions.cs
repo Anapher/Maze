@@ -15,12 +15,12 @@ namespace Orcus.Administration.Library.Clients
             return CreateTargeted(orcusRestClient, client.ClientId);
         }
 
-        public static ITargetedRestClient CreatePackageSpecific(this ITargetedRestClient targetedRestClient, string packageName)
+        public static IPackageRestClient CreatePackageSpecific(this ITargetedRestClient targetedRestClient, string packageName)
         {
             return new PackageRestClient(targetedRestClient, packageName);
         }
 
-        public static ITargetedRestClient CreatePackageSpecific(this ITargetedRestClient targetedRestClient, PackageIdentity packageId)
+        public static IPackageRestClient CreatePackageSpecific(this ITargetedRestClient targetedRestClient, PackageIdentity packageId)
         {
             return new PackageRestClient(targetedRestClient, packageId.Id);
         }

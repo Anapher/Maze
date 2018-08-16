@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a6dd1856-afb7-43a3-a816-d153b8866140</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Orcus.Modules.UserInteraction.Dtos</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\OpenMessageBoxDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\SystemButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\SystemIcon.cs" />
+  </ItemGroup>
+</Project>

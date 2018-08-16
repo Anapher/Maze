@@ -87,9 +87,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ViewMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Library", "src\Orcus.Administration.Library\Orcus.Administration.Library.csproj", "{8B7888A3-A402-4D7C-82BB-E1A2494C023D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Modules.Api.Tests", "test\Orcus.Modules.Api.Tests\Orcus.Modules.Api.Tests.csproj", "{F70F3C62-7504-4526-BC16-3344BA753C09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Modules.Api.Tests", "test\Orcus.Modules.Api.Tests\Orcus.Modules.Api.Tests.csproj", "{F70F3C62-7504-4526-BC16-3344BA753C09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserInteraction", "UserInteraction", "{B4AB533F-EC5B-43BA-9686-5D784CC80742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInteraction.Administration", "src\modules\UserInteraction\UserInteraction.Administration\UserInteraction.Administration.csproj", "{78079640-832D-4593-B86A-6D2D537C5824}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInteraction.Client", "src\modules\UserInteraction\UserInteraction.Client\UserInteraction.Client.csproj", "{D20D50B0-DC99-4A88-95D4-494367737DE7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UserInteraction.Dtos", "src\modules\UserInteraction\UserInteraction.Dtos\UserInteraction.Dtos.shproj", "{A6DD1856-AFB7-43A3-A816-D153B8866140}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
+		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -215,6 +227,14 @@ Global
 		{F70F3C62-7504-4526-BC16-3344BA753C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F70F3C62-7504-4526-BC16-3344BA753C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F70F3C62-7504-4526-BC16-3344BA753C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78079640-832D-4593-B86A-6D2D537C5824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78079640-832D-4593-B86A-6D2D537C5824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78079640-832D-4593-B86A-6D2D537C5824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78079640-832D-4593-B86A-6D2D537C5824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,6 +269,10 @@ Global
 		{34B39498-66BC-45A3-8502-44F15D28D670} = {E7996DC9-7C33-4F35-9748-4A825DB56784}
 		{8B7888A3-A402-4D7C-82BB-E1A2494C023D} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 		{F70F3C62-7504-4526-BC16-3344BA753C09} = {22C4E303-30DF-41D2-86BA-906CD6BDE4F1}
+		{B4AB533F-EC5B-43BA-9686-5D784CC80742} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{78079640-832D-4593-B86A-6D2D537C5824} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
+		{D20D50B0-DC99-4A88-95D4-494367737DE7} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
+		{A6DD1856-AFB7-43A3-A816-D153B8866140} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

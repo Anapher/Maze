@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
 namespace Orcus.Administration.Prism
 {
-    public class ViewModelResolver
+    public interface IViewModelResolver
+    {
+        Type ResolveViewModelType(Type viewType);
+    }
+
+    public class ViewModelResolver : IViewModelResolver
     {
         private readonly IReadOnlyDictionary<string, Type> _viewModelMap;
+        private readonly Assembly _viewAssembly;
 
-        public ViewModelResolver(Assembly viewModelsAssembly)
+        public ViewModelResolver(Assembly viewModelsAssembly, Assembly viewAssembly)
         {
+            _viewAssembly = viewAssembly;
             var types = viewModelsAssembly.GetExportedTypes();
 
             _viewModelMap = types.Where(x => x.Name.EndsWith("ViewModel")).ToDictionary(ExtractViewModelName, x => x);
@@ -19,7 +27,22 @@ namespace Orcus.Administration.Prism
         public Type ResolveViewModelType(Type viewType)
         {
             var name = ExtractViewName(viewType);
-            return _viewModelMap[name];
+
+            if (viewType.Assembly == _viewAssembly)
+                return _viewModelMap[name];
+
+            return DefaultResolve(viewType);
+        }
+
+        private static Type DefaultResolve(Type viewType)
+        {
+            var viewName = viewType.FullName;
+            viewName = viewName.Replace(".Views.", ".ViewModels.");
+            var viewAssemblyName = viewType.Assembly.FullName;
+            var suffix = viewName.EndsWith("View") ? "Model" : "ViewModel";
+
+            var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}{1}, {2}", viewName, suffix, viewAssemblyName);
+            return Type.GetType(viewModelName);
         }
 
         private static string ExtractViewModelName(Type type) =>

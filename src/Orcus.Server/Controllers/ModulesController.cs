@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
 using Orcus.Server.Hubs;
 using Orcus.Server.Service.Modules;
 using Orcus.Server.Service.Modules.PackageManagement;
@@ -57,6 +59,16 @@ namespace Orcus.Server.Controllers
         public IActionResult GetSources([FromServices] IModuleProject project)
         {
             return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
+        }
+
+        [HttpGet("inst"), AllowAnonymous]
+        public async Task<IActionResult> Install([FromServices] IModulePackageManager packageManager)
+        {
+            await packageManager.InstallPackageAsync(new PackageIdentity("UserInteraction", NuGetVersion.Parse("1.0")),
+                new ResolutionContext(),
+                new PackageDownloadContext(new SourceCacheContext {DirectDownload = true, NoCache = true}, "tmp", true),
+                new NuGetLoggerWrapper(NullLogger.Instance), CancellationToken.None);
+            return Ok();
         }
     }
 }

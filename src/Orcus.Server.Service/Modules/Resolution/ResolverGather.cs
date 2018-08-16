@@ -87,7 +87,7 @@ namespace Orcus.Server.Service.Modules.Resolution
             foreach (var primaryTarget in _context.PrimaryTargets)
             {
                 // Add the id to the search list to block searching for all versions
-                _idsSearched.Add(primaryTarget.Id);
+                //_idsSearched.Add(primaryTarget.Id);
 
                 QueueWork(_primaryResources, primaryTarget, ignoreExceptions: false, isInstalledPackage: false);
             }

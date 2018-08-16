@@ -64,8 +64,13 @@
     <Compile Include="Factories\MenuFactory.cs" />
     <Compile Include="Prism\ViewModelResolver.cs" />
     <Compile Include="Services\AppDispatcher.cs" />
+    <Compile Include="Services\ClientCommandRegistrar.cs" />
+    <Compile Include="Services\ShellWindowOpener.cs" />
     <Compile Include="Utilities\WpfExtensions.cs" />
     <Compile Include="ViewModule.cs" />
+    <Compile Include="Views\ShellWindow.xaml.cs">
+      <DependentUpon>ShellWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Main\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
@@ -108,6 +113,10 @@
     <Page Include="Resources\VisualStudioIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ShellWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -57,6 +57,10 @@ namespace Orcus.Administration
             builder.RegisterModule<AutofacModule>();
             builder.RegisterType<MenuFactory>().As<IMenuFactory>().SingleInstance();
             builder.RegisterType<ClientsContextMenu>().SingleInstance();
+            builder.RegisterInstance(new ViewModelResolver(Assembly.GetAssembly(typeof(MainViewModel)),
+                Assembly.GetEntryAssembly())).As<IViewModelResolver>();
+            builder.RegisterType<ClientCommandRegistrar>().As<IClientCommandRegistrar>().SingleInstance();
+            builder.RegisterType<ShellWindowOpener>().As<IShellWindowOpener>().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);
@@ -66,7 +70,7 @@ namespace Orcus.Administration
         {
             base.ConfigureViewModelLocator();
 
-            var resolver = new ViewModelResolver(Assembly.GetAssembly(typeof(MainViewModel)));
+            var resolver = Container.Resolve<IViewModelResolver>();
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(resolver.ResolveViewModelType);
         }
     }

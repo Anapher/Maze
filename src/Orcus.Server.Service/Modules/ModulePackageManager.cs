@@ -105,7 +105,7 @@ namespace Orcus.Server.Service.Modules
 
         private async Task<PackagesContext> GetRequiredPackages(ISet<PackageIdentity> primaryPackages,
             ISet<PackageIdentity> targetPackages, bool downgradeAllowed, ResolutionContext resolutionContext,
-            NuGetFramework primaryFramework, ILogger logger,   CancellationToken token)
+            NuGetFramework primaryFramework, ILogger logger, CancellationToken token)
         {
             var libraryPackage = GetFramworkLibrary(primaryFramework);
 
@@ -125,9 +125,12 @@ namespace Orcus.Server.Service.Modules
                 Log = logger
             };
 
-            var availablePackages = await ResolverGather.GatherAsync(gatherContext, token);
-            if (!availablePackages.Any())
-                throw new InvalidOperationException("UnableToGatherDependencyInfo");
+            var primaryPackageIds = primaryPackages.Select(x => x.Id).ToHashSet();
+
+            var allPackages = await ResolverGather.GatherAsync(gatherContext, token);
+            var availablePackages = allPackages.Where(x => !primaryPackageIds.Contains(x.Id) || x.Dependencies.Any()).ToList();
+            if (!availablePackages.Any()) //packages not available for this framework
+                return new PackagesContext(ImmutableDictionary<PackageIdentity, SourcePackageDependencyInfo>.Empty);
 
             //available packages now contains all versions of the package and all versions of each depdendency (recursive)
             //we try to prune the results down to only what we would allow to be installed
