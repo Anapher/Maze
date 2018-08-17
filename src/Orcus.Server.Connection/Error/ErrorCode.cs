@@ -13,7 +13,10 @@ namespace Orcus.Server.Connection.Error
         Account_Disabled,
 
         Commander_ClientNotFound = 2000,
-        SingleCommandTargetRequired,
-        CommandTransmissionFailed,
+        Commander_SingleCommandTargetRequired,
+        Commander_CommandTransmissionFailed,
+        Commander_RouteNotFound,
+        Commander_ActionError,
+        Commander_ResultError,
     }
 }

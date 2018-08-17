@@ -5,7 +5,7 @@ using NuGetLogger = NuGet.Common.ILogger;
 using ILogMessage = NuGet.Common.ILogMessage;
 using LogLevel = NuGet.Common.LogLevel;
 
-namespace Orcus.Server.Utilities
+namespace Orcus.Server.Service
 {
     public class NuGetLoggerWrapper : NuGetLogger
     {

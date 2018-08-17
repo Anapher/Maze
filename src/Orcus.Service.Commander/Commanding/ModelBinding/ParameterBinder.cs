@@ -42,6 +42,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding
             var modelBindingContext =
                 DefaultModelBindingContext.CreateBindingContext(actionContext, valueProvider, metadata, parameter.Name);
             modelBindingContext.Model = value;
+            modelBindingContext.ModelState = new ModelStateDictionary();
 
             var parameterModelName = metadata.BinderModelName;
             if (parameterModelName != null)

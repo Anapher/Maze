@@ -67,7 +67,10 @@ namespace Orcus.Server.Service.Extensions
                 if (header.Key.Equals(HeaderNames.Authorization, StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                requestMessage.Headers.Add(header.Key, (IEnumerable<string>) header.Value);
+                if (HeadersHelper.IsContentHeader(header.Key))
+                    requestMessage.Content.Headers.Add(header.Key, (IEnumerable<string>) header.Value);
+                else
+                    requestMessage.Headers.Add(header.Key, (IEnumerable<string>) header.Value);
             }
 
             return requestMessage;

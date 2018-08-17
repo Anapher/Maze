@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using Autofac;
+using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Models;
@@ -17,15 +18,17 @@ namespace Orcus.Administration.Services
         private readonly ClientsContextMenu _clientsContextMenu;
         private readonly IComponentContext _componentContext;
         private readonly IShellWindowOpener _shellWindowOpener;
+        private readonly IOrcusRestClient _orcusRestClient;
         private readonly IViewModelResolver _viewModelResolver;
 
         public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IViewModelResolver viewModelResolver,
-            IComponentContext componentContext, IShellWindowOpener shellWindowOpener)
+            IComponentContext componentContext, IShellWindowOpener shellWindowOpener, IOrcusRestClient orcusRestClient)
         {
             _clientsContextMenu = clientsContextMenu;
             _viewModelResolver = viewModelResolver;
             _componentContext = componentContext;
             _shellWindowOpener = shellWindowOpener;
+            _orcusRestClient = orcusRestClient;
         }
 
         public void RegisterView(Type viewType, string txLibResource, object icon, CommandCategory category)
@@ -43,6 +46,7 @@ namespace Orcus.Administration.Services
                         builder.RegisterType(viewType);
                         builder.RegisterType(viewModelType);
                         builder.RegisterInstance(model);
+                        builder.Register(context => _orcusRestClient.CreateTargeted(model.ClientId)).SingleInstance();
                     });
 
                     var viewModel = lifescope.Resolve(viewModelType);

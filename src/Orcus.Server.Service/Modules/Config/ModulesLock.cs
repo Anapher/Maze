@@ -3,16 +3,12 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
-using NuGet.Packaging.Core;
-using NuGet.Versioning;
-using Orcus.Server.Connection.JsonConverters;
 using Orcus.Server.Connection.Modules;
-using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Service.Modules.Config.Base;
 
 namespace Orcus.Server.Service.Modules.Config
 {
-    public class ModulesLock : JsonObjectFile<Dictionary<string, PackagesLock>>,  IModulesLock
+    public class ModulesLock : JsonObjectFile<Dictionary<string, PackagesLock>>, IModulesLock
     {
         private readonly IImmutableDictionary<NuGetFramework, PackagesLock> _empty;
 

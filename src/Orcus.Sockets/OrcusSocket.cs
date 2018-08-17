@@ -126,6 +126,7 @@ namespace Orcus.Sockets
             }
         }
 
+        public ArrayPool<byte> BufferPool { get; } = ArrayPool<byte>.Shared;
         public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public void Abort()

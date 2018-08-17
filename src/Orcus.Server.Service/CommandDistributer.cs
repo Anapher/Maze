@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Orcus.Modules.Api;
 using Orcus.Modules.Api.Request;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Library.Services;

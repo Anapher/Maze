@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -13,6 +14,7 @@ using Orcus.Administration.ViewModels;
 using Orcus.Administration.Views;
 using Orcus.Administration.Views.Main;
 using Prism.Autofac;
+using Prism.Logging;
 using Prism.Modularity;
 using Prism.Mvvm;
 
@@ -25,6 +27,7 @@ namespace Orcus.Administration
         public Bootstrapper(AppLoadContext appLoadContext)
         {
             _appLoadContext = appLoadContext;
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         }
 
         protected override DependencyObject CreateShell()
@@ -44,7 +47,13 @@ namespace Orcus.Administration
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
             foreach (var type in packageCarrier.Assembly.GetExportedTypes()
                 .Where(x => typeof(IModule).IsAssignableFrom(x)))
-                moduleCatalog.AddModule(type);
+            {
+                moduleCatalog.AddModule(
+                    new ModuleInfo(packageCarrier.Context.Package.Id, type.AssemblyQualifiedName)
+                    {
+                        State = ModuleState.ReadyForInitialization
+                    });
+            }
         }
 
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
@@ -72,6 +81,11 @@ namespace Orcus.Administration
 
             var resolver = Container.Resolve<IViewModelResolver>();
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(resolver.ResolveViewModelType);
+        }
+
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName == args.Name);
         }
     }
 }

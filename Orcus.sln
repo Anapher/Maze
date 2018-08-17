@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{505B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anapher.Wpf.Swan", "src\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj", "{DE56441C-B66E-40C5-86B3-DE881D7D09F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anapher.Wpf.Swan", "src\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj", "{DE56441C-B66E-40C5-86B3-DE881D7D09F7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Data", "src\Orcus.Server.Data\Orcus.Server.Data.csproj", "{B413093F-9C96-4D93-BB03-A1E2F25940EF}"
 EndProject
@@ -91,11 +91,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Modules.Api.Tests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserInteraction", "UserInteraction", "{B4AB533F-EC5B-43BA-9686-5D784CC80742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInteraction.Administration", "src\modules\UserInteraction\UserInteraction.Administration\UserInteraction.Administration.csproj", "{78079640-832D-4593-B86A-6D2D537C5824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInteraction.Administration", "src\modules\UserInteraction\UserInteraction.Administration\UserInteraction.Administration.csproj", "{78079640-832D-4593-B86A-6D2D537C5824}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInteraction.Client", "src\modules\UserInteraction\UserInteraction.Client\UserInteraction.Client.csproj", "{D20D50B0-DC99-4A88-95D4-494367737DE7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UserInteraction.Dtos", "src\modules\UserInteraction\UserInteraction.Dtos\UserInteraction.Dtos.shproj", "{A6DD1856-AFB7-43A3-A816-D153B8866140}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration.Library.Test", "test\Orcus.Administration.Library.Test\Orcus.Administration.Library.Test.csproj", "{143B1316-91D4-471B-AED1-FFCD344281CD}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -235,6 +237,10 @@ Global
 		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D20D50B0-DC99-4A88-95D4-494367737DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{143B1316-91D4-471B-AED1-FFCD344281CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{143B1316-91D4-471B-AED1-FFCD344281CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{143B1316-91D4-471B-AED1-FFCD344281CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{143B1316-91D4-471B-AED1-FFCD344281CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,11 +274,12 @@ Global
 		{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2} = {E7996DC9-7C33-4F35-9748-4A825DB56784}
 		{34B39498-66BC-45A3-8502-44F15D28D670} = {E7996DC9-7C33-4F35-9748-4A825DB56784}
 		{8B7888A3-A402-4D7C-82BB-E1A2494C023D} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
-		{F70F3C62-7504-4526-BC16-3344BA753C09} = {22C4E303-30DF-41D2-86BA-906CD6BDE4F1}
+		{F70F3C62-7504-4526-BC16-3344BA753C09} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
 		{B4AB533F-EC5B-43BA-9686-5D784CC80742} = {505B289B-B216-44A4-8234-12E31B16C230}
 		{78079640-832D-4593-B86A-6D2D537C5824} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
 		{D20D50B0-DC99-4A88-95D4-494367737DE7} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
 		{A6DD1856-AFB7-43A3-A816-D153B8866140} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
+		{143B1316-91D4-471B-AED1-FFCD344281CD} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

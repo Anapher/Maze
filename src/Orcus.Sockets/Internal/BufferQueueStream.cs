@@ -15,6 +15,7 @@ namespace Orcus.Sockets.Internal
     /// </summary>
     public class BufferQueueStream : ReadOnlyStream
     {
+        private readonly ArrayPool<byte> _bufferPool;
         private readonly Queue<ArraySegment<byte>> _buffers;
         private readonly AsyncAutoResetEvent _bufferWaitingAutoResetEvent;
         private readonly object _streamLock = new object();
@@ -23,8 +24,9 @@ namespace Orcus.Sockets.Internal
         private long _length;
         private int _position;
 
-        public BufferQueueStream()
+        public BufferQueueStream(ArrayPool<byte> bufferPool)
         {
+            _bufferPool = bufferPool;
             _buffers = new Queue<ArraySegment<byte>>();
             _bufferWaitingAutoResetEvent = new AsyncAutoResetEvent(false);
         }
@@ -143,7 +145,7 @@ namespace Orcus.Sockets.Internal
         private void DisposeCurrentBuffer()
         {
             var buffer = _buffers.Dequeue();
-            ArrayPool<byte>.Shared.Return(buffer.Array);
+            _bufferPool?.Return(buffer.Array);
             _currentBufferPosition = 0;
         }
 

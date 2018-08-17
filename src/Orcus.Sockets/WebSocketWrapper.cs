@@ -23,6 +23,7 @@ namespace Orcus.Sockets
 
         public WebSocket WebSocket { get; }
 
+        public ArrayPool<byte> BufferPool { get; } = null;
         public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public async Task ReceiveAsync()

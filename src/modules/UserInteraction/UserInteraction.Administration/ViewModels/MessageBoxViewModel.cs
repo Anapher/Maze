@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Anapher.Wpf.Swan;
 using Orcus.Administration.Library.Clients;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -15,7 +16,7 @@ namespace UserInteraction.Administration.ViewModels
         private string _caption;
         private SystemButtons _messageBoxButtons;
         private SystemIcon _messageBoxIcon;
-        private DelegateCommand _sendCommand;
+        private AsyncRelayCommand _sendCommand;
         private DelegateCommand _testCommand;
         private string _text;
 
@@ -60,11 +61,11 @@ namespace UserInteraction.Administration.ViewModels
             }
         }
 
-        public DelegateCommand SendCommand
+        public AsyncRelayCommand SendCommand
         {
             get
             {
-                return _sendCommand ?? (_sendCommand = new DelegateCommand(() =>
+                return _sendCommand ?? (_sendCommand = new AsyncRelayCommand(parameter =>
                 {
                     var dto = new OpenMessageBoxDto
                     {
@@ -74,7 +75,7 @@ namespace UserInteraction.Administration.ViewModels
                         Buttons = MessageBoxButtons
                     };
 
-                    MessageBoxResource.OpenAsync(dto, _restClient);
+                    return MessageBoxResource.OpenAsync(dto, _restClient);
                 }));
             }
         }

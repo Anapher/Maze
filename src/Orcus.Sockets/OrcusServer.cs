@@ -259,7 +259,7 @@ namespace Orcus.Sockets
 
             Logger.Trace("Request: {@request}", request);
 
-            var stream = new BufferQueueStream();
+            var stream = new BufferQueueStream(_socket.BufferPool);
             request.Body = stream;
 
             stream.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength,
@@ -313,7 +313,9 @@ namespace Orcus.Sockets
                         throw new InvalidOperationException(
                             $"The header size {offset}B exceeds the maximum allowed header size ({_maxHeaderSize}B)");
 
-                    Buffer.BlockCopy(data.Array, data.Offset, sendBuffer, offset, data.Count);
+                    if (data.Count > 0)
+                        Buffer.BlockCopy(data.Array, data.Offset, sendBuffer, offset, data.Count);
+
                     var opCode = OrcusSocket.MessageOpcode.Response;
                     if (orcusResponse.IsCompleted)
                         opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
@@ -373,7 +375,7 @@ namespace Orcus.Sockets
             }
             else
             {
-                var stream = new BufferQueueStream();
+                var stream = new BufferQueueStream(_socket.BufferPool);
                 stream.PushBuffer(bufferSegment);
                 if (_activeResponses.TryAdd(requestId, stream))
                 {

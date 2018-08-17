@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -7,6 +8,9 @@ using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -18,39 +22,73 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using Orcus.ModuleManagement.PackageManagement;
 using Orcus.Server.Connection.Modules;
+using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Service.Modules.Resolution;
+using ILogger = NuGet.Common.ILogger;
 
 namespace Orcus.Server.Service.Modules
 {
+    public class PackageLockRequestManager
+    {
+        public ConcurrentDictionary<NuGetFramework, Task<PackagesLock>> PackageLockLoadingTasks { get; } =
+            new ConcurrentDictionary<NuGetFramework, Task<PackagesLock>>();
+    }
+
+    public static class MpmCacheKeys
+    {
+        public const string ResolutionContext = "MPM_ResolutionContext";
+        public const string DownloadContext = "MPM_DownloadContext";
+    }
+
+    public class ModulePackageManagerOptions
+    {
+        public DependencyBehavior DependencyBehavior { get; set; } = DependencyBehavior.HighestPatch;
+        public TimeSpan ResolutionContextExpiration { get; set; } = TimeSpan.FromMinutes(10);
+        public bool IncludePrerelease { get; set; } = false;
+        public bool IncludeUnlisted { get; set; }
+
+        public TimeSpan DownloadContextExpiration { get; set; } = TimeSpan.FromMinutes(10);
+        public string DownloadTmpDirectory { get; set; } = "tmp";
+    }
+
     public class ModulePackageManager : IModulePackageManager
     {
         private readonly IModuleProject _project;
+        private readonly IMemoryCache _memoryCache;
+        private readonly PackageLockRequestManager _packageLockRequestManager;
+        private readonly ModulePackageManagerOptions _options;
+        private readonly ILogger _logger;
 
-        public ModulePackageManager(IModuleProject project)
+        public ModulePackageManager(IModuleProject project, IMemoryCache memoryCache,
+            PackageLockRequestManager packageLockRequestManager, IOptions<ModulePackageManagerOptions> options, ILogger<ModulePackageManager> logger)
         {
             _project = project;
+            _memoryCache = memoryCache;
+            _packageLockRequestManager = packageLockRequestManager;
+            _options = options.Value;
+            _logger = new NuGetLoggerWrapper(logger);
         }
 
         public async Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
-            ResolutionContext resolutionContext, ILogger logger, CancellationToken token)
+            ResolutionContext resolutionContext, CancellationToken token)
         {
             var (primaryPackages, downgradeAllowed) = GetPackageInstallContext(packageIdentity);
             var context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
-                downgradeAllowed, resolutionContext, _project.Framework, logger, token);
+                downgradeAllowed, resolutionContext, _project.Framework, _logger, token);
 
             return GetRequiredActions(context);
         }
 
         public async Task InstallPackageAsync(PackageIdentity packageIdentity,
-            ResolutionContext resolutionContext, PackageDownloadContext downloadContext, ILogger logger, CancellationToken token)
+            ResolutionContext resolutionContext, PackageDownloadContext downloadContext, CancellationToken token)
         {
             var (primaryPackages, downgradeAllowed) = GetPackageInstallContext(packageIdentity);
             
             //Server
             var context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
-                downgradeAllowed, resolutionContext, _project.Framework, logger, token);
+                downgradeAllowed, resolutionContext, _project.Framework, _logger, token);
             
             var actions = GetRequiredActions(context);
             await ExecuteActionsAsync(actions, downloadContext, token);
@@ -60,12 +98,12 @@ namespace Orcus.Server.Service.Modules
             foreach (var framework in _project.FrameworkLibraries.Keys.Where(x => x != _project.Framework))
             {
                 context = await GetRequiredPackages(primaryPackages, new HashSet<PackageIdentity> {packageIdentity},
-                    downgradeAllowed, resolutionContext, framework, logger, token);
+                    downgradeAllowed, resolutionContext, framework, _logger, token);
 
                 actions = GetRequiredActions(context);
                 await ExecuteActionsAsync(actions, downloadContext, token);
 
-                await _project.AddModulesLock(framework, GetLock(context));
+                await _project.AddModulesLock(framework, ExtractLock(context));
             }
         }
 
@@ -91,13 +129,13 @@ namespace Orcus.Server.Service.Modules
             return (resultingPackages, downgradeAllowed);
         }
 
-        public Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities, ResolutionContext resolutionContext, ILogger logger,
+        public Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities, ResolutionContext resolutionContext,
             CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ResolvedAction>> PreviewDeletePackagesAsync(List<PackageIdentity> packageIdentities, ResolutionContext resolutionContext, ILogger logger,
+        public Task<IEnumerable<ResolvedAction>> PreviewDeletePackagesAsync(List<PackageIdentity> packageIdentities, ResolutionContext resolutionContext, 
             CancellationToken token)
         {
             throw new NotImplementedException();
@@ -379,12 +417,40 @@ namespace Orcus.Server.Service.Modules
             }
         }
 
-        public async Task<PackagesLock> GetPackagesLock(NuGetFramework framework)
+        public Task<PackagesLock> GetPackagesLock(NuGetFramework framework)
         {
             if (_project.ModulesLock.Modules.TryGetValue(framework, out var packagesLock))
-                return packagesLock;
+                return Task.FromResult(packagesLock);
 
-            throw new NotImplementedException(); //TODO create package lock
+            return _packageLockRequestManager.PackageLockLoadingTasks.GetOrAdd(framework, async _ =>
+            {
+                var resolutionContext = GetDefaultResolutionContext();
+                
+                var context = await GetRequiredPackages(_project.PrimaryPackages.ToHashSet(), ImmutableHashSet<PackageIdentity>.Empty,
+                    false, resolutionContext, framework, _logger, CancellationToken.None);
+
+                await _project.AddModulesLock(framework, ExtractLock(context));
+                return ExtractLock(context);
+            });
+        }
+
+        public ResolutionContext GetDefaultResolutionContext()
+        {
+            return _memoryCache.GetOrSetValueSafe(MpmCacheKeys.ResolutionContext, _options.ResolutionContextExpiration,
+                () => new ResolutionContext(_options.DependencyBehavior, _options.IncludePrerelease,
+                    _options.IncludeUnlisted, VersionConstraints.ExactMajor, new GatherCache(),
+                    CreateSourceCacheContext()));
+        }
+
+        public PackageDownloadContext GetDefaultDownloadContext()
+        {
+            return _memoryCache.GetOrSetValueSafe(MpmCacheKeys.DownloadContext, _options.DownloadContextExpiration,
+                () => new PackageDownloadContext(CreateSourceCacheContext(), _options.DownloadTmpDirectory, true));
+        }
+
+        private SourceCacheContext CreateSourceCacheContext()
+        {
+            return new SourceCacheContext{DirectDownload = true, NoCache = true};
         }
 
         private async Task Rollback(Stack<ResolvedAction> executedActions, ISet<PackageIdentity> packageWithDirectoriesToBeDeleted, CancellationToken token)
@@ -439,7 +505,7 @@ namespace Orcus.Server.Service.Modules
 
         private async Task WriteModuleState(PackagesContext serverContext,  IEnumerable<PackageIdentity> primaryModules)
         {
-            await _project.SetServerModulesLock(primaryModules.ToList(), GetLock(serverContext));
+            await _project.SetServerModulesLock(primaryModules.ToList(), ExtractLock(serverContext));
         }
 
         private PackageIdentity GetFramworkLibrary(NuGetFramework framework)
@@ -457,7 +523,7 @@ namespace Orcus.Server.Service.Modules
             return _project.FrameworkLibraries[lowerFramework];
         }
 
-        private static PackagesLock GetLock(PackagesContext context)
+        private static PackagesLock ExtractLock(PackagesContext context)
         {
             return new PackagesLock(context.Packages.ToImmutableDictionary(x => x,
                 x => (IImmutableList<PackageIdentity>) context.PackageDependencies[x].Dependencies

@@ -30,7 +30,7 @@ namespace Orcus.Server.Connection.Tests.JsonConverters
             var framework = NuGetFramework.Parse("win");
             var result = JsonConvert.SerializeObject(framework, _jsonSettings);
             Assert.NotNull(result);
-            Assert.Equal("\"Windows\"", result);
+            Assert.Equal("\"Windows,Version=v0.0\"", result);
         }
     }
 }

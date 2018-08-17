@@ -1,8 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
 using NuGet.Packaging.Core;
-using NuGet.Versioning;
-using Orcus.Server.Connection.Modules;
 using Orcus.Server.Connection.Utilities;
 
 namespace Orcus.Server.Connection.JsonConverters

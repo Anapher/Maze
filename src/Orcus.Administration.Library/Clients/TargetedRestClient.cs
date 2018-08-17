@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Orcus.Administration.Library.Extensions;
 
 namespace Orcus.Administration.Library.Clients
 {
@@ -21,7 +22,7 @@ namespace Orcus.Administration.Library.Clients
             request.Headers.Add("CommandTarget", _commandTargetHeader);
 
             //request.Uri = TestModule/Controller
-            request.RequestUri = new Uri(RelativeBaseUri, request.RequestUri);
+            request.RequestUri = UriHelper.CombineRelativeUris(RelativeBaseUri, request.RequestUri);
             return _orcusRestClient.SendMessage(request);
         }
     }

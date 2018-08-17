@@ -49,17 +49,31 @@ namespace Orcus.Server.Connection
 
             public static RestError SingleCommandTargetRequired =>
                 CreateValidationError("A single command target is required for this operation.",
-                    ErrorCode.SingleCommandTargetRequired);
+                    ErrorCode.Commander_SingleCommandTargetRequired);
 
             public static RestError CommandTransmissionFailed =>
                 CreateInvalidOperationError("The transmission of the command failed. Maybe the client disconnected.",
-                    ErrorCode.CommandTransmissionFailed);
+                    ErrorCode.Commander_CommandTransmissionFailed);
+
+            public static RestError RouteNotFound(string path) =>
+                CreateNotFoundError($"The route '{path}' was not found", ErrorCode.Commander_RouteNotFound);
+
+            public static RestError ActionError(string exception, string methodName, string message) =>
+                CreateNotFoundError($"An {exception} occurred on executing {methodName}: {message}",
+                    ErrorCode.Commander_ActionError);
+
+            public static RestError ResultExecutionError(string exception, string name, string message) =>
+                CreateNotFoundError($"An {exception} occurred on executing result {name}: {message}",
+                    ErrorCode.Commander_ResultError);
         }
 
         private static RestError CreateValidationError(string message, ErrorCode code) =>
             new RestError(ErrorTypes.ValidationError, message, (int) code);
 
         private static RestError CreateInvalidOperationError(string message, ErrorCode code) =>
-            new RestError(ErrorTypes.InvalidOperationError, message, (int)code);
+            new RestError(ErrorTypes.InvalidOperationError, message, (int) code);
+
+        private static RestError CreateNotFoundError(string message, ErrorCode code) =>
+            new RestError(ErrorTypes.NotFoundError, message, (int) code);
     }
 }

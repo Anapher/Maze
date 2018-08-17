@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NuGet.Common;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
@@ -12,17 +11,20 @@ namespace Orcus.Server.Service.Modules
 {
     public interface IModulePackageManager
     {
+        ResolutionContext GetDefaultResolutionContext();
+        PackageDownloadContext GetDefaultDownloadContext();
+
         Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
-            ResolutionContext resolutionContext, ILogger logger, CancellationToken token);
+            ResolutionContext resolutionContext, CancellationToken token);
 
         Task<IEnumerable<ResolvedAction>> PreviewUpdatePackagesAsync(List<SourcedPackageIdentity> packageIdentities,
-            ResolutionContext resolutionContext, ILogger logger, CancellationToken token);
+            ResolutionContext resolutionContext, CancellationToken token);
 
         Task<IEnumerable<ResolvedAction>> PreviewDeletePackagesAsync(List<PackageIdentity> packageIdentities,
-            ResolutionContext resolutionContext, ILogger logger, CancellationToken token);
+            ResolutionContext resolutionContext, CancellationToken token);
 
         Task InstallPackageAsync(PackageIdentity packageIdentity, ResolutionContext resolutionContext,
-            PackageDownloadContext downloadContext, ILogger logger, CancellationToken token);
+            PackageDownloadContext downloadContext, CancellationToken token);
 
         Task<PackagesLock> GetPackagesLock(NuGetFramework framework);
     }

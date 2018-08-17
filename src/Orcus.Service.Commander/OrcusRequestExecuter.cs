@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Response;
+using Orcus.Server.Connection;
 using Orcus.Service.Commander.Routing;
 
 namespace Orcus.Service.Commander
@@ -31,7 +33,8 @@ namespace Orcus.Service.Commander
             if (!result.Success)
             {
                 _logger.LogDebug("Path not found");
-                return/* NotFound()*/;
+                await WriteError(context, BusinessErrors.Commander.RouteNotFound(context.Request.Path), StatusCodes.Status404NotFound);
+                return;
             }
 
             _logger.LogDebug(
@@ -50,7 +53,10 @@ namespace Orcus.Service.Commander
             {
                 _logger.LogError(e,
                     $"Error occurred when invoking method {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
-                return /*Exception(e)*/;
+                await WriteError(context,
+                    BusinessErrors.Commander.ActionError(e.GetType().Name, route.RouteMethod.Name, e.Message),
+                    StatusCodes.Status500InternalServerError);
+                return;
             }
 
             try
@@ -61,20 +67,19 @@ namespace Orcus.Service.Commander
             {
                 _logger.LogError(e,
                     $"Error occurred when executing action result {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
-                return/* Exception(e)*/;
+                await WriteError(context,
+                    BusinessErrors.Commander.ResultExecutionError(e.GetType().Name, actionResult?.GetType().Name, e.Message),
+                    StatusCodes.Status500InternalServerError);
+                return;
             }
 
             _logger.LogDebug("Request successfully executed.");
         }
 
-        private OrcusResponse NotFound()
+        private Task WriteError(OrcusContext context, RestError error, int statusCode)
         {
-            throw new NotImplementedException();
-        }
-
-        private OrcusResponse Exception(Exception e)
-        {
-            throw new NotImplementedException();
+            var actionContext = new DefaultActionContext(context, null, ImmutableDictionary<string, object>.Empty);
+            return new ObjectResult(error) {StatusCode = statusCode}.ExecuteResultAsync(actionContext);
         }
     }
 }

@@ -11,8 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NuGet.Frameworks;
 using Orcus.ModuleManagement;
+using Orcus.Server.AppStart;
 using Orcus.Server.Authentication;
 using Orcus.Server.Autofac;
 using Orcus.Server.BusinessDataAccess;
@@ -48,8 +48,11 @@ namespace Orcus.Server
             services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
+            services.Configure<ModulePackageManagerOptions>(Configuration.GetSection("Modules.PackageManager"));
+
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
             services.AddLogging();
+            services.AddMemoryCache();
 
             var provider = services.BuildServiceProvider();
 
@@ -77,14 +80,16 @@ namespace Orcus.Server
             
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
-            containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>();
-            containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>();
+            containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>().SingleInstance();
+            containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>().SingleInstance();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()
                 .RegisterModule<BusinessLogicModule>()
-                .RegisterModule(new PackagesModule(provider.GetService<IOptions<ModulesOptions>>().Value))
                 .RegisterModule<ModuleManagementModule>();
+
+            new PackageInitialization(provider.GetService<IOptions<ModulesOptions>>().Value, services)
+                .LoadModules(containerBuilder).Wait();
 
             containerBuilder.Populate(services);
 

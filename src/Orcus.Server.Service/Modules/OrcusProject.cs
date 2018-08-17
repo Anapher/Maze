@@ -42,12 +42,13 @@ namespace Orcus.Server.Service.Modules
 
             Architecture = Environment.Is64BitProcess ? Architecture.x64 : Architecture.x86;
             Runtime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Runtime.Windows : Runtime.Linux;
+            PrimaryPackages = modulesConfig.Modules.ToImmutableList(); //copy, very important because the file may change while the packages must consist
         }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
         public Runtime Runtime { get; }
         public Architecture Architecture { get; }
-        public IImmutableList<PackageIdentity> PrimaryPackages => _modulesConfig.Modules;
+        public IImmutableList<PackageIdentity> PrimaryPackages { get; }
         public IModulesLock ModulesLock { get; }
 
         public IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>> InstalledPackages =>

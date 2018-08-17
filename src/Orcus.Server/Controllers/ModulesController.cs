@@ -4,17 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
-using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Orcus.Server.Hubs;
 using Orcus.Server.Service.Modules;
-using Orcus.Server.Service.Modules.PackageManagement;
-using Orcus.Server.Utilities;
-using IActionResult = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace Orcus.Server.Controllers
 {
@@ -41,14 +35,13 @@ namespace Orcus.Server.Controllers
 
         [HttpPost("install")]
         public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
-            [FromServices] IModulePackageManager moduleManager, [FromServices] ILogger<ModulesController> logger)
+            [FromServices] IModulePackageManager moduleManager)
         {
             if (string.IsNullOrWhiteSpace(packageIdentity.Id))
                 return BadRequest();
 
-            await moduleManager.InstallPackageAsync(packageIdentity, new ResolutionContext(),
-                new PackageDownloadContext(new SourceCacheContext{DirectDownload = true, NoCache = true}, "tmp", true), new NuGetLoggerWrapper(logger),
-                CancellationToken.None);
+            await moduleManager.InstallPackageAsync(packageIdentity, moduleManager.GetDefaultResolutionContext(),
+                moduleManager.GetDefaultDownloadContext(), CancellationToken.None);
 
             await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
 
@@ -61,13 +54,13 @@ namespace Orcus.Server.Controllers
             return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
         }
 
-        [HttpGet("inst"), AllowAnonymous]
+        [HttpGet("inst")]
+        [AllowAnonymous]
         public async Task<IActionResult> Install([FromServices] IModulePackageManager packageManager)
         {
             await packageManager.InstallPackageAsync(new PackageIdentity("UserInteraction", NuGetVersion.Parse("1.0")),
-                new ResolutionContext(),
-                new PackageDownloadContext(new SourceCacheContext {DirectDownload = true, NoCache = true}, "tmp", true),
-                new NuGetLoggerWrapper(NullLogger.Instance), CancellationToken.None);
+                packageManager.GetDefaultResolutionContext(), packageManager.GetDefaultDownloadContext(),
+                CancellationToken.None);
             return Ok();
         }
     }

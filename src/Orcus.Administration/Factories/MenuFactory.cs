@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Prism.Commands;
 
@@ -17,7 +16,7 @@ namespace Orcus.Administration.Factories
             return result;
         }
 
-        private static (IEnumerable<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems)
+        private static (IReadOnlyList<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems)
             CreateInternal<T>(IEnumerable<IMenuEntry<T>> menuEntries)
         {
             var result = new List<UIElement>();
@@ -43,6 +42,9 @@ namespace Orcus.Administration.Factories
                 {
                     var (items, singleItem, multipleItems) = CreateInternal(navigationalEntry);
 
+                    if (!items.Any())
+                        continue;
+
                     if (singleItem)
                         forSingleItem = true;
                     if (multipleItems)
@@ -52,6 +54,7 @@ namespace Orcus.Administration.Factories
 
                     foreach (var item in items)
                         menuItem.Items.Add(item);
+                    result.Add(menuItem);
                 }
                 else if (menuEntry is CommandMenuEntry<T> commandMenuEntry)
                 {

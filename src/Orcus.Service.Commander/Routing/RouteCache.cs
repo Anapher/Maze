@@ -38,15 +38,15 @@ namespace Orcus.Service.Commander.Routing
                     if (controllerType.IsAbstract)
                         continue;
 
-                    var routeFragments = new Stack<IRouteFragment>();
+                    var routeFragments = new List<IRouteFragment>();
 
                     var routeAttribute = controllerType.GetCustomAttribute<RouteAttribute>();
                     if (routeAttribute != null)
-                        routeFragments.Push(routeAttribute);
+                        routeFragments.Add(routeAttribute);
 
                     foreach (var methodInfo in controllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public))
                     {
-                        var methodPath = new Stack<IRouteFragment>(routeFragments);
+                        var methodPath = new List<IRouteFragment>(routeFragments);
 
                         var methodAttributes = methodInfo.GetCustomAttributes().ToList();
 
@@ -61,7 +61,7 @@ namespace Orcus.Service.Commander.Routing
                         var method = methodAttribute.Method;
 
                         foreach (var routeFragment in methodAttributes.OfType<IRouteFragment>())
-                            methodPath.Push(routeFragment);
+                            methodPath.Add(routeFragment);
 
                         var segments = GetSegments(methodPath, controllerType, methodInfo);
                         var description = new RouteDescription(package, method, segments);
@@ -78,7 +78,7 @@ namespace Orcus.Service.Commander.Routing
             Routes = ImmutableDictionary<RouteDescription, Route>.Empty;
         }
 
-        private static string[] GetSegments(IEnumerable<IRouteFragment> fragments, Type controllerType, MethodInfo methodInfo)
+        private static string[] GetSegments(IReadOnlyList<IRouteFragment> fragments, Type controllerType, MethodInfo methodInfo)
         {
             var segments = new List<string>();
             foreach (var routeFragment in fragments)
