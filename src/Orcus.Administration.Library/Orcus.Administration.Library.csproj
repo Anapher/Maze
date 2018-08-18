@@ -15,6 +15,7 @@
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
     <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
+    <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>

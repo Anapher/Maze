@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Swan.ViewInterface;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Prism.Commands;
 using Prism.Mvvm;
 using UserInteraction.Administration.Extensions;
@@ -11,17 +12,18 @@ namespace UserInteraction.Administration.ViewModels
 {
     public class MessageBoxViewModel : BindableBase
     {
+        private readonly IWindow _window;
         private readonly IPackageRestClient _restClient;
-
         private string _caption;
         private SystemButtons _messageBoxButtons;
         private SystemIcon _messageBoxIcon;
-        private AsyncRelayCommand _sendCommand;
+        private DelegateCommand _sendCommand;
         private DelegateCommand _testCommand;
         private string _text;
 
-        public MessageBoxViewModel(ITargetedRestClient restClient)
+        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow window)
         {
+            _window = window;
             _restClient = restClient.CreateLocal();
         }
 
@@ -61,11 +63,11 @@ namespace UserInteraction.Administration.ViewModels
             }
         }
 
-        public AsyncRelayCommand SendCommand
+        public DelegateCommand SendCommand
         {
             get
             {
-                return _sendCommand ?? (_sendCommand = new AsyncRelayCommand(parameter =>
+                return _sendCommand ?? (_sendCommand = new DelegateCommand(async () =>
                 {
                     var dto = new OpenMessageBoxDto
                     {
@@ -75,7 +77,7 @@ namespace UserInteraction.Administration.ViewModels
                         Buttons = MessageBoxButtons
                     };
 
-                    return MessageBoxResource.OpenAsync(dto, _restClient);
+                    await MessageBoxResource.OpenAsync(dto, _restClient).OnErrorShowMessageBox(_window);
                 }));
             }
         }

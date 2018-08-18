@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Orcus.Server.Service.Commanding;
+using Orcus.Service.Commander.Commanding;
 using Xunit;
 
 namespace Orcus.Server.Service.Tests.Commanding
