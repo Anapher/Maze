@@ -11,7 +11,7 @@
                         <DrawingGroup>
                             <DrawingGroup.Children>
                                 <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M6.0003,-0.000199999999999534L6.0003,5.9998 0.000300000000000189,5.9998 0.000300000000000189,9.9998 6.0003,9.9998 6.0003,15.9998 10.0003,15.9998 10.0003,9.9998 16.0003,9.9998 16.0003,5.9998 10.0003,5.9998 10.0003,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M6.0003,-0.000199999999999534L6.0003,5.9998 0.000300000000000189,5.9998 0.000300000000000189,9.9998 6.0003,9.9998 6.0003,15.9998 10.0003,15.9998 10.0003,9.9998 16.0003,9.9998 16.0003,5.9998 10.0003,5.9998 10.0003,-0.000199999999999534z" />
                                 <GeometryDrawing Brush="#FF388934" Geometry="F1M15,9L9,9 9,15 7,15 7,9 1,9 1,7 7,7 7,1 9,1 9,7 15,7z" />
                             </DrawingGroup.Children>
                         </DrawingGroup>
@@ -33,8 +33,8 @@
                         <DrawingGroup>
                             <DrawingGroup.Children>
                                 <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M16,8C16,12.411 12.411,16 8,16 3.589,16 0,12.411 0,8 0,6.597 0.384,5.212 1.088,4L0,4 0,0 8,0 8,8 4,8C4,10.206 5.794,12 8,12 10.206,12 12,10.206 12,8 12,6.656 11.331,5.41 10.21,4.666L9.377,4.112 11.592,0.78 12.425,1.333C14.663,2.822,16,5.314,16,8" />
-                                <GeometryDrawing Brush="{DynamicResource IconBlueBrush1}" Geometry="F1M15,8C15,11.859 11.859,15 8,15 4.14,15 1,11.859 1,8 1,6.076 1.801,4.292 3.121,3L1,3 1,1 7,1 7,7 5,7 5,4.002C3.766,4.931 3,6.401 3,8 3,10.757 5.243,13 8,13 10.757,13 13,10.757 13,8 13,6.321 12.164,4.763 10.764,3.833L11.871,2.167C13.83,3.469,15,5.649,15,8" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M16,8C16,12.411 12.411,16 8,16 3.589,16 0,12.411 0,8 0,6.597 0.384,5.212 1.088,4L0,4 0,0 8,0 8,8 4,8C4,10.206 5.794,12 8,12 10.206,12 12,10.206 12,8 12,6.656 11.331,5.41 10.21,4.666L9.377,4.112 11.592,0.78 12.425,1.333C14.663,2.822,16,5.314,16,8" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M15,8C15,11.859 11.859,15 8,15 4.14,15 1,11.859 1,8 1,6.076 1.801,4.292 3.121,3L1,3 1,1 7,1 7,7 5,7 5,4.002C3.766,4.931 3,6.401 3,8 3,10.757 5.243,13 8,13 10.757,13 13,10.757 13,8 13,6.321 12.164,4.763 10.764,3.833L11.871,2.167C13.83,3.469,15,5.649,15,8" />
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -55,8 +55,1210 @@
                         <DrawingGroup>
                             <DrawingGroup.Children>
                                 <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M5.9859,-0.000199999999999534L5.6129,2.2378 3.7669,0.918800000000001 0.9189,3.7668 2.2369,5.6128 -9.99999999997669E-05,5.9858 -9.99999999997669E-05,10.0118 2.2369,10.3868 0.9189,12.2338 3.7669,15.0798 5.6119,13.7628 5.9859,15.9998 10.0129,15.9998 10.3869,13.7618 12.2339,15.0798 15.0799,12.2338 13.7619,10.3868 15.9999,10.0148 15.9999,5.9868 13.7619,5.6128 15.0799,3.7668 12.2339,0.919800000000001 10.3869,2.2378 10.0139,-0.000199999999999534z" />
-                                <GeometryDrawing Brush="{DynamicResource DarkBrush1}" Geometry="F1M10.2123,8C10.2123,9.222 9.2223,10.212 8.0003,10.212 6.7783,10.212 5.7873,9.222 5.7873,8 5.7873,6.778 6.7783,5.788 8.0003,5.788 9.2223,5.788 10.2123,6.778 10.2123,8z M9.9643,3.257C9.8183,3.197,9.6683,3.17,9.5203,3.124L9.1663,1 6.8333,1 6.4803,3.121C6.1853,3.213,5.8993,3.332,5.6253,3.475L3.8753,2.225 2.2253,3.875 3.4773,5.627C3.4053,5.764 3.3183,5.89 3.2573,6.036 3.1973,6.182 3.1703,6.331 3.1243,6.479L1.0003,6.833 1.0003,9.166 3.1213,9.52C3.2133,9.815,3.3313,10.101,3.4753,10.375L2.2253,12.125 3.8753,13.775 5.6273,12.523C5.7643,12.595 5.8893,12.682 6.0353,12.742 6.1813,12.803 6.3313,12.83 6.4793,12.876L6.8333,15 9.1663,15 9.5203,12.879C9.8153,12.787,10.1013,12.668,10.3743,12.525L12.1243,13.775 13.7743,12.125 12.5233,10.373C12.5953,10.236 12.6823,10.11 12.7423,9.964 12.8033,9.818 12.8303,9.669 12.8763,9.521L15.0003,9.167 15.0003,6.834 12.8783,6.48C12.7863,6.185,12.6683,5.899,12.5243,5.625L13.7743,3.875 12.1253,2.225 10.3723,3.477C10.2353,3.405,10.1103,3.318,9.9643,3.257z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M5.9859,-0.000199999999999534L5.6129,2.2378 3.7669,0.918800000000001 0.9189,3.7668 2.2369,5.6128 -9.99999999997669E-05,5.9858 -9.99999999997669E-05,10.0118 2.2369,10.3868 0.9189,12.2338 3.7669,15.0798 5.6119,13.7628 5.9859,15.9998 10.0129,15.9998 10.3869,13.7618 12.2339,15.0798 15.0799,12.2338 13.7619,10.3868 15.9999,10.0148 15.9999,5.9868 13.7619,5.6128 15.0799,3.7668 12.2339,0.919800000000001 10.3869,2.2378 10.0139,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10.2123,8C10.2123,9.222 9.2223,10.212 8.0003,10.212 6.7783,10.212 5.7873,9.222 5.7873,8 5.7873,6.778 6.7783,5.788 8.0003,5.788 9.2223,5.788 10.2123,6.778 10.2123,8z M9.9643,3.257C9.8183,3.197,9.6683,3.17,9.5203,3.124L9.1663,1 6.8333,1 6.4803,3.121C6.1853,3.213,5.8993,3.332,5.6253,3.475L3.8753,2.225 2.2253,3.875 3.4773,5.627C3.4053,5.764 3.3183,5.89 3.2573,6.036 3.1973,6.182 3.1703,6.331 3.1243,6.479L1.0003,6.833 1.0003,9.166 3.1213,9.52C3.2133,9.815,3.3313,10.101,3.4753,10.375L2.2253,12.125 3.8753,13.775 5.6273,12.523C5.7643,12.595 5.8893,12.682 6.0353,12.742 6.1813,12.803 6.3313,12.83 6.4793,12.876L6.8333,15 9.1663,15 9.5203,12.879C9.8153,12.787,10.1013,12.668,10.3743,12.525L12.1243,13.775 13.7743,12.125 12.5233,10.373C12.5953,10.236 12.6823,10.11 12.7423,9.964 12.8033,9.818 12.8303,9.669 12.8763,9.521L15.0003,9.167 15.0003,6.834 12.8783,6.48C12.7863,6.185,12.6683,5.899,12.5243,5.625L13.7743,3.875 12.1253,2.225 10.3723,3.477C10.2353,3.405,10.1103,3.318,9.9643,3.257z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <!--  Animations  -->
+    <Viewbox
+        x:Key="SearchStatusBar1Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M5,6L11.999,6 11.999,0 5,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L6,5 6,1 11,1z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11,7L16,7 16,0 11,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,6L12,6 12,1 15,1z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M6.9141,4.5859C4.4331,4.5859 2.4141,6.6049 2.4141,9.0859 2.4141,9.7009 2.5391,10.2879 2.7641,10.8219L0.000100000000000655,13.5859 2.4141,15.9999 5.1781,13.2359C5.7121,13.4609 6.2991,13.5859 6.9141,13.5859 9.3951,13.5859 11.4141,11.5669 11.4141,9.0859 11.4141,6.6049 9.3951,4.5859 6.9141,4.5859" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M6.9141,11.5859C5.5331,11.5859 4.4141,10.4669 4.4141,9.0859 4.4141,7.7049 5.5331,6.5859 6.9141,6.5859 8.2951,6.5859 9.4141,7.7049 9.4141,9.0859 9.4141,10.4669 8.2951,11.5859 6.9141,11.5859 M6.9141,5.5859C4.9811,5.5859 3.4141,7.1529 3.4141,9.0859 3.4141,9.7959 3.6291,10.4549 3.9931,11.0069L1.4141,13.5859 2.4141,14.5859 4.9931,12.0079C5.5451,12.3709 6.2041,12.5859 6.9141,12.5859 8.8471,12.5859 10.4141,11.0189 10.4141,9.0859 10.4141,7.1529 8.8471,5.5859 6.9141,5.5859" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M6.9141,11.5859C5.5331,11.5859 4.4141,10.4669 4.4141,9.0859 4.4141,7.7049 5.5331,6.5859 6.9141,6.5859 8.2951,6.5859 9.4141,7.7049 9.4141,9.0859 9.4141,10.4669 8.2951,11.5859 6.9141,11.5859" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar2Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M5.094,6.938L16,6.938 16,0 5.094,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,4L6,4 6,1 11,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,6L12,6 12,1 15,1z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M8.9141,3C6.4331,3 4.4141,5.019 4.4141,7.5 4.4141,8.115 4.5391,8.702 4.7641,9.236L2.0001,12 4.4141,14.414 7.1781,11.65C7.7121,11.875 8.2991,12 8.9141,12 11.3951,12 13.4141,9.981 13.4141,7.5 13.4141,5.019 11.3951,3 8.9141,3" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M8.9141,10C7.5331,10 6.4141,8.881 6.4141,7.5 6.4141,6.119 7.5331,5 8.9141,5 10.2951,5 11.4141,6.119 11.4141,7.5 11.4141,8.881 10.2951,10 8.9141,10 M8.9141,4C6.9811,4 5.4141,5.567 5.4141,7.5 5.4141,8.21 5.6291,8.869 5.9931,9.421L3.4141,12 4.4141,13 6.9931,10.422C7.5451,10.785 8.2041,11 8.9141,11 10.8471,11 12.4141,9.433 12.4141,7.5 12.4141,5.567 10.8471,4 8.9141,4" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M8.9141,10C7.5331,10 6.4141,8.881 6.4141,7.5 6.4141,6.119 7.5331,5 8.9141,5 10.2951,5 11.4141,6.119 11.4141,7.5 11.4141,8.881 10.2951,10 8.9141,10" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,7L7,7 7,6 11,6z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar3Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M9.5,10C8.119,10 7,8.881 7,7.5 7,6.119 8.119,5 9.5,5 10.881,5 12,6.119 12,7.5 12,8.881 10.881,10 9.5,10" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11,7L4.998,7 4.998,0 11,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,6L6,6 6,1 10,1z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.5,1.5C9.019,1.5 7,3.519 7,6 7,6.615 7.125,7.202 7.35,7.736L4.586,10.5 7,12.914 9.764,10.15C10.298,10.375 10.885,10.5 11.5,10.5 13.981,10.5 16,8.481 16,6 16,3.519 13.981,1.5 11.5,1.5" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11.5,8.5C10.119,8.5 9,7.381 9,6 9,4.619 10.119,3.5 11.5,3.5 12.881,3.5 14,4.619 14,6 14,7.381 12.881,8.5 11.5,8.5 M11.5,2.5C9.567,2.5 8,4.067 8,6 8,6.71 8.215,7.369 8.579,7.921L6,10.5 7,11.5 9.579,8.922C10.131,9.285 10.79,9.5 11.5,9.5 13.433,9.5 15,7.933 15,6 15,4.067 13.433,2.5 11.5,2.5" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M11.5,8.5C10.119,8.5 9,7.381 9,6 9,4.619 10.119,3.5 11.5,3.5 12.881,3.5 14,4.619 14,6 14,7.381 12.881,8.5 11.5,8.5" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.937,5.967L10.059,5.967 10.059,5.012 12.937,5.012z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar4Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M9.5,10C8.119,10 7,8.881 7,7.5 7,6.119 8.119,5 9.5,5 10.881,5 12,6.119 12,7.5 12,8.881 10.881,10 9.5,10" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,8L3,8 3,2 10,2z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M8,7L4,7 4,3 8.083,3z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.5,1.2526C9.019,1.2526 7,3.2716 7,5.7526 7,6.3676 7.125,6.9546 7.35,7.4886L4.586,10.2526 7,12.6666 9.764,9.9026C10.298,10.1276 10.885,10.2526 11.5,10.2526 13.981,10.2526 16,8.2336 16,5.7526 16,3.2716 13.981,1.2526 11.5,1.2526" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11.5,8.2526C10.119,8.2526 9,7.1336 9,5.7526 9,4.3716 10.119,3.2526 11.5,3.2526 12.881,3.2526 14,4.3716 14,5.7526 14,7.1336 12.881,8.2526 11.5,8.2526 M11.5,2.2526C9.567,2.2526 8,3.8196 8,5.7526 8,6.4626 8.215,7.1216 8.579,7.6736L6,10.2526 7,11.2526 9.579,8.6746C10.131,9.0376 10.79,9.2526 11.5,9.2526 13.433,9.2526 15,7.6856 15,5.7526 15,3.8196 13.433,2.2526 11.5,2.2526" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M11.5,8.2526C10.119,8.2526 9,7.1336 9,5.7526 9,4.3716 10.119,3.2526 11.5,3.2526 12.881,3.2526 14,4.3716 14,5.7526 14,7.1336 12.881,8.2526 11.5,8.2526" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,7.01L10,7.01 10,4 12,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar5Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M9.5,10C8.119,10 7,8.881 7,7.5 7,6.119 8.119,5 9.5,5 10.881,5 12,6.119 12,7.5 12,8.881 10.881,10 9.5,10" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9,10L2,10 2,4 9,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,9.031L3,9.031 3,5 9,5z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.5,1.3333C9.019,1.3333 7,3.3523 7,5.8333 7,6.4483 7.125,7.0353 7.35,7.5693L4.586,10.3333 7,12.7473 9.764,9.9833C10.298,10.2083 10.885,10.3333 11.5,10.3333 13.981,10.3333 16,8.3143 16,5.8333 16,3.3523 13.981,1.3333 11.5,1.3333" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11.5,8.3333C10.119,8.3333 9,7.2143 9,5.8333 9,4.4523 10.119,3.3333 11.5,3.3333 12.881,3.3333 14,4.4523 14,5.8333 14,7.2143 12.881,8.3333 11.5,8.3333 M11.5,2.3333C9.567,2.3333 8,3.9003 8,5.8333 8,6.5433 8.215,7.2023 8.579,7.7543L6,10.3333 7,11.3333 9.579,8.7553C10.131,9.1183 10.79,9.3333 11.5,9.3333 13.433,9.3333 15,7.7663 15,5.8333 15,3.9003 13.433,2.3333 11.5,2.3333" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M11.5,8.3333C10.119,8.3333 9,7.2143 9,5.8333 9,4.4523 10.119,3.3333 11.5,3.3333 12.881,3.3333 14,4.4523 14,5.8333 14,7.2143 12.881,8.3333 11.5,8.3333" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.917,7L10,7 10,5.313 12.917,5.313z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar6Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M9.5,10C8.119,10 7,8.881 7,7.5 7,6.119 8.119,5 9.5,5 10.881,5 12,6.119 12,7.5 12,8.881 10.881,10 9.5,10" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9,10L3,10 3,4 9,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,8.959L4,8.959 4,5 10,5z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.5,3.3255C9.019,3.3255 7,5.3445 7,7.8255 7,8.4405 7.125,9.0275 7.35,9.5615L4.586,12.3255 7,14.7395 9.764,11.9755C10.298,12.2005 10.885,12.3255 11.5,12.3255 13.981,12.3255 16,10.3065 16,7.8255 16,5.3445 13.981,3.3255 11.5,3.3255" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11.5,10.3255C10.119,10.3255 9,9.2065 9,7.8255 9,6.4445 10.119,5.3255 11.5,5.3255 12.881,5.3255 14,6.4445 14,7.8255 14,9.2065 12.881,10.3255 11.5,10.3255 M11.5,4.3255C9.567,4.3255 8,5.8925 8,7.8255 8,8.5355 8.215,9.1945 8.579,9.7465L6,12.3255 7,13.3255 9.579,10.7475C10.131,11.1105 10.79,11.3255 11.5,11.3255 13.433,11.3255 15,9.7585 15,7.8255 15,5.8925 13.433,4.3255 11.5,4.3255" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M11.5,10.3255C10.119,10.3255 9,9.2065 9,7.8255 9,6.4445 10.119,5.3255 11.5,5.3255 12.881,5.3255 14,6.4445 14,7.8255 14,9.2065 12.881,10.3255 11.5,10.3255" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.917,8.927L10.001,8.927 10.001,6.988 12.917,6.988z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SearchStatusBar7Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M9.5,10C8.119,10 7,8.881 7,7.5 7,6.119 8.119,5 9.5,5 10.881,5 12,6.119 12,7.5 12,8.881 10.881,10 9.5,10" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M16,9.5L5,9.5 5,2 16,2z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,8L6,8 6,3 11,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,8L12,8 12,3 15,3z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10.2083,4.5859C7.7273,4.5859 5.7083,6.6049 5.7083,9.0859 5.7083,9.7009 5.8333,10.2879 6.0583,10.8219L3.2943,13.5859 5.7083,15.9999 8.4723,13.2359C9.0063,13.4609 9.5933,13.5859 10.2083,13.5859 12.6893,13.5859 14.7083,11.5669 14.7083,9.0859 14.7083,6.6049 12.6893,4.5859 10.2083,4.5859" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10.2083,11.5859C8.8273,11.5859 7.7083,10.4669 7.7083,9.0859 7.7083,7.7049 8.8273,6.5859 10.2083,6.5859 11.5893,6.5859 12.7083,7.7049 12.7083,9.0859 12.7083,10.4669 11.5893,11.5859 10.2083,11.5859 M10.2083,5.5859C8.2753,5.5859 6.7083,7.1529 6.7083,9.0859 6.7083,9.7959 6.9233,10.4549 7.2873,11.0069L4.7083,13.5859 5.7083,14.5859 8.2873,12.0079C8.8393,12.3709 9.4983,12.5859 10.2083,12.5859 12.1413,12.5859 13.7083,11.0189 13.7083,9.0859 13.7083,7.1529 12.1413,5.5859 10.2083,5.5859" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M10.2083,11.5859C8.8273,11.5859 7.7083,10.4669 7.7083,9.0859 7.7083,7.7049 8.8273,6.5859 10.2083,6.5859 11.5893,6.5859 12.7083,7.7049 12.7083,9.0859 12.7083,10.4669 11.5893,11.5859 10.2083,11.5859" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11.917,9L9,9 9,8.146 11.917,8.146z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar1Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M1,15L1,1 10,1 12.414,1 15,3.586 15,15z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M12,2L11,2 11,7 5,7 5,2 2,2 2,14 14,14 14,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5L8,5 8,2 10,2z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,2L10,5 8,5 8,2 5,2 5,7 11,7 11,2z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar2Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.4141,2L2.0001,2 2.0001,14 14.0001,14 14.0001,4.586z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M11,3L11,3 11,7 6,7 6,3 3,3 3,13 13,13 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5.041L8,5.041 8,3 10,3z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,3L10,5 8,5 8,3 6,3 6,7 11,7 11,3z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar3Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11,3L4,3 4,12 13,12 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M10,7L7,7 7,4 10,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M10,4.0274L10,7.0004 7,7.0004 7,4.0014C5.937,3.9974,5,4.0004,5,4.0274L5,11.0274 12,11.0274 12,6.0274z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M9,6L8,6 8,4 9,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar4Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M1,15L1,1 10,1 12.414,1 15,3.586 15,15z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M12,2L11,2 11,7 5,7 5,2 2,2 2,14 14,14 14,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5L8,5 8,2 10,2z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,2L10,5 8,5 8,2 5,2 5,7 11,7 11,2z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar5Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.4141,2L2.0001,2 2.0001,14 14.0001,14 14.0001,4.586z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M11,3L11,3 11,7 6,7 6,3 3,3 3,13 13,13 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5.041L8,5.041 8,3 10,3z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,3L10,5 8,5 8,3 6,3 6,7 11,7 11,3z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar6Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11,3L4,3 4,12 13,12 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M10,7L7,7 7,4 10,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M10,4.0274L10,7.0004 7,7.0004 7,4.0014C5.937,3.9974,5,4.0004,5,4.0274L5,11.0274 12,11.0274 12,6.0274z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M9,6L8,6 8,4 9,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar7Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M1,15L1,1 10,1 12.414,1 15,3.586 15,15z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M12,2L11,2 11,7 5,7 5,2 2,2 2,14 14,14 14,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5L8,5 8,2 10,2z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,2L10,5 8,5 8,2 5,2 5,7 11,7 11,2z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar8Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.4141,2L2.0001,2 2.0001,14 14.0001,14 14.0001,4.586z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M11,3L11,3 11,7 6,7 6,3 3,3 3,13 13,13 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush1}" Geometry="F1M10,5.041L8,5.041 8,3 10,3z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,3L10,5 8,5 8,3 6,3 6,7 11,7 11,3z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SaveStatusBar9Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11,3L4,3 4,12 13,12 13,5z" />
+                                <GeometryDrawing Brush="{StaticResource LightBrush2}" Geometry="F1M10,7L7,7 7,4 10,4z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M10,4.0274L10,7.0004 7,7.0004 7,4.0014C5.937,3.9974,5,4.0004,5,4.0274L5,11.0274 12,11.0274 12,6.0274z" />
+                                <GeometryDrawing Brush="{StaticResource IconBlueBrush2}" Geometry="F1M9,6L8,6 8,4 9,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar1Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M12.9996,5.0002L12.9996,13.0002 2.9996,13.0002 2.9996,5.0002 -0.000400000000000844,5.0002 -0.000400000000000844,16.0002 16.0006,16.0002 16.0006,5.0002z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M3,2L6.001,2 6.001,0.167 3,0.167z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,2L13,2 13,0.167 10,0.167z" />
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4,1L5.001,1 5.001,0 4,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,1L12,1 12,0 11,0z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar2Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M12.9996,5.0002L12.9996,13.0002 2.9996,13.0002 2.9996,5.0002 -0.000400000000000844,5.0002 -0.000400000000000844,16.0002 16.0006,16.0002 16.0006,5.0002z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M2.0016,-0.000199999999999534L2.0016,1.9998 3.9996,1.9998 3.9996,3.0008 7.0006,3.0008 7.0006,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10.9998,-0.000199999999999534L10.9998,0.9998 8.9998,0.9998 8.9998,4.0008 11.9998,4.0008 11.9998,3.0008 14.0008,3.0008 14.0008,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.001,1L4.001,1 4.001,0 3.001,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,2L6,2 6,1 5,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,2L13,2 13,1 12,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,3L11,3 11,1.999 10,1.999z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar3Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M12.9996,5.0002L12.9996,13.0002 2.9996,13.0002 2.9996,5.0002 -0.000400000000000844,5.0002 -0.000400000000000844,16.0002 16.0006,16.0002 16.0006,5.0002z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M4.0023,-0.000199999999999534L4.1683,0.1668 1.9993,0.1668 1.9993,3.0008 3.9993,3.0008 3.9993,4.9998 7.0003,4.9998 7.0003,2.9978 8.4263,4.4238 9.0003,3.8348 9.0003,5.9998 11.9993,5.9998 11.9993,3.0008 14.9843,3.0008 14.9843,-0.000199999999999534z M11.9843,0.7648L11.9843,3.0008 9.8113,3.0008z M5.0003,0.9978L6.0023,1.9998 5.0003,1.9998z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,2L4.001,2 4.001,1 3,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,4L6,4 6,3 5,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,2L14.001,2 14.001,1 13,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,5L11,5 11,4 10,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5.4171,-0.000199999999999534L8.4171,3.0008 11.3341,-0.000199999999999534z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar4Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M3.375,-0.000199999999999534L3.375,0.1668 0.896,0.1668 0.896,3.0008 2,3.0008 2,4.9998 0,4.9998 0,15.9998 16,15.9998 16,4.9998 13,4.9998 13,3.0008 14.984,3.0008 14.984,-0.000199999999999534z M3.896,2.5218L4.375,3.0008 3.896,3.0008z M3,5.9998L5,5.9998 5,3.6248 8.375,6.9998 10,5.3748 10,5.9998 13,5.9998 13,13.0008 3,13.0008z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L12,5 12,4 11,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9.9999,-0.000199999999999534L8.9999,0.9998 8.9999,-0.000199999999999534 6.9999,-0.000199999999999534 6.9999,0.9998 6.1259,-0.000199999999999534 4.3749,-0.000199999999999534 4.3749,0.9998 7.9999,4.9998 11.9999,0.9998 11.9999,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2.006,2L2.896,2 2.896,1 2.006,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,5L4,5 4,4 3,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,2L14.001,2 14.001,1 13,1z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar5Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.9997,-0.000199999999999534L11.9997,0.666800000000001 9.9997,1.9998 9.9997,-0.000199999999999534 6.0007,-0.000199999999999534 6.0007,1.9998 5.0007,1.3338 5.0007,-0.000199999999999534 2.0417,-0.000199999999999534 2.0417,1.9568 2.9997,1.9568 2.9997,1.9998 0.999700000000001,1.9998 0.999700000000001,4.9998 -0.000299999999999301,4.9998 -0.000299999999999301,15.9998 16.0007,15.9998 16.0007,4.9998 15.0007,4.9998 15.0007,1.9998 15.0007,-0.000199999999999534z M10.9997,7.9998L12.9997,7.9998 12.9997,13.0008 2.9997,13.0008 2.9997,7.9998 5.0007,7.9998 7.9997,10.9998z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L12,5 12,4 11,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14.0004,6.0001L14.0004,14.0001 1.9994,14.0001 1.9994,6.0001 0.999400000000001,6.0001 0.999400000000001,15.0001 15.0004,15.0001 15.0004,6.0001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.013,1L3.904,1 3.904,0 3.013,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2,4L3,4 3,3 2,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,4L14.001,4 14.001,3 13,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,7L4,7 4,6 3,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,7L13,7 13,6 12,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13.082,1L13.973,1 13.973,0 13.082,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M7.0002,-0.000199999999999534L7.0002,4.9998 5.2492,3.0008 4.3752,3.0008 4.3752,4.9998 8.0002,8.9998 11.9992,4.9998 11.9992,3.0008 11.0002,3.0008 9.0002,4.9998 9.0002,-0.000199999999999534z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar6Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.9997,-0.000199999999999534L11.9997,0.9998 9.9997,3.0008 9.9997,-0.000199999999999534 6.0007,-0.000199999999999534 6.0007,3.0008 4.9567,1.9568 5.0007,1.9568 5.0007,-0.000199999999999534 2.0417,-0.000199999999999534 2.0417,0.9998 0.999700000000001,0.9998 0.999700000000001,4.0008 2.9997,4.0008 2.9997,4.9998 -0.000299999999999301,4.9998 -0.000299999999999301,15.9998 16.0007,15.9998 16.0007,4.9998 15.0007,4.9998 15.0007,3.0008 12.9997,3.0008 12.9997,1.9998 15.0007,1.9998 15.0007,-0.000199999999999534z M10.9997,8.9998L10.9997,9.9998 12.9997,9.9998 12.9997,13.0008 2.9997,13.0008 2.9997,9.9998 5.0007,9.9998 5.0007,8.9998 7.9997,12.0008z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.013,1L3.904,1 3.904,0 3.013,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2,3L3,3 3,1.999 2,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,3L12,3 12,1.999 11,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,5L14.001,5 14.001,4 13,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,9L4,9 4,8 3,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,9L13,9 13,8 12,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13.082,1L13.973,1 13.973,0 13.082,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,4L9,6 9,1 7,1 7,6 5.25,4 4.375,4 4.375,6 8,10 12,6 12,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar7Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.0052,-0.000199999999999534L11.0052,1.9998 10.0002,1.9998 10.0002,0.9998 7.0042,0.9998 7.0042,-0.000199999999999534 4.0052,-0.000199999999999534 4.0052,0.0688000000000005 1.0052,0.0688000000000005 1.0052,1.9998 2.0052,1.9998 2.0052,4.9998 0.000199999999999534,4.9998 0.000199999999999534,15.9998 16.0002,15.9998 16.0002,4.9998 15.0052,4.9998 15.0052,4.0008 12.9992,4.0008 12.9992,3.0008 14.0052,3.0008 14.0052,-0.000199999999999534z M5.0052,3.0048L5.0052,3.0008 6.0002,3.0008 6.0002,4.0008z M11.0002,9.9998L11.0002,10.9998 11.0052,10.9998 12.9992,10.9998 12.9992,13.0008 8.0002,13.0008 2.9992,13.0008 2.9992,10.9998 5.0002,10.9998 5.0052,10.9998 5.0052,10.0048 8.0002,13.0008z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,6L12,6 12,5 11,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L9,7 9,2 7,2 7,7 5.25,5 4.375,5 4.375,7 8,11 12,7 12,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2.005,1L3.005,1 3.005,0 2.005,0z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5.005,2L6.005,2 6.005,1 5.005,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.005,4L4.005,4 4.005,3 3.005,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.005,10L4.005,10 4.005,9 3.005,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.005,10L13.005,10 13.005,9 12.005,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13.005,6L14.005,6 14.005,5 13.005,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10.005,4L11.005,4 11.005,3 10.005,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.005,2L13.005,2 13.005,1 12.005,1z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar8Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.0052,-0.000199999999999534L11.0052,3.0008 10.0002,3.0008 10.0002,1.9998 7.0042,1.9998 7.0042,0.9998 4.0052,0.9998 4.0052,0.0538000000000005 1.0052,0.0538000000000005 1.0052,3.0008 2.0052,3.0008 2.0052,4.9998 0.000199999999999534,4.9998 0.000199999999999534,15.9998 16.0002,15.9998 16.0002,4.9998 12.9992,4.9998 12.9992,3.0008 14.0052,3.0008 14.0052,-0.000199999999999534z M5.0052,4.0048L5.0052,4.0008 6.0002,4.0008 6.0002,4.9998z M11.0052,10.9948L11.0052,10.9998 12.9992,10.9998 12.9992,13.0008 9.0002,13.0008z M2.9992,10.9998L5.0002,10.9998 7.0002,13.0008 2.9992,13.0008z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2.005,2L3.005,2 3.005,1 2.005,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5.005,3L6.005,3 6.005,1.999 5.005,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.005,5L4.005,5 4.005,4 3.005,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3.005,10L4.005,10 4.005,9 3.005,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,7L13,7 13,6 12,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,5L11,5 11,4 10,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12.005,2L13.005,2 13.005,1 12.005,1z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,7L9,9 9,4 7,4 7,9 5.25,7 4.375,7 4.375,9 8,13 12,9 12,7z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar9Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9.9999,1.0627L9.9999,3.0627 7.9999,3.0627 7.9999,4.0007 6.9999,4.0007 6.9999,2.0627 3.9999,2.0627 3.9999,1.0627 0.9999,1.0627 0.9999,4.0627 1.9999,4.0627 1.9999,5.0007 -9.99999999997669E-05,5.0007 -9.99999999997669E-05,15.9997 15.9999,15.9997 15.9999,5.0007 12.9999,5.0007 12.9999,4.0627 12.9999,4.0007 12.9999,1.0627z M10.9999,4.0627L12.9379,4.0627 10.9999,5.9997z M5.0009,5.9997L5.0009,5.0627 5.9999,5.0627 5.9999,6.9997z M9.9999,6.0617L10.9379,6.0617 9.9999,6.9997z M12.9999,10.9997L12.9999,13.0007 10.9999,13.0007z M2.9999,10.9997L5.0009,13.0007 2.9999,13.0007z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,9L9,11 9,6 7,6 7,11 5.25,9 4.375,9 4.375,11 6.188,13 10,13 12,11 12,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M2,3L3,3 3,1.999 2,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,4L6,4 6,3 5,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,6L4,6 4,5 3,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,5L10,5 10,4 9,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,3L12,3 12,1.999 11,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,7.062L12,7.062 12,6.062 11,6.062z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,5.062L13,5.062 13,8.062 10,8.062z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar10Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9,0.999700000000001L9,4.0007 9,5.0627 7,5.0627 7,3.0007 5,3.0007 5,0.999700000000001 2,0.999700000000001 2,4.0007 4,4.0007 4,5.0007 3,5.0007 2,5.0007 0,5.0007 0,15.9997 16,15.9997 16,5.0007 13,5.0007 13,5.9997 12,5.9997 12,4.0007 12,0.999700000000001z M5,5.9997L6,5.9997 6,7.9997 5,7.9997z M10,6.9997L11,6.9997 11,8.9997 13,8.9997 13,9.9997 10,9.9997z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,10L7,10 7,6.062 9,6.062z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,13L7,13 7,11 9,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,13L3,13 3,11 5,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,13L11,13 11,11 13,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,3L4,3 4,1.999 3,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,5L6,5 6,4 5,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,7L4,7 4,6 3,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4,10L5.001,10 5.001,9 4,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,6L11,6 11,5 10,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,8L13,8 13,7 12,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,3L11,3 11,1.999 10,1.999z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar11Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9,0.999700000000001L9,4.0007 9,6.9997 7,6.9997 7,4.0007 5,4.0007 5,0.999700000000001 2,0.999700000000001 2,4.0007 4,4.0007 4,5.9997 3,5.9997 3,5.0007 0,5.0007 0,15.9997 16,15.9997 16,5.0007 13,5.0007 13,5.9997 12,5.9997 12,4.0007 12,0.999700000000001z M10,6.9997L11,6.9997 11,8.9997 13,8.9997 13,9.9997 10,9.9997z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,8.125L7,8.125 7,10 9,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,11L7,11 7,13 9,13z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,10L4,10 4,11 3,11 3,13 5,13z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,13L13,13 13,11 11,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,3L4,3 4,1.999 3,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,6L6,6 6,5 5,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4,8L5.001,8 5.001,7 4,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,6L11,6 11,5 10,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M12,8L13,8 13,7 12,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10,3L11,3 11,1.999 10,1.999z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar12Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M2.9997,1.9996L2.9997,5.0006 -0.000300000000000189,5.0006 -0.000300000000000189,15.9996 16.0007,15.9996 16.0007,5.0006 12.9997,5.0006 12.9997,3.0006 9.9997,3.0006 9.9997,6.0006 12.9997,6.0006 12.9997,6.9996 9.9997,6.9996 7.0007,6.9996 7.0007,5.0006 6.0007,5.0006 6.0007,1.9996z M3.9997,6.9996L2.9997,6.9996 2.9997,4.9996 3.9997,4.9996z M11.9997,10.9996L12.9997,10.9996 12.9997,13.0006 11.9997,13.0006z M2.9997,10.9996L3.9997,10.9996 3.9997,13.0006 2.9997,13.0006z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,10L7,10 7,8 9,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,10L3,10 3,8 5,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M7,13L5,13 5,11 7,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,13L9,13 9,11 11,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,10L11,10 11,8 13,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4,4L5.001,4 5.001,3 4,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,7L6,7 6,6 5,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L12,5 12,4 11,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="BuildSolutionStatusBar13Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9.9999,3.0004L9.9999,6.0004 12.9999,6.0004 12.9999,7.0004 9.9999,7.0004 5.9999,7.0004 2.9999,7.0004 2.9999,5.0004 -9.99999999997669E-05,5.0004 -9.99999999997669E-05,16.0004 15.9999,16.0004 15.9999,5.0004 12.9999,5.0004 12.9999,3.0004z M11.9999,10.9994L12.9999,10.9994 12.9999,13.0004 11.9999,13.0004z M2.9999,10.9994L3.9999,10.9994 3.9999,13.0004 2.9999,13.0004z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M6,2L3,2 3,5 6,5z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L14,14 2,14 2,6 1,6 1,15 15,15 15,6z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M9,10L7,10 7,8 9,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M5,10L3,10 3,8 5,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M7,13L5,13 5,11 7,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,13L9,13 9,11 11,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,10L11,10 11,8 13,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4,4L5.001,4 5.001,3 4,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M11,5L12,5 12,4 11,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar1Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,13L3,13 3,8.999 0,8.999z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M13,7L16.001,7 16.001,3 13,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,12L2,12 2,9.999 1,9.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6L15,6 15,4 14,4z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar2Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,16L0.414,16 5.414,11 0,5.586z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M15.5862,-0.000199999999999534L10.5862,4.9998 16.0002,10.4138 16.0002,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,8L1,14 4,11z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,2L15,8 12,5z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar3Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0.3816,7L1.3816,9 -0.000400000000000011,9.031 -0.000400000000000011,13 1.3816,13 0.3816,15 4.5346,15 7.2016,11 4.5346,7z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.4633,0.999700000000001L8.7963,5.0007 11.4633,8.9997 15.6163,8.9997 14.6163,6.9997 15.9983,6.9627 15.9983,3.0007 14.6163,3.0007 15.6163,0.999700000000001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,10L1,12 3,12 2,14 4,14 6,11 4,8 2,8 3,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14.9977,6L14.9977,4 12.9977,4 13.9977,2 11.9977,2 9.9977,5 11.9977,8 13.9977,8 12.9977,6z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar4Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M1.9998,7L2.9998,9 -0.000199999999999978,9.031 -0.000199999999999978,13 2.9998,13 1.9998,15 6.3328,15 8.9998,11 6.3328,7z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M9.6669,0.999700000000001L6.9999,5.0007 9.6669,8.9997 13.8199,8.9997 12.8199,6.9997 15.9999,6.9627 15.9999,3.0007 12.8199,3.0007 13.8199,0.999700000000001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,10L1,12 4.798,12 3.798,14 5.798,14 7.798,11 5.798,8 3.798,8 4.798,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14.9997,6L14.9997,4 11.2017,4 12.2017,2 10.2017,2 8.2017,5 10.2017,8 12.2017,8 11.2017,6z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar5Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M7.6653,0.999700000000001L4.9983,5.0007 6.3323,6.9997 4.3823,6.9997 5.3823,8.9997 0.000300000000000189,8.9997 0.000300000000000189,13.0007 5.3823,13.0007 4.3823,14.9997 8.5353,14.9997 11.2023,10.9997 9.8683,8.9997 11.8193,8.9997 10.8183,6.9997 16.0003,6.9997 16.0003,3.0007 10.8183,3.0007 11.8193,0.999700000000001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,10L1,12 7,12 6,14 8,14 10,11 8,8 6,8 7,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,6L15,4 9.201,4 10.201,2 8.201,2 6.201,5 8.201,8 10.201,8 9.201,6z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar6Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M3.4641,0.999700000000001L0.7971,5.0007 3.4641,8.9997 3.0001,8.9997 3.0001,13.0007 8.3831,13.0007 7.3831,14.9997 11.5361,14.9997 14.2031,10.9997 11.5361,6.9997 11.9991,6.9997 11.9991,3.0007 6.6171,3.0007 7.6181,0.999700000000001z M6.6171,6.9997L7.3831,6.9997 8.3831,8.9997 7.6181,8.9997z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4.0008,10L4.0008,12 10.0008,12 9.0008,14 11.0008,14 13.0008,11 11.0008,8 9.0008,8 10.0008,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M10.9992,6L10.9992,4 4.9992,4 5.9992,2 3.9992,2 1.9992,5 3.9992,8 5.9992,8 4.9992,6z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar7Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,0.999700000000001L0,8.9647 4,8.9647 4,6.9997 9,6.9997 9,3.0007 4,3.0007 4,0.999700000000001z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M11.9997,7L11.9997,8.965 7.0007,8.965 7.0007,12.965 11.9997,12.965 11.9997,14.965 16.0007,14.965 16.0007,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,2L1,2 1,7.964 3,7.964 3,7 2,7 2,6 8,6 8,4 2,4 2,3 3,3z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M13,13.9644L15,13.9644 15,8.0004 13,8.0004 13,8.9644 14,8.9644 14,9.9644 8,9.9644 8,11.9644 14,11.9644 14,12.9644 13,12.9644z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar8Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,0.999700000000001L0,3.0007 0,4.0007 0,5.9997 0,6.9997 0,8.9997 3,8.9997 3,6.9997 8,6.9997 8,3.0007 3,3.0007 3,0.999700000000001z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M12.9996,7L12.9996,9 8.0006,9 8.0006,13 12.9996,13 12.9996,15 16.0006,15 16.0006,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,3L2,3 2,1.999 1,1.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,8L2,8 2,7 1,7z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M7,6L1,6 1,4 7,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M15,12L9,12 9,10 15,10z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,9L15,9 15,8 14,8z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,14L15,14 15,13 14,13z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar9Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,7L6,7 6,3.117 0,3.117z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M10,12.903L16,12.903 16,9 10,9z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M4.96,6L1,6 1,4 4.96,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14.96,12L11,12 11,10 14.96,10z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar10Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,6.977L4.039,6.977 4.039,3.094 0,3.094z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M12,12.87L16.001,12.87 16.001,8.967 12,8.967z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M3,6L1,6 1,4 3,4z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14.96,12L13,12 13,10 14.96,10z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar11Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,12.977L3,12.977 3,9.094 0,9.094z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M13,6.903L16.001,6.903 16.001,3.001 13,3.001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,12L1.96,12 1.96,9.999 1,9.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6.033L14.96,6.033 14.96,4.033 14,4.033z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="SyncArrowStatusBar12Icon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z">
+                                    <GeometryDrawing.Pen>
+                                        <Pen
+                                            Brush="#00FFFFFF"
+                                            DashCap="Flat"
+                                            Thickness="1.0000003576278687" />
+                                    </GeometryDrawing.Pen>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M0,12.977L3,12.977 3,9.094 0,9.094z" />
+                                <GeometryDrawing Brush="{StaticResource HaloBrush}" Geometry="F1M13,6.903L16.001,6.903 16.001,3.001 13,3.001z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M1,12L1.96,12 1.96,9.999 1,9.999z" />
+                                <GeometryDrawing Brush="{StaticResource DarkBrush1}" Geometry="F1M14,6.033L14.96,6.033 14.96,4.033 14,4.033z" />
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>

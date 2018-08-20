@@ -1,16 +1,10 @@
-﻿namespace Orcus.Administration.Library.StatusBar
+﻿using System;
+
+namespace Orcus.Administration.Library.StatusBar
 {
+    //https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.shell.interop.ivsstatusbar?view=visualstudiosdk-2017
     public interface IShellStatusBar
     {
-        void PushStatus(StatusMessage message);
-    }
-
-    public abstract class StatusMessage
-    {
-    }
-
-    public class TextStatusMessage
-    {
-
+        IDisposable PushStatus(StatusMessage message);
     }
 }

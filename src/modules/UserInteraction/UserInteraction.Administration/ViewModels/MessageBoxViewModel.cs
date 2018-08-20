@@ -2,6 +2,7 @@
 using Anapher.Wpf.Swan.ViewInterface;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
+using Orcus.Administration.Library.StatusBar;
 using Prism.Commands;
 using Prism.Mvvm;
 using UserInteraction.Administration.Extensions;
@@ -13,6 +14,7 @@ namespace UserInteraction.Administration.ViewModels
     public class MessageBoxViewModel : BindableBase
     {
         private readonly IWindow _window;
+        private readonly IShellStatusBar _statusBar;
         private readonly IPackageRestClient _restClient;
         private string _caption;
         private SystemButtons _messageBoxButtons;
@@ -21,9 +23,10 @@ namespace UserInteraction.Administration.ViewModels
         private DelegateCommand _testCommand;
         private string _text;
 
-        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow window)
+        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow window, IShellStatusBar statusBar)
         {
             _window = window;
+            _statusBar = statusBar;
             _restClient = restClient.CreateLocal();
         }
 
@@ -77,7 +80,9 @@ namespace UserInteraction.Administration.ViewModels
                         Buttons = MessageBoxButtons
                     };
 
-                    await MessageBoxResource.OpenAsync(dto, _restClient).OnErrorShowMessageBox(_window);
+                    await MessageBoxResource.OpenAsync(dto, _restClient).DisplayOnStatusBar(_statusBar,
+                            "Send MessageBox to client, waiting for response...", StatusBarAnimation.Send)
+                        .OnErrorShowMessageBox(_window);
                 }));
             }
         }

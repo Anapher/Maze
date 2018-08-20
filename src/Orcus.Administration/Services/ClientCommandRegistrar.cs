@@ -7,6 +7,7 @@ using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Prism;
 using Prism.Commands;
 using Unclassified.TxLib;
@@ -40,9 +41,12 @@ namespace Orcus.Administration.Services
                 Command = new DelegateCommand<ClientViewModel>(model =>
                 {
                     var viewModelType = _viewModelResolver.ResolveViewModelType(viewType);
+                    IShellStatusBar statusBar = null;
 
                     var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
                     {
+                        builder.Register(context => statusBar = new StatusBarManager()).As<IShellStatusBar>()
+                            .SingleInstance();
                         builder.RegisterType(viewType);
                         builder.RegisterType(viewModelType);
                         builder.RegisterInstance(model);
@@ -53,7 +57,7 @@ namespace Orcus.Administration.Services
                     var view = (FrameworkElement) lifescope.Resolve(viewType);
                     view.DataContext = viewModel;
 
-                    var window = _shellWindowOpener.Show(view, Tx.T(txLibResource), icon as ImageSource);
+                    var window = _shellWindowOpener.Show(view, Tx.T(txLibResource), icon as ImageSource, statusBar);
                     window.Closed += (sender, args) => lifescope.Dispose();
                 })
             });
