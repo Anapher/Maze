@@ -10,6 +10,7 @@ namespace Orcus.Administration.Library.StatusBar
         private readonly List<StatusMessage> _messages;
         private readonly object _messagesLock = new object();
         private StatusMessage _currentStatusMessage;
+        private object _rightContent;
 
         public StatusBarManager()
         {
@@ -20,6 +21,12 @@ namespace Orcus.Administration.Library.StatusBar
         {
             get => _currentStatusMessage;
             private set => SetProperty(ref _currentStatusMessage, value);
+        }
+
+        public object RightContent
+        {
+            get => _rightContent;
+            set => SetProperty(ref _rightContent, value);
         }
 
         public IDisposable PushStatus(StatusMessage message)

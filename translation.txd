@@ -23,6 +23,7 @@
 		<text key="ModulesView:Source.All">Alle</text>
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
+		<text key="Ready">Bereit</text>
 		<text key="Server">Server</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
@@ -235,6 +236,7 @@
 		<text key="ModulesView:Source.All">All</text>
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
+		<text key="Ready">Ready</text>
 		<text key="Server">Server</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />

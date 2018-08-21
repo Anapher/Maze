@@ -157,7 +157,7 @@ namespace Orcus.Sockets.Internal.Http
         private static int SearchBytes(ArraySegment<byte> haystack, byte[] needle)
         {
             var len = needle.Length;
-            var limit = haystack.Count - len;
+            var limit = haystack.Count - len + haystack.Offset;
             for (var i = haystack.Offset; i <= limit; i++)
             {
                 var k = 0;

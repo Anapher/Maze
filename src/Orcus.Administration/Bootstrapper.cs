@@ -69,7 +69,7 @@ namespace Orcus.Administration
             builder.RegisterInstance(new ViewModelResolver(Assembly.GetAssembly(typeof(MainViewModel)),
                 Assembly.GetEntryAssembly())).As<IViewModelResolver>();
             builder.RegisterType<ClientCommandRegistrar>().As<IClientCommandRegistrar>().SingleInstance();
-            builder.RegisterType<ShellWindowOpener>().As<IShellWindowOpener>().SingleInstance();
+            builder.RegisterType<ShellWindowFactory>().As<IShellWindowFactory>().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

@@ -1,5 +1,4 @@
-﻿using Orcus.Administration.Core.Clients;
-using Orcus.Administration.Library.Clients;
+﻿using Orcus.Administration.Library.Clients;
 
 namespace Orcus.Administration.Core.Modules
 {

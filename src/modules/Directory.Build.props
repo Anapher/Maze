@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ConfigurationName)'=='Debug'">
+    <Exec Command="$(SolutionDir)src\ModuleLocalUpdater\bin\Debug\net47\ModuleLocalUpdater.exe $(ProjectName) $(TargetDir) --solutionDir $(SolutionDir)" />
+  </Target>
+</Project>

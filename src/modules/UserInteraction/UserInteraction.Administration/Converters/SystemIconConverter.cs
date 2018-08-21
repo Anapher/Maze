@@ -7,54 +7,50 @@ using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using UserInteraction.Administration.Native;
-using UserInteraction.Dtos;
+using UserInteraction.Dtos.MessageBox;
 
 namespace UserInteraction.Administration.Converters
 {
-    [ValueConversion(typeof (string), typeof (BitmapSource))]
+    [ValueConversion(typeof(string), typeof(BitmapSource))]
     public class SystemIconConverter : IValueConverter
     {
         public object Convert(object value, Type type, object parameter, CultureInfo culture)
         {
-            var messageBoxIcon = (SystemIcon) value;
-            if (messageBoxIcon == SystemIcon.None)
+            var messageBoxIcon = (MsgBxIcon) value;
+            if (messageBoxIcon == MsgBxIcon.None)
                 return null;
 
             SHSTOCKICONID iconId;
             switch (messageBoxIcon)
             {
-                case SystemIcon.Error:
+                case MsgBxIcon.Error:
                     iconId = SHSTOCKICONID.SIID_ERROR;
                     break;
-                case SystemIcon.Question:
+                case MsgBxIcon.Question:
                     iconId = SHSTOCKICONID.SIID_HELP;
                     break;
-                case SystemIcon.Warning:
+                case MsgBxIcon.Warning:
                     iconId = SHSTOCKICONID.SIID_WARNING;
                     break;
-                case SystemIcon.Info:
+                case MsgBxIcon.Info:
                     iconId = SHSTOCKICONID.SIID_INFO;
                     break;
                 default:
                     return null;
             }
 
-            var sii = new SHSTOCKICONINFO {cbSize = (uint) Marshal.SizeOf(typeof (SHSTOCKICONINFO))};
+            var sii = new SHSTOCKICONINFO {cbSize = (uint) Marshal.SizeOf(typeof(SHSTOCKICONINFO))};
 
-            Marshal.ThrowExceptionForHR(NativeMethods.SHGetStockIconInfo(iconId,
-                SHGSI.SHGSI_ICON,
-                ref sii));
+            Marshal.ThrowExceptionForHR(NativeMethods.SHGetStockIconInfo(iconId, SHGSI.SHGSI_ICON, ref sii));
 
-            Icon icon = Icon.FromHandle(sii.hIcon);
+            var icon = Icon.FromHandle(sii.hIcon);
             var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
             NativeMethods.DestroyIcon(sii.hIcon);
             return bs;
         }
 
-        public object ConvertBack(object value, Type type, object parameter, CultureInfo culture)
-        {
+        public object ConvertBack(object value, Type type, object parameter, CultureInfo culture) =>
             throw new NotSupportedException();
-        }
     }
 }

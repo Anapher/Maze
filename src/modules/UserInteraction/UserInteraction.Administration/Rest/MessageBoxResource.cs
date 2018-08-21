@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Clients.Helpers;
-using UserInteraction.Dtos;
+using UserInteraction.Dtos.MessageBox;
 
 namespace UserInteraction.Administration.Rest
 {
@@ -11,9 +11,7 @@ namespace UserInteraction.Administration.Rest
         {
         }
 
-        public static Task OpenAsync(OpenMessageBoxDto dto, IPackageRestClient restClient)
-        {
-            return CreateRequest(HttpVerb.Post, "open", dto).Execute(restClient);
-        }
+        public static Task<MsgBxResult> OpenAsync(OpenMessageBoxDto dto, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "open", dto).Execute(restClient).Return<MsgBxResult>();
     }
 }

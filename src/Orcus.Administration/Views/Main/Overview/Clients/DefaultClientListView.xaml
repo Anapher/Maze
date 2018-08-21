@@ -25,11 +25,17 @@
         CanUserSortColumns="True"
         ItemsSource="{Binding ClientsView}">
         <DataGrid.Resources>
-            <ContextMenu x:Key="ItemContextMenu" MinWidth="230" />
+            <ContextMenu x:Key="OnlineItemContextMenu" MinWidth="230" />
+            <ContextMenu x:Key="OfflineItemContextMenu" MinWidth="230" />
         </DataGrid.Resources>
         <DataGrid.RowStyle>
             <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">
-                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                <Setter Property="ContextMenu" Value="{StaticResource OnlineItemContextMenu}" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSocketConnected}" Value="false">
+                        <Setter Property="ContextMenu" Value="{StaticResource OfflineItemContextMenu}" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </DataGrid.RowStyle>
         <DataGrid.Columns>

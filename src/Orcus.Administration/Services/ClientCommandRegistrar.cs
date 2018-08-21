@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Menu;
@@ -8,6 +9,7 @@ using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
 using Prism.Commands;
 using Unclassified.TxLib;
@@ -18,17 +20,17 @@ namespace Orcus.Administration.Services
     {
         private readonly ClientsContextMenu _clientsContextMenu;
         private readonly IComponentContext _componentContext;
-        private readonly IShellWindowOpener _shellWindowOpener;
+        private readonly IShellWindowFactory _shellWindowFactory;
         private readonly IOrcusRestClient _orcusRestClient;
         private readonly IViewModelResolver _viewModelResolver;
 
         public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IViewModelResolver viewModelResolver,
-            IComponentContext componentContext, IShellWindowOpener shellWindowOpener, IOrcusRestClient orcusRestClient)
+            IComponentContext componentContext, IShellWindowFactory shellWindowFactory, IOrcusRestClient orcusRestClient)
         {
             _clientsContextMenu = clientsContextMenu;
             _viewModelResolver = viewModelResolver;
             _componentContext = componentContext;
-            _shellWindowOpener = shellWindowOpener;
+            _shellWindowFactory = shellWindowFactory;
             _orcusRestClient = orcusRestClient;
         }
 
@@ -41,10 +43,14 @@ namespace Orcus.Administration.Services
                 Command = new DelegateCommand<ClientViewModel>(model =>
                 {
                     var viewModelType = _viewModelResolver.ResolveViewModelType(viewType);
-                    IShellStatusBar statusBar = null;
+                    StatusBarManager statusBar = null;
+
+                    var window = _shellWindowFactory.Create();
+                    window.InitializeTitleBar(Tx.T(txLibResource), icon as ImageSource);
 
                     var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
                     {
+                        builder.RegisterInstance(window.ViewManager).As<IWindow>().As<IMetroWindow>().As<IWindowViewManager>();
                         builder.Register(context => statusBar = new StatusBarManager()).As<IShellStatusBar>()
                             .SingleInstance();
                         builder.RegisterType(viewType);
@@ -57,8 +63,9 @@ namespace Orcus.Administration.Services
                     var view = (FrameworkElement) lifescope.Resolve(viewType);
                     view.DataContext = viewModel;
 
-                    var window = _shellWindowOpener.Show(view, Tx.T(txLibResource), icon as ImageSource, statusBar);
-                    window.Closed += (sender, args) => lifescope.Dispose();
+                    window.InitalizeContent(view, statusBar);
+                    window.Window.Closed += (sender, args) => lifescope.Dispose();
+                    window.Show();
                 })
             });
         }

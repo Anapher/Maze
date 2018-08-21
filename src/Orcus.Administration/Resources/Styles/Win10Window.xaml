@@ -757,5 +757,67 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource Win10Window}" TargetType="controls:MetroWindow" />
+    <Style x:Key="NormalWindow" TargetType="controls:MetroWindow">
+        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="converters:StylizedBehaviors.Behaviors">
+            <Setter.Value>
+                <converters:StylizedBehaviorCollection>
+                    <converters:BorderlessWindowBehavior />
+                    <converters:WindowsSettingBehaviour />
+                    <converters:GlowWindowBehavior />
+                </converters:StylizedBehaviorCollection>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="TextElement.FontSize" Value="{DynamicResource ContentFontSize}" />
+        <Setter Property="TitleAlignment" Value="Left" />
+        <Setter Property="TitleForeground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="TitleTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI"
+                        FontSize="12"
+                        Text="{TemplateBinding Content}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="WindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
+        <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="GlowBrush" Value="{DynamicResource AccentColorBrush}" />
+        <Setter Property="WindowTransitionsEnabled" Value="False" />
+        <Setter Property="ShowIconOnTitleBar" Value="True" />
+        <Setter Property="TitleCharacterCasing" Value="Normal" />
+        <Setter Property="IconBitmapScalingMode" Value="HighQuality" />
+        <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource TransparentWhiteBrush}" />
+        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource NonActiveBorderColorBrush}" />
+        <Setter Property="IconEdgeMode" Value="Aliased" />
+        <Setter Property="Template" Value="{StaticResource WindowTemplateKey}" />
+        <Setter Property="IconTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        RenderOptions.BitmapScalingMode="{Binding IconBitmapScalingMode, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:MetroWindow}}}"
+                        RenderOptions.EdgeMode="{Binding IconEdgeMode, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:MetroWindow}}}"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True">
+                        <Image.Source>
+                            <TemplateBinding Converter="{StaticResource IconSizeConverter}" Property="Content">
+                                <TemplateBinding.ConverterParameter>
+                                    <system:Double>16</system:Double>
+                                </TemplateBinding.ConverterParameter>
+                            </TemplateBinding>
+                        </Image.Source>
+                    </Image>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace UserInteraction.Dtos
+﻿namespace UserInteraction.Dtos.MessageBox
 {
     /// <summary>Specifies constants defining which buttons to display on a <see cref="T:System.Windows.Forms.MessageBox" />.</summary>
     /// <filterpriority>2</filterpriority>
-    [Serializable]
-    public enum SystemButtons
+    public enum MsgBxButtons
     {
         /// <summary>The message box contains an OK button.</summary>
         OK,

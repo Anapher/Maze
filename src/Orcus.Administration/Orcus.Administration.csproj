@@ -69,7 +69,8 @@
     <Compile Include="Prism\ViewModelResolver.cs" />
     <Compile Include="Services\AppDispatcher.cs" />
     <Compile Include="Services\ClientCommandRegistrar.cs" />
-    <Compile Include="Services\ShellWindowOpener.cs" />
+    <Compile Include="Services\ShellWindowFactory.cs" />
+    <Compile Include="Services\WindowInstance.cs" />
     <Compile Include="Utilities\WpfExtensions.cs" />
     <Compile Include="ViewModule.cs" />
     <Compile Include="Views\ShellWindow.xaml.cs">
@@ -220,4 +221,8 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -9,8 +9,9 @@
     <Import_RootNamespace>Orcus.Modules.UserInteraction.Dtos</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\MsgBxResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MessageBox\OpenMessageBoxDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\SystemButtons.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\SystemIcon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\MsgBxButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageBox\MsgBxIcon.cs" />
   </ItemGroup>
 </Project>

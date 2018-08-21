@@ -13,7 +13,9 @@
 		<text key="UserInteraction:MessageBox.Buttons.Yes">Ja</text>
 		<text key="UserInteraction:MessageBox.Caption">Titel</text>
 		<text key="UserInteraction:MessageBox.Icon">Icon</text>
+		<text key="UserInteraction:MessageBox.MessageBoxClosed">Die Nachrichtenbox wurde von dem Benutzer geschlossen. Antwort: {result}</text>
 		<text key="UserInteraction:MessageBox.Send">Senden</text>
+		<text key="UserInteraction:MessageBox.SendingMessage">Die Nachricht wurde an den Benutzer gesendet, warte auf eine Antwort...</text>
 		<text key="UserInteraction:MessageBox.Test">Testen</text>
 		<text key="UserInteraction:MessageBox.Text">Text</text>
 	</culture>
@@ -29,7 +31,9 @@
 		<text key="UserInteraction:MessageBox.Buttons.Yes">Yes</text>
 		<text key="UserInteraction:MessageBox.Caption">Caption</text>
 		<text key="UserInteraction:MessageBox.Icon">Icon</text>
+		<text key="UserInteraction:MessageBox.MessageBoxClosed">Message box closed by user. Result: {result}</text>
 		<text key="UserInteraction:MessageBox.Send">Send</text>
+		<text key="UserInteraction:MessageBox.SendingMessage">Sent message box to client, waiting for response...</text>
 		<text key="UserInteraction:MessageBox.Test">Test</text>
 		<text key="UserInteraction:MessageBox.Text">Text</text>
 	</culture>

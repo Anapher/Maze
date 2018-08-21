@@ -8,13 +8,9 @@ namespace Orcus.Administration.Controls
 {
     public class FrameAnimationControl : ContentControl
     {
-        public static readonly DependencyProperty FirstFrameResourceNameProperty =
-            DependencyProperty.Register("FirstFrameResourceName", typeof(string), typeof(FrameAnimationControl),
-                new PropertyMetadata(default(string), OnResourceNameChanged));
-
-        public static readonly DependencyProperty LastFrameResourceNameProperty =
-            DependencyProperty.Register("LastFrameResourceName", typeof(string), typeof(FrameAnimationControl),
-                new PropertyMetadata(default(string), OnResourceNameChanged));
+        public static readonly DependencyProperty FrameResourceNameProperty = DependencyProperty.Register("FrameResourceName",
+            typeof(string), typeof(FrameAnimationControl),
+            new PropertyMetadata(default(string), OnResourceNameChanged));
 
         public static readonly DependencyProperty AnimationIntervalProperty =
             DependencyProperty.Register("AnimationInterval", typeof(TimeSpan), typeof(FrameAnimationControl),
@@ -22,22 +18,16 @@ namespace Orcus.Administration.Controls
 
         private CancellationTokenSource _animationCancelSource;
 
+        public string FrameResourceName
+        {
+            get => (string) GetValue(FrameResourceNameProperty);
+            set => SetValue(FrameResourceNameProperty, value);
+        }
+
         public TimeSpan AnimationInterval
         {
             get => (TimeSpan) GetValue(AnimationIntervalProperty);
             set => SetValue(AnimationIntervalProperty, value);
-        }
-
-        public string FirstFrameResourceName
-        {
-            get => (string) GetValue(FirstFrameResourceNameProperty);
-            set => SetValue(FirstFrameResourceNameProperty, value);
-        }
-
-        public string LastFrameResourceName
-        {
-            get => (string) GetValue(LastFrameResourceNameProperty);
-            set => SetValue(LastFrameResourceNameProperty, value);
         }
 
         private static void OnResourceNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -50,26 +40,16 @@ namespace Orcus.Administration.Controls
         {
             ClearAnimation();
 
-            var name = FirstFrameResourceName;
-            var lastResource = LastFrameResourceName;
+            var resourceName = FrameResourceName;
 
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lastResource))
+            if (string.IsNullOrEmpty(resourceName))
                 return;
 
-            var numberPosition = name.IndexOf('1');
-            if (numberPosition < lastResource.Length)
-            {
-                if (name.AsSpan().Slice(0, numberPosition).SequenceEqual(lastResource.AsSpan().Slice(0, numberPosition)))
-                {
-                    var i = numberPosition + 1;
-                    while (char.IsNumber(lastResource[i]) && lastResource.Length > i - 1)
-                        i++;
+            var parts = resourceName.Split('/');
+            var name = parts[0];
+            var count = int.Parse(parts[1]);
 
-                    if (name.AsSpan().Slice(numberPosition + 1).SequenceEqual(lastResource.AsSpan().Slice(i)))
-                        StartAnimation(name.Replace('1', '*'),
-                            int.Parse(lastResource.Substring(numberPosition, i - numberPosition)));
-                }
-            }
+            StartAnimation(name, count);
         }
 
         private async void StartAnimation(string name, int count)

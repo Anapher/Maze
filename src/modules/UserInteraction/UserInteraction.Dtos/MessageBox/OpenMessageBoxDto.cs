@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text;
-
-namespace UserInteraction.Dtos
+﻿namespace UserInteraction.Dtos.MessageBox
 {
-   public class OpenMessageBoxDto
+    public class OpenMessageBoxDto
     {
         public string Text { get; set; }
         public string Caption { get; set; }
-        public SystemButtons Buttons { get; set; }
-        public SystemIcon Icon { get; set; }
-
+        public MsgBxButtons Buttons { get; set; }
+        public MsgBxIcon Icon { get; set; }
     }
 }

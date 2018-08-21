@@ -5,9 +5,10 @@ using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.StatusBar;
 using Prism.Commands;
 using Prism.Mvvm;
+using Unclassified.TxLib;
 using UserInteraction.Administration.Extensions;
 using UserInteraction.Administration.Rest;
-using UserInteraction.Dtos;
+using UserInteraction.Dtos.MessageBox;
 
 namespace UserInteraction.Administration.ViewModels
 {
@@ -17,8 +18,8 @@ namespace UserInteraction.Administration.ViewModels
         private readonly IShellStatusBar _statusBar;
         private readonly IPackageRestClient _restClient;
         private string _caption;
-        private SystemButtons _messageBoxButtons;
-        private SystemIcon _messageBoxIcon;
+        private MsgBxButtons _messageBoxButtons;
+        private MsgBxIcon _messageBoxIcon;
         private DelegateCommand _sendCommand;
         private DelegateCommand _testCommand;
         private string _text;
@@ -30,13 +31,13 @@ namespace UserInteraction.Administration.ViewModels
             _restClient = restClient.CreateLocal();
         }
 
-        public SystemIcon MessageBoxIcon
+        public MsgBxIcon MessageBoxIcon
         {
             get => _messageBoxIcon;
             set => SetProperty(ref _messageBoxIcon, value);
         }
 
-        public SystemButtons MessageBoxButtons
+        public MsgBxButtons MessageBoxButtons
         {
             get => _messageBoxButtons;
             set => SetProperty(ref _messageBoxButtons, value);
@@ -80,24 +81,28 @@ namespace UserInteraction.Administration.ViewModels
                         Buttons = MessageBoxButtons
                     };
 
-                    await MessageBoxResource.OpenAsync(dto, _restClient).DisplayOnStatusBar(_statusBar,
-                            "Send MessageBox to client, waiting for response...", StatusBarAnimation.Send)
-                        .OnErrorShowMessageBox(_window);
+                    var result = await MessageBoxResource.OpenAsync(dto, _restClient)
+                        .DisplayOnStatusBar(_statusBar, Tx.T("UserInteraction:MessageBox.SendingMessage"),
+                            StatusBarAnimation.Send).OnErrorShowMessageBox(_window);
+                    if (!result.Failed)
+                    {
+                        _statusBar.ShowSuccess(Tx.T("UserInteraction:MessageBox.MessageBoxClosed", "result", result.Result.ToString()));
+                    }
                 }));
             }
         }
 
-        private static MessageBoxIcon SystemIconToMessageBoxIcon(SystemIcon icon)
+        private static MessageBoxIcon SystemIconToMessageBoxIcon(MsgBxIcon icon)
         {
             switch (icon)
             {
-                case SystemIcon.Error:
+                case MsgBxIcon.Error:
                     return System.Windows.Forms.MessageBoxIcon.Error;
-                case SystemIcon.Info:
+                case MsgBxIcon.Info:
                     return System.Windows.Forms.MessageBoxIcon.Information;
-                case SystemIcon.Warning:
+                case MsgBxIcon.Warning:
                     return System.Windows.Forms.MessageBoxIcon.Warning;
-                case SystemIcon.Question:
+                case MsgBxIcon.Question:
                     return System.Windows.Forms.MessageBoxIcon.Question;
                 default:
                     return System.Windows.Forms.MessageBoxIcon.None;
