@@ -1,4 +1,5 @@
 ﻿using Orcus.Administration.Library.Views;
+using UserInteraction.Administration.Resources;
 
 namespace UserInteraction.Administration.Views
 {
@@ -10,6 +11,7 @@ namespace UserInteraction.Administration.Views
         public MessageBoxView(IWindowViewManager viewManager) : base(viewManager)
         {
             InitializeComponent();
+            Icon = VisualStudioImages.MessageBox();
         }
     }
 }

@@ -12,4 +12,5 @@
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.0" />
   </ItemGroup>
+  <Import Project="..\Orcus.Utilities\Orcus.Utilities.projitems" Label="Shared" />
 </Project>

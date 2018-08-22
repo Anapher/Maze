@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Orcus.ModuleManagement.Logging;
-using Orcus.ModuleManagement.Utilities;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.Utilities;
 
 namespace Orcus.ModuleManagement
 {
@@ -35,7 +35,7 @@ namespace Orcus.ModuleManagement
         public async Task Invoke(TContext context, CancellationToken cancellationToken)
         {
             var exceptions =
-                await TaskCombinators.ThrottledAsync(_actions, (action, token) => action.Execute(context), cancellationToken);
+                await TaskCombinators.ThrottledCatchErrorsAsync(_actions, (action, token) => action.Execute(context), cancellationToken);
 
             foreach (var keyValuePair in exceptions)
             {
@@ -64,7 +64,7 @@ namespace Orcus.ModuleManagement
         public async Task Invoke(CancellationToken cancellationToken)
         {
             var exceptions =
-                await TaskCombinators.ThrottledAsync(_actions, (action, token) => action.Execute(), cancellationToken);
+                await TaskCombinators.ThrottledCatchErrorsAsync(_actions, (action, token) => action.Execute(), cancellationToken);
 
             foreach (var keyValuePair in exceptions)
             {

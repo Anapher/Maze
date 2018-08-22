@@ -58,6 +58,35 @@ namespace Orcus.Utilities
             await Task.WhenAll(tasks);
         }
 
+        public static async Task<IReadOnlyDictionary<TSource, Exception>> ThrottledCatchErrorsAsync<TSource>(IEnumerable<TSource> sources,
+            Func<TSource, CancellationToken, Task> valueSelector, CancellationToken cancellationToken)
+        {
+            var bag = new ConcurrentBag<TSource>(sources);
+            var exceptions = new ConcurrentDictionary<TSource, Exception>();
+
+            async Task TaskBody()
+            {
+                while (bag.TryTake(out var source))
+                {
+                    try
+                    {
+                        await valueSelector(source, cancellationToken);
+                    }
+                    catch (Exception e)
+                    {
+                        exceptions.TryAdd(source, e);
+                    }
+                }
+            }
+
+            var tasks = Enumerable
+                .Repeat(0, Math.Min(MaxDegreeOfParallelism, bag.Count))
+                .Select(_ => Task.Run(TaskBody));
+
+            await Task.WhenAll(tasks);
+            return exceptions;
+        }
+
         public static IDictionary<string, Task<TValue>> ObserveErrorsAsync<TSource, TValue>(
             IEnumerable<TSource> sources, Func<TSource, string> keySelector,
             Func<TSource, CancellationToken, Task<TValue>> valueSelector, Action<Task, object> observeErrorAction,

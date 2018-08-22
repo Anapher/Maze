@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
+using Orcus.Modules.Api.Utilities;
 using Orcus.Server.Connection.Modules;
-using Orcus.Utilities;
 
 namespace Orcus.Core.Modules
 {

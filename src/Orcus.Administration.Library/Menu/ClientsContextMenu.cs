@@ -1,5 +1,6 @@
 ﻿using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Models;
+using Orcus.Administration.Library.Resources;
 using Unclassified.TxLib;
 
 namespace Orcus.Administration.Library.Menu
@@ -9,7 +10,7 @@ namespace Orcus.Administration.Library.Menu
         public ClientsContextMenu()
         {
             Add(SystemCommands = new NavigationalEntry<ClientViewModel>());
-            Add(InteractionCommands = new NavigationalEntry<ClientViewModel>{Header = Tx.T("Interaction")});
+            Add(InteractionCommands = new NavigationalEntry<ClientViewModel> {Header = Tx.T("Menu.UserInteraction"), Icon = VisualStudioIcons.UserVoice()});
             Add(ClientCommands = new MenuSection<ClientViewModel>());
         }
 

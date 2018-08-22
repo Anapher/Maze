@@ -17,9 +17,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
-    <None Remove="Resources\CustomErrorMessage_16x.png" />
-    <None Remove="Resources\UserInteraction.Translation.txd" />
-    <EmbeddedResource Include="Resources\CustomErrorMessage_16x.png" />
     <EmbeddedResource Include="Resources\UserInteraction.Translation.txd" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />

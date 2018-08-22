@@ -104,8 +104,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Librar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleLocalUpdater", "src\ModuleLocalUpdater\ModuleLocalUpdater.csproj", "{77C26037-9C50-4E3F-9DCA-8E7145F595BD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileExplorer", "FileExplorer", "{56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration", "src\modules\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj", "{4F35A848-7221-4745-9C6C-0DA1E104FBF5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Client", "src\modules\FileExplorer\FileExplorer.Client\FileExplorer.Client.csproj", "{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileExplorer.Shared", "src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.shproj", "{41D81D49-8C6A-47F0-8F66-B533473BC004}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.shproj", "{183F7CBB-E86A-4599-9414-B19E03B07325}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\Orcus.Utilities\Orcus.Utilities.projitems*{183f7cbb-e86a-4599-9414-b19e03b07325}*SharedItemsImports = 13
+		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{41d81d49-8c6a-47f0-8f66-b533473bc004}*SharedItemsImports = 13
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
 	EndGlobalSection
@@ -250,6 +262,14 @@ Global
 		{77C26037-9C50-4E3F-9DCA-8E7145F595BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77C26037-9C50-4E3F-9DCA-8E7145F595BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77C26037-9C50-4E3F-9DCA-8E7145F595BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -290,6 +310,11 @@ Global
 		{A6DD1856-AFB7-43A3-A816-D153B8866140} = {B4AB533F-EC5B-43BA-9686-5D784CC80742}
 		{143B1316-91D4-471B-AED1-FFCD344281CD} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
 		{77C26037-9C50-4E3F-9DCA-8E7145F595BD} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{56A6743C-4904-4C7D-B84A-6B5D0FA78E7F} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
+		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
+		{41D81D49-8C6A-47F0-8F66-B533473BC004} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
+		{183F7CBB-E86A-4599-9414-B19E03B07325} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

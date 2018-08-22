@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
-using Orcus.Administration.Library.Views;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 
-namespace Orcus.Administration.Library.Controls
+namespace Orcus.Administration.Library.Views
 {
     public class WindowUserControl : UserControl
     {
@@ -44,6 +47,10 @@ namespace Orcus.Administration.Library.Controls
         public WindowUserControl(IWindowViewManager viewManager)
         {
             ViewManager = viewManager;
+        }
+
+        private WindowUserControl()
+        {
         }
 
         public string Title
@@ -88,6 +95,45 @@ namespace Orcus.Administration.Library.Controls
             set => SetValue(EscapeClosesWindowProperty, value);
         }
 
-        private static IWindowViewManager GetViewManager(DependencyObject d) => ((WindowUserControl) d).ViewManager;
+        private static IWindowViewManager GetViewManager(DependencyObject d)
+        {
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+                return new DummyViewManager();
+#endif
+            return ((WindowUserControl) d).ViewManager;
+        }
+
+#if DEBUG
+#pragma warning disable CS0067
+        private class DummyViewManager : IWindowViewManager
+        {
+            public WindowState WindowState { get; set; }
+            public event EventHandler Closed;
+            public event CancelEventHandler Closing;
+            public void Close()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Activate() => throw new NotImplementedException();
+
+            public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons, MessageBoxImage icon,
+                MessageBoxResult defResult, MessageBoxOptions options) =>
+                throw new NotImplementedException();
+
+            public bool? ShowDialog(VistaFileDialog fileDialog) => throw new NotImplementedException();
+
+            public bool? ShowDialog(FileDialog fileDialog) => throw new NotImplementedException();
+
+            public string Title { get; set; }
+            public object RightStatusBarContent { get; set; }
+            public bool EscapeClosesWindow { get; set; }
+            public WindowCommands LeftWindowCommands { get; set; }
+            public WindowCommands RightWindowCommands { get; set; }
+            public object TitleBarIcon { get; set; }
+            public FlyoutsControl Flyouts { get; set; }
+        }
+#endif
     }
 }

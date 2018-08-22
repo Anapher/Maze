@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>41d81d49-8c6a-47f0-8f66-b533473bc004</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>FileExplorer.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\FileExplorerEntryConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DirectoryEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DriveDirectoryEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntryType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\SpecialDirectoryEntry.cs" />
+  </ItemGroup>
+</Project>

@@ -12,6 +12,7 @@
     </PackageReference>
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageReference Include="Ookii.Dialogs" Version="1.0.0" />
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
@@ -27,7 +28,10 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+
+  <Import Project="..\Orcus.Utilities\Orcus.Utilities.projitems" Label="Shared" />
 
 </Project>

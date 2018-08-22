@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Autofac;
 using NuGet.Packaging.Core;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.Utilities;
 using Orcus.Server.Connection.Modules;
-using Orcus.Utilities;
 
 namespace Orcus.Core.Modules
 {
