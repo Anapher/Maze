@@ -15,6 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntryType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\PathTreeRequestDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\PathTreeResponseDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\RootElementsDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\SpecialDirectoryEntry.cs" />
   </ItemGroup>
 </Project>

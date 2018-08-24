@@ -9,20 +9,20 @@ namespace FileExplorer.Administration.Controls
     [TemplatePart(Name = "PART_Background", Type = typeof(Grid))]
     [TemplatePart(Name = "PART_ContentOn", Type = typeof(ContentPresenter))]
     [TemplatePart(Name = "PART_ContentOff", Type = typeof(ContentPresenter))]
-    public class Switch : HeaderedContentControl
+    public class ContentSwitch : HeaderedContentControl
     {
         public static readonly DependencyProperty IsSwitchedProperty = DependencyProperty.Register("IsSwitched",
-            typeof(bool), typeof(Switch), new PropertyMetadata(default(bool)));
+            typeof(bool), typeof(ContentSwitch), new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty ContentOffProperty = DependencyProperty.Register("ContentOff",
-            typeof(FrameworkElement), typeof(Switch), new PropertyMetadata(default(FrameworkElement)));
+            typeof(FrameworkElement), typeof(ContentSwitch), new PropertyMetadata(default(FrameworkElement)));
 
         public static readonly DependencyProperty ContentOnProperty = DependencyProperty.Register("ContentOn",
-            typeof(FrameworkElement), typeof(Switch),
+            typeof(FrameworkElement), typeof(ContentSwitch),
             new PropertyMetadata(default(FrameworkElement), ContentOnPropertyChangedCallback));
 
         public static readonly DependencyProperty IsContentVisibleProperty =
-            DependencyProperty.RegisterAttached("IsContentVisible", typeof(bool), typeof(Switch),
+            DependencyProperty.RegisterAttached("IsContentVisible", typeof(bool), typeof(ContentSwitch),
                 new PropertyMetadata(default(bool)));
 
         public bool IsSwitched
@@ -59,7 +59,7 @@ namespace FileExplorer.Administration.Controls
         private static void ContentOnPropertyChangedCallback(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var switchControl = (Switch) dependencyObject;
+            var switchControl = (ContentSwitch) dependencyObject;
             if (dependencyPropertyChangedEventArgs.OldValue != null)
             {
                 var oldFrameworkElement = (FrameworkElement) dependencyPropertyChangedEventArgs.OldValue;

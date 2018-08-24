@@ -114,6 +114,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileExplorer.Shared", "src\
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.shproj", "{183F7CBB-E86A-4599-9414-B19E03B07325}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Administration.Tests", "src\modules\FileExplorer\test\FileExplorer.Administration.Tests\FileExplorer.Administration.Tests.csproj", "{C8A05842-CAF4-49E0-86B9-FEBD69B47627}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92618B4D-D919-448F-88CD-C9044A48DD38}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\Orcus.Utilities\Orcus.Utilities.projitems*{183f7cbb-e86a-4599-9414-b19e03b07325}*SharedItemsImports = 13
@@ -270,6 +274,10 @@ Global
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -315,6 +323,8 @@ Global
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{41D81D49-8C6A-47F0-8F66-B533473BC004} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{183F7CBB-E86A-4599-9414-B19E03B07325} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
+		{C8A05842-CAF4-49E0-86B9-FEBD69B47627} = {92618B4D-D919-448F-88CD-C9044A48DD38}
+		{92618B4D-D919-448F-88CD-C9044A48DD38} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

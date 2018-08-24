@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FileExplorer.Client.Utilities;
 using Orcus.Modules.Api;
@@ -16,6 +18,17 @@ namespace FileExplorer.Client.Controllers
             var entries = await directoryHelper.GetEntries(path);
 
             return Ok(entries.ToList());
+        }
+
+        [OrcusGet("path")]
+        public IActionResult ExpandEnvironmentVariables([FromQuery] string path) =>
+            Ok(Environment.ExpandEnvironmentVariables(path));
+
+        [OrcusGet("directory")]
+        public IActionResult GetDirectory([FromQuery] string path)
+        {
+            var directory = new DirectoryHelper().GetDirectoryEntry(new DirectoryInfoEx(path));
+            return Ok(directory);
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Orcus.Administration.FileExplorer.Controls">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:FileExplorer.Administration.Controls">
 
     <Style BasedOn="{StaticResource MetroTreeViewItem}" TargetType="controls:TreeViewItemEx" />
     <Style BasedOn="{StaticResource MetroTreeView}" TargetType="controls:TreeViewEx" />

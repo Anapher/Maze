@@ -4,13 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:NavigationBarViewModel}"
     d:DesignHeight="40"
     d:DesignWidth="600"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -26,5 +32,27 @@
             Margin="5,0"
             Command="{Binding GoForwardCommand}"
             IconKind="ArrowRight" />
+        <Border
+            Grid.Column="2"
+            BorderThickness="1"
+            CornerRadius=".2"
+            SnapsToDevicePixels="True">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource GrayBrush9}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ContentSwitch, Path=IsSwitched}" Value="true">
+                            <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush2}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <controls:ContentSwitch Height="25">
+                <controls:ContentSwitch.Header>
+                    <Image />
+                </controls:ContentSwitch.Header>
+            </controls:ContentSwitch>
+        </Border>
     </Grid>
 </UserControl>

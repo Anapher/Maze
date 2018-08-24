@@ -42,7 +42,7 @@ namespace Orcus
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
 
-            builder.RegisterInstance(new SerilogLoggerFactory(null)).As<ILoggerFactory>().SingleInstance();
+            builder.RegisterInstance(new SerilogLoggerFactory()).As<ILoggerFactory>().SingleInstance();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
             builder.RegisterInstance(ArrayPool<char>.Create());
             builder.RegisterInstance(ArrayPool<byte>.Create());

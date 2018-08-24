@@ -2,7 +2,6 @@
 {
     public class SpecialDirectoryEntry : DirectoryEntry
     {
-        public string Label { get; set; }
         public int LabelId { get; set; }
         public string LabelPath { get; set; }
         public int IconId { get; set; }

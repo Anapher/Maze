@@ -8,7 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Native;
 using FileExplorer.Shared.Dtos;
-using Orcus.Modules.Api.Utilities;
+using Microsoft.Win32;
+using Orcus.Client.Library.Utilities;
+using Orcus.Utilities;
+using Serilog;
 using ShellDll;
 
 namespace FileExplorer.Client.Utilities
@@ -16,6 +19,7 @@ namespace FileExplorer.Client.Utilities
     public class DirectoryHelper
     {
         private readonly Lazy<DriveInfo[]> _drives;
+        private static readonly ILogger Logger = Log.ForContext<DirectoryHelper>();
 
         public DirectoryHelper()
         {
@@ -43,6 +47,93 @@ namespace FileExplorer.Client.Utilities
             }, token), CancellationToken.None);
         }
 
+        public async Task<List<FileExplorerEntry>> GetComputerDirectoryEntries()
+        {
+            var entries = (await GetEntries(DirectoryInfoEx.MyComputerDirectory)).ToList();
+
+            if (!CoreHelper.RunningOnWin8OrGreater)
+            {
+                if (TryFetchLibraryDirectories(out var libraries))
+                    entries.InsertRange(0, libraries);
+                else
+                {
+                    foreach (var specialFolder in new[]
+                    {
+                        Environment.SpecialFolder.MyMusic, Environment.SpecialFolder.MyDocuments,
+                        Environment.SpecialFolder.MyPictures, Environment.SpecialFolder.MyVideos
+                    })
+                    {
+                        var path = Environment.GetFolderPath(specialFolder);
+                        if (TryGetDirectory(path, out var libraryDirectoryEntry))
+                            entries.Insert(0, libraryDirectoryEntry);
+                    }
+                }
+            }
+
+            //add missing drives
+            foreach (var driveInfo in _drives.Value.Where(x => x.IsReady))
+            {
+                if (!entries.Any(x => x.Path == driveInfo.RootDirectory.FullName))
+                {
+                    if (TryGetDirectory(driveInfo.RootDirectory.FullName, out var directoryEntry))
+                        entries.Add(directoryEntry);
+                }
+            }
+
+            return entries;
+        }
+
+        public List<DirectoryEntry> GetNamespaceDirectories()
+        {
+            var result = new Dictionary<DirectoryEntry, int>();
+            try
+            {
+                using (var rootKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Classes\CLSID"))
+                {
+                    if (rootKey != null)
+                        foreach (var subKeyName in rootKey.GetSubKeyNames())
+                        {
+                            using (var possibleEntryRegKey = rootKey.OpenSubKey(subKeyName))
+                            {
+                                if ((int?) possibleEntryRegKey?.GetValue("System.IsPinnedToNameSpaceTree", 0) != 1)
+                                    continue;
+
+                                using (var infoKey = possibleEntryRegKey.OpenSubKey("Instance\\InitPropertyBag"))
+                                {
+                                    var folder = (string) (infoKey?.GetValue("TargetFolderPath", null) ??
+                                                           infoKey?.GetValue("TargetKnownFolder"));
+                                    if (folder == null)
+                                        continue;
+
+                                    DirectoryEntry entry;
+                                    using (var directory = new DirectoryInfoEx(folder))
+                                        entry = GetDirectoryEntry(directory);
+
+                                    if (entry == null)
+                                        continue;
+
+                                    var label = (string) possibleEntryRegKey.GetValue("");
+                                    if (!string.IsNullOrEmpty(label))
+                                        entry.Label = label;
+
+                                    result.Add(entry,
+                                        (int?) possibleEntryRegKey.GetValue("SortOrderIndex", null) ??
+                                        int.MaxValue - 1);
+                                }
+                            }
+                        }
+                }
+            }
+            catch (Exception e)
+            {
+                // Requested registry access is not allowed
+                Log.Logger.Warning(e, "Error when accessing registry at SOFTWARE\\Classes\\CLSID");
+            }
+
+            result.Add(GetDirectoryEntry(DirectoryInfoEx.RecycleBinDirectory), -1);
+            return result.OrderBy(x => x.Value).Select(x => x.Key).ToList();
+        }
+
         private FileExplorerEntry GetFileEntry(FileInfoEx fileInfo)
         {
             var result = new FileEntry
@@ -56,37 +147,88 @@ namespace FileExplorer.Client.Utilities
             return result;
         }
 
-        private FileExplorerEntry GetDirectoryEntry(DirectoryInfoEx directory)
+        public DirectoryEntry GetDirectoryEntry(DirectoryInfoEx directory)
         {
-            SpecialDirectoryEntry directoryEntry;
-
-            if (directory.DirectoryType == DirectoryInfoEx.DirectoryTypeEnum.dtDrive)
-            {
-                var drive = _drives.Value.FirstOrDefault(x => x.RootDirectory.FullName == directory.FullName);
-                if (drive != null)
-                {
-                    if (drive.IsReady)
-                        directoryEntry = new DriveDirectoryEntry
-                        {
-                            TotalSize = drive.TotalSize,
-                            UsedSpace = drive.TotalSize - drive.TotalFreeSpace,
-                            DriveType = drive.DriveType
-                        };
-                    else
-                        directoryEntry =
-                            new DriveDirectoryEntry {TotalSize = 0, UsedSpace = 0, DriveType = drive.DriveType};
-                } else directoryEntry = new SpecialDirectoryEntry();
-            }
-            else directoryEntry = new SpecialDirectoryEntry();
+            var directoryEntry = CreateSpecializedDirectory(directory);
 
             directoryEntry.Name = directory.Name;
             directoryEntry.HasSubFolder = directory.HasSubFolder;
             directoryEntry.CreationTime = directory.CreationTimeUtc;
             directoryEntry.LastAccess = directory.LastAccessTimeUtc;
 
-            SetSpecialFolderAttributes(directory, directoryEntry);
-
             return directoryEntry;
+        }
+
+        private bool TryFetchLibraryDirectories(out IEnumerable<DirectoryEntry> result)
+        {
+            try
+            {
+                var librariesDirectory = new DirectoryInfoEx(KnownFolderIds.Libraries);
+                result = librariesDirectory.GetDirectories().Select(GetDirectoryEntry);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warning(e, "Error occurred when trying to fetch library directories");
+                result = null;
+                return false;
+            }
+        }
+
+        private bool TryGetDirectory(string path, out DirectoryEntry directoryEntry)
+        {
+            try
+            {
+                var directory = new DirectoryInfoEx(path);
+                if (!directory.Exists)
+                {
+                    directoryEntry = null;
+                    return false;
+                }
+
+                directoryEntry = GetDirectoryEntry(directory);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warning(e, "Error occurred when trying to get directory at {path}", path);
+                directoryEntry = null;
+                return false;
+            }
+        }
+
+        private DirectoryEntry CreateSpecializedDirectory(DirectoryInfoEx directory)
+        {
+            if (directory.DirectoryType == DirectoryInfoEx.DirectoryTypeEnum.dtDrive)
+            {
+                var drive = _drives.Value.FirstOrDefault(x => x.RootDirectory.FullName == directory.FullName);
+                if (drive != null)
+                {
+                    DriveDirectoryEntry driveDirectory;
+                    if (drive.IsReady)
+                        driveDirectory = new DriveDirectoryEntry
+                        {
+                            TotalSize = drive.TotalSize,
+                            UsedSpace = drive.TotalSize - drive.TotalFreeSpace,
+                            DriveType = drive.DriveType
+                        };
+                    else
+                        driveDirectory =
+                            new DriveDirectoryEntry { TotalSize = 0, UsedSpace = 0, DriveType = drive.DriveType };
+
+                    SetSpecialFolderAttributes(directory, driveDirectory);
+                    return driveDirectory;
+                }
+            }
+
+            var specialDirectory = new SpecialDirectoryEntry();
+            SetSpecialFolderAttributes(directory, specialDirectory);
+
+            if (specialDirectory.IconId != 0 || specialDirectory.Label != null || specialDirectory.LabelId != 0 ||
+                specialDirectory.LabelPath != null)
+                return specialDirectory;
+
+            return new DirectoryEntry();
         }
 
         private static void SetSpecialFolderAttributes(DirectoryInfoEx directory, SpecialDirectoryEntry directoryEntry)

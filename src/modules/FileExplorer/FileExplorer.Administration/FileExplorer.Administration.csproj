@@ -20,6 +20,7 @@
     <None Remove="Resources\Generic.xaml" />
     <None Remove="Views\NavigationBarView.xaml" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 

@@ -25,24 +25,16 @@ namespace Orcus.Service.Commander
             builder.RegisterType<OrcusRequestExecuter>().As<IOrcusRequestExecuter>().InstancePerLifetimeScope();
 
             builder.RegisterType<ModelBinderFactory>().As<IModelBinderFactory>().SingleInstance();
-            builder.RegisterInstance(new ServerOptions(new OrcusServerOptions())).As<IOptions<OrcusServerOptions>>();
+            builder.RegisterInstance(new OptionsWrapper<OrcusServerOptions>(new OrcusServerOptions()))
+                .As<IOptions<OrcusServerOptions>>();
 
             builder.RegisterType<DefaultOutputFormatterSelector>().As<OutputFormatterSelector>().SingleInstance();
             builder.RegisterType<MemoryPoolHttpResponseStreamWriterFactory>().As<IHttpResponseStreamWriterFactory>()
                 .SingleInstance();
 
             builder.RegisterType<ObjectResultExecutor>().As<IActionResultExecutor<ObjectResult>>().SingleInstance();
-            builder.RegisterType<FileStreamResultExecutor>().As<IActionResultExecutor<FileStreamResult>>().SingleInstance();
+            builder.RegisterType<FileStreamResultExecutor>().As<IActionResultExecutor<FileStreamResult>>()
+                .SingleInstance();
         }
-    }
-
-    public class ServerOptions : IOptions<OrcusServerOptions>
-    {
-        public ServerOptions(OrcusServerOptions value)
-        {
-            Value = value;
-        }
-
-        public OrcusServerOptions Value { get; }
     }
 }

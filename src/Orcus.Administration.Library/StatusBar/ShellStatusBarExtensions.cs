@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orcus.Administration.Library.StatusBar
@@ -17,6 +18,12 @@ namespace Orcus.Administration.Library.StatusBar
             }
         }
 
+        public static IDisposable ShowStatus(this IShellStatusBar shellStatusBar, string message,
+            StatusBarAnimation animation = StatusBarAnimation.None)
+        {
+            return shellStatusBar.PushStatus(new TextStatusMessage(message) {Animation = animation});
+        }
+
         public static async void ShowSuccess(this IShellStatusBar shellStatusBar, string message,
             StatusBarAnimation animation = StatusBarAnimation.None, int? seconds = null,
             CancellationToken cancellationToken = default)
@@ -25,6 +32,20 @@ namespace Orcus.Administration.Library.StatusBar
             {
                 Animation = animation,
                 StatusBarMode = StatusBarMode.Success
+            }))
+            {
+                await Task.Delay((seconds ?? DefaultMessageTimeout) * 1000, cancellationToken);
+            }
+        }
+
+        public static async void ShowError(this IShellStatusBar shellStatusBar, string message,
+            StatusBarAnimation animation = StatusBarAnimation.None, int? seconds = null,
+            CancellationToken cancellationToken = default)
+        {
+            using (shellStatusBar.PushStatus(new TextStatusMessage(message)
+            {
+                Animation = animation,
+                StatusBarMode = StatusBarMode.Error
             }))
             {
                 await Task.Delay((seconds ?? DefaultMessageTimeout) * 1000, cancellationToken);

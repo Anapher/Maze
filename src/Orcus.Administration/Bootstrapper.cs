@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Orcus.Administration.Core.Modules;
 using Orcus.Administration.Factories;
 using Orcus.Administration.Library.Menu;
@@ -70,6 +72,8 @@ namespace Orcus.Administration
                 Assembly.GetEntryAssembly())).As<IViewModelResolver>();
             builder.RegisterType<ClientCommandRegistrar>().As<IClientCommandRegistrar>().SingleInstance();
             builder.RegisterType<ShellWindowFactory>().As<IShellWindowFactory>().SingleInstance();
+            builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions()))
+                .As<IMemoryCache>().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

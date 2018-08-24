@@ -39,6 +39,9 @@ namespace ModuleLocalUpdater
             //F:\Projects\Orcus\src\modules\UserInteraction\UserInteraction.Administration\bin\Debug\net47
             //UserInteraction.Administration
 
+            if (arg.ModuleName.EndsWith(".Tests"))
+                return 0;
+
             var solutionDirectory = arg.SolutionDirectory ?? GetSolutionDirectory(arg.ModuleDirectory);
             DirectoryInfo packageDirectory;
 
