@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using Orcus.Modules.Api;
@@ -22,7 +23,7 @@ namespace FileExplorer.Client.Controllers
             IList<FileExplorerEntry> entries;
             if (directoriesOnly)
             {
-                entries = (await directoryHelper.GetDirectoryEntries(new DirectoryInfoEx(path), CancellationToken.None))
+                entries = (await directoryHelper.GetDirectoryEntries(path, CancellationToken.None))
                     .ToList<FileExplorerEntry>();
             }
             else
@@ -40,8 +41,11 @@ namespace FileExplorer.Client.Controllers
         [OrcusGet("directory")]
         public IActionResult GetDirectory([FromQuery] string path)
         {
-            var directory = new DirectoryHelper().GetDirectoryEntry(new DirectoryInfoEx(path), null);
-            return Ok(directory);
+            using (var directory = new DirectoryInfoEx(path))
+            {
+                var directoryEntry = new DirectoryHelper().GetDirectoryEntry(directory, null);
+                return Ok(directoryEntry);
+            }
         }
     }
 }

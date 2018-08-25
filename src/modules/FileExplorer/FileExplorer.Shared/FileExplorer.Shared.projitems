@@ -19,5 +19,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\PathTreeResponseDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\RootElementsDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\SpecialDirectoryEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\PathHelper.cs" />
   </ItemGroup>
 </Project>

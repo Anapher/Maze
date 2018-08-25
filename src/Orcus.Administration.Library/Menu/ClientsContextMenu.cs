@@ -9,8 +9,16 @@ namespace Orcus.Administration.Library.Menu
     {
         public ClientsContextMenu()
         {
-            Add(SystemCommands = new NavigationalEntry<ClientViewModel>());
-            Add(InteractionCommands = new NavigationalEntry<ClientViewModel> {Header = Tx.T("Menu.UserInteraction"), Icon = VisualStudioIcons.UserVoice()});
+            Add(SystemCommands = new NavigationalEntry<ClientViewModel>
+            {
+                Header = Tx.T("Menu.System"),
+                Icon = VisualStudioIcons.ComputerService()
+            });
+            Add(InteractionCommands = new NavigationalEntry<ClientViewModel>
+            {
+                Header = Tx.T("Menu.UserInteraction"),
+                Icon = VisualStudioIcons.UserVoice()
+            });
             Add(ClientCommands = new MenuSection<ClientViewModel>());
         }
 

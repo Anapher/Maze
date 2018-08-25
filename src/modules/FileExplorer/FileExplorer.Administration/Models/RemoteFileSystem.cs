@@ -11,9 +11,11 @@ using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Shared.Dtos;
+using FileExplorer.Shared.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
+using PathHelper = FileExplorer.Shared.Utilities.PathHelper;
 
 namespace FileExplorer.Administration.Models
 {
@@ -79,7 +81,7 @@ namespace FileExplorer.Administration.Models
         public async Task<PathContent> FetchPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
             CancellationToken token)
         {
-            if (PathHelper.ContainsEnvironmentVariables(path))
+            if (Utilities.PathHelper.ContainsEnvironmentVariables(path))
             {
                 path = await FileSystemResource.ExpandEnvironmentVariables(path, _restClient);
             }
@@ -92,26 +94,14 @@ namespace FileExplorer.Administration.Models
             {
                 request.RequestEntries = true;
             }
-
-            var index = 0;
-            var parts = new List<string>();
-
-            //forward loop, e. g.
-            //C:\
-            //C:\Windows
-            //C:\Windows\System32 ...
-            while (true)
+            
+            var parts = PathHelper.GetPathDirectories(path).ToList();
+            for (var i = 0; i < parts.Count; i++)
             {
-                index = path.IndexOf('\\', index);
-                if (index == -1)
-                    break;
-
-                var partPath = path.Substring(0, index);
+                var partPath = parts[i];
 
                 if (ignorePathCache || !TryGetCachedDirectory(partPath, out _))
-                    request.RequestedDirectories.Add(parts.Count);
-
-                parts.Add(partPath);
+                    request.RequestedDirectories.Add(i);
             }
 
             PathTreeResponseDto queryResponse = null;

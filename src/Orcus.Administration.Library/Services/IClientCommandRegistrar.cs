@@ -10,6 +10,7 @@ namespace Orcus.Administration.Library.Services
     public enum CommandCategory
     {
         Fun,
-        Interaction
+        Interaction,
+        System
     }
 }

@@ -18,6 +18,7 @@
 		<text key="LoginView:Status.LoadModules">Module laden...</text>
 		<text key="LoginView:Status.RetrieveModules">Module abrufen...</text>
 		<text key="LoginView:Status.SynchronizeModules">Module synchronisieren</text>
+		<text key="Menu.System">System</text>
 		<text key="Menu.UserInteraction">Benutuzerinteraktion</text>
 		<text key="Modules">Module</text>
 		<text key="ModulesView:Source">Modul-Quelle</text>
@@ -232,6 +233,7 @@
 		<text key="LoginView:Status.LoadModules">Load modules...</text>
 		<text key="LoginView:Status.RetrieveModules">Retrieve modules...</text>
 		<text key="LoginView:Status.SynchronizeModules">Synchronize modules</text>
+		<text key="Menu.System">System</text>
 		<text key="Menu.UserInteraction">User Interaction</text>
 		<text key="Modules">Modules</text>
 		<text key="ModulesView:Source">Module source</text>

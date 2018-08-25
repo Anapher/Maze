@@ -10,6 +10,7 @@
 		<text key="FileExplorer:DriveTypes.Ram">RAM Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Removable">USB Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
+		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 	</culture>
 	<culture name="en" primary="true">
@@ -21,6 +22,7 @@
 		<text key="FileExplorer:DriveTypes.Ram">RAM Drive</text>
 		<text key="FileExplorer:DriveTypes.Removable">USB Drive</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
+		<text key="FileExplorer:FileExplorer">File Explorer</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 	</culture>
 </translation>

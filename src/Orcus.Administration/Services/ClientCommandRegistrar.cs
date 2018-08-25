@@ -25,7 +25,8 @@ namespace Orcus.Administration.Services
         private readonly IViewModelResolver _viewModelResolver;
 
         public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IViewModelResolver viewModelResolver,
-            IComponentContext componentContext, IShellWindowFactory shellWindowFactory, IOrcusRestClient orcusRestClient)
+            IComponentContext componentContext, IShellWindowFactory shellWindowFactory,
+            IOrcusRestClient orcusRestClient)
         {
             _clientsContextMenu = clientsContextMenu;
             _viewModelResolver = viewModelResolver;
@@ -34,9 +35,22 @@ namespace Orcus.Administration.Services
             _orcusRestClient = orcusRestClient;
         }
 
+        private NavigationalEntry<ClientViewModel> GetNavigationEntry(CommandCategory category)
+        {
+            switch (category)
+            {
+                case CommandCategory.Interaction:
+                    return _clientsContextMenu.InteractionCommands;
+                case CommandCategory.System:
+                    return _clientsContextMenu.SystemCommands;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(category), category, null);
+            }
+        }
+
         public void RegisterView(Type viewType, string txLibResource, object icon, CommandCategory category)
         {
-            _clientsContextMenu.InteractionCommands.Add(new CommandMenuEntry<ClientViewModel>
+            GetNavigationEntry(category).Add(new CommandMenuEntry<ClientViewModel>
             {
                 Header = Tx.T(txLibResource),
                 Icon = icon,
@@ -50,7 +64,8 @@ namespace Orcus.Administration.Services
 
                     var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
                     {
-                        builder.RegisterInstance(window.ViewManager).As<IWindow>().As<IMetroWindow>().As<IWindowViewManager>();
+                        builder.RegisterInstance(window.ViewManager).As<IWindow>().As<IMetroWindow>()
+                            .As<IWindowViewManager>();
                         builder.Register(context => statusBar = new StatusBarManager()).As<IShellStatusBar>()
                             .SingleInstance();
                         builder.RegisterType(viewType);

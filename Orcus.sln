@@ -84,6 +84,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration", "src\Orcus.Administration\Orcus.Administration.csproj", "{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{78079640-832D-4593-B86A-6D2D537C5824} = {78079640-832D-4593-B86A-6D2D537C5824}
+		{4F35A848-7221-4745-9C6C-0DA1E104FBF5} = {4F35A848-7221-4745-9C6C-0DA1E104FBF5}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ViewModels", "src\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj", "{34B39498-66BC-45A3-8502-44F15D28D670}"

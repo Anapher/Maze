@@ -14,18 +14,13 @@
     <!-- XAML elements -->
     <Page Include="**\*.xaml" Exclude="App.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Remove="Resources\Generic.xaml" />
-    <None Remove="Views\DirectoryTreeView.xaml" />
-    <None Remove="Views\NavigationBarView.xaml" />
+
+    <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-
-    <!-- Resources -->
-
-    <!-- Settings -->
 
   </ItemGroup>
 
@@ -41,54 +36,6 @@
       <DependentUpon>NavigationBarView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\DirectoryTreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\NavigationBarView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Resources\ControlThemes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\BreadcrumbTree.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\BreadcrumbTreeItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\Buttons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\Colors.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\ComboBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\DropDown.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\HotTrack.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\ModernTrack.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\SuggestBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\Switch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Themes\TreeViewEx.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
-
+  
   <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
 </Project>

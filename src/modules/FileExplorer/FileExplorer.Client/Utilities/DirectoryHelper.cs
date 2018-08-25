@@ -26,12 +26,6 @@ namespace FileExplorer.Client.Utilities
             _drives = new Lazy<DriveInfo[]>(DriveInfo.GetDrives, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
-        public Task<IEnumerable<FileExplorerEntry>> GetEntries(string directoryPath, CancellationToken token)
-        {
-            using (var directory = new DirectoryInfoEx(directoryPath))
-                return GetEntries(directory, CancellationToken.None);
-        }
-
         public Task<IEnumerable<FileExplorerEntry>> GetEntries(DirectoryInfoEx directory, CancellationToken token)
         {
             var entries = directory.EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly,
