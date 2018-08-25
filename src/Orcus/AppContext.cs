@@ -1,6 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
 using Autofac;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NuGet.Frameworks;
 using NuGet.Versioning;
@@ -19,6 +21,8 @@ namespace Orcus
         {
             builder.RegisterInstance(this).AsImplementedInterfaces();
             RootContainer = builder.Build();
+
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             Container = LoadModules();
             StartConnecting();
@@ -57,6 +61,11 @@ namespace Orcus
         private void StartConnecting()
         {
             Container.Resolve<ICoreConnector>().StartConnecting(Container);
+        }
+
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName == args.Name);
         }
     }
 }

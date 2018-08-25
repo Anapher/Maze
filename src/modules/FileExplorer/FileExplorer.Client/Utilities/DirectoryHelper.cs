@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Native;
 using FileExplorer.Shared.Dtos;
 using Microsoft.Win32;
@@ -247,14 +248,18 @@ namespace FileExplorer.Client.Utilities
             if (directory.Name != directory.Label)
                 directoryEntry.Label = directory.Label;
 
-            if (!string.IsNullOrEmpty(directory.KnownFolderType?.Definition.LocalizedName))
+            if (directory.TryGetKnownFolderType(out var knownFolder))
             {
-                var parts = directory.KnownFolderType.Definition.LocalizedName.TrimStart('@').Split(',');
-                if (parts.Length == 2 && int.TryParse(parts[1], out var id))
+                var definition = knownFolder.Definition;
+                if (!string.IsNullOrEmpty(definition.LocalizedName))
                 {
-                    directoryEntry.LabelPath = parts[0];
-                    directoryEntry.LabelId = id;
-                    return;
+                    var parts = definition.LocalizedName.TrimStart('@').Split(',');
+                    if (parts.Length == 2 && int.TryParse(parts[1], out var id))
+                    {
+                        directoryEntry.LabelPath = parts[0];
+                        directoryEntry.LabelId = id;
+                        return;
+                    }
                 }
             }
 
@@ -286,23 +291,26 @@ namespace FileExplorer.Client.Utilities
                     return -113;
             }
 
-            var iconPath = directory.KnownFolderType?.Definition.Icon;
-            if (!string.IsNullOrEmpty(iconPath))
+            if (directory.TryGetKnownFolderType(out var knownFolder))
             {
-                var parts = iconPath.Trim('"').Split(',');
-                if (parts.Length == 2 && parts[0].EndsWith("imageres.dll", StringComparison.OrdinalIgnoreCase) &&
-                    int.TryParse(parts[1], out var resultId))
-                    return resultId;
-            }
+                var iconPath = knownFolder.Definition.Icon;
+                if (!string.IsNullOrEmpty(iconPath))
+                {
+                    var parts = iconPath.Trim('"').Split(',');
+                    if (parts.Length == 2 && parts[0].EndsWith("imageres.dll", StringComparison.OrdinalIgnoreCase) &&
+                        int.TryParse(parts[1], out var resultId))
+                        return resultId;
+                }
 
-            switch (directory.KnownFolderType?.KnownFolderId)
-            {
-                case KnownFolderIds.ComputerFolder:
-                    return -109;
-                case KnownFolderIds.RecycleBinFolder:
-                    return -54;
-                case KnownFolderIds.NetworkFolder:
-                    return -1013;
+                switch (knownFolder.KnownFolderId)
+                {
+                    case KnownFolderIds.ComputerFolder:
+                        return -109;
+                    case KnownFolderIds.RecycleBinFolder:
+                        return -54;
+                    case KnownFolderIds.NetworkFolder:
+                        return -1013;
+                }
             }
 
             var shinfo = new ShellAPI.SHFILEINFO();

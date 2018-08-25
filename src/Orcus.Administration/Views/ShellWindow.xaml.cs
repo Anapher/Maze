@@ -33,14 +33,22 @@ namespace Orcus.Administration.Views
                 _statusBarManager = statusBarManager;
 
                 var grid = new Grid();
-                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(1, GridUnitType.Star)});
+                grid.RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
 
-                var contentControl = new ContentControl { Content = content };
-                Grid.SetRow(contentControl, 0);
-                grid.Children.Add(contentControl);
+                if (content is UIElement uiElement)
+                {
+                    Grid.SetRow(uiElement, 0);
+                    grid.Children.Add(uiElement);
+                }
+                else
+                {
+                    var contentControl = new ContentControl {Content = content};
+                    Grid.SetRow(contentControl, 0);
+                    grid.Children.Add(contentControl);
+                }
 
-                var statusBar = new StatusBar { ShellStatusBar = statusBarManager };
+                var statusBar = new StatusBar {ShellStatusBar = statusBarManager};
                 Grid.SetRow(statusBar, 1);
                 grid.Children.Add(statusBar);
 

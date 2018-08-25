@@ -6,15 +6,17 @@
 
     <ControlTemplate x:Key="BasicArrowButton" TargetType="{x:Type ToggleButton}">
         <Grid Background="Transparent">
-            <Viewbox x:Name="PART_PathBox"
-                     Height="10"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center">
-                <Path x:Name="PART_Path"
-                      Margin="{TemplateBinding Padding}"
-                      Data="{StaticResource ArrowRight}"
-                      Fill="{TemplateBinding Foreground}"
-                      IsHitTestVisible="True" />
+            <Viewbox
+                x:Name="PART_PathBox"
+                Height="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Path
+                    x:Name="PART_Path"
+                    Margin="{TemplateBinding Padding}"
+                    Data="{StaticResource ArrowRight}"
+                    Fill="{TemplateBinding Foreground}"
+                    IsHitTestVisible="True" />
             </Viewbox>
         </Grid>
         <ControlTemplate.Triggers>

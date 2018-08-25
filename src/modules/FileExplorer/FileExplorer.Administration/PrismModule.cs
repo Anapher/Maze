@@ -1,4 +1,5 @@
-﻿using FileExplorer.Administration.Views;
+﻿using FileExplorer.Administration.Resources;
+using FileExplorer.Administration.Views;
 using Orcus.Administration.Library.Services;
 using Prism.Modularity;
 using Unclassified.TxLib;
@@ -19,7 +20,7 @@ namespace FileExplorer.Administration
             Tx.LoadFromEmbeddedResource("FileExplorer.Administration.Resources.FileExplorer.Translation.txd");
 
             _registrar.RegisterView(typeof(FileExplorerView), "FileExplorer:FileExplorer",
-                null, CommandCategory.System);
+                VisualStudioImages.ListFolder(), CommandCategory.System);
         }
     }
 }

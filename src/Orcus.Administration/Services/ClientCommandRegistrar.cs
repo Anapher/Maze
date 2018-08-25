@@ -12,6 +12,7 @@ using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
 using Prism.Commands;
+using Prism.Regions;
 using Unclassified.TxLib;
 
 namespace Orcus.Administration.Services
@@ -77,6 +78,9 @@ namespace Orcus.Administration.Services
                     var viewModel = lifescope.Resolve(viewModelType);
                     var view = (FrameworkElement) lifescope.Resolve(viewType);
                     view.DataContext = viewModel;
+
+                    if (viewModel is INavigationAware navigationAware)
+                        window.Window.Loaded += (sender, args) => navigationAware.OnNavigatedTo(null);
 
                     window.InitalizeContent(view, statusBar);
                     window.Window.Closed += (sender, args) => lifescope.Dispose();

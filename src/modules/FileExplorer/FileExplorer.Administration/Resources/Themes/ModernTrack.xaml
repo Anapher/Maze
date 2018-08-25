@@ -4,29 +4,32 @@
             <Border.Background>
                 <SolidColorBrush Opacity="0" Color="{DynamicResource SelectionColor}" />
             </Border.Background>
-            <ContentPresenter Margin="{TemplateBinding Padding}"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch" />
+            <ContentPresenter
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.1"
-                                             Storyboard.TargetName="PART_BACKGROUND"
-                                             Storyboard.TargetProperty="Background.Opacity"
-                                             To="1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="PART_BACKGROUND"
+                                Storyboard.TargetProperty="Background.Opacity"
+                                To="1"
+                                Duration="0:0:0.1" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
                 <Trigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.1"
-                                             Storyboard.TargetName="PART_BACKGROUND"
-                                             Storyboard.TargetProperty="Background.Opacity"
-                                             To="0" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="PART_BACKGROUND"
+                                Storyboard.TargetProperty="Background.Opacity"
+                                To="0"
+                                Duration="0:0:0.1" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>

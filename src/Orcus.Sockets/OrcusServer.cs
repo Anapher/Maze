@@ -319,7 +319,7 @@ namespace Orcus.Sockets
                     var opCode = OrcusSocket.MessageOpcode.Response;
                     if (orcusResponse.IsCompleted)
                         opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
-                    
+
                     await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, offset + data.Count),
                         CancellationToken.None);
 
