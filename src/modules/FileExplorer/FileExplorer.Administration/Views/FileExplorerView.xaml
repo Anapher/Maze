@@ -3,13 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="clr-namespace:Anapher.Wpf.Swan.Extensions;assembly=Anapher.Wpf.Swan"
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:listViewLayoutManager="clr-namespace:Anapher.Wpf.Swan.ListViewLayoutManager;assembly=Anapher.Wpf.Swan"
     xmlns:localViews="clr-namespace:FileExplorer.Administration.Views"
-    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:regions="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     d:DataContext="{d:DesignInstance viewModels:FileExplorerViewModel}"
@@ -36,6 +31,11 @@
         <localViews:NavigationBarView
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="3" />
+            Grid.ColumnSpan="3"
+            DataContext="{Binding NavigationBarViewModel}" />
+        <localViews:DirectoryTreeView
+            Grid.Row="1"
+            Grid.Column="0"
+            DataContext="{Binding DirectoryTreeViewModel}" />
     </Grid>
 </views:WindowUserControl>

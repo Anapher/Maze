@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
-using FileExplorer.Administration.Rest;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;
@@ -31,7 +30,7 @@ namespace FileExplorer.Administration.ViewModels
 
             EntriesViewModel = new EntriesViewModel(this);
             NavigationBarViewModel = new NavigationBarViewModel(this);
-            DirectoryTreeViewModel = new DirectoryTreeViewModel(FileSystem);
+            DirectoryTreeViewModel = new DirectoryTreeViewModel(this);
         }
 
         public event EventHandler<PathContent> PathChanged;
@@ -64,7 +63,7 @@ namespace FileExplorer.Administration.ViewModels
 
             try
             {
-                pathContent = await FileSystem.RequestPath(path, invalidate, invalidate, token)
+                pathContent = await FileSystem.FetchPath(path, invalidate, invalidate, token)
                     .DisplayOnStatusBar(StatusBar, "");
             }
             catch (TaskCanceledException)

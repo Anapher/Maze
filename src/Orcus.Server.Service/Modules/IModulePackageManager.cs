@@ -14,6 +14,8 @@ namespace Orcus.Server.Service.Modules
         ResolutionContext GetDefaultResolutionContext();
         PackageDownloadContext GetDefaultDownloadContext();
 
+        Task EnsurePackagesInstalled(PackagesLock packagesLock);
+
         Task<IEnumerable<ResolvedAction>> PreviewInstallPackageAsync(PackageIdentity packageIdentity,
             ResolutionContext resolutionContext, CancellationToken token);
 

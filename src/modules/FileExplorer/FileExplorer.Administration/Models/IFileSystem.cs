@@ -38,20 +38,28 @@ namespace FileExplorer.Administration.Models
         string NormalizePath(string path);
 
         /// <summary>
-        ///     Get the root elements. This must be called before <see cref="RequestPath"/> is used
+        ///     Get the root elements. This must be called before <see cref="FetchPath" /> is used
         /// </summary>
         Task<RootElementsDto> GetRoot();
 
         /// <summary>
-        ///     Request the content of a path
+        ///     Fetch the content of a path
         /// </summary>
         /// <param name="path">The path to request</param>
         /// <param name="ignoreEntriesCache">True to ignore the cache for the <see cref="PathContent.Entries" /></param>
         /// <param name="ignorePathCache">True to ignore the cache of for the <see cref="PathContent.PathDirectories" /></param>
         /// <param name="token">The cancellation token for this operation</param>
         /// <returns>Return the content of the path</returns>
-        Task<PathContent> RequestPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
+        Task<PathContent> FetchPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
             CancellationToken token);
+
+        /// <summary>
+        ///     Fetch the sub directories of a directory
+        /// </summary>
+        /// <param name="directoryEntry">The directory which should be fetched</param>
+        /// <param name="ignoreCache">True if the cache should be ignored</param>
+        /// <returns>Return the fetched subdirectories of <see cref="directoryEntry" /></returns>
+        Task<IEnumerable<DirectoryEntry>> FetchSubDirectories(DirectoryEntry directoryEntry, bool ignoreCache);
 
         /// <summary>
         ///     Get information about a file type
@@ -74,6 +82,7 @@ namespace FileExplorer.Administration.Models
         /// <param name="entries">The entries of the directory</param>
         /// <param name="directoriesOnly">True if only the directories were queried</param>
         /// <returns>Returns the created cache entry</returns>
-        CachedDirectory AddToCache(DirectoryEntry directoryEntry, IReadOnlyList<FileExplorerEntry> entries, bool directoriesOnly);
+        CachedDirectory AddToCache(DirectoryEntry directoryEntry, IReadOnlyList<FileExplorerEntry> entries,
+            bool directoriesOnly);
     }
 }

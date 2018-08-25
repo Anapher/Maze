@@ -64,11 +64,13 @@ namespace Orcus.Server.AppStart
             foreach (var framework in orcusProject.FrameworkLibraries.Keys.Where(x => x != orcusProject.Framework))
             {
                 logger.LogInformation("Initialize modules lock for {framework}", framework);
-                await packageManager.GetPackagesLock(framework);
+                var packages = await packageManager.GetPackagesLock(framework);
+                await packageManager.EnsurePackagesInstalled(packages);
             }
 
             logger.LogInformation("Initialize modules lock for {framework}", orcusProject.Framework);
             var packageLock = await packageManager.GetPackagesLock(orcusProject.Framework);
+            await packageManager.EnsurePackagesInstalled(packageLock);
 
             if (modulesConfig.Modules.Any())
             {

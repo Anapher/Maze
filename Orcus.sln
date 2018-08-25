@@ -112,15 +112,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Client", "src\
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileExplorer.Shared", "src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.shproj", "{41D81D49-8C6A-47F0-8F66-B533473BC004}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.shproj", "{183F7CBB-E86A-4599-9414-B19E03B07325}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Administration.Tests", "src\modules\FileExplorer\test\FileExplorer.Administration.Tests\FileExplorer.Administration.Tests.csproj", "{C8A05842-CAF4-49E0-86B9-FEBD69B47627}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration.Tests", "src\modules\FileExplorer\test\FileExplorer.Administration.Tests\FileExplorer.Administration.Tests.csproj", "{C8A05842-CAF4-49E0-86B9-FEBD69B47627}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92618B4D-D919-448F-88CD-C9044A48DD38}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.csproj", "{28ABF583-643F-488C-B5FC-B285E41ED342}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\Orcus.Utilities\Orcus.Utilities.projitems*{183f7cbb-e86a-4599-9414-b19e03b07325}*SharedItemsImports = 13
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{41d81d49-8c6a-47f0-8f66-b533473bc004}*SharedItemsImports = 13
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
@@ -278,6 +277,10 @@ Global
 		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8A05842-CAF4-49E0-86B9-FEBD69B47627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28ABF583-643F-488C-B5FC-B285E41ED342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28ABF583-643F-488C-B5FC-B285E41ED342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28ABF583-643F-488C-B5FC-B285E41ED342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28ABF583-643F-488C-B5FC-B285E41ED342}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -322,7 +325,6 @@ Global
 		{4F35A848-7221-4745-9C6C-0DA1E104FBF5} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{41D81D49-8C6A-47F0-8F66-B533473BC004} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
-		{183F7CBB-E86A-4599-9414-B19E03B07325} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 		{C8A05842-CAF4-49E0-86B9-FEBD69B47627} = {92618B4D-D919-448F-88CD-C9044A48DD38}
 		{92618B4D-D919-448F-88CD-C9044A48DD38} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 	EndGlobalSection

@@ -42,4 +42,16 @@
       <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Core\Converter\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Material\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Material\Themes\PackIconMaterial.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
 </Project>

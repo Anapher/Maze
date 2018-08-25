@@ -8,7 +8,7 @@ namespace FileExplorer.Shared.Dtos
     public abstract class FileExplorerEntry
     {
         public string Name { get; set; }
-        public string Path => Parent == null ? Name : System.IO.Path.Combine(Parent.Path, Name);
+        public string Path { get; set; } // Parent == null ? Name : System.IO.Path.Combine(Parent.Path, Name);
         public DateTimeOffset LastAccess { get; set; }
         public DateTimeOffset CreationTime { get; set; }
 

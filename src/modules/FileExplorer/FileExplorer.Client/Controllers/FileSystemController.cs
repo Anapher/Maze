@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Utilities;
+using FileExplorer.Shared.Dtos;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
@@ -12,12 +15,22 @@ namespace FileExplorer.Client.Controllers
     public class FileSystemController : OrcusController
     {
         [OrcusGet]
-        public async Task<IActionResult> QueryFileEntries([FromQuery] string path)
+        public async Task<IActionResult> QueryPathEntries([FromQuery] string path, [FromQuery] bool directoriesOnly = false)
         {
             var directoryHelper = new DirectoryHelper();
-            var entries = await directoryHelper.GetEntries(path);
 
-            return Ok(entries.ToList());
+            IList<FileExplorerEntry> entries;
+            if (directoriesOnly)
+            {
+                entries = (await directoryHelper.GetDirectoryEntries(new DirectoryInfoEx(path), CancellationToken.None))
+                    .ToList<FileExplorerEntry>();
+            }
+            else
+            {
+                entries = (await directoryHelper.GetEntries(path, CancellationToken.None)).ToList();
+            }
+
+            return Ok(entries);
         }
 
         [OrcusGet("path")]
@@ -27,7 +40,7 @@ namespace FileExplorer.Client.Controllers
         [OrcusGet("directory")]
         public IActionResult GetDirectory([FromQuery] string path)
         {
-            var directory = new DirectoryHelper().GetDirectoryEntry(new DirectoryInfoEx(path));
+            var directory = new DirectoryHelper().GetDirectoryEntry(new DirectoryInfoEx(path), null);
             return Ok(directory);
         }
     }

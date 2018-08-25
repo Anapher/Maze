@@ -26,30 +26,42 @@ namespace FileExplorer.Client.Utilities
             _drives = new Lazy<DriveInfo[]>(DriveInfo.GetDrives, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
-        public Task<IEnumerable<FileExplorerEntry>> GetEntries(string directoryPath)
+        public Task<IEnumerable<FileExplorerEntry>> GetEntries(string directoryPath, CancellationToken token)
         {
             using (var directory = new DirectoryInfoEx(directoryPath))
-                return GetEntries(directory);
+                return GetEntries(directory, CancellationToken.None);
         }
 
-        public Task<IEnumerable<FileExplorerEntry>> GetEntries(DirectoryInfoEx directory)
+        public Task<IEnumerable<FileExplorerEntry>> GetEntries(DirectoryInfoEx directory, CancellationToken token)
         {
-            var entries = directory.EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly);
-            return TaskCombinators.ThrottledAsync(entries, (entry, token) => Task.Run(() =>
+            var entries = directory.EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly,
+                () => token.IsCancellationRequested);
+            return TaskCombinators.ThrottledAsync(entries, (entry, _) => Task.Run(() =>
             {
                 using (entry)
                 {
                     if (entry.IsFolder)
-                        return GetDirectoryEntry((DirectoryInfoEx) entry);
+                        return GetDirectoryEntry((DirectoryInfoEx) entry, directory);
 
                     return GetFileEntry((FileInfoEx) entry);
                 }
             }, token), CancellationToken.None);
         }
 
+        public Task<IEnumerable<DirectoryEntry>> GetDirectoryEntries(DirectoryInfoEx directory, CancellationToken token)
+        {
+            var entries = directory.EnumerateDirectories("*", SearchOption.TopDirectoryOnly,
+                () => token.IsCancellationRequested);
+            return TaskCombinators.ThrottledAsync(entries, (entry, _) => Task.Run(() =>
+            {
+                using (entry)
+                    return GetDirectoryEntry(entry, directory);
+            }), token);
+        }
+
         public async Task<List<FileExplorerEntry>> GetComputerDirectoryEntries()
         {
-            var entries = (await GetEntries(DirectoryInfoEx.MyComputerDirectory)).ToList();
+            var entries = (await GetEntries(DirectoryInfoEx.MyComputerDirectory, CancellationToken.None)).ToList();
 
             if (!CoreHelper.RunningOnWin8OrGreater)
             {
@@ -107,7 +119,7 @@ namespace FileExplorer.Client.Utilities
 
                                     DirectoryEntry entry;
                                     using (var directory = new DirectoryInfoEx(folder))
-                                        entry = GetDirectoryEntry(directory);
+                                        entry = GetDirectoryEntry(directory, null);
 
                                     if (entry == null)
                                         continue;
@@ -130,7 +142,7 @@ namespace FileExplorer.Client.Utilities
                 Log.Logger.Warning(e, "Error when accessing registry at SOFTWARE\\Classes\\CLSID");
             }
 
-            result.Add(GetDirectoryEntry(DirectoryInfoEx.RecycleBinDirectory), -1);
+            result.Add(GetDirectoryEntry(DirectoryInfoEx.RecycleBinDirectory, null), -1);
             return result.OrderBy(x => x.Value).Select(x => x.Key).ToList();
         }
 
@@ -147,7 +159,7 @@ namespace FileExplorer.Client.Utilities
             return result;
         }
 
-        public DirectoryEntry GetDirectoryEntry(DirectoryInfoEx directory)
+        public DirectoryEntry GetDirectoryEntry(DirectoryInfoEx directory, DirectoryInfoEx parentFolder)
         {
             var directoryEntry = CreateSpecializedDirectory(directory);
 
@@ -155,6 +167,11 @@ namespace FileExplorer.Client.Utilities
             directoryEntry.HasSubFolder = directory.HasSubFolder;
             directoryEntry.CreationTime = directory.CreationTimeUtc;
             directoryEntry.LastAccess = directory.LastAccessTimeUtc;
+
+            if (parentFolder == null && directory.FullName != directory.Name)
+                directoryEntry.Path = directory.FullName;
+            else if (parentFolder?.FullName != directory.FullName)
+                directoryEntry.Path = directory.FullName;
 
             return directoryEntry;
         }
@@ -164,7 +181,7 @@ namespace FileExplorer.Client.Utilities
             try
             {
                 var librariesDirectory = new DirectoryInfoEx(KnownFolderIds.Libraries);
-                result = librariesDirectory.GetDirectories().Select(GetDirectoryEntry);
+                result = librariesDirectory.GetDirectories().Select(x => GetDirectoryEntry(x, null));
                 return true;
             }
             catch (Exception e)
@@ -186,7 +203,7 @@ namespace FileExplorer.Client.Utilities
                     return false;
                 }
 
-                directoryEntry = GetDirectoryEntry(directory);
+                directoryEntry = GetDirectoryEntry(directory, null);
                 return true;
             }
             catch (Exception e)

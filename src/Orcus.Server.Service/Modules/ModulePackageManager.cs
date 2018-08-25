@@ -26,6 +26,7 @@ using Orcus.Server.Service.Extensions;
 using Orcus.Server.Service.Modules.Extensions;
 using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Service.Modules.Resolution;
+using Orcus.Utilities;
 using ILogger = NuGet.Common.ILogger;
 
 namespace Orcus.Server.Service.Modules
@@ -249,6 +250,33 @@ namespace Orcus.Server.Service.Modules
             }
 
             return new PackagesContext(dependencyMap);
+        }
+
+        public async Task EnsurePackagesInstalled(PackagesLock packagesLock)
+        {
+            var resources = _project.PrimarySources.Concat(_project.DependencySources)
+                .ToImmutableDictionary(x => x.GetResource<FindPackageByIdResource>(), x => x);
+            var cache = GetDefaultResolutionContext().SourceCacheContext;
+
+            var actions = (await TaskCombinators.ThrottledAsync(packagesLock, async (package, token) =>
+            {
+                if (!_project.ModulesDirectory.ModuleExists(package.Key))
+                {
+                    foreach (var (resource, repo) in resources)
+                    {
+                        var versions =
+                            await resource.GetAllVersionsAsync(package.Key.Id, cache, _logger, CancellationToken.None);
+                        if (versions.Any(x => x == package.Key.Version))
+                        {
+                            return ResolvedAction.CreateInstall(package.Key, repo);
+                        }
+                    }
+                }
+                return null;
+            }, CancellationToken.None)).Where(x => x != null).ToList();
+
+            if (actions.Any())
+                await ExecuteActionsAsync(actions, GetDefaultDownloadContext(), CancellationToken.None);
         }
 
         private IEnumerable<ResolvedAction> GetRequiredActions(PackagesContext context)

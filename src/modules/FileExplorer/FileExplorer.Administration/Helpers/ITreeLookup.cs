@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FileExplorer.Administration.Controls.Models;
 
@@ -66,14 +68,15 @@ namespace FileExplorer.Administration.Helpers
 
         Stack<ITreeSelector<VM, T>> _hierarchy;
         private ITreeSelector<VM, T> _targetSelector;
+
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
             ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
             if (parentSelector.EntryHelper.IsLoaded)
                 foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
-                    if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
+                    if (current is ISupportTreeSelector<VM, T> selector)
                     {
-                        var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                        var currentSelectionHelper = selector.Selection;
                         var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {

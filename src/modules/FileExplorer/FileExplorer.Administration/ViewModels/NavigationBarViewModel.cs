@@ -19,9 +19,12 @@ namespace FileExplorer.Administration.ViewModels
             _fileExplorerViewModel = fileExplorerViewModel;
             _fileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
             PathHistoryManager = new PathHistoryManager(fileExplorerViewModel.FileSystem);
+
+            DirectoryTreeViewModel = fileExplorerViewModel.DirectoryTreeViewModel;
         }
 
         public PathHistoryManager PathHistoryManager { get; }
+        public DirectoryTreeViewModel DirectoryTreeViewModel { get; }
 
         public DelegateCommand GoBackCommand
         {

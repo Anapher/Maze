@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using NuGet.Frameworks;
 using Orcus.ModuleManagement;
 using Orcus.ModuleManagement.Loader;
-using Orcus.ModuleManagement.Utilities;
 using Orcus.Server.Connection.Modules;
+using Orcus.Utilities;
 
 namespace Orcus.Administration.Core.Modules
 {

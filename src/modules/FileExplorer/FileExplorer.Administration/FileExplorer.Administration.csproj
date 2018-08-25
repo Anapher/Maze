@@ -2,7 +2,6 @@
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
     <Description>Interact with the user.</Description>
   </PropertyGroup>
 
@@ -18,9 +17,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <None Remove="Resources\Generic.xaml" />
+    <None Remove="Views\DirectoryTreeView.xaml" />
     <None Remove="Views\NavigationBarView.xaml" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
@@ -44,6 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\DirectoryTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\NavigationBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -66,11 +66,17 @@ namespace FileExplorer.Administration.Models
         {
             var dto = await FileExplorerResource.GetRoot(_restClient);
 
+            foreach (var rootDirectory in dto.RootDirectories)
+                rootDirectory.Migrate();
+
+            foreach (var computerDirectoryEntry in dto.ComputerDirectoryEntries)
+                computerDirectoryEntry.Migrate(dto.ComputerDirectory);
+
             _computerDirectory = AddToCache(dto.ComputerDirectory, dto.ComputerDirectoryEntries, false);
             return dto;
         }
 
-        public async Task<PathContent> RequestPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
+        public async Task<PathContent> FetchPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
             CancellationToken token)
         {
             if (PathHelper.ContainsEnvironmentVariables(path))
@@ -138,6 +144,7 @@ namespace FileExplorer.Administration.Models
                 if (directory == null) //Special folders like trash can etc.
                 {
                     directory = await FileSystemResource.GetDirectoryEntry(directoryPath, _restClient);
+                    directory.Migrate();
                 }
 
                 if (queryResponse != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))
@@ -188,6 +195,21 @@ namespace FileExplorer.Administration.Models
             return new PathContent(directory, directoryEntries, pathDirectories);
         }
 
+        public async Task<IEnumerable<DirectoryEntry>> FetchSubDirectories(DirectoryEntry directoryEntry, bool ignoreCache)
+        {
+            if (!ignoreCache && TryGetCachedDirectory(directoryEntry.Path, out var cachedDirectory))
+            {
+                return cachedDirectory.Entries.OfType<DirectoryEntry>();
+            }
+
+            var directories = await FileSystemResource.QueryDirectories(directoryEntry.Path, _restClient);
+            foreach (var subDirectory in directories)
+                subDirectory.Migrate(directoryEntry);
+
+            AddToCache(directoryEntry, directories, true);
+            return directories;
+        }
+
         public FileTypeDescription GetFileTypeDescription(string filename)
         {
             var extension = Path.GetExtension(filename);
@@ -225,7 +247,7 @@ namespace FileExplorer.Administration.Models
             }
             catch (Exception e)
             {
-                Debug.Fail("Why does that happen?");
+                Debug.Fail($"Why does that happen? {e.Message} / {path}");
                 var pos = path.LastIndexOf('\\');
                 if (pos == -1)
                     return path;

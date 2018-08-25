@@ -10,13 +10,13 @@
     d:DesignHeight="40"
     d:DesignWidth="600"
     mc:Ignorable="d">
-    <UserControl.Resources>
+    <!--<UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
+    </UserControl.Resources>-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -50,7 +50,11 @@
 
             <controls:ContentSwitch Height="25">
                 <controls:ContentSwitch.Header>
-                    <Image />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Margin="7,0,5,0"
+                        Source="{Binding DirectoryTreeViewModel.Selection.Value}" />
                 </controls:ContentSwitch.Header>
             </controls:ContentSwitch>
         </Border>

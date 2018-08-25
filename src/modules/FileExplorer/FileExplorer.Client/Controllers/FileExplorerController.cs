@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
@@ -23,9 +24,9 @@ namespace FileExplorer.Client.Controllers
             {
                 Task.Run(() => result.RootDirectories = directoryHelper.GetNamespaceDirectories()),
                 Task.Run(() =>
-                    result.ComputerDirectory = directoryHelper.GetDirectoryEntry(DirectoryInfoEx.MyComputerDirectory)),
+                    result.ComputerDirectory = directoryHelper.GetDirectoryEntry(DirectoryInfoEx.MyComputerDirectory, null)),
                 Task.Run(async () => result.ComputerDirectoryEntries =
-                    (await directoryHelper.GetEntries(DirectoryInfoEx.MyComputerDirectory)).ToList())
+                    (await directoryHelper.GetEntries(DirectoryInfoEx.MyComputerDirectory, CancellationToken.None)).ToList())
             };
 
             await Task.WhenAll(tasks);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Orcus.Utilities
 {
     /// <summary>
-    /// Contains task execution strategies, such as parallel throttled execution.
+    ///     Contains task execution strategies, such as parallel throttled execution.
     /// </summary>
     public static class TaskCombinators
     {
@@ -17,22 +17,22 @@ namespace Orcus.Utilities
         public static async Task<IEnumerable<TValue>> ThrottledAsync<TSource, TValue>(IEnumerable<TSource> sources,
             Func<TSource, CancellationToken, Task<TValue>> valueSelector, CancellationToken cancellationToken)
         {
-            var bag = new ConcurrentBag<TSource>(sources);
             var values = new ConcurrentQueue<TValue>();
 
-            async Task TaskBody()
+            async Task TaskBody(IEnumerator<TSource> enumerator)
             {
-                while (bag.TryTake(out var source))
-                {
-                    var value = await valueSelector(source, cancellationToken);
-                    values.Enqueue(value);
-                }
+                using (enumerator)
+                    while (enumerator.MoveNext())
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        var value = await valueSelector(enumerator.Current, cancellationToken);
+                        values.Enqueue(value);
+                    }
             }
 
-            var tasks = Enumerable
-                .Repeat(0, Math.Min(MaxDegreeOfParallelism, bag.Count))
-                .Select(_ => Task.Run(TaskBody));
-
+            var tasks = Partitioner.Create(sources).GetPartitions(MaxDegreeOfParallelism)
+                .Select(enumerator => Task.Run(() => TaskBody(enumerator)));
             await Task.WhenAll(tasks);
 
             return values;
@@ -41,49 +41,54 @@ namespace Orcus.Utilities
         public static async Task ThrottledAsync<TSource>(IEnumerable<TSource> sources,
             Func<TSource, CancellationToken, Task> valueSelector, CancellationToken cancellationToken)
         {
-            var bag = new ConcurrentBag<TSource>(sources);
-
-            async Task TaskBody()
+            async Task TaskBody(IEnumerator<TSource> enumerator)
             {
-                while (bag.TryTake(out var source))
-                {
-                    await valueSelector(source, cancellationToken);
-                }
+                using (enumerator)
+                    while (enumerator.MoveNext())
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        await valueSelector(enumerator.Current, cancellationToken);
+                    }
             }
 
-            var tasks = Enumerable
-                .Repeat(0, Math.Min(MaxDegreeOfParallelism, bag.Count))
-                .Select(_ => Task.Run(TaskBody));
-
+            var tasks = Partitioner.Create(sources).GetPartitions(MaxDegreeOfParallelism)
+                .Select(enumerator => Task.Run(() => TaskBody(enumerator)));
             await Task.WhenAll(tasks);
         }
 
-        public static async Task<IReadOnlyDictionary<TSource, Exception>> ThrottledCatchErrorsAsync<TSource>(IEnumerable<TSource> sources,
-            Func<TSource, CancellationToken, Task> valueSelector, CancellationToken cancellationToken)
+        public static async Task<IReadOnlyDictionary<TSource, Exception>> ThrottledCatchErrorsAsync<TSource>(
+            IEnumerable<TSource> sources, Func<TSource, CancellationToken, Task> valueSelector,
+            CancellationToken cancellationToken)
         {
-            var bag = new ConcurrentBag<TSource>(sources);
             var exceptions = new ConcurrentDictionary<TSource, Exception>();
 
-            async Task TaskBody()
+            async Task TaskBody(IEnumerator<TSource> enumerator)
             {
-                while (bag.TryTake(out var source))
-                {
-                    try
+                using (enumerator)
+                    while (enumerator.MoveNext())
                     {
-                        await valueSelector(source, cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        try
+                        {
+                            await valueSelector(enumerator.Current, cancellationToken);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
+                        }
+                        catch (Exception e)
+                        {
+                            exceptions.TryAdd(enumerator.Current, e);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        exceptions.TryAdd(source, e);
-                    }
-                }
             }
 
-            var tasks = Enumerable
-                .Repeat(0, Math.Min(MaxDegreeOfParallelism, bag.Count))
-                .Select(_ => Task.Run(TaskBody));
-
+            var tasks = Partitioner.Create(sources).GetPartitions(MaxDegreeOfParallelism)
+                .Select(enumerator => Task.Run(() => TaskBody(enumerator)));
             await Task.WhenAll(tasks);
+
             return exceptions;
         }
 
@@ -92,20 +97,13 @@ namespace Orcus.Utilities
             Func<TSource, CancellationToken, Task<TValue>> valueSelector, Action<Task, object> observeErrorAction,
             CancellationToken cancellationToken)
         {
-            var tasks = sources
-                .ToDictionary(
-                    keySelector,
-                    s =>
-                    {
-                        var valueTask = valueSelector(s, cancellationToken);
-                        var ignored = valueTask.ContinueWith(
-                            observeErrorAction,
-                            s,
-                            cancellationToken,
-                            TaskContinuationOptions.OnlyOnFaulted,
-                            TaskScheduler.Current);
-                        return valueTask;
-                    });
+            var tasks = sources.ToDictionary(keySelector, s =>
+            {
+                var valueTask = valueSelector(s, cancellationToken);
+                var ignored = valueTask.ContinueWith(observeErrorAction, s, cancellationToken,
+                    TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Current);
+                return valueTask;
+            });
 
             return tasks;
         }

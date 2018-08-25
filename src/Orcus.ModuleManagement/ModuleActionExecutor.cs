@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Orcus.ModuleManagement.Logging;
 using Orcus.Modules.Api;
-using Orcus.Modules.Api.Utilities;
+using Orcus.Utilities;
 
 namespace Orcus.ModuleManagement
 {

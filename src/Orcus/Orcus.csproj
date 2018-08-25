@@ -132,6 +132,10 @@
       <Project>{9c1c6607-7f2e-4f28-8629-2552d3bbfb38}</Project>
       <Name>Orcus.Sockets</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj">
+      <Project>{28abf583-643f-488c-b5fc-b285e41ed342}</Project>
+      <Name>Orcus.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">

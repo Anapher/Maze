@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 

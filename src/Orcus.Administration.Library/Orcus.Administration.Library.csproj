@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
+    <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
   </ItemGroup>
 
@@ -32,7 +33,5 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-
-  <Import Project="..\Orcus.Utilities\Orcus.Utilities.projitems" Label="Shared" />
 
 </Project>

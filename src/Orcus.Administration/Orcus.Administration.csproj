@@ -71,7 +71,6 @@
     <Compile Include="Services\ClientCommandRegistrar.cs" />
     <Compile Include="Services\ShellWindowFactory.cs" />
     <Compile Include="Services\WindowInstance.cs" />
-    <Compile Include="Utilities\WpfExtensions.cs" />
     <Compile Include="ViewModule.cs" />
     <Compile Include="Views\ShellWindow.xaml.cs">
       <DependentUpon>ShellWindow.xaml</DependentUpon>
