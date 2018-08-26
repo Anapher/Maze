@@ -1,4 +1,5 @@
-﻿using FileExplorer.Administration.Models;
+﻿using System.ComponentModel;
+using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer.Helpers;
 using Orcus.Utilities;
 using Prism.Commands;
@@ -8,22 +9,21 @@ namespace FileExplorer.Administration.ViewModels
 {
     public class NavigationBarViewModel : BindableBase
     {
-        private readonly FileExplorerViewModel _fileExplorerViewModel;
-
         private DelegateCommand _goBackCommand;
         private DelegateCommand _goForwardCommand;
+        private DelegateCommand<string> _navigateToPathCommand;
 
         public NavigationBarViewModel(FileExplorerViewModel fileExplorerViewModel)
         {
-            _fileExplorerViewModel = fileExplorerViewModel;
-            _fileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
+            FileExplorerViewModel = fileExplorerViewModel;
+            FileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
             PathHistoryManager = new PathHistoryManager(fileExplorerViewModel.FileSystem);
-
-            DirectoryTreeViewModel = fileExplorerViewModel.DirectoryTreeViewModel;
+            PathHistoryManager.PropertyChanged += PathHistoryManagerOnPropertyChanged;
         }
 
         public PathHistoryManager PathHistoryManager { get; }
-        public DirectoryTreeViewModel DirectoryTreeViewModel { get; }
+        public DirectoryTreeViewModel DirectoryTreeViewModel => FileExplorerViewModel.DirectoryTreeViewModel;
+        public FileExplorerViewModel FileExplorerViewModel { get; }
 
         public DelegateCommand GoBackCommand
         {
@@ -32,8 +32,8 @@ namespace FileExplorer.Administration.ViewModels
                 return _goBackCommand ?? (_goBackCommand =
                            new DelegateCommand(() =>
                            {
-                               _fileExplorerViewModel.OpenPath(PathHistoryManager.GoBack()).Forget();
-                           }).ObservesCanExecute(() => PathHistoryManager.CanGoBack));
+                               FileExplorerViewModel.OpenPath(PathHistoryManager.GoBack()).Forget();
+                           }, () => PathHistoryManager.CanGoBack));
             }
         }
 
@@ -44,14 +44,33 @@ namespace FileExplorer.Administration.ViewModels
                 return _goForwardCommand ?? (_goForwardCommand =
                            new DelegateCommand(() =>
                            {
-                               _fileExplorerViewModel.OpenPath(PathHistoryManager.GoForward()).Forget();
-                           }).ObservesCanExecute(() => PathHistoryManager.CanGoForward));
+                               FileExplorerViewModel.OpenPath(PathHistoryManager.GoForward()).Forget();
+                           }, () => PathHistoryManager.CanGoForward));
+            }
+        }
+
+        public DelegateCommand<string> NavigateToPathCommand
+        {
+            get
+            {
+                return _navigateToPathCommand ?? (_navigateToPathCommand = new DelegateCommand<string>(parameter =>
+                {
+                    FileExplorerViewModel.OpenPath(parameter).Forget();
+                }));
             }
         }
 
         private void FileExplorerViewModelOnPathChanged(object sender, PathContent e)
         {
             PathHistoryManager.Navigate(e.Path);
+        }
+
+        private void PathHistoryManagerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PathHistoryManager.CanGoBack))
+                GoBackCommand.RaiseCanExecuteChanged();
+            else if (e.PropertyName == nameof(PathHistoryManager.CanGoForward))
+                GoForwardCommand.RaiseCanExecuteChanged();
         }
     }
 }

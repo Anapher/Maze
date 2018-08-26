@@ -1,19 +1,35 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Serilog;
 
 namespace Orcus.Server
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            try
+            {
+                BuildWebHost(args).Run();
+                return 0;
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseSerilog()
                 .Build();
         }
     }

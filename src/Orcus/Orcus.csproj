@@ -142,7 +142,9 @@
       <Version>4.8.1</Version>
     </PackageReference>
     <PackageReference Include="CodeElements.Clients">
-      <Version>1.1.0</Version>
+      <Version>1.2.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Costura.Fody">
       <Version>3.1.0</Version>
@@ -164,6 +166,9 @@
     </PackageReference>
     <PackageReference Include="Serilog.Extensions.Logging">
       <Version>2.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.Debug">
+      <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.RollingFile">
       <Version>3.3.0</Version>

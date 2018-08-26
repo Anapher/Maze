@@ -2,7 +2,8 @@
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Orcus.Logging.LogProviders;
+using Serilog;
+using Serilog.Events;
 
 namespace Orcus
 {
@@ -14,8 +15,7 @@ namespace Orcus
         [STAThread]
         private static void Main()
         {
-            Logging.LogProvider.SetCurrentLogProvider(new SerilogLogProvider());
-            //Orcus.ModuleManagement.Logging.LogProvider.SetCurrentLogProvider(new SerilogLogProvider());
+            Log.Logger = new LoggerConfiguration().WriteTo.Debug(LogEventLevel.Debug).CreateLogger();
 
             var config = new ConfigurationBuilder().AddJsonFile("orcussettings.json").Build();
             var startup = new Startup(config);

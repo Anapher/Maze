@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
@@ -78,6 +81,16 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         public override string Description { get; }
         public override long Size { get; }
 
+        public ObservableCollection<DirectoryNodeViewModel> AutoCompleteEntries
+        {
+            get
+            {
+                if (!Entries.IsLoaded)
+                    Entries.LoadAsync();
+                return Entries.All;
+            }
+        }
+
         public DirectoryNodeViewModel Parent { get; }
         public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
         public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
@@ -127,6 +140,9 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             var viewModels = result.Result.Select(CreateDirectoryViewModel);
             if (!_source.IsComputerDirectory())
                 viewModels = viewModels.OrderBy(x => x.Label);
+
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
+                (Action) (() => RaisePropertyChanged(nameof(AutoCompleteEntries))));
 
             return viewModels;
         }

@@ -4,6 +4,8 @@
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Color x:Key="SelectionColor">#24257AB5</Color>
+    <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource SelectionColor}" />
 
     <!--#region IconButton-->
     <Style TargetType="controls:IconButton">
@@ -92,6 +94,307 @@
     <Style TargetType="controls:ContentSwitch">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template" Value="{StaticResource SwitchTemplate}" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region ExplorerTextBox-->
+    <ControlTemplate x:Key="SuggestableTextBoxTemplate" TargetType="{x:Type controls:SuggestBox}">
+        <Grid x:Name="root">
+            <TextBlock
+                Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+                Opacity="0.5"
+                Text="{TemplateBinding Hint}"
+                Visibility="{Binding IsHintVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <ScrollViewer x:Name="PART_ContentHost" />
+            <Popup
+                x:Name="PART_Popup"
+                AllowsTransparency="true"
+                IsOpen="{TemplateBinding IsPopupOpened}"
+                Placement="Bottom"
+                PlacementTarget="{Binding ElementName=PART_ContentHost}"
+                PopupAnimation="Fade">
+                <Border
+                    x:Name="DropDownBorder"
+                    Width="{Binding ActualWidth, ElementName=PART_ContentHost}"
+                    MaxHeight="100"
+                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="1,1,1,1">
+                    <ListBox
+                        x:Name="PART_ItemList"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+                        ItemsSource="{Binding Suggestions, RelativeSource={RelativeSource TemplatedParent}}"
+                        KeyboardNavigation.AcceptsReturn="True"
+                        KeyboardNavigation.DirectionalNavigation="Cycle"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        SelectedValuePath="{TemplateBinding ValuePath}"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ListBox.Style>
+                            <Style BasedOn="{StaticResource MetroListBox}" TargetType="ListBox">
+                                <Setter Property="ItemContainerStyle">
+                                    <Setter.Value>
+                                        <Style BasedOn="{StaticResource MetroListBoxItem}" TargetType="ListBoxItem">
+                                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                                            <Setter Property="MinHeight" Value="20" />
+                                            <Setter Property="Height" Value="20" />
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                        </Style>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.Style>
+                    </ListBox>
+                </Border>
+            </Popup>
+        </Grid>
+    </ControlTemplate>
+
+    <Style
+        x:Key="ExplorerTextBoxStyle"
+        BasedOn="{StaticResource MetroTextBox}"
+        TargetType="controls:ExplorerTextBox">
+        <Setter Property="BorderBrush" Value="{StaticResource GrayBrush4}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template" Value="{StaticResource SuggestableTextBoxTemplate}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style BasedOn="{StaticResource ExplorerTextBoxStyle}" TargetType="controls:ExplorerTextBox" />
+    <!--#endregion ExplorerTextBox-->
+
+    <!--#region ModernTrack-->
+
+    <ControlTemplate x:Key="ModernTrackTemplate" TargetType="ContentControl">
+        <Border x:Name="PART_BACKGROUND" BorderBrush="Transparent">
+            <Border.Background>
+                <SolidColorBrush Opacity="0" Color="{DynamicResource SelectionColor}" />
+            </Border.Background>
+            <ContentPresenter
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="PART_BACKGROUND"
+                                Storyboard.TargetProperty="Background.Opacity"
+                                To="1"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="PART_BACKGROUND"
+                                Storyboard.TargetProperty="Background.Opacity"
+                                To="0"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="ExplorerContentControl" TargetType="ContentControl">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template" Value="{StaticResource ModernTrackTemplate}" />
+    </Style>
+
+    <!--#endregion ModernTrack-->
+
+    <!--#region Breadcrumb-->
+    <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type controls:BreadcrumbTreeItem}">
+        <controls:OverflowableStackPanel
+            HorizontalAlignment="Stretch"
+            Orientation="Horizontal"
+            OverflowItemCount="{Binding OverflowItemCount, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}">
+            <Button x:Name="PART_CONTENT" IsHitTestVisible="True">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid x:Name="PART_BACKGROUND">
+                                        <Grid.Background>
+                                            <SolidColorBrush Opacity="0" Color="{StaticResource SelectionColor}" />
+                                        </Grid.Background>
+                                        <ContentPresenter />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BACKGROUND"
+                                                            Storyboard.TargetProperty="Background.Opacity"
+                                                            To="1"
+                                                            Duration="0:0:0.1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BACKGROUND"
+                                                            Storyboard.TargetProperty="Background.Opacity"
+                                                            To="0"
+                                                            Duration="0:0:0.1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="PART_CaptionButton">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                        <ContentPresenter
+                            x:Name="PART_Header"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            ContentSource="Header"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Button>
+                    <Rectangle
+                        Width="1"
+                        Margin="4,0,0,0"
+                        VerticalAlignment="Stretch"
+                        Fill="{StaticResource SelectionBrush}"
+                        SnapsToDevicePixels="True">
+                        <Rectangle.Style>
+                            <Style TargetType="Rectangle">
+                                <Setter Property="Opacity" Value="0" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=PART_CONTENT, Path=IsMouseOver}" Value="true">
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                    <controls:DropDownList
+                        x:Name="PART_Toggle"
+                        Width="15"
+                        controls:OverflowableStackPanel.CanOverflow="True"
+                        IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        ItemTemplate="{Binding MenuItemTemplate, RelativeSource={RelativeSource AncestorType={x:Type controls:BreadcrumbTree}}}"
+                        ItemsSource="{TemplateBinding ItemsSource}"
+                        SelectedValue="{Binding SelectedChild, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
+                        VirtualizingPanel.IsVirtualizing="{TemplateBinding VirtualizingPanel.IsVirtualizing}" />
+                </StackPanel>
+            </Button>
+            <ItemsPresenter x:Name="ItemsHost" />
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CaptionStates">
+                    <VisualState x:Name="ShowCaption">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="headerHL"
+                                Storyboard.TargetProperty="MaxWidth"
+                                To="1000"
+                                Duration="0:0:1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="HideCaption">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="headerHL"
+                                Storyboard.TargetProperty="MaxWidth"
+                                To="{Binding ActualWidth, ElementName=PART_CaptionButton, FallbackValue=1000}"
+                                Duration="0:0:0" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="headerHL"
+                                Storyboard.TargetProperty="MaxWidth"
+                                To="0"
+                                Duration="0:0:1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                <DiscreteObjectKeyFrame KeyTime="00:00:1">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Collapsed</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </controls:OverflowableStackPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="HasItems" Value="False">
+                <Setter TargetName="PART_Toggle" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChildSelected" Value="false" />
+                    <Condition Property="IsCurrentSelected" Value="false" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
+        <controls:OneItemPanel />
+    </ItemsPanelTemplate>
+
+    <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type controls:BreadcrumbTreeItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <Setter Property="Padding" Value="1,0,0,0" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Template" Value="{StaticResource BreadcrumbTreeItemTemplate}" />
+        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
+    </Style>
+
+    <ControlTemplate x:Key="BreadcrumbTreeTemplate" TargetType="{x:Type controls:BreadcrumbTree}">
+        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+            <ItemsPresenter />
+        </Border>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:BreadcrumbTree}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource BreadcrumbTreeItemStyle}" />
+        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
+        <Setter Property="Template" Value="{StaticResource BreadcrumbTreeTemplate}" />
     </Style>
     <!--#endregion-->
 </ResourceDictionary>

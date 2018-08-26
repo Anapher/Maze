@@ -13,11 +13,15 @@ namespace FileExplorer.Administration.Controls
     /// </summary>
     public class PathHierarchyHelper : IHierarchyHelper
     {
-        public PathHierarchyHelper(string parentPath, string valuePath, string subEntriesPath)
+        public PathHierarchyHelper(string parentPath, string valuePath, string subEntriesPath) : this()
         {
             ParentPath = parentPath;
             ValuePath = valuePath;
             SubentriesPath = subEntriesPath;
+        }
+
+        public PathHierarchyHelper()
+        {
             Separator = '\\';
             StringComparisonOption = StringComparison.CurrentCultureIgnoreCase;
         }

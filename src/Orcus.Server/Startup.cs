@@ -7,10 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orcus.ModuleManagement;
 using Orcus.Server.AppStart;
@@ -28,16 +26,14 @@ using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
 using Orcus.Sockets;
+using Serilog;
 
 namespace Orcus.Server
 {
     public class Startup
     {
-        private readonly ILogger<Startup> _logger;
-
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
-            _logger = logger;
             Configuration = configuration;
         }
 
@@ -46,13 +42,17 @@ namespace Orcus.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger();
+            Log.Information("Starting web host");
+
             services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
             services.Configure<ModulePackageManagerOptions>(Configuration.GetSection("Modules.PackageManager"));
 
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
-            services.AddLogging();
             services.AddMemoryCache();
 
             var provider = services.BuildServiceProvider();

@@ -321,11 +321,7 @@ namespace Orcus.Sockets
                     if (orcusResponse.IsCompleted)
                         opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
 
-                    if (Logger.IsTraceEnabled())
-                    {
-                        Logger.Trace("Send HTTP Response Message (Size: {size}):\r\n{httpMessage}", data.Count - 1, Encoding.UTF8.GetString(sendBuffer, 0, offset + data.Count));
-                    }
-
+                    LogDataPackage("Send HTTP Response", sendBuffer, 0, offset + data.Count);
                     await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, offset + data.Count),
                         CancellationToken.None);
 
@@ -349,6 +345,7 @@ namespace Orcus.Sockets
                     Buffer.BlockCopy(data.Array, data.Offset, buffer, 4, data.Count);
                     BinaryUtils.WriteInt32(ref buffer, 0, orcusResponse.RequestId);
 
+                    LogDataPackage("Send HTTP Response Continuation", buffer, 0, data.Count + 4);
                     await _socket.SendFrameAsync(opcode, new ArraySegment<byte>(buffer, 0, data.Count + 4),
                         CancellationToken.None);
                 }
@@ -362,16 +359,19 @@ namespace Orcus.Sockets
             }
         }
 
+        private static void LogDataPackage(string name, byte[] buffer, int offset, int count)
+        {
+            if (Logger.IsDebugEnabled())
+            {
+                var hash = HashHelper.HashData(buffer, offset, count);
+                var s = Encoding.UTF8.GetString(buffer, offset, count);
+                Logger.Debug(name + " [{size} => {hash}]:\r\n{data}", count, hash, "");
+            }
+        }
+
         private void ProcessResponse(ArraySegment<byte> buffer, bool isCompleted)
         {
-            Logger.Debug("Response received (isCompleted = {isCompleted}), total length = {length}",
-                isCompleted, buffer.Count);
-
-            if (Logger.IsTraceEnabled())
-            {
-                Logger.Trace("Received HTTP Response Message (Size: {size}):\r\n{httpMessage}", buffer.Count - 1,
-                    Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count));
-            }
+            LogDataPackage("Received Response", buffer.Array, buffer.Offset, buffer.Count);
             
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
             var requestId = int.Parse(response.Headers.GetValues(OrcusSocketRequestIdHeader).First());
@@ -416,6 +416,8 @@ namespace Orcus.Sockets
 
         private void AppendResponseData(ArraySegment<byte> buffer, bool isCompleted)
         {
+            LogDataPackage("Received Response Continuation", buffer.Array, buffer.Offset, buffer.Count);
+
             var requestId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
 
             if (!_activeResponses.TryGetValue(requestId, out var response))

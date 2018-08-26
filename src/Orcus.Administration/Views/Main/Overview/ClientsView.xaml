@@ -69,11 +69,13 @@
         <TabControl
             x:Name="ClientListTabControl"
             Grid.Row="2"
+            Padding="0"
             prism:RegionManager.RegionName="{x:Static library:RegionNames.ClientListTabs}"
             SelectedIndex="0">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="Visibility" Value="Collapsed" />
+                    <Setter Property="Padding" Value="0" />
                 </Style>
             </TabControl.ItemContainerStyle>
         </TabControl>

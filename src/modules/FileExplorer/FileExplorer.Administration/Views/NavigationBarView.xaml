@@ -4,12 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fileExplorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:NavigationBarViewModel}"
     d:DesignHeight="40"
     d:DesignWidth="600"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer.Administration;component/Resources/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -47,8 +55,78 @@
                         Width="16"
                         Height="16"
                         Margin="7,0,5,0"
-                        Source="{Binding DirectoryTreeViewModel.Selection.Value}" />
+                        Source="{Binding DirectoryTreeViewModel.SelectedViewModel.Icon}" />
                 </controls:ContentSwitch.Header>
+                <controls:ContentSwitch.ContentOn>
+                    <controls:ExplorerTextBox
+                        VerticalAlignment="Center"
+                        CurrentPath="{Binding FileExplorerViewModel.CurrentPath, Mode=OneWay}"
+                        DisplayMemberPath="Selection.Value.Path"
+                        EnterTextCommand="{Binding NavigateToPathCommand}"
+                        IsInEditMode="{Binding RelativeSource={RelativeSource Self}, Path=(controls:ContentSwitch.IsContentVisible)}"
+                        RootItem="{Binding DirectoryTreeViewModel}"
+                        ValuePath="Selection.Value.Path">
+                        <controls:ExplorerTextBox.HierarchyHelper>
+                            <controls:PathHierarchyHelper
+                                ParentPath="Parent"
+                                SubentriesPath="AutoCompleteEntries"
+                                ValuePath="Selection.Value.Path" />
+                        </controls:ExplorerTextBox.HierarchyHelper>
+                    </controls:ExplorerTextBox>
+                </controls:ContentSwitch.ContentOn>
+                <controls:ContentSwitch.ContentOff>
+                    <DockPanel Height="25">
+                        <ContentControl
+                            Width="16"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Style="{StaticResource ExplorerContentControl}">
+                            <controls:DropDownList
+                                x:Name="bexp"
+                                ItemTemplate="{Binding MenuItemTemplate, ElementName=btree}"
+                                ItemsSource="{Binding DirectoryTreeViewModel.RootViewModels}">
+                                <controls:DropDownList.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource MetroComboBoxItem}" TargetType="ComboBoxItem">
+                                        <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}" />
+                                    </Style>
+                                </controls:DropDownList.ItemContainerStyle>
+                            </controls:DropDownList>
+                        </ContentControl>
+                        <controls:BreadcrumbTree x:Name="btree" ItemsSource="{Binding DirectoryTreeViewModel.Entries.All}">
+                            <controls:BreadcrumbTree.ItemContainerStyle>
+                                <Style
+                                    d:DataContext="{d:DesignInstance fileExplorer:DirectoryNodeViewModel}"
+                                    BasedOn="{StaticResource BreadcrumbTreeItemStyle}"
+                                    TargetType="{x:Type controls:BreadcrumbTreeItem}">
+                                    <Setter Property="ValuePath" Value="Selection.Value" />
+                                    <Setter Property="IsCurrentSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}" />
+                                    <Setter Property="SelectedChild" Value="{Binding Selection.SelectedChild, Mode=TwoWay}" />
+                                    <Setter Property="IsChildSelected" Value="{Binding Selection.IsChildSelected, Mode=OneWay}" />
+                                    <Setter Property="IsExpanded" Value="{Binding IsBreadcrumbExpanded, Mode=TwoWay}" />
+                                </Style>
+                            </controls:BreadcrumbTree.ItemContainerStyle>
+                            <controls:BreadcrumbTree.MenuItemTemplate>
+                                <DataTemplate DataType="{x:Type fileExplorer:DirectoryNodeViewModel}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image
+                                            Width="16"
+                                            Height="16"
+                                            Source="{Binding Icon}" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Label}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </controls:BreadcrumbTree.MenuItemTemplate>
+                            <controls:BreadcrumbTree.ItemTemplate>
+                                <HierarchicalDataTemplate DataType="{x:Type fileExplorer:DirectoryNodeViewModel}" ItemsSource="{Binding Entries.All}">
+                                    <TextBlock Text="{Binding Label}" />
+                                </HierarchicalDataTemplate>
+                            </controls:BreadcrumbTree.ItemTemplate>
+                        </controls:BreadcrumbTree>
+                    </DockPanel>
+                </controls:ContentSwitch.ContentOff>
             </controls:ContentSwitch>
         </Border>
     </Grid>
