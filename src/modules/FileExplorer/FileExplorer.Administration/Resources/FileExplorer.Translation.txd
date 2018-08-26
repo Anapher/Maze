@@ -11,8 +11,10 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
+		<text key="FileExplorer:Size">Größe</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Lade Unterverzeichnisse</text>
+		<text key="FileExplorer:Type">Type</text>
 	</culture>
 	<culture name="en" primary="true">
 		<text key="FileExplorer:Directory">Directory</text>
@@ -24,7 +26,9 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Drive</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
+		<text key="FileExplorer:Size">Size</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Load subdirectories</text>
+		<text key="FileExplorer:Type">Type</text>
 	</culture>
 </translation>

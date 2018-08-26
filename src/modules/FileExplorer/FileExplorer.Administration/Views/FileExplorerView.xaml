@@ -37,5 +37,19 @@
             Grid.Row="1"
             Grid.Column="0"
             DataContext="{Binding DirectoryTreeViewModel}" />
+        <GridSplitter
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="-3,0"
+            HorizontalAlignment="Stretch"
+            Background="{StaticResource GridSplitterBrush}"
+            BorderBrush="Transparent"
+            BorderThickness="3,0"
+            Canvas.ZIndex="100"
+            SnapsToDevicePixels="True" />
+        <local:EntriesView
+            Grid.Row="1"
+            Grid.Column="2"
+            DataContext="{Binding EntriesViewModel}" />
     </Grid>
 </views:WindowUserControl>

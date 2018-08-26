@@ -136,6 +136,9 @@
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EntriesView.xaml.cs">
+      <DependentUpon>EntriesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FileExplorerView.xaml.cs">
       <DependentUpon>FileExplorerView.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\EntriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FileExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -233,6 +240,10 @@
     <ProjectReference Include="..\..\..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj">
       <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>
       <Name>Anapher.Wpf.Swan</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\submodules\TxTranslation\TxLib\TxLib.csproj">
+      <Project>{dc6ba170-806f-4d6e-9165-401de852e304}</Project>
+      <Name>TxLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

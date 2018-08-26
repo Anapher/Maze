@@ -33,7 +33,7 @@ namespace Orcus.Sockets
         public OrcusServer(IDataSocket socket, int packageBufferSize, int maxHeaderSize)
         {
             _socket = socket;
-            _packageBufferSize = packageBufferSize;
+            _packageBufferSize = packageBufferSize - 5;
             _maxHeaderSize = maxHeaderSize;
 
             _channels = new ConcurrentDictionary<int, OrcusChannel>();
@@ -372,9 +372,7 @@ namespace Orcus.Sockets
                 Logger.Trace("Received HTTP Response Message (Size: {size}):\r\n{httpMessage}", buffer.Count - 1,
                     Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count));
             }
-
-            var test = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-
+            
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
             var requestId = int.Parse(response.Headers.GetValues(OrcusSocketRequestIdHeader).First());
             var bufferSegment =
@@ -434,7 +432,7 @@ namespace Orcus.Sockets
                 response.IsCompleted = true;
                 _activeResponses.TryRemove(requestId, out _);
             }
-
+            
             //important: also push the buffer if it's empty, the stream disposes it and the autoresetevent must be set!
             response.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + 4, buffer.Count - 4));
         }

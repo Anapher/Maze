@@ -17,7 +17,6 @@
     <PackageReference Include="Ookii.Dialogs" Version="1.0.0" />
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
-    <PackageReference Include="Unclassified.TxLib" Version="1.383.76" />
     <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 
@@ -25,6 +24,7 @@
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
     <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
+    <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

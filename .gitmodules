@@ -7,3 +7,6 @@
 [submodule "src/submodules/NuGet.Client"]
 	path = src/submodules/NuGet.Client
 	url = https://github.com/OrcusTechnologies/NuGet.Client.git
+[submodule "src/submodules/TxTranslation"]
+	path = src/submodules/TxTranslation
+	url = https://github.com/Anapher/TxTranslation

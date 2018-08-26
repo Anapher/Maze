@@ -1,5 +1,6 @@
 ﻿using System;
 using FileExplorer.Administration.Native;
+using FileExplorer.Shared.Dtos;
 
 namespace FileExplorer.Administration.Utilities
 {
@@ -16,6 +17,12 @@ namespace FileExplorer.Administration.Utilities
                 DONT_RESOLVE_DLL_REFERENCES | LOAD_LIBRARY_AS_DATAFILE);
 
             return new LoadedLabelLibrary(hMod);
+        }
+
+        public static bool IsComputerDirectory(this DirectoryEntry directoryEntry)
+        {
+            return string.Equals(directoryEntry.Name, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
+                StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -17,5 +17,11 @@ namespace FileExplorer.Administration.Rest
         public static Task<PathTreeResponseDto>
             GetPathTree(PathTreeRequestDto requestDto, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient).Return<PathTreeResponseDto>();
+        //{
+        //    //;
+        //    var ads = await CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient);
+        //    var data = await ads.Content.ReadAsStringAsync();
+        //    return JsonConvert.DeserializeObject<PathTreeResponseDto>(data);
+        //}
     }
 }

@@ -209,6 +209,10 @@
       <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>
       <Name>Anapher.Wpf.Swan</Name>
     </ProjectReference>
+    <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj">
+      <Project>{dc6ba170-806f-4d6e-9165-401de852e304}</Project>
+      <Name>TxLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />

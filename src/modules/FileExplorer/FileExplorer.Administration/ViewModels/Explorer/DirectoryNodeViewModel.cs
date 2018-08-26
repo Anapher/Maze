@@ -6,6 +6,7 @@ using System.Windows.Media;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
+using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
 using Orcus.Administration.Library.StatusBar;
@@ -119,11 +120,15 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                 return Enumerable.Empty<DirectoryNodeViewModel>();
 
             var result = await _fileSystem.FetchSubDirectories(_source, false)
-                .DisplayOnStatusBarCatchErrors(_uiTools.StatusBar, Tx.T("FileExplorer:StatusBar.LoadSubDirectories"), StatusBarAnimation.Build);
+                .DisplayOnStatusBarCatchErrors(_uiTools.StatusBar, Tx.T("FileExplorer:StatusBar.LoadSubDirectories"), StatusBarAnimation.Search);
             if (result.Failed)
                 return Enumerable.Empty<DirectoryNodeViewModel>();
 
-            return result.Result.Select(CreateDirectoryViewModel).OrderBy(x => x.Label);
+            var viewModels = result.Result.Select(CreateDirectoryViewModel);
+            if (!_source.IsComputerDirectory())
+                viewModels = viewModels.OrderBy(x => x.Label);
+
+            return viewModels;
         }
 
         private DirectoryNodeViewModel CreateDirectoryViewModel(DirectoryEntry directoryEntry)

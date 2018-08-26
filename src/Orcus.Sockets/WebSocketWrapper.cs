@@ -13,7 +13,7 @@ namespace Orcus.Sockets
         public WebSocketWrapper(WebSocket webSocket, int packageBufferSize)
         {
             WebSocket = webSocket;
-            _packageBufferSize = packageBufferSize + 1;
+            _packageBufferSize = packageBufferSize + 1 + 1000;
             BufferPool = ArrayPool<byte>.Create(_packageBufferSize * 5, 10);
         }
 
@@ -42,9 +42,9 @@ namespace Orcus.Sockets
                     if (result.MessageType == WebSocketMessageType.Close)
                         return;
 
-                    if (!result.EndOfMessage)
+                    if (!result.EndOfMessage && i != _packageBufferSize)
                     {
-                        i = result.Count;
+                        i += result.Count;
                         continue;
                     }
 

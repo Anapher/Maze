@@ -23,6 +23,7 @@
 		<text key="Modules">Module</text>
 		<text key="ModulesView:Source">Modul-Quelle</text>
 		<text key="ModulesView:Source.All">Alle</text>
+		<text key="Name">Name</text>
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Ready">Bereit</text>
@@ -238,6 +239,7 @@
 		<text key="Modules">Modules</text>
 		<text key="ModulesView:Source">Module source</text>
 		<text key="ModulesView:Source.All">All</text>
+		<text key="Name">Name</text>
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
 		<text key="Ready">Ready</text>

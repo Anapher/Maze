@@ -148,7 +148,7 @@ namespace FileExplorer.Administration.Models
                     directoryEntries = queryResponse.Entries;
                     AddToCache(directory, directoryEntries, false);
                 }
-                else if (queryResponse != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))
+                else if (queryResponse?.Directories != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))
                 {
                     directoryEntries = subDirectories;
 
@@ -166,7 +166,7 @@ namespace FileExplorer.Administration.Models
                 pathDirectories.Add(directory);
 
                 //if we are not at the very last part (so there is a child directory)
-                if (i > parts.Count - 1)
+                if (i < parts.Count - 1)
                 {
                     var normalizedPath = NormalizePath(parts[i + 1]); //path of the child directory
                     var nextDirectory = directoryEntries.OfType<DirectoryEntry>().FirstOrDefault(x =>

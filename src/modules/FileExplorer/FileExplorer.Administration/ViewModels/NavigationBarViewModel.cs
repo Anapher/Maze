@@ -1,5 +1,4 @@
 ﻿using FileExplorer.Administration.Models;
-using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Helpers;
 using Orcus.Utilities;
 using Prism.Commands;

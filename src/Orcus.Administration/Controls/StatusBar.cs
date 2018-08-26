@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Administration.Library.Utilities;
 
 namespace Orcus.Administration.Controls
 {
@@ -39,7 +40,9 @@ namespace Orcus.Administration.Controls
                 var statusBar = (StatusBar) d;
                 var statusBarManager = (StatusBarManager) sender;
 
-                statusBar.CurrentMode = statusBarManager.CurrentStatusMessage?.StatusBarMode ?? StatusBarMode.Default;
+                statusBar.Dispatcher.InvokeIfRequired(() =>
+                    statusBar.CurrentMode =
+                        statusBarManager.CurrentStatusMessage?.StatusBarMode ?? StatusBarMode.Default);
             }
 
             if (args.OldValue != null) ((StatusBarManager) args.OldValue).PropertyChanged -= StatusBarOnPropertyChanged;

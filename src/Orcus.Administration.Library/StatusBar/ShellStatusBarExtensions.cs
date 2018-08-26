@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Administration.Library.Exceptions;
 using Orcus.Administration.Library.Extensions;
+using Orcus.Utilities;
 
 namespace Orcus.Administration.Library.StatusBar
 {
@@ -81,33 +82,54 @@ namespace Orcus.Administration.Library.StatusBar
             }
         }
 
-        public static async Task<T> DisplayOnStatusBar<T>(this Task<T> task, IShellStatusBar shellStatusBar, string message,
-            StatusBarAnimation animation = StatusBarAnimation.None)
+        public static async Task<T> DisplayOnStatusBar<T>(this Task<T> task, IShellStatusBar shellStatusBar,
+            string message, StatusBarAnimation animation = StatusBarAnimation.None)
         {
-            using (shellStatusBar.PushStatus(new TextStatusMessage(message) { Animation = animation }))
+            //if the task executes synchronously, don't display anything to avoid "flickering"
+            var completedTask = await Task.WhenAny(task, Task.Delay(200));
+            if (completedTask == task)
+                return task.Result;
+
+            var beginTime = DateTimeOffset.UtcNow;
+            var status = shellStatusBar.PushStatus(new TextStatusMessage(message) {Animation = animation});
+
+            T result;
+            try
             {
-                return await task;
+                result = await task;
             }
+            catch (Exception)
+            {
+                status.Dispose();
+                throw;
+            }
+
+            //the status should be displayed at least one second to avoid flickering. Even if the task finished,
+            //continue displaying the status for the remaining of the time
+
+            var diff = TimeSpan.FromSeconds(1) - (DateTimeOffset.UtcNow - beginTime);
+            if (diff < TimeSpan.Zero)
+                status.Dispose();
+            else Task.Delay(diff).ContinueWith(_ => status.Dispose()).Forget();
+
+            return result;
         }
 
         public static async Task<SuccessOrError<T>> DisplayOnStatusBarCatchErrors<T>(this Task<T> task,
             IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None)
         {
-            using (shellStatusBar.PushStatus(new TextStatusMessage(message) {Animation = animation}))
+            try
             {
-                try
-                {
-                    return await task;
-                }
-                catch (RestException e)
-                {
-                    shellStatusBar.ShowError(e.GetRestExceptionMessage());
-                }
-                catch (Exception e)
-                {
-                    shellStatusBar.ShowError(e.Message);
-                }
-
+                return await task.DisplayOnStatusBar(shellStatusBar, message, animation);
+            }
+            catch (RestException e)
+            {
+                shellStatusBar.ShowError(e.GetRestExceptionMessage());
+                return SuccessOrError<T>.DefaultFailed;
+            }
+            catch (Exception e)
+            {
+                shellStatusBar.ShowError(e.Message);
                 return SuccessOrError<T>.DefaultFailed;
             }
         }

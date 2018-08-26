@@ -25,8 +25,11 @@ namespace FileExplorer.Administration.ViewModels
 
             Filters = new List<Predicate<object>>();
             LiveFilteringProperties = new List<string>();
+
+            NavigationBarViewModel = fileExplorerViewModel.NavigationBarViewModel;
         }
 
+        public NavigationBarViewModel NavigationBarViewModel { get; }
         public List<Predicate<object>> Filters { get; }
         public List<string> LiveFilteringProperties { get; }
 
@@ -34,6 +37,14 @@ namespace FileExplorer.Administration.ViewModels
         {
             get => _view;
             private set => SetProperty(ref _view, value);
+        }
+
+        private CollectionViewSource _viewSource;
+
+        public CollectionViewSource ViewSource
+        {
+            get => _viewSource;
+            set => SetProperty(ref _viewSource, value);
         }
 
         private void FileExplorerViewModelOnPathChanged(object sender, PathContent e)
@@ -61,22 +72,20 @@ namespace FileExplorer.Administration.ViewModels
 
             _entryViewModels = new ObservableCollection<EntryViewModel>(entries);
 
-            var view = new ListCollectionView(_entryViewModels);
+            View = new ListCollectionView(_entryViewModels);
 
             foreach (var predicate in Filters)
-                view.Filter += predicate;
-            
-            view.SortDescriptions.Add(new SortDescription(nameof(EntryViewModel.IsDirectory),
+                View.Filter += predicate;
+
+            View.SortDescriptions.Add(new SortDescription(nameof(EntryViewModel.IsDirectory),
                 ListSortDirection.Descending));
-            view.SortDescriptions.Add(new SortDescription(nameof(EntryViewModel.SortName),
+            View.SortDescriptions.Add(new SortDescription(nameof(EntryViewModel.SortName),
                 ListSortDirection.Ascending));
-            view.LiveSortingProperties.Add(nameof(EntryViewModel.SortName));
-            view.IsLiveSorting = true;
+            View.LiveSortingProperties.Add(nameof(EntryViewModel.SortName));
+            View.IsLiveSorting = true;
 
-            view.LiveFilteringProperties.AddRange(LiveFilteringProperties);
-            view.IsLiveFiltering = true;
-
-            View = view;
+            View.LiveFilteringProperties.AddRange(LiveFilteringProperties);
+            View.IsLiveFiltering = true;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Orcus.Sockets.Internal
         private long _length;
         private byte[] _packageBuffer;
         private int _packageBufferOffset;
+        //private byte[] _debug = new byte[1024 * 1024];
+        //private int _debugOffset;
 
         public PackagingBufferStream(OnSendPackageDelegate sendPackageDelegate, int packageBufferSize)
         {
@@ -30,6 +32,9 @@ namespace Orcus.Sockets.Internal
 
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
+            //using (var fs = File.Create($@"C:\Users\anaph\Documents\test\{Guid.NewGuid().ToString("N")}"))
+            //    fs.Write(_debug, 0, _debugOffset);
+
             if (_packageBufferOffset == 0)
                 return _sendPackageDelegate(new ArraySegment<byte>());
 
@@ -45,6 +50,9 @@ namespace Orcus.Sockets.Internal
 
         public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            //Buffer.BlockCopy(buffer, offset, _debug, _debugOffset, count);
+            //_debugOffset += count;
+
             _length += count;
 
             while (count > 0)
@@ -52,7 +60,7 @@ namespace Orcus.Sockets.Internal
                 var spaceLeft = _packageBufferSize - _packageBufferOffset;
 
                 //if we have enough space in the package buffer to fit the write buffer
-                if (spaceLeft >= count)
+                if (spaceLeft > count)
                 {
                     CreateBufferIfNull();
                     Buffer.BlockCopy(buffer, offset, _packageBuffer, _packageBufferOffset, count);

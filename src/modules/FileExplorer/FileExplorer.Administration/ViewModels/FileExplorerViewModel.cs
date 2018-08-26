@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
+using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
@@ -29,8 +30,8 @@ namespace FileExplorer.Administration.ViewModels
             FileSystem = new RemoteFileSystem(cache, RestClient);
             ImageProvider = new ImageProvider(cache, FileSystem);
 
-            EntriesViewModel = new EntriesViewModel(this);
             NavigationBarViewModel = new NavigationBarViewModel(this);
+            EntriesViewModel = new EntriesViewModel(this);
             DirectoryTreeViewModel = new DirectoryTreeViewModel(this);
         }
 
@@ -66,7 +67,7 @@ namespace FileExplorer.Administration.ViewModels
             try
             {
                 pathContent = await FileSystem.FetchPath(path, invalidate, invalidate, token)
-                    .DisplayOnStatusBar(StatusBar, "");
+                    .DisplayOnStatusBar(StatusBar, "Fetch path");
             }
             catch (TaskCanceledException)
             {
@@ -97,7 +98,7 @@ namespace FileExplorer.Administration.ViewModels
                 return;
 
             _isLoaded = true;
-
+            
             var root = await FileSystem.GetRoot()
                 .DisplayOnStatusBar(StatusBar, Tx.T("FileExplorer:StatusBar.LoadingRoot"));
 
