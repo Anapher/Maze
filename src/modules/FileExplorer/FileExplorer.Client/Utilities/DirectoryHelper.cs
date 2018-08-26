@@ -27,6 +27,26 @@ namespace FileExplorer.Client.Utilities
             _drives = new Lazy<DriveInfo[]>(DriveInfo.GetDrives, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
+        public async Task<IEnumerable<FileExplorerEntry>> GetEntriesKeepOrder(DirectoryInfoEx directory, CancellationToken token)
+        {
+            var entries = directory.EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly).ToList();
+            var result = new FileExplorerEntry[entries.Count];
+
+            await TaskCombinators.ThrottledAsync(entries, (entry, _) => Task.Run(() =>
+            {
+                var index = entries.IndexOf(entry);
+                using (entry)
+                {
+                    if (entry.IsFolder)
+                        result[index] = GetDirectoryEntry((DirectoryInfoEx) entry, directory);
+                    else
+                        result[index] = GetFileEntry((FileInfoEx) entry);
+                }
+            }), token);
+
+            return result;
+        }
+
         public Task<IEnumerable<FileExplorerEntry>> GetEntries(DirectoryInfoEx directory, CancellationToken token)
         {
             var entries = directory.EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly,
@@ -165,7 +185,7 @@ namespace FileExplorer.Client.Utilities
 
             if (parentFolder == null && directory.FullName != directory.Name)
                 directoryEntry.Path = directory.FullName;
-            else if (parentFolder?.FullName != directory.FullName)
+            else if (parentFolder != null && parentFolder.FullName != directory.FullName)
                 directoryEntry.Path = directory.FullName;
 
             return directoryEntry;
@@ -313,7 +333,7 @@ namespace FileExplorer.Client.Utilities
                 }
             }
 
-            var shinfo = new ShellAPI.SHFILEINFO();
+            var shinfo = new SHFILEINFO();
             NativeMethods.SHGetFileInfo(directory.FullName, 0, ref shinfo, (uint) Marshal.SizeOf(shinfo),
                 ShellAPI.SHGFI.ICONLOCATION);
 

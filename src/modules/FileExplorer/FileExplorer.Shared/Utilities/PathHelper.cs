@@ -25,5 +25,23 @@ namespace FileExplorer.Shared.Utilities
                 yield return path.Substring(0, index + 1);
             }
         }
+
+        public static bool ContainsEnvironmentVariables(string path)
+        {
+            var hasPercent = false;
+            foreach (var c in path)
+                if (c == '%')
+                {
+                    if (hasPercent)
+                        return true;
+                    hasPercent = true;
+                }
+                else if (c == '\\')
+                {
+                    hasPercent = false;
+                }
+
+            return false;
+        }
     }
 }

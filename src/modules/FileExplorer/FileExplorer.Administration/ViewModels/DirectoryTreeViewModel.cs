@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.ViewModels.Explorer;
@@ -63,18 +65,21 @@ namespace FileExplorer.Administration.ViewModels
             rootElements.Add(dto.ComputerDirectory);
 
             RootViewModels = rootElements
-                .Select(x => new DirectoryNodeViewModel(this, null, x, _fileExplorerViewModel.FileSystem)).ToList();
+                .Select(x => new DirectoryNodeViewModel(this, null, x, _fileExplorerViewModel.FileSystem, _fileExplorerViewModel)).ToList();
             Entries.SetEntries(UpdateMode.Update, RootViewModels.ToArray());
 
             InitializeRoots(dto.ComputerDirectory.Yield()).Forget(); //will execute synchronously
 
-            //expand and select Computer
-            var entry = Entries.AllNonBindable.Last();
-            entry.Entries.IsExpanded = true;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (Action) (() =>
+            {
+                //expand and select Computer
+                var entry = Entries.AllNonBindable.Last();
+                entry.Entries.IsExpanded = true;
 
-            Selection.AsRoot().SelectAsync(dto.ComputerDirectory).Forget();
+                Selection.AsRoot().SelectAsync(dto.ComputerDirectory).Forget();
 
-            entry.IsBringIntoView = true;
+                entry.IsBringIntoView = true;
+            }));
         }
 
         public async Task InitializeRoots(IEnumerable<DirectoryEntry> directories)

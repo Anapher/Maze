@@ -28,6 +28,9 @@ namespace Orcus.Modules.Api.Response
 
         public Task ExecuteResultAsync(ActionContext context)
         {
+            if (StatusCode.HasValue)
+                context.Context.Response.StatusCode = StatusCode.Value;
+
             return context.Context.RequestServices.GetRequiredService<IActionResultExecutor<ObjectResult>>()
                 .ExecuteAsync(context, this);
         }

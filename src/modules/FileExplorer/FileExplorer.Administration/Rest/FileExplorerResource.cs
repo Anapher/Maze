@@ -11,14 +11,11 @@ namespace FileExplorer.Administration.Rest
         {
         }
 
-        public static async Task<RootElementsDto> GetRoot(IPackageRestClient restClient)
-        {
-            var response = await CreateRequest(HttpVerb.Get, "root").Execute(restClient); //.Return<RootElementsDto>();
-            var st = await response.Content.ReadAsStringAsync();
-            return null;
-        }
+        public static Task<RootElementsDto> GetRoot(IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "root").Execute(restClient).Return<RootElementsDto>();
 
-        public static Task<PathTreeResponseDto> GetPathTree(PathTreeRequestDto requestDto, IPackageRestClient restClient) =>
-            CreateRequest(HttpVerb.Post, "pathTree").Execute(restClient).Return<PathTreeResponseDto>();
+        public static Task<PathTreeResponseDto>
+            GetPathTree(PathTreeRequestDto requestDto, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient).Return<PathTreeResponseDto>();
     }
 }

@@ -14,7 +14,7 @@ namespace FileExplorer.Shared.Converters
             JsonSerializer serializer)
         {
             var jobj = JToken.ReadFrom(reader);
-            _type = jobj[nameof(FileExplorerEntry.Type)].ToObject<FileExplorerEntryType>();
+            _type = jobj["type"].ToObject<FileExplorerEntryType>();
 
             return base.ReadJson(jobj.CreateReader(), objectType, existingValue, serializer);
         }

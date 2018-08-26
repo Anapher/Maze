@@ -8,6 +8,7 @@ using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
+using Orcus.Administration.Library.StatusBar;
 using Unclassified.TxLib;
 
 namespace FileExplorer.Administration.ViewModels.Explorer
@@ -17,19 +18,21 @@ namespace FileExplorer.Administration.ViewModels.Explorer
     {
         private readonly DirectoryTreeViewModel _rootViewModel;
         private readonly IFileSystem _fileSystem;
+        private readonly IUiTools _uiTools;
         private readonly Lazy<string> _lazyLabel;
+        private readonly Lazy<ImageSource> _lazyIcon;
         private readonly string _sortName;
         private readonly DirectoryEntry _source;
         private bool _isBringIntoView;
 
-        public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, int orderNumber) : this(
-            directoryEntry, fileSystem)
+        public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, int orderNumber,
+            IUiTools uiTools) : this(directoryEntry, fileSystem, uiTools)
         {
             _sortName = orderNumber.ToString("0000");
         }
 
         public DirectoryNodeViewModel(DirectoryTreeViewModel rootViewModel, DirectoryNodeViewModel parentViewModel,
-            DirectoryEntry directoryEntry, IFileSystem fileSystem) : this(directoryEntry, fileSystem)
+            DirectoryEntry directoryEntry, IFileSystem fileSystem, IUiTools uiTools) : this(directoryEntry, fileSystem, uiTools)
         {
             _rootViewModel = rootViewModel;
             Parent = parentViewModel;
@@ -42,9 +45,10 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                 Entries.SetEntries(UpdateMode.Update);
         }
 
-        public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem)
+        public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, IUiTools uiTools)
         {
             _fileSystem = fileSystem;
+            _uiTools = uiTools;
             _source = directoryEntry;
 
             if (directoryEntry is DriveDirectoryEntry driveDirectory)
@@ -58,6 +62,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             }
 
             _lazyLabel = new Lazy<string>(CreateLabel);
+            _lazyIcon = new Lazy<ImageSource>(CreateIcon);
 
             Name = directoryEntry.Name;
         }
@@ -68,7 +73,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         public override FileExplorerEntry Source => _source;
         public override bool IsDirectory { get; } = true;
         public override EntryViewModelType Type { get; } = EntryViewModelType.Directory;
-        public override ImageSource Icon { get; }
+        public override ImageSource Icon => _lazyIcon.Value;
         public override string Description { get; }
         public override long Size { get; }
 
@@ -84,7 +89,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
 
         private string CreateLabel()
         {
-            if (Source is SpecialDirectoryEntry specialDirectory)
+            if (_source is SpecialDirectoryEntry specialDirectory)
             {
                 if (specialDirectory.LabelId != 0 && !string.IsNullOrEmpty(specialDirectory.LabelPath))
                 {
@@ -92,12 +97,20 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                     if (!string.IsNullOrEmpty(label))
                         return label;
                 }
-
-                if (!string.IsNullOrEmpty(specialDirectory.Label))
-                    return specialDirectory.Label;
             }
 
+            if (!string.IsNullOrEmpty(_source.Label))
+                return _source.Label;
+
             return Source.Name;
+        }
+
+        private ImageSource CreateIcon()
+        {
+            if (_source is SpecialDirectoryEntry specialDirectory)
+                return _uiTools.ImageProvider.GetFolderImage(specialDirectory);
+            
+            return _uiTools.ImageProvider.GetFolderImage(_source.Name, 0);
         }
 
         private async Task<IEnumerable<DirectoryNodeViewModel>> LoadEntriesAsync()
@@ -105,13 +118,17 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             if (!_source.HasSubFolder)
                 return Enumerable.Empty<DirectoryNodeViewModel>();
 
-            var entries = await _fileSystem.FetchSubDirectories(_source, false);
-            return entries.Select(CreateDirectoryViewModel);
+            var result = await _fileSystem.FetchSubDirectories(_source, false)
+                .DisplayOnStatusBarCatchErrors(_uiTools.StatusBar, Tx.T("FileExplorer:StatusBar.LoadSubDirectories"), StatusBarAnimation.Build);
+            if (result.Failed)
+                return Enumerable.Empty<DirectoryNodeViewModel>();
+
+            return result.Result.Select(CreateDirectoryViewModel).OrderBy(x => x.Label);
         }
 
         private DirectoryNodeViewModel CreateDirectoryViewModel(DirectoryEntry directoryEntry)
         {
-            return new DirectoryNodeViewModel(_rootViewModel, this, directoryEntry, _fileSystem);
+            return new DirectoryNodeViewModel(_rootViewModel, this, directoryEntry, _fileSystem, _uiTools);
         }
 
         public bool Equals(EntryViewModel other) => Equals((object) other);

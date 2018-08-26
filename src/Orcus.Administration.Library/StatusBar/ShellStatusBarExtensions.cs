@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Orcus.Administration.Library.Exceptions;
+using Orcus.Administration.Library.Extensions;
 
 namespace Orcus.Administration.Library.StatusBar
 {
@@ -85,6 +87,28 @@ namespace Orcus.Administration.Library.StatusBar
             using (shellStatusBar.PushStatus(new TextStatusMessage(message) { Animation = animation }))
             {
                 return await task;
+            }
+        }
+
+        public static async Task<SuccessOrError<T>> DisplayOnStatusBarCatchErrors<T>(this Task<T> task,
+            IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None)
+        {
+            using (shellStatusBar.PushStatus(new TextStatusMessage(message) {Animation = animation}))
+            {
+                try
+                {
+                    return await task;
+                }
+                catch (RestException e)
+                {
+                    shellStatusBar.ShowError(e.GetRestExceptionMessage());
+                }
+                catch (Exception e)
+                {
+                    shellStatusBar.ShowError(e.Message);
+                }
+
+                return SuccessOrError<T>.DefaultFailed;
             }
         }
     }

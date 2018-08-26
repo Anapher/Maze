@@ -10,15 +10,17 @@ namespace Orcus.Sockets.Internal
     public class ArrayPoolMemoryStream : MemoryStream
     {
         private readonly ArraySegment<byte> _buffer;
+        private readonly ArrayPool<byte> _pool;
 
-        public ArrayPoolMemoryStream(ArraySegment<byte> buffer) : base(buffer.Array, buffer.Offset, buffer.Count, false)
+        public ArrayPoolMemoryStream(ArraySegment<byte> buffer, ArrayPool<byte> pool) : base(buffer.Array, buffer.Offset, buffer.Count, false)
         {
             _buffer = buffer;
+            _pool = pool;
         }
 
         protected override void Dispose(bool disposing)
         {
-            ArrayPool<byte>.Shared.Return(_buffer.Array);
+            _pool?.Return(_buffer.Array);
         }
     }
 }

@@ -60,9 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\FrameAnimationControl.cs" />
-    <Compile Include="Controls\StatusBar.xaml.cs">
-      <DependentUpon>StatusBar.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\StatusBar.cs" />
     <Compile Include="Converter\SelectedItemsCountFromChildConverter.cs" />
     <Compile Include="Converter\SelectedItemsFromChildConverter.cs" />
     <Compile Include="Factories\MenuFactory.cs" />
@@ -90,10 +88,6 @@
     <Compile Include="Views\Main\Overview\ModulesView.xaml.cs">
       <DependentUpon>ModulesView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\StatusBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Resources\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

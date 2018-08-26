@@ -2,7 +2,7 @@
 {
     public enum FileExplorerEntryType
     {
-        File,
+        File = 1,
         Directory,
         Drive,
         SpecialDirectory

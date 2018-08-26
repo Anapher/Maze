@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Sockets.Internal;
@@ -320,6 +321,11 @@ namespace Orcus.Sockets
                     if (orcusResponse.IsCompleted)
                         opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
 
+                    if (Logger.IsTraceEnabled())
+                    {
+                        Logger.Trace("Send HTTP Response Message (Size: {size}):\r\n{httpMessage}", data.Count - 1, Encoding.UTF8.GetString(sendBuffer, 0, offset + data.Count));
+                    }
+
                     await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, offset + data.Count),
                         CancellationToken.None);
 
@@ -361,6 +367,14 @@ namespace Orcus.Sockets
             Logger.Debug("Response received (isCompleted = {isCompleted}), total length = {length}",
                 isCompleted, buffer.Count);
 
+            if (Logger.IsTraceEnabled())
+            {
+                Logger.Trace("Received HTTP Response Message (Size: {size}):\r\n{httpMessage}", buffer.Count - 1,
+                    Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count));
+            }
+
+            var test = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
+
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
             var requestId = int.Parse(response.Headers.GetValues(OrcusSocketRequestIdHeader).First());
             var bufferSegment =
@@ -368,7 +382,7 @@ namespace Orcus.Sockets
 
             if (isCompleted)
             {
-                response.Content = new RawStreamContent(new ArrayPoolMemoryStream(bufferSegment));
+                response.Content = new RawStreamContent(new ArrayPoolMemoryStream(bufferSegment, _socket.BufferPool));
 
                 foreach (var contentHeader in contentHeaders)
                     response.Content.Headers.Add(contentHeader.Key, (IEnumerable<string>) contentHeader.Value);
@@ -396,6 +410,7 @@ namespace Orcus.Sockets
             {
                 Logger.Error("No TaskCompletionSource for request {requestId} found.", requestId);
                 response.Dispose();
+                return;
             }
 
             taskCompletionSource.SetResult(response);

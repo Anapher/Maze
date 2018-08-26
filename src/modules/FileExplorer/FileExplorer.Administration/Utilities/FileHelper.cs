@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.Native;
 
 namespace FileExplorer.Administration.Utilities

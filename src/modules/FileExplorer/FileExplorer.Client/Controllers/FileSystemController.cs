@@ -13,6 +13,7 @@ using Orcus.Modules.Api.Routing;
 
 namespace FileExplorer.Client.Controllers
 {
+    [Route("fileSystem")]
     public class FileSystemController : OrcusController
     {
         [OrcusGet]

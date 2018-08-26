@@ -21,9 +21,9 @@ namespace Orcus.Administration.Core.Clients
 {
     public class OrcusRestClient : IOrcusRestClient
     {
-        private readonly SecureString _password;
         private readonly HttpClient _httpClient;
         private readonly JwtSecurityTokenHandler _jwtHandler;
+        private readonly SecureString _password;
         private JwtSecurityToken _jwtSecurityToken;
 
         public OrcusRestClient(string username, SecureString password, HttpClient httpClient)
@@ -46,11 +46,29 @@ namespace Orcus.Administration.Core.Clients
             var result = await response.Content.ReadAsStringAsync();
 
             RestError[] errors;
-            try
+
+            if (!string.IsNullOrEmpty(result))
             {
-                errors = JsonConvert.DeserializeObject<RestError[]>(result);
+                if (result[0] == '[')
+                    try
+                    {
+                        errors = JsonConvert.DeserializeObject<RestError[]>(result);
+                    }
+                    catch (Exception)
+                    {
+                        throw new HttpRequestException(result);
+                    }
+                else
+                    try
+                    {
+                        errors = new[] {JsonConvert.DeserializeObject<RestError>(result)};
+                    }
+                    catch (Exception)
+                    {
+                        throw new HttpRequestException(result);
+                    }
             }
-            catch (Exception)
+            else
             {
                 throw new HttpRequestException(result);
             }
@@ -73,6 +91,12 @@ namespace Orcus.Administration.Core.Clients
 
             Debug.Fail($"The error type {error.Type} is not implemented.");
             throw new NotSupportedException(error.Message);
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+            _password.Dispose();
         }
 
         private void ConfigureHttpConnection(HttpConnectionOptions obj)
@@ -105,17 +129,10 @@ namespace Orcus.Administration.Core.Clients
                 }
 
                 HubConnection = new HubConnectionBuilder()
-                    .WithUrl(new Uri(_httpClient.BaseAddress, "signalR"), ConfigureHttpConnection)
-                    .Build();
+                    .WithUrl(new Uri(_httpClient.BaseAddress, "signalR"), ConfigureHttpConnection).Build();
 
                 await HubConnection.StartAsync();
             }
-        }
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
-            _password.Dispose();
         }
     }
 }

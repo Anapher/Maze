@@ -57,7 +57,7 @@ namespace Orcus.Server.Service.Extensions
         {
             var requestMessage =
                 new HttpRequestMessage(new HttpMethod(httpRequest.Method),
-                    new Uri(DummyBaseUri, path))
+                    new Uri(DummyBaseUri, path + httpRequest.QueryString))
                 {
                     Content = new RawStreamContent(httpRequest.Body)
                 };

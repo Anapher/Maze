@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace FileExplorer.Administration.Utilities
+namespace FileExplorer.Administration.Models.Cache
 {
     public class FileTypeDescription
     {

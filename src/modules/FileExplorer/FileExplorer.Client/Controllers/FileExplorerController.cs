@@ -9,6 +9,7 @@ using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using FileExplorer.Shared.Utilities;
 using Orcus.Modules.Api;
+using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
 using Orcus.Utilities;
 
@@ -30,7 +31,7 @@ namespace FileExplorer.Client.Controllers
                     result.ComputerDirectory =
                         directoryHelper.GetDirectoryEntry(DirectoryInfoEx.MyComputerDirectory, null)),
                 Task.Run(async () => result.ComputerDirectoryEntries =
-                    (await directoryHelper.GetEntries(DirectoryInfoEx.MyComputerDirectory, CancellationToken.None))
+                    (await directoryHelper.GetEntriesKeepOrder(DirectoryInfoEx.MyComputerDirectory, CancellationToken.None))
                     .ToList())
             };
 
@@ -39,7 +40,7 @@ namespace FileExplorer.Client.Controllers
         }
 
         [OrcusPost("pathTree")]
-        public async Task<IActionResult> GetPathTree(PathTreeRequestDto request)
+        public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request)
         {
             var response = new PathTreeResponseDto();
             var directoryHelper = new DirectoryHelper();

@@ -11,11 +11,10 @@ using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Shared.Dtos;
-using FileExplorer.Shared.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
-using PathHelper = FileExplorer.Shared.Utilities.PathHelper;
+using FileExplorer.Shared.Utilities;
 
 namespace FileExplorer.Administration.Models
 {
@@ -26,12 +25,14 @@ namespace FileExplorer.Administration.Models
         private readonly IMemoryCache _localCache;
         private readonly bool _caseInsensitivePaths = true;
         private CachedDirectory _computerDirectory;
+        private readonly ISet<char> _illegalPathCharacters;
 
         public RemoteFileSystem(IMemoryCache globalCache, IPackageRestClient restClient)
         {
             _globalCache = globalCache;
             _restClient = restClient;
             _localCache = new MemoryCache(new MemoryCacheOptions());
+            _illegalPathCharacters = new HashSet<char>(Path.GetInvalidFileNameChars());
         }
 
         public StringComparison PathStringComparison { get; } = StringComparison.OrdinalIgnoreCase;
@@ -55,7 +56,10 @@ namespace FileExplorer.Administration.Models
             if (string.IsNullOrEmpty(path))
                 return null;
 
-            path = Path.GetFullPath(path).TrimEnd('\\');
+            if (!path.Any(x => _illegalPathCharacters.Contains(x)))
+                path = Path.GetFullPath(path);
+
+            path = path.TrimEnd('\\');
 
             //Volume Label, we add a slash because some systems (Windows XP) can't handle "C:"
             if (path.Length == 2 && path[1] == ':')
@@ -67,6 +71,7 @@ namespace FileExplorer.Administration.Models
         public async Task<RootElementsDto> GetRoot()
         {
             var dto = await FileExplorerResource.GetRoot(_restClient);
+            dto.ComputerDirectory.Migrate();
 
             foreach (var rootDirectory in dto.RootDirectories)
                 rootDirectory.Migrate();
@@ -81,7 +86,7 @@ namespace FileExplorer.Administration.Models
         public async Task<PathContent> FetchPath(string path, bool ignoreEntriesCache, bool ignorePathCache,
             CancellationToken token)
         {
-            if (Utilities.PathHelper.ContainsEnvironmentVariables(path))
+            if (PathHelper.ContainsEnvironmentVariables(path))
             {
                 path = await FileSystemResource.ExpandEnvironmentVariables(path, _restClient);
             }
@@ -137,7 +142,13 @@ namespace FileExplorer.Administration.Models
                     directory.Migrate();
                 }
 
-                if (queryResponse != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))
+                if (request.RequestEntries && i == parts.Count - 1)
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    directoryEntries = queryResponse.Entries;
+                    AddToCache(directory, directoryEntries, false);
+                }
+                else if (queryResponse != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))
                 {
                     directoryEntries = subDirectories;
 
@@ -254,8 +265,8 @@ namespace FileExplorer.Administration.Models
         {
             var cachedDirectory = new CachedDirectory(directory, directoriesOnly, entries);
             var cacheKey = new CachedDirectoryKey {UnifiedPath = UnifyPath(directory.Path)};
-
-            _localCache.CreateEntry(cacheKey).SetValue(cachedDirectory);
+            
+            _localCache.Set(cacheKey, cachedDirectory);
             return cachedDirectory;
         }
     }

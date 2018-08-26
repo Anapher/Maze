@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
+using FileExplorer.Administration.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;
@@ -15,7 +15,7 @@ using Unclassified.TxLib;
 
 namespace FileExplorer.Administration.ViewModels
 {
-    public class FileExplorerViewModel : BindableBase, INavigationAware
+    public class FileExplorerViewModel : BindableBase, INavigationAware, IUiTools
     {
         private string _currentPath;
         private CancellationTokenSource _openPathCancellationTokenSource;
@@ -27,6 +27,7 @@ namespace FileExplorer.Administration.ViewModels
             Window = window;
             RestClient = client.CreatePackageSpecific("FileExplorer");
             FileSystem = new RemoteFileSystem(cache, RestClient);
+            ImageProvider = new ImageProvider(cache, FileSystem);
 
             EntriesViewModel = new EntriesViewModel(this);
             NavigationBarViewModel = new NavigationBarViewModel(this);
@@ -38,6 +39,7 @@ namespace FileExplorer.Administration.ViewModels
         public IPackageRestClient RestClient { get; }
         public IShellStatusBar StatusBar { get; }
         public IWindow Window { get; }
+        public IImageProvider ImageProvider { get; }
         public IFileSystem FileSystem { get; }
 
         public EntriesViewModel EntriesViewModel { get; }

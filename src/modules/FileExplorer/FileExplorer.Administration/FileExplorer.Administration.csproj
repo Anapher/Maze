@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Cache\CachedDirectoryKey.cs" />
     <Compile Include="Cache\FileDescriptionKey.cs" />
+    <Compile Include="Cache\FileImageKey.cs" />
+    <Compile Include="Cache\FolderImageKey.cs" />
     <Compile Include="Cache\LoadedLabelLibraryKey.cs" />
     <Compile Include="Controls\BreadcrumbTree.cs" />
     <Compile Include="Controls\BreadcrumbTreeItem.cs" />
@@ -116,7 +118,8 @@
     <Compile Include="Rest\FileSystemResource.cs" />
     <Compile Include="Utilities\DirectoryHelper.cs" />
     <Compile Include="Utilities\FileHelper.cs" />
-    <Compile Include="Utilities\PathHelper.cs" />
+    <Compile Include="Utilities\IImageProvider.cs" />
+    <Compile Include="Utilities\ImageProvider.cs" />
     <Compile Include="Utilities\PropertyPathHelper.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\EntriesViewModel.cs" />
@@ -128,8 +131,8 @@
     <Compile Include="ViewModels\Explorer\Helpers\PathComparer.cs" />
     <Compile Include="ViewModels\Explorer\Helpers\PathHistoryManager.cs" />
     <Compile Include="ViewModels\FileExplorerViewModel.cs" />
+    <Compile Include="Models\IUiTools.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
-    <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
     </Compile>
@@ -239,6 +242,35 @@
     <PackageReference Include="Prism.Autofac">
       <Version>6.3.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Drives\CD-DVD.png" />
+    <Resource Include="Resources\Images\Drives\Drive.png" />
+    <Resource Include="Resources\Images\Drives\DriveWindows.png" />
+    <Resource Include="Resources\Images\Drives\NetworkDrive.png" />
+    <Resource Include="Resources\Images\Drives\NetworkDriveDC.png" />
+    <Resource Include="Resources\Images\Drives\USB.png" />
+    <Resource Include="Resources\Images\Folders\AdobeCloud.png" />
+    <Resource Include="Resources\Images\Folders\Contacts.png" />
+    <Resource Include="Resources\Images\Folders\DesktopFolder.png" />
+    <Resource Include="Resources\Images\Folders\Documents.png" />
+    <Resource Include="Resources\Images\Folders\Download.png" />
+    <Resource Include="Resources\Images\Folders\Dropbox.png" />
+    <Resource Include="Resources\Images\Folders\Favorite.png" />
+    <Resource Include="Resources\Images\Folders\Folder.png" />
+    <Resource Include="Resources\Images\Folders\Game.png" />
+    <Resource Include="Resources\Images\Folders\GoogleDrive.png" />
+    <Resource Include="Resources\Images\Folders\Links.png" />
+    <Resource Include="Resources\Images\Folders\Music.png" />
+    <Resource Include="Resources\Images\Folders\NetworkFolder.png" />
+    <Resource Include="Resources\Images\Folders\OneDrive.png" />
+    <Resource Include="Resources\Images\Folders\Pictures.png" />
+    <Resource Include="Resources\Images\Folders\RecentPlaces.png" />
+    <Resource Include="Resources\Images\Folders\Search.png" />
+    <Resource Include="Resources\Images\Folders\User.png" />
+    <Resource Include="Resources\Images\Folders\Videos.png" />
+    <Resource Include="Resources\Images\Other\ThisPC.png" />
+    <Resource Include="Resources\Images\Other\TrashFull.png" />
   </ItemGroup>
   <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

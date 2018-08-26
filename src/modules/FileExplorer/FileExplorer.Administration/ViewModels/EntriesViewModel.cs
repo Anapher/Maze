@@ -48,12 +48,12 @@ namespace FileExplorer.Administration.ViewModels
             {
                 var counter = 0;
                 entries = pathEntries.OfType<DirectoryEntry>()
-                    .Select(x => new DirectoryNodeViewModel(x, _fileExplorerViewModel.FileSystem, counter++))
+                    .Select(x => new DirectoryNodeViewModel(x, _fileExplorerViewModel.FileSystem, counter++, _fileExplorerViewModel))
                     .ToList<EntryViewModel>();
             }
             else
                 entries = pathEntries.OfType<DirectoryEntry>()
-                    .Select(x => new DirectoryNodeViewModel(x, _fileExplorerViewModel.FileSystem))
+                    .Select(x => new DirectoryNodeViewModel(x, _fileExplorerViewModel.FileSystem, _fileExplorerViewModel))
                     .ToList<EntryViewModel>();
 
             entries.AddRange(pathEntries.OfType<FileEntry>()

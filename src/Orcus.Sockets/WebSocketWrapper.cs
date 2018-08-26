@@ -14,6 +14,7 @@ namespace Orcus.Sockets
         {
             WebSocket = webSocket;
             _packageBufferSize = packageBufferSize + 1;
+            BufferPool = ArrayPool<byte>.Create(_packageBufferSize * 5, 10);
         }
 
         public void Dispose()
@@ -23,25 +24,36 @@ namespace Orcus.Sockets
 
         public WebSocket WebSocket { get; }
 
-        public ArrayPool<byte> BufferPool { get; } = null;
+        public ArrayPool<byte> BufferPool { get; }
         public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public async Task ReceiveAsync()
         {
-            var buffer = new byte[_packageBufferSize];
-
             while (WebSocket.State == WebSocketState.Open)
             {
-                var result = await WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer, 0, _packageBufferSize),
-                    CancellationToken.None);
+                var buffer = BufferPool.Rent(_packageBufferSize);
 
-                if (result.MessageType == WebSocketMessageType.Close)
-                    return;
+                var i = 0;
+                while (true)
+                {
+                    var result = await WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer, i, _packageBufferSize - i),
+                        CancellationToken.None);
 
-                var opCode = (OrcusSocket.MessageOpcode) buffer[0];
-                var payload = new ArraySegment<byte>(buffer, 1, result.Count - 1);
+                    if (result.MessageType == WebSocketMessageType.Close)
+                        return;
 
-                DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(payload, opCode));
+                    if (!result.EndOfMessage)
+                    {
+                        i = result.Count;
+                        continue;
+                    }
+
+                    var opCode = (OrcusSocket.MessageOpcode) buffer[0];
+                    var payload = new ArraySegment<byte>(buffer, 1, result.Count + i - 1);
+
+                    DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(payload, opCode));
+                    break;
+                }
             }
         }
 

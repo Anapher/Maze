@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Orcus.Modules.Api.Formatters;
 using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
 using Orcus.Service.Commander.Commanding.Formatters.Json;
@@ -72,6 +73,11 @@ namespace Orcus.Service.Commander
         /// </summary>
         public IList<IModelBinderProvider> ModelBinderProviders { get; }
 
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings();
+        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore
+        };
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 using FileExplorer.Administration.Models;
-using FileExplorer.Administration.Utilities;
+using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
 
