@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Orcus.Administration.Library.Utilities;
 
 namespace FileExplorer.Administration.Extensions
@@ -9,6 +10,27 @@ namespace FileExplorer.Administration.Extensions
         public static readonly DependencyProperty SupressBringIntoViewProperty =
             DependencyProperty.RegisterAttached("SupressBringIntoView", typeof(bool),
                 typeof(FrameworkElementExtensions), new PropertyMetadata(default(bool), OnSupressBringIntoViewChanged));
+
+        public static readonly DependencyProperty SetClickHandledProperty =
+            DependencyProperty.RegisterAttached("SetClickHandled", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(default(bool), PropertyChangedCallback));
+
+        public static void SetSupressBringIntoView(DependencyObject element, bool value)
+        {
+            element.SetValue(SupressBringIntoViewProperty, value);
+        }
+
+        public static bool GetSupressBringIntoView(DependencyObject element) =>
+            (bool)element.GetValue(SupressBringIntoViewProperty);
+
+        public static void SetSetClickHandled(DependencyObject element, bool value)
+        {
+            element.SetValue(SetClickHandledProperty, value);
+        }
+
+        public static bool GetSetClickHandled(DependencyObject element)
+        {
+            return (bool) element.GetValue(SetClickHandledProperty);
+        }
 
         private static void OnSupressBringIntoViewChanged(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -45,12 +67,24 @@ namespace FileExplorer.Administration.Extensions
             }
         }
 
-        public static void SetSupressBringIntoView(DependencyObject element, bool value)
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            element.SetValue(SupressBringIntoViewProperty, value);
+            var frameworkElement = (FrameworkElement)d;
+
+            if (e.OldValue as bool? == true)
+            {
+                frameworkElement.PreviewMouseDown -= FrameworkElementOnMouseDown;
+            }
+
+            if (e.NewValue as bool? == true)
+            {
+                frameworkElement.PreviewMouseDown += FrameworkElementOnMouseDown;
+            }
         }
 
-        public static bool GetSupressBringIntoView(DependencyObject element) =>
-            (bool) element.GetValue(SupressBringIntoViewProperty);
+        private static void FrameworkElementOnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

@@ -19,18 +19,17 @@ using Prism.Mvvm;
 
 namespace FileExplorer.Administration.ViewModels
 {
-    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IAsyncAutoComplete
+    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IAsyncAutoComplete, IFileExplorerChildViewModel
     {
-        private readonly FileExplorerViewModel _fileExplorerViewModel;
+        private FileExplorerViewModel _fileExplorerViewModel;
         private ObservableCollection<DirectoryNodeViewModel> _autoCompleteEntries;
         private List<DirectoryNodeViewModel> _rootViewModels;
         private DirectoryNodeViewModel _selectedViewModel;
-        private readonly FileExplorerPathComparer _fileExplorerPathComparer;
+        private FileExplorerPathComparer _fileExplorerPathComparer;
 
-        public DirectoryTreeViewModel(FileExplorerViewModel fileExplorerViewModel)
+        public void Initialize(FileExplorerViewModel fileExplorerViewModel)
         {
             _fileExplorerViewModel = fileExplorerViewModel;
-            NavigationBarViewModel = fileExplorerViewModel.NavigationBarViewModel;
 
             Entries = new EntriesHelper<DirectoryNodeViewModel>();
             Selection = new TreeRootSelector<DirectoryNodeViewModel, FileExplorerEntry>(Entries)
@@ -38,11 +37,12 @@ namespace FileExplorer.Administration.ViewModels
                 Comparers = new[]
                     {_fileExplorerPathComparer = new FileExplorerPathComparer(fileExplorerViewModel.FileSystem)}
             };
+
             Selection.AsRoot().SelectionChanged += OnSelectionChanged;
             _fileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
         }
 
-        public NavigationBarViewModel NavigationBarViewModel { get; }
+        public NavigationBarViewModel NavigationBarViewModel => _fileExplorerViewModel.NavigationBarViewModel;
 
         public List<DirectoryNodeViewModel> RootViewModels
         {
@@ -252,11 +252,12 @@ namespace FileExplorer.Administration.ViewModels
         private (DirectoryNodeViewModel, HierarchicalResult) FindRelatedViewModel(
             IEnumerable<DirectoryNodeViewModel> entries, DirectoryEntry directoryEntry)
         {
-            return entries
+            var items = entries
                 .Select(directoryVm => (directoryVm,
                     _fileExplorerPathComparer.CompareHierarchy(directoryVm.Source, directoryEntry)))
                 .Where(x => (x.Item2 & HierarchicalResult.Related) != 0 && x.Item2 != HierarchicalResult.Parent)
-                .OrderBy(x => x.directoryVm.Source.Path.Length).FirstOrDefault();
+                .OrderByDescending(x => x.directoryVm.Source.Path.Length);
+            return items.FirstOrDefault();
         }
 
         private DirectoryNodeViewModel UpwardSelect(string path, DirectoryNodeViewModel directoryNodeViewModel)

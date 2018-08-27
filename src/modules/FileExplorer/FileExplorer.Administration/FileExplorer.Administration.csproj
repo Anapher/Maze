@@ -57,6 +57,7 @@
     <Compile Include="Controls\BreadcrumbTree.cs" />
     <Compile Include="Controls\BreadcrumbTreeItem.cs" />
     <Compile Include="Controls\ContentSwitch.cs" />
+    <Compile Include="Controls\DataGridTextBox.cs" />
     <Compile Include="Controls\DropDown.cs" />
     <Compile Include="Controls\DropDownList.cs" />
     <Compile Include="Controls\ExplorerTextBox.cs" />
@@ -108,12 +109,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Resources\Extensions\ExtendedMouseBinding.cs" />
-    <Compile Include="Resources\Extensions\FileExplorerEntryExtensions.cs" />
-    <Compile Include="Resources\Extensions\FrameworkElementExtensions.cs" />
-    <Compile Include="Resources\Extensions\TreeViewExtensions.cs" />
-    <Compile Include="Resources\Extensions\UITools.cs" />
-    <Compile Include="Resources\Extensions\VisualTreeHelperExtensions.cs" />
+    <Compile Include="Extensions\ExtendedMouseBinding.cs" />
+    <Compile Include="Extensions\FileExplorerEntryExtensions.cs" />
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
+    <Compile Include="Extensions\TreeViewExtensions.cs" />
+    <Compile Include="Extensions\UITools.cs" />
+    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Resources\VisualStudioImages.cs" />
     <Compile Include="Rest\FileExplorerResource.cs" />
     <Compile Include="Rest\FileSystemResource.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="ViewModels\Explorer\Helpers\PathHistoryManager.cs" />
     <Compile Include="ViewModels\FileExplorerViewModel.cs" />
     <Compile Include="Models\IUiTools.cs" />
+    <Compile Include="ViewModels\IFileExplorerChildViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>

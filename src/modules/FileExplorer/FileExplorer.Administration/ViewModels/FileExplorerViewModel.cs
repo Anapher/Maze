@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
-using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
@@ -32,9 +31,12 @@ namespace FileExplorer.Administration.ViewModels
             ImageProvider = new ImageProvider(cache, FileSystem);
             Dispatcher = dispatcher;
 
-            NavigationBarViewModel = new NavigationBarViewModel(this);
-            EntriesViewModel = new EntriesViewModel(this);
-            DirectoryTreeViewModel = new DirectoryTreeViewModel(this);
+            NavigationBarViewModel = new NavigationBarViewModel();
+            DirectoryTreeViewModel = new DirectoryTreeViewModel();
+            EntriesViewModel = new EntriesViewModel();
+
+            foreach (var childViewModel in new IFileExplorerChildViewModel[]{NavigationBarViewModel, DirectoryTreeViewModel, EntriesViewModel })
+                childViewModel.Initialize(this);
         }
 
         public event EventHandler<PathContent> PathChanged;

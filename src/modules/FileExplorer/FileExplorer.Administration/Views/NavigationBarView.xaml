@@ -5,8 +5,10 @@
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fileExplorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:FileExplorer.Administration.Controls.Models"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:NavigationBarViewModel}"
     d:DesignHeight="40"
@@ -23,7 +25,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" MaxWidth="210" />
         </Grid.ColumnDefinitions>
         <controls:IconButton
             Margin="5,0"
@@ -132,5 +136,97 @@
                 </controls:ContentSwitch.ContentOff>
             </controls:ContentSwitch>
         </Border>
+        <Border
+            Grid.Column="3"
+            BorderBrush="{StaticResource GrayBrush9}"
+            BorderThickness="0,1,1,1"
+            CornerRadius=".2"
+            SnapsToDevicePixels="True">
+            <Button Command="{Binding RefreshEntriesCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border
+                                        x:Name="PART_BORDER"
+                                        Width="28"
+                                        BorderThickness="1">
+                                        <Border.Background>
+                                            <SolidColorBrush Opacity="0" Color="{DynamicResource SelectionColor}" />
+                                        </Border.Background>
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Opacity="0" Color="#54257AB5" />
+                                        </Border.BorderBrush>
+                                        <Viewbox Width="12" Height="12">
+                                            <Grid x:Name="PART_CONTENT">
+                                                <!--  Visual Studio 2017 Image Library "Refresh"  -->
+                                                <Rectangle Width="20" Height="20">
+                                                    <Rectangle.Fill>
+                                                        <DrawingBrush>
+                                                            <DrawingBrush.Drawing>
+                                                                <DrawingGroup>
+                                                                    <DrawingGroup.Children>
+                                                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,8C16,12.411 12.411,16 8,16 3.589,16 0,12.411 0,8 0,6.597 0.384,5.212 1.088,4L0,4 0,0 8,0 8,8 4,8C4,10.206 5.794,12 8,12 10.206,12 12,10.206 12,8 12,6.656 11.331,5.41 10.21,4.666L9.377,4.112 11.592,0.78 12.425,1.333C14.663,2.822,16,5.314,16,8" />
+                                                                        <GeometryDrawing Brush="#FF00529C" Geometry="F1M15,8C15,11.859 11.859,15 8,15 4.14,15 1,11.859 1,8 1,6.076 1.801,4.292 3.121,3L1,3 1,1 7,1 7,7 5,7 5,4.002C3.766,4.931 3,6.401 3,8 3,10.757 5.243,13 8,13 10.757,13 13,10.757 13,8 13,6.321 12.164,4.763 10.764,3.833L11.871,2.167C13.83,3.469,15,5.649,15,8" />
+                                                                    </DrawingGroup.Children>
+                                                                </DrawingGroup>
+                                                            </DrawingBrush.Drawing>
+                                                        </DrawingBrush>
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </Grid>
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BORDER"
+                                                            Storyboard.TargetProperty="Background.Opacity"
+                                                            To="1"
+                                                            Duration="0:0:0.1" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BORDER"
+                                                            Storyboard.TargetProperty="BorderBrush.Opacity"
+                                                            To="1"
+                                                            Duration="0:0:0.1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BORDER"
+                                                            Storyboard.TargetProperty="Background.Opacity"
+                                                            To="0"
+                                                            Duration="0:0:0.1" />
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetName="PART_BORDER"
+                                                            Storyboard.TargetProperty="BorderBrush.Opacity"
+                                                            To="0"
+                                                            Duration="0:0:0.1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Border>
+        <TextBox
+            Grid.Column="4"
+            Margin="10,0"
+            VerticalAlignment="Stretch"
+            mah:TextBoxHelper.Watermark="{tx:T FileExplorer:SearchWatermark}"
+            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=50}" />
     </Grid>
 </UserControl>
