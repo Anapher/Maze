@@ -8,7 +8,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer.Helpers
         private const char Separator = '\\';
         protected StringComparison StringComparison = StringComparison.OrdinalIgnoreCase;
 
-        protected HierarchicalResult CompareHierarchy(string path1, string path2)
+        protected HierarchicalResult CompareHierarchyInternal(string path1, string path2)
         {
             if (path1 == null || path2 == null)
                 return HierarchicalResult.Unrelated;

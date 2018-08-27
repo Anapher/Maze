@@ -2,6 +2,7 @@
 
 namespace FileExplorer.Administration.Controls.Models
 {
+    [Flags]
     public enum HierarchicalResult
     {
         Parent = 1 << 1,

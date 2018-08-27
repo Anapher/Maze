@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Utilities;
 
@@ -23,7 +24,7 @@ namespace FileExplorer.Administration.Controls
         public PathHierarchyHelper()
         {
             Separator = '\\';
-            StringComparisonOption = StringComparison.CurrentCultureIgnoreCase;
+            StringComparisonOption = StringComparison.OrdinalIgnoreCase;
         }
 
         public virtual string ExtractPath(string pathName)
@@ -87,13 +88,39 @@ namespace FileExplorer.Administration.Controls
             return current;
         }
 
+        public async ValueTask<object> GetItemAsync(object rootItem, string path)
+        {
+            var queue = new Queue<string>(path.Split(new[] {Separator}, StringSplitOptions.RemoveEmptyEntries));
+            var current = rootItem;
+            while (current != null && queue.Any())
+            {
+                var nextSegment = queue.Dequeue();
+                object found = null;
+                foreach (var item in await ListAsync(current))
+                {
+                    var valuePathName = GetValuePath(item);
+                    var value = ExtractName(valuePathName); //Value may be full path, or just current value.
+                    if (value.Equals(nextSegment, StringComparisonOption))
+                    {
+                        found = item;
+                        break;
+                    }
+                }
+
+                current = found;
+            }
+
+            return current;
+        }
+
         public char Separator { get; set; }
         public StringComparison StringComparisonOption { get; set; }
         public string ParentPath { get; set; }
         public string ValuePath { get; set; }
         public string SubentriesPath { get; set; }
 
-        public IEnumerable List(object item) => item is IEnumerable ? item as IEnumerable : GetSubEntries(item);
+        public ValueTask<IEnumerable> ListAsync(object item) => item is IEnumerable enumerable ? new ValueTask<IEnumerable>(enumerable) : GetAutoCompleteEntries(item);
+        public IEnumerable List(object item) => item is IEnumerable enumerable ?  enumerable : GetSubEntries(item);
 
         protected virtual object GetParent(object item) =>
             PropertyPathHelper.GetValueFromPropertyInfo(item, ParentPath);
@@ -103,6 +130,14 @@ namespace FileExplorer.Administration.Controls
 
         protected virtual IEnumerable GetSubEntries(object item) =>
             PropertyPathHelper.GetValueFromPropertyInfo(item, SubentriesPath) as IEnumerable;
+
+        protected virtual ValueTask<IEnumerable> GetAutoCompleteEntries(object item) =>
+            ((IAsyncAutoComplete) item).GetAutoCompleteEntries();
+    }
+
+    public interface IAsyncAutoComplete
+    {
+        ValueTask<IEnumerable> GetAutoCompleteEntries();
     }
 
     /// <summary>

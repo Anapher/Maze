@@ -1,5 +1,6 @@
 ﻿using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Utilities;
+using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 
 namespace FileExplorer.Administration.Models
@@ -9,5 +10,6 @@ namespace FileExplorer.Administration.Models
         IShellStatusBar StatusBar { get; }
         IWindow Window { get; }
         IImageProvider ImageProvider { get; }
+        IAppDispatcher Dispatcher { get; }
     }
 }

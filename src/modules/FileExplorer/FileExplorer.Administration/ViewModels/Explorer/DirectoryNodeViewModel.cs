@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
+using FileExplorer.Administration.Controls;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
@@ -18,16 +18,17 @@ using Unclassified.TxLib;
 namespace FileExplorer.Administration.ViewModels.Explorer
 {
     public class DirectoryNodeViewModel : EntryViewModel,
-        ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IIntoViewBringable, IEquatable<EntryViewModel>
+        ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IIntoViewBringable, IEquatable<EntryViewModel>,
+        IAsyncAutoComplete
     {
-        private readonly DirectoryTreeViewModel _rootViewModel;
         private readonly IFileSystem _fileSystem;
-        private readonly IUiTools _uiTools;
-        private readonly Lazy<string> _lazyLabel;
         private readonly Lazy<ImageSource> _lazyIcon;
+        private readonly Lazy<string> _lazyLabel;
+        private readonly DirectoryTreeViewModel _rootViewModel;
         private readonly string _sortName;
         private readonly DirectoryEntry _source;
-        private bool _isBringIntoView;
+        private readonly IUiTools _uiTools;
+        private bool _isBreadcrumbExpanded;
 
         public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, int orderNumber,
             IUiTools uiTools) : this(directoryEntry, fileSystem, uiTools)
@@ -36,7 +37,8 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         }
 
         public DirectoryNodeViewModel(DirectoryTreeViewModel rootViewModel, DirectoryNodeViewModel parentViewModel,
-            DirectoryEntry directoryEntry, IFileSystem fileSystem, IUiTools uiTools) : this(directoryEntry, fileSystem, uiTools)
+            DirectoryEntry directoryEntry, IFileSystem fileSystem, IUiTools uiTools) : this(directoryEntry, fileSystem,
+            uiTools)
         {
             _rootViewModel = rootViewModel;
             Parent = parentViewModel;
@@ -81,37 +83,58 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         public override string Description { get; }
         public override long Size { get; }
 
-        public ObservableCollection<DirectoryNodeViewModel> AutoCompleteEntries
+        public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
+        public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
+        public DirectoryNodeViewModel Parent { get; }
+
+        private int _bringIntoViewToken;
+
+        public int BringIntoViewToken
         {
-            get
+            get => _bringIntoViewToken;
+            set => SetProperty(ref _bringIntoViewToken, value);
+        }
+
+        public bool IsBreadcrumbExpanded
+        {
+            get => _isBreadcrumbExpanded;
+            set
             {
-                if (!Entries.IsLoaded)
-                    Entries.LoadAsync();
-                return Entries.All;
+                if (_isBreadcrumbExpanded != value)
+                {
+                    if (value)
+                        Entries.LoadAsync();
+
+                    _isBreadcrumbExpanded = value;
+                    //no need to notify property changed
+                }
             }
         }
 
-        public DirectoryNodeViewModel Parent { get; }
-        public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
-        public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
-
-        public bool IsBringIntoView
+        public void BringIntoView()
         {
-            get => _isBringIntoView;
-            set => SetProperty(ref _isBringIntoView, value);
+            BringIntoViewToken++;
+        }
+
+        public async ValueTask<IEnumerable> GetAutoCompleteEntries()
+        {
+            if (!Entries.IsLoaded)
+            {
+                return await Entries.LoadAsync(UpdateMode.Replace, false, null, await _uiTools.Dispatcher.GetTaskScheduler());
+            }
+
+            return Entries.All;
         }
 
         private string CreateLabel()
         {
             if (_source is SpecialDirectoryEntry specialDirectory)
-            {
                 if (specialDirectory.LabelId != 0 && !string.IsNullOrEmpty(specialDirectory.LabelPath))
                 {
                     var label = _fileSystem.GetLabel(specialDirectory.LabelPath, specialDirectory.LabelId);
                     if (!string.IsNullOrEmpty(label))
                         return label;
                 }
-            }
 
             if (!string.IsNullOrEmpty(_source.Label))
                 return _source.Label;
@@ -123,7 +146,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         {
             if (_source is SpecialDirectoryEntry specialDirectory)
                 return _uiTools.ImageProvider.GetFolderImage(specialDirectory);
-            
+
             return _uiTools.ImageProvider.GetFolderImage(_source.Name, 0);
         }
 
@@ -133,7 +156,8 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                 return Enumerable.Empty<DirectoryNodeViewModel>();
 
             var result = await _fileSystem.FetchSubDirectories(_source, false)
-                .DisplayOnStatusBarCatchErrors(_uiTools.StatusBar, Tx.T("FileExplorer:StatusBar.LoadSubDirectories"), StatusBarAnimation.Search);
+                .DisplayOnStatusBarCatchErrors(_uiTools.StatusBar, Tx.T("FileExplorer:StatusBar.LoadSubDirectories"),
+                    StatusBarAnimation.Search);
             if (result.Failed)
                 return Enumerable.Empty<DirectoryNodeViewModel>();
 
@@ -141,18 +165,13 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             if (!_source.IsComputerDirectory())
                 viewModels = viewModels.OrderBy(x => x.Label);
 
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
-                (Action) (() => RaisePropertyChanged(nameof(AutoCompleteEntries))));
-
             return viewModels;
         }
 
-        private DirectoryNodeViewModel CreateDirectoryViewModel(DirectoryEntry directoryEntry)
-        {
-            return new DirectoryNodeViewModel(_rootViewModel, this, directoryEntry, _fileSystem, _uiTools);
-        }
+        private DirectoryNodeViewModel CreateDirectoryViewModel(DirectoryEntry directoryEntry) =>
+            new DirectoryNodeViewModel(_rootViewModel, this, directoryEntry, _fileSystem, _uiTools);
 
-        public bool Equals(EntryViewModel other) => Equals((object) other);
+        public bool Equals(EntryViewModel other) => Equals((object)other);
 
         protected bool Equals(DirectoryNodeViewModel other) =>
             Equals(Source, other.Source) && string.Equals(Description, other.Description) && Size == other.Size;

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;
 using Orcus.Administration.Library.Extensions;
+using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -22,13 +23,14 @@ namespace FileExplorer.Administration.ViewModels
         private CancellationTokenSource _openPathCancellationTokenSource;
         private bool _isLoaded;
 
-        public FileExplorerViewModel(IShellStatusBar statusBar, IWindow window, IMemoryCache cache, ITargetedRestClient client)
+        public FileExplorerViewModel(IShellStatusBar statusBar, IWindow window, IMemoryCache cache, ITargetedRestClient client, IAppDispatcher dispatcher)
         {
             StatusBar = statusBar;
             Window = window;
             RestClient = client.CreatePackageSpecific("FileExplorer");
             FileSystem = new RemoteFileSystem(cache, RestClient);
             ImageProvider = new ImageProvider(cache, FileSystem);
+            Dispatcher = dispatcher;
 
             NavigationBarViewModel = new NavigationBarViewModel(this);
             EntriesViewModel = new EntriesViewModel(this);
@@ -41,6 +43,7 @@ namespace FileExplorer.Administration.ViewModels
         public IShellStatusBar StatusBar { get; }
         public IWindow Window { get; }
         public IImageProvider ImageProvider { get; }
+        public IAppDispatcher Dispatcher { get; }
         public IFileSystem FileSystem { get; }
 
         public EntriesViewModel EntriesViewModel { get; }
@@ -67,7 +70,7 @@ namespace FileExplorer.Administration.ViewModels
             try
             {
                 pathContent = await FileSystem.FetchPath(path, invalidate, invalidate, token)
-                    .DisplayOnStatusBar(StatusBar, "Fetch path");
+                    .DisplayOnStatusBar(StatusBar, Tx.T("FileExplorer:OpenPath"), StatusBarAnimation.Search);
             }
             catch (TaskCanceledException)
             {

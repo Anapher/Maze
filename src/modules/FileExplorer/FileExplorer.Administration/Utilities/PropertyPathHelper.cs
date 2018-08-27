@@ -11,8 +11,8 @@ namespace FileExplorer.Administration.Utilities
     //Thomas Levesque - http://stackoverflow.com/questions/3577802/wpf-getting-a-property-value-from-a-binding-path
     public static class PropertyPathHelper
     {
-        internal static Dictionary<Tuple<Type, string>, PropertyInfo> _cacheDic
-            = new Dictionary<Tuple<Type, string>, PropertyInfo>();
+        internal static Dictionary<Tuple<Type, string>, PropertyInfo> _cacheDic =
+            new Dictionary<Tuple<Type, string>, PropertyInfo>();
 
         private static readonly Dummy _dummy = new Dummy();
 
@@ -24,17 +24,18 @@ namespace FileExplorer.Administration.Utilities
                 if (current == null)
                     return null;
 
-                Type type = current.GetType();
+                var type = current.GetType();
                 var key = new Tuple<Type, string>(type, ppath);
 
                 PropertyInfo pInfo = null;
                 lock (_cacheDic)
                 {
-                    if (!(_cacheDic.ContainsKey(key)))
+                    if (!_cacheDic.ContainsKey(key))
                     {
                         pInfo = type.GetProperty(ppath);
                         _cacheDic.Add(key, pInfo);
                     }
+
                     pInfo = _cacheDic[key];
                 }
 
@@ -42,17 +43,16 @@ namespace FileExplorer.Administration.Utilities
                     return null;
                 current = pInfo.GetValue(current);
             }
+
             return current;
         }
 
-        public static object GetValueFromPropertyInfo(object obj, string propertyPath)
-        {
-            return GetValueFromPropertyInfo(obj, propertyPath.Split('.'));
-        }
+        public static object GetValueFromPropertyInfo(object obj, string propertyPath) =>
+            GetValueFromPropertyInfo(obj, propertyPath.Split('.'));
 
         public static object GetValue(object obj, string propertyPath)
         {
-            Dispatcher dispatcher = Dispatcher.FromThread(Thread.CurrentThread);
+            var dispatcher = Dispatcher.FromThread(Thread.CurrentThread);
             if (dispatcher == null)
                 return GetValueFromPropertyInfo(obj, propertyPath);
 
@@ -61,15 +61,12 @@ namespace FileExplorer.Administration.Utilities
             return _dummy.GetValue(Dummy.ValueProperty);
         }
 
-        public static object GetValue(object obj, BindingBase binding)
-        {
-            return GetValue(obj, ((Binding) binding).Path.Path);
-        }
+        public static object GetValue(object obj, BindingBase binding) => GetValue(obj, ((Binding) binding).Path.Path);
 
         private class Dummy : DependencyObject
         {
             public static readonly DependencyProperty ValueProperty =
-                DependencyProperty.Register("Value", typeof (object), typeof (Dummy), new UIPropertyMetadata(null));
+                DependencyProperty.Register("Value", typeof(object), typeof(Dummy), new UIPropertyMetadata(null));
         }
     }
 }

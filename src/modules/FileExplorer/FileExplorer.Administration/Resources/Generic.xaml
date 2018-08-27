@@ -212,6 +212,332 @@
 
     <!--#endregion ModernTrack-->
 
+    <!--#region Buttons-->
+    <!--  https://www.iconfinder.com/icons/186409/arrow_next_right_icon  -->
+    <Geometry x:Key="ArrowRight">F1 M 14.241,10.244 L 4.655,0.659 C 3.777,-0.220 2.338,-0.220 1.460,0.659 L 0.660,1.459 C -0.218,2.336 -0.218,3.775 0.660,4.652 L 7.974,11.968 L 0.659,19.284 C -0.220,20.162 -0.220,21.600 0.659,22.478 L 1.459,23.277 C 2.337,24.156 3.776,24.156 4.654,23.277 L 14.240,13.691 C 14.712,13.219 14.922,12.587 14.887,11.968 C 14.923,11.349 14.713,10.717 14.241,10.244 Z</Geometry>
+    <!--  https://www.iconfinder.com/icons/186411/arrow_down_icon  -->
+    <Geometry x:Key="ArrowDown">F1 M 10.244,14.239 L 0.659,4.654 C -0.220,3.775 -0.220,2.337 0.659,1.459 L 1.459,0.659 C 2.336,-0.220 3.775,-0.220 4.653,0.659 L 11.968,7.974 L 19.284,0.659 C 20.162,-0.220 21.601,-0.220 22.478,0.659 L 23.278,1.459 C 24.157,2.338 24.157,3.775 23.278,4.654 L 13.691,14.239 C 13.220,14.711 12.587,14.921 11.968,14.886 C 11.349,14.921 10.717,14.711 10.244,14.239 Z</Geometry>
+
+    <ControlTemplate x:Key="BasicArrowButton" TargetType="{x:Type ToggleButton}">
+        <Grid Background="Transparent">
+            <Viewbox
+                x:Name="PART_PathBox"
+                Height="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Path
+                    x:Name="PART_Path"
+                    Margin="{TemplateBinding Padding}"
+                    Data="{StaticResource ArrowRight}"
+                    Fill="{TemplateBinding Foreground}"
+                    IsHitTestVisible="True" />
+            </Viewbox>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <!--   <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="PART_Path" Property="Data" Value="{StaticResource ArrowDown}" />
+                <Setter TargetName="PART_PathBox" Property="Height" Value="8" />
+            </Trigger> Would flicker-->
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="PART_Path" Property="Data" Value="{StaticResource ArrowDown}" />
+                <Setter TargetName="PART_PathBox" Property="Height" Value="8" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!--#endregion Buttons-->
+
+    <!--#region HotTrack-->
+
+    <ControlTemplate x:Key="HotTrackTemplate" TargetType="controls:HotTrack">
+        <Border
+            x:Name="borderCurrent"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="{TemplateBinding CornerRadius}">
+            <Grid>
+                <Grid x:Name="hotTrackGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="15" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Rectangle
+                        x:Name="selected"
+                        Grid.RowSpan="2"
+                        Fill="{TemplateBinding SelectedBrush}"
+                        Opacity="0" />
+                    <Rectangle
+                        x:Name="background"
+                        Grid.RowSpan="2"
+                        Fill="{TemplateBinding BackgroundBrush}"
+                        Opacity="0" />
+                    <Rectangle
+                        x:Name="highlight"
+                        Fill="{TemplateBinding HighlightBrush}"
+                        Opacity="0" />
+                </Grid>
+                <Rectangle Visibility="{Binding FillFullRow, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Uniform" Visual="{Binding ElementName=hotTrackGrid}" />
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform ScaleX="-1" />
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Border Grid.RowSpan="2" Padding="{TemplateBinding Padding}">
+                    <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" />
+                </Border>
+            </Grid>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="background"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.15"
+                                Duration="0:0:0.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="highlight"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.5"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="MouseOverGrayed">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="background"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.015"
+                                Duration="0:0:0.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="highlight"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.05"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Dragging">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="background"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.05"
+                                Duration="0:0:0.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="highlight"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.35"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="DraggingOver">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="background"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.05"
+                                Duration="0:0:0.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="highlight"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.35"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Selected">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="selected"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.35"
+                                Duration="0:0:0.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="highlight"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.5"
+                                Duration="0:0:0.1" />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="borderCurrent" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:HotTrack}, Mode=FindAncestor}, Path=SelectedBorderBrush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="borderCurrent" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:HotTrack}, Mode=FindAncestor}, Path=SelectedBorderBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:HotTrack}">
+        <Setter Property="SelectedBrush" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <Setter Property="BackgroundBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+        <Setter Property="HighlightBrush" Value="#75FFFFFF" />
+        <Setter Property="Template" Value="{StaticResource HotTrackTemplate}" />
+    </Style>
+
+    <!--#endregion HotTrack-->
+
+    <!--#region ComboBox-->
+
+    <Style
+        x:Key="ComboboxNullAsSeparatorStyle"
+        BasedOn="{StaticResource {x:Type ComboBoxItem}}"
+        TargetType="{x:Type ComboBoxItem}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                            <Separator HorizontalAlignment="Stretch" IsEnabled="False" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region DropDown-->
+
+    <ControlTemplate x:Key="BaseToggleButton" TargetType="{x:Type ToggleButton}">
+        <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:DropDown}">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SelectionBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HeaderButtonTemplate" Value="{StaticResource BaseToggleButton}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:DropDown}">
+                    <Grid>
+                        <ToggleButton
+                            x:Name="PART_ToggleButton"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Focusable="False"
+                            Foreground="{StaticResource GrayBrush3}"
+                            IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            Template="{Binding HeaderButtonTemplate, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                            <ContentPresenter Content="{TemplateBinding Header}" />
+                        </ToggleButton>
+                        <Popup
+                            x:Name="PART_Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            HorizontalOffset="{TemplateBinding HorizontalOffset}"
+                            IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            Placement="{TemplateBinding Placement}"
+                            PlacementTarget="{TemplateBinding PlacementTarget}"
+                            PopupAnimation="None"
+                            StaysOpen="False"
+                            VerticalOffset="{TemplateBinding VerticalOffset}">
+                            <Grid>
+                                <Border
+                                    MinWidth="150"
+                                    MinHeight="10"
+                                    Margin="0,0,8,8"
+                                    Padding="{TemplateBinding Padding}"
+                                    Background="{StaticResource WhiteBrush}"
+                                    BorderBrush="{StaticResource GrayBrush4}"
+                                    BorderThickness="1">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="5"
+                                            Opacity="0.2"
+                                            ShadowDepth="2" />
+                                    </Border.Effect>
+                                    <ContentPresenter x:Name="PART_Content" Content="{TemplateBinding Content}" />
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Header" Value="{x:Null}">
+                            <Setter TargetName="PART_ToggleButton" Property="Template" Value="{StaticResource BasicArrowButton}" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsDropDownAlignLeft" Value="True">
+                            <Setter TargetName="PART_Popup" Property="HorizontalOffset" Value="{Binding ActualWidth, ElementName=PART_ToggleButton}" />
+                            <Setter TargetName="PART_Popup" Property="VerticalOffset" Value="{Binding ActualHeight, ElementName=PART_ToggleButton}" />
+                            <Setter TargetName="PART_Popup" Property="Placement" Value="Left" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type controls:DropDownList}" TargetType="{x:Type controls:DropDownList}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <Setter Property="HeaderButtonTemplate" Value="{StaticResource BaseToggleButton}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:DropDownList}">
+                    <controls:DropDown
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Header="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
+                        HeaderButtonTemplate="{Binding HeaderButtonTemplate, RelativeSource={RelativeSource TemplatedParent}}"
+                        HorizontalOffset="{TemplateBinding HorizontalOffset}"
+                        IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        Placement="{TemplateBinding Placement}"
+                        PlacementTarget="{TemplateBinding PlacementTarget}"
+                        VerticalOffset="{TemplateBinding VerticalOffset}">
+                        <ScrollViewer
+                            x:Name="DropDownScrollViewer"
+                            CanContentScroll="True"
+                            VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter
+                                x:Name="ItemsPresenter"
+                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </ScrollViewer>
+                    </controls:DropDown>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ComboboxNullAsSeparatorStyle}" />
+        <Style.Triggers>
+            <Trigger Property="VirtualizingStackPanel.IsVirtualizing" Value="True">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion DropDown-->
+
     <!--#region Breadcrumb-->
     <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type controls:BreadcrumbTreeItem}">
         <controls:OverflowableStackPanel
@@ -397,4 +723,11 @@
         <Setter Property="Template" Value="{StaticResource BreadcrumbTreeTemplate}" />
     </Style>
     <!--#endregion-->
+
+    <!--#region TreeViewEx-->
+
+    <Style BasedOn="{StaticResource MetroTreeViewItem}" TargetType="controls:TreeViewItemEx" />
+    <Style BasedOn="{StaticResource MetroTreeView}" TargetType="controls:TreeViewEx" />
+
+    <!--#endregion TreeViewEx-->
 </ResourceDictionary>

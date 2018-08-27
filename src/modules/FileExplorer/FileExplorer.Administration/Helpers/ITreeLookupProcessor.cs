@@ -158,13 +158,13 @@ namespace FileExplorer.Administration.Helpers
             if (MatchResult.HasFlag(hr))
                 selector.EntryHelper.IsExpanded = true;
             if (hr == HierarchicalResult.Current)
-                ((IIntoViewBringable) selector.ViewModel).IsBringIntoView = true;
+                ((IIntoViewBringable) selector.ViewModel).BringIntoView();
             return true;
         }
     }
 
     public interface IIntoViewBringable
     {
-        bool IsBringIntoView { get; set; }
+        void BringIntoView();
     }
 }

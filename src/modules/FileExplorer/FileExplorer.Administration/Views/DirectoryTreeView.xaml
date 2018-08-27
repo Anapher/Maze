@@ -26,7 +26,7 @@
                 d:DataContext="{d:DesignInstance explorer:DirectoryNodeViewModel}"
                 BasedOn="{StaticResource MetroTreeViewItem}"
                 TargetType="controls:TreeViewItemEx">
-                <Setter Property="IsBringIntoView" Value="{Binding IsBringIntoView, Mode=TwoWay}" />
+                <Setter Property="BringIntoViewToken" Value="{Binding BringIntoViewToken}" />
                 <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}" />
                 <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}" />
             </Style>

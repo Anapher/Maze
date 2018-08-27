@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fileExplorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:FileExplorer.Administration.Controls.Models"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:NavigationBarViewModel}"
     d:DesignHeight="40"
@@ -67,11 +68,13 @@
                         RootItem="{Binding DirectoryTreeViewModel}"
                         ValuePath="Selection.Value.Path">
                         <controls:ExplorerTextBox.HierarchyHelper>
-                            <controls:PathHierarchyHelper
-                                ParentPath="Parent"
-                                SubentriesPath="AutoCompleteEntries"
-                                ValuePath="Selection.Value.Path" />
+                            <controls:PathHierarchyHelper ParentPath="Parent" ValuePath="Selection.Value.Path" />
                         </controls:ExplorerTextBox.HierarchyHelper>
+                        <controls:ExplorerTextBox.SuggestSources>
+                            <x:Array Type="models:ISuggestSource">
+                                <models:AsyncAutoSuggestSource />
+                            </x:Array>
+                        </controls:ExplorerTextBox.SuggestSources>
                     </controls:ExplorerTextBox>
                 </controls:ContentSwitch.ContentOn>
                 <controls:ContentSwitch.ContentOff>

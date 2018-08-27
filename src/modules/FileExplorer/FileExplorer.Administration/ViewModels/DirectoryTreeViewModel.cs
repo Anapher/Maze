@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using FileExplorer.Administration.Controls;
 using FileExplorer.Administration.Controls.Models;
 using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
+using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Helpers;
 using FileExplorer.Shared.Dtos;
@@ -16,12 +19,13 @@ using Prism.Mvvm;
 
 namespace FileExplorer.Administration.ViewModels
 {
-    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>
+    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IAsyncAutoComplete
     {
         private readonly FileExplorerViewModel _fileExplorerViewModel;
         private ObservableCollection<DirectoryNodeViewModel> _autoCompleteEntries;
         private List<DirectoryNodeViewModel> _rootViewModels;
         private DirectoryNodeViewModel _selectedViewModel;
+        private readonly FileExplorerPathComparer _fileExplorerPathComparer;
 
         public DirectoryTreeViewModel(FileExplorerViewModel fileExplorerViewModel)
         {
@@ -31,7 +35,8 @@ namespace FileExplorer.Administration.ViewModels
             Entries = new EntriesHelper<DirectoryNodeViewModel>();
             Selection = new TreeRootSelector<DirectoryNodeViewModel, FileExplorerEntry>(Entries)
             {
-                Comparers = new[] {new FileExplorerPathComparer(fileExplorerViewModel.FileSystem)}
+                Comparers = new[]
+                    {_fileExplorerPathComparer = new FileExplorerPathComparer(fileExplorerViewModel.FileSystem)}
             };
             Selection.AsRoot().SelectionChanged += OnSelectionChanged;
             _fileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
@@ -59,6 +64,11 @@ namespace FileExplorer.Administration.ViewModels
 
         public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
         public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
+
+        public ValueTask<IEnumerable> GetAutoCompleteEntries()
+        {
+            return new ValueTask<IEnumerable>(AutoCompleteEntries);
+        }
 
         public async Task SelectAsync(FileExplorerEntry value)
         {
@@ -88,8 +98,7 @@ namespace FileExplorer.Administration.ViewModels
                 entry.Entries.IsExpanded = true;
 
                 Selection.AsRoot().SelectAsync(dto.ComputerDirectory).Forget();
-
-                entry.IsBringIntoView = true;
+                entry.BringIntoView();
             }));
         }
 
@@ -112,7 +121,7 @@ namespace FileExplorer.Administration.ViewModels
         {
             var rootSelector = Selection.AsRoot();
             var currentItem = rootSelector.SelectedViewModel;
-            currentItem.IsBringIntoView = true;
+            //currentItem.BringIntoView();
             if (currentItem.Parent != null)
                 currentItem.Parent.Entries.IsExpanded = true;
 
@@ -123,98 +132,148 @@ namespace FileExplorer.Administration.ViewModels
 
         private async void FileExplorerViewModelOnPathChanged(object sender, PathContent e)
         {
-            bool ComparePaths(string path1, string path2) =>
-                _fileExplorerViewModel.FileSystem.ComparePaths(path1, path2);
-
             var rootSelection = Selection.AsRoot();
 
-            //the directory is already selected in the tree
-            if (rootSelection.IsChildSelected && ComparePaths(e.Path, rootSelection.SelectedValue.Path))
-                return;
-
-            //when a subdirectory is selected
-            if (rootSelection.SelectedViewModel != null)
+            DirectoryNodeViewModel directoryViewModel = null;
+            if (rootSelection.IsChildSelected)
             {
-                var selectedViewModel = rootSelection.SelectedViewModel;
-                if (selectedViewModel.Entries.IsLoaded)
+                var relation = _fileExplorerPathComparer.CompareHierarchy(rootSelection.SelectedValue.Path, e.Path);
+
+                switch (relation)
                 {
-                    var subEntry =
-                        selectedViewModel.Entries.All.FirstOrDefault(x => ComparePaths(x.Source.Path, e.Path));
-                    if (subEntry != null)
-                    {
-                        selectedViewModel.Selection.IsSelected = false;
-                        subEntry.Entries.IsExpanded = true;
-                        subEntry.Selection.IsSelected = true;
-                        subEntry.IsBringIntoView = true;
+                    case HierarchicalResult.Current:
                         return;
-                    }
+                    case HierarchicalResult.Parent:
+                        directoryViewModel = UpwardSelect(e.Path, rootSelection.SelectedViewModel);
+                        break;
+                    case HierarchicalResult.Child:
+                        directoryViewModel = await DownwardSelect(e.PathDirectories, 0, rootSelection.SelectedViewModel);
+                        break;
+                    case HierarchicalResult.Unrelated:
+                        directoryViewModel = null;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
-            //check if there is any root view model which the path starts with
-            var rootTreeNodeViewModel = Entries.All.FirstOrDefault(x =>
-                e.Path.StartsWith(x.Source.Path, _fileExplorerViewModel.FileSystem.PathStringComparison));
-
-            if (rootTreeNodeViewModel != null && (rootTreeNodeViewModel.Selection.IsSelected || rootTreeNodeViewModel.Selection.IsChildSelected))
+            if (directoryViewModel == null)
             {
-                //if the path is equal to the root view model, we just select it
-                if (ComparePaths(rootTreeNodeViewModel.Source.Path, e.Path))
-                {
-                    if (!rootTreeNodeViewModel.Entries.IsLoaded)
-                        await rootTreeNodeViewModel.Entries.LoadAsync();
+                //check if there is any root view model which the path starts with (or is the path)
 
-                    rootTreeNodeViewModel.Entries.IsExpanded = true;
-                    rootTreeNodeViewModel.Selection.IsSelected = true;
-                    rootTreeNodeViewModel.IsBringIntoView = true;
-                }
-                else
-                {
-                    //it may be possible that the rootTreeNodeViewModel is a path with multiple directories like C:\OneDrive. We have to find the current position
-                    var currentPathPart =
-                        e.PathDirectories.First(x => ComparePaths(x.Path, rootTreeNodeViewModel.Source.Path));
+                var (rootTreeNodeViewModel, relation) = FindRelatedViewModel(Entries.All, e.Directory);
 
-                    RecursiveSelect(e.PathDirectories, e.PathDirectories.IndexOf(currentPathPart),
-                        rootTreeNodeViewModel).Forget();
+                if (rootTreeNodeViewModel == null)
+                    (rootTreeNodeViewModel, relation) = FindRelatedViewModel(
+                        Entries.All.First(x => ((DirectoryEntry) x.Source).IsComputerDirectory()).Entries.All,
+                        e.Directory);
+
+                if (rootTreeNodeViewModel != null)
+                {
+                    switch (relation)
+                    {
+                        case HierarchicalResult.Current:
+                            directoryViewModel = rootTreeNodeViewModel;
+                            break;
+                        case HierarchicalResult.Child:
+                            var position = e.PathDirectories.FindIndex(x =>
+                                ComparePaths(x.Path, rootTreeNodeViewModel.Source.Path));
+
+                            rootTreeNodeViewModel.Entries.IsExpanded = true;
+
+                            directoryViewModel =
+                                await DownwardSelect(e.PathDirectories, position + 1, rootTreeNodeViewModel);
+                            break;
+                    }
                 }
+
+                //var pathRoot = e.PathDirectories.First();
+
+                //DirectoryNodeViewModel rootEntry = null;
+                //foreach (var directoryNodeViewModel in Entries.All)
+                //{
+                //    if (directoryNodeViewModel.Source.Equals(pathRoot))
+                //    {
+                //        if (!directoryNodeViewModel.Entries.IsLoaded)
+                //            await directoryNodeViewModel.Entries.LoadAsync();
+
+                //        directoryNodeViewModel.Entries.IsExpanded = true;
+                //        directoryNodeViewModel.Selection.IsSelected = true;
+                //        directoryNodeViewModel.IsBringIntoView = true;
+                //        return;
+                //    }
+
+                //    if (directoryNodeViewModel.Entries.IsLoaded)
+                //    {
+                //        rootEntry = directoryNodeViewModel.Entries.All.FirstOrDefault(x =>
+                //                        e.Path.StartsWith(x.Source.Path,
+                //                            _fileExplorerViewModel.FileSystem.PathStringComparison)) ??
+                //                    directoryNodeViewModel.Entries.All.FirstOrDefault(x => x.Source == pathRoot);
+                //        if (rootEntry != null)
+                //        {
+                //            var pathDirectory = e.PathDirectories.First(x => ComparePaths(x.Path, rootEntry.Source.Path));
+
+                //            var index = e.PathDirectories.IndexOf(pathDirectory) + 1;
+                //            if (index != e.PathDirectories.Count)
+                //            {
+                //                await DownwardSelect(e.PathDirectories, e.PathDirectories.IndexOf(pathDirectory) + 1,
+                //                    rootEntry);
+                //            }
+                //            else
+                //            {
+                //                rootEntry.Selection.IsSelected = true;
+                //                rootEntry.IsBringIntoView = true;
+                //                if (!rootEntry.Entries.IsLoaded)
+                //                    await directoryNodeViewModel.Entries.LoadAsync();
+                //            }
+
+                //            rootEntry.Entries.IsExpanded = true;
+                //        }
+                //    }
+                //}
+            }
+            
+            if (rootSelection.IsChildSelected)
+                rootSelection.SelectedViewModel.Selection.IsSelected = false;
+
+            if (directoryViewModel == null)
+            {
+                //WTF
                 return;
             }
 
-            var pathRoot = e.PathDirectories.First();
+            if (!directoryViewModel.Entries.IsLoaded)
+                await directoryViewModel.Entries.LoadAsync();
+            
+            directoryViewModel.Selection.IsSelected = true;
+            directoryViewModel.BringIntoView();
+        }
 
-            DirectoryNodeViewModel rootEntry = null;
-            foreach (var directoryNodeViewModel in Entries.All)
+        private (DirectoryNodeViewModel, HierarchicalResult) FindRelatedViewModel(
+            IEnumerable<DirectoryNodeViewModel> entries, DirectoryEntry directoryEntry)
+        {
+            return entries
+                .Select(directoryVm => (directoryVm,
+                    _fileExplorerPathComparer.CompareHierarchy(directoryVm.Source, directoryEntry)))
+                .Where(x => (x.Item2 & HierarchicalResult.Related) != 0 && x.Item2 != HierarchicalResult.Parent)
+                .OrderBy(x => x.directoryVm.Source.Path.Length).FirstOrDefault();
+        }
+
+        private DirectoryNodeViewModel UpwardSelect(string path, DirectoryNodeViewModel directoryNodeViewModel)
+        {
+            while (true)
             {
-                if (directoryNodeViewModel.Source.Equals(pathRoot))
-                {
-                    if (!directoryNodeViewModel.Entries.IsLoaded)
-                        await directoryNodeViewModel.Entries.LoadAsync();
+                directoryNodeViewModel = directoryNodeViewModel.Parent;
 
-                    directoryNodeViewModel.Entries.IsExpanded = true;
-                    directoryNodeViewModel.Selection.IsSelected = true;
-                    directoryNodeViewModel.IsBringIntoView = true;
-                    return;
-                }
+                if (directoryNodeViewModel == null)
+                    return null;
 
-                if (directoryNodeViewModel.Entries.IsLoaded)
-                {
-                    rootEntry = directoryNodeViewModel.Entries.All.FirstOrDefault(x =>
-                                    e.Path.StartsWith(x.Source.Path,
-                                        _fileExplorerViewModel.FileSystem.PathStringComparison)) ??
-                                directoryNodeViewModel.Entries.All.FirstOrDefault(x => x.Source == pathRoot);
-                    if (rootEntry != null)
-                    {
-                        var pathDirectory = e.PathDirectories.First(x => ComparePaths(x.Path, rootEntry.Source.Path));
-
-                        await RecursiveSelect(e.PathDirectories, e.PathDirectories.IndexOf(pathDirectory) + 1,
-                            rootEntry);
-                        rootEntry.Entries.IsExpanded = true;
-                    }
-                }
+                if (ComparePaths(directoryNodeViewModel.Source.Path, path))
+                    return directoryNodeViewModel;
             }
         }
 
-        private async Task<List<DirectoryNodeViewModel>> RecursiveSelect(IReadOnlyList<DirectoryEntry> entries,
-            int index, DirectoryNodeViewModel directoryNodeViewModel)
+        private async Task<DirectoryNodeViewModel> DownwardSelect(IReadOnlyList<DirectoryEntry> entries, int index, DirectoryNodeViewModel directoryNodeViewModel)
         {
             var currentEntry = entries[index];
             if (!directoryNodeViewModel.Entries.IsLoaded)
@@ -222,18 +281,12 @@ namespace FileExplorer.Administration.ViewModels
 
             foreach (var viewModel in directoryNodeViewModel.Entries.All)
             {
-                if (viewModel.Source.Equals(currentEntry))
+                if (ComparePaths(currentEntry.Path, viewModel.Source.Path))
                 {
-                    if (index == entries.Count - 1)
-                    {
-                        viewModel.Selection.IsSelected = true;
-                        viewModel.IsBringIntoView = true;
-                        if (!viewModel.Entries.IsLoaded)
-                            await viewModel.Entries.LoadAsync();
-                        return viewModel.Entries.All.ToList();
-                    }
+                    if (index == entries.Count - 1) //we are at the end
+                        return viewModel;
 
-                    var result = await RecursiveSelect(entries, index + 1, viewModel);
+                    var result = await DownwardSelect(entries, index + 1, viewModel);
                     viewModel.Entries.IsExpanded = true;
                     return result;
                 }
@@ -241,5 +294,8 @@ namespace FileExplorer.Administration.ViewModels
 
             return null;
         }
+
+        private bool ComparePaths(string path1, string path2) =>
+            _fileExplorerViewModel.FileSystem.ComparePaths(path1, path2);
     }
 }

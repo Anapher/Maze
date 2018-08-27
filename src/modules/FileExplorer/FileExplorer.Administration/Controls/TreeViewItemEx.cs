@@ -1,39 +1,27 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.Administration.Extensions;
 
 namespace FileExplorer.Administration.Controls
 {
     public class TreeViewItemEx : TreeViewItem
     {
-        public static readonly DependencyProperty IsBringIntoViewProperty =
-            DependencyProperty.Register("IsBringIntoView", typeof(bool), typeof(TreeViewItemEx),
-                new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty BringIntoViewTokenProperty =
+            DependencyProperty.Register("BringIntoViewToken", typeof(object), typeof(TreeViewItemEx),
+                new PropertyMetadata(default, OnBringIntoViewTokenChanged));
 
-        public TreeViewItemEx()
+        public object BringIntoViewToken
         {
-            AddHandler(SelectedEvent,
-                new RoutedEventHandler(delegate(object obj, RoutedEventArgs args)
-                {
-                    (args.OriginalSource as TreeViewItem)?.BringIntoView();
-                }));
-
-            this.AddValueChanged(IsBringIntoViewProperty, (sender, args) =>
-            {
-                var treeViewItem = (TreeViewItemEx) sender;
-
-                if (treeViewItem.IsBringIntoView)
-                {
-                    treeViewItem.BringIntoView();
-                    treeViewItem.IsBringIntoView = false;
-                }
-            });
+            get => GetValue(BringIntoViewTokenProperty);
+            set => SetValue(BringIntoViewTokenProperty, value);
         }
 
-        public bool IsBringIntoView
+        private static void OnBringIntoViewTokenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (bool) GetValue(IsBringIntoViewProperty);
-            set => SetValue(IsBringIntoViewProperty, value);
+            if (e.NewValue != e.OldValue)
+            {
+                var treeViewItem = (TreeViewItemEx) d;
+                treeViewItem.BringIntoView();
+            }
         }
 
         protected override DependencyObject GetContainerForItemOverride() => new TreeViewItemEx();

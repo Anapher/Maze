@@ -114,12 +114,12 @@ namespace FileExplorer.Administration.Helpers
         public IEnumerable<TVm> AllNonBindable => _subItemList;
 
         public async Task<IEnumerable<TVm>> LoadAsync(UpdateMode updateMode = UpdateMode.Replace, bool force = false,
-            object parameter = null)
+            object parameter = null, TaskScheduler uiScheduler = null)
         {
             if (LoadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
             {
                 _lastCancellationToken.Cancel(); //Cancel previous load.                
-                using (var releaser = await _loadingLock.LockAsync())
+                using (await _loadingLock.LockAsync())
                 {
                     _lastCancellationToken = new CancellationTokenSource();
                     if (!_isLoaded || force)
@@ -127,9 +127,10 @@ namespace FileExplorer.Administration.Helpers
                         if (_clearBeforeLoad)
                             All.Clear();
 
+                        if (uiScheduler == null)
+                            uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
                         try
                         {
-                            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
                             IsLoading = true;
                             await LoadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
                             {
@@ -140,7 +141,7 @@ namespace FileExplorer.Administration.Helpers
                                     SetEntries(updateMode, prevTask.Result.ToArray());
                                     _lastRefreshTimeUtc = DateTime.UtcNow;
                                 }
-                            }, _lastCancellationToken, scheduler);
+                            }, _lastCancellationToken, uiScheduler);
                         }
                         catch (InvalidOperationException)
                         {

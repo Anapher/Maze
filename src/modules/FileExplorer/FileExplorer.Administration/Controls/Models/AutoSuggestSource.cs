@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Administration.Controls.Models
@@ -10,8 +11,8 @@ namespace FileExplorer.Administration.Controls.Models
     {
         public Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
         {
-            if (helper == null)
-                return Task.FromResult<IList<object>>(new List<object>());
+            if (helper?.SubentriesPath == null)
+                return Task.FromResult<IList<object>>(ImmutableList<object>.Empty);
 
             string valuePath = helper.ExtractPath(input);
             string valueName = helper.ExtractName(input);
@@ -25,8 +26,7 @@ namespace FileExplorer.Administration.Controls.Models
 
             if (found != null)
             {
-                var enuma =
-                helper.List(found);
+                var enuma = helper.List(found);
                 foreach (var item in enuma)
                 {
                     string valuePathName = helper.GetPath(item);

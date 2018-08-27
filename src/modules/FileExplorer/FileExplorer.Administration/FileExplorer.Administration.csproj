@@ -63,6 +63,7 @@
     <Compile Include="Controls\HotTrack.cs" />
     <Compile Include="Controls\IconButton.cs" />
     <Compile Include="Controls\ICustomFocusLoosingControl.cs" />
+    <Compile Include="Controls\Models\AsyncAutoSuggestSource.cs" />
     <Compile Include="Controls\Models\AutoSuggestSource.cs" />
     <Compile Include="Controls\Models\Enums.cs" />
     <Compile Include="Controls\Models\IEntryHierarchyComparer.cs" />
@@ -159,55 +160,11 @@
     <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources\ControlThemes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Resources\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Themes\BreadcrumbTree.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\BreadcrumbTreeItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\Buttons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Resources\Themes\Colors.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\ComboBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\DropDown.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\HotTrack.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\ModernTrack.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\SuggestBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\Switch.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\TreeViewEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

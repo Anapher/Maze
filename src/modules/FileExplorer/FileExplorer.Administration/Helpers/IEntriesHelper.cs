@@ -46,7 +46,7 @@ namespace FileExplorer.Administration.Helpers
         /// <param name="force">Load sub-entries even if it's already loaded.</param>
         /// <returns></returns>
         Task<IEnumerable<TVm>> LoadAsync(UpdateMode updateMode = UpdateMode.Replace, bool force = false,
-            object parameter = null);
+            object parameter = null, TaskScheduler uiScheduler = null);
 
         Task UnloadAsync();
 

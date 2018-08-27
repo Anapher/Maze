@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FileExplorer.Administration.Controls.Models
 {
@@ -35,7 +36,10 @@ namespace FileExplorer.Administration.Controls.Models
         /// <returns></returns>
         object GetItem(object rootItem, string path);
 
+        ValueTask<object> GetItemAsync(object rootItem, string path);
+
         IEnumerable List(object item);
+        ValueTask<IEnumerable> ListAsync(object item);
 
         string ExtractPath(string pathName);
 
