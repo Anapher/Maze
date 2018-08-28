@@ -14,9 +14,11 @@ namespace FileExplorer.Administration.Rest
         public static Task<RootElementsDto> GetRoot(IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Get, "root").Execute(restClient).Return<RootElementsDto>();
 
-        public static Task<PathTreeResponseDto>
-            GetPathTree(PathTreeRequestDto requestDto, IPackageRestClient restClient) =>
-            CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient).Return<PathTreeResponseDto>();
+        public static Task<PathTreeResponseDto> GetPathTree(PathTreeRequestDto requestDto, bool keepOrder,
+            IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "pathTree", requestDto).AddQueryParam("keepOrder", keepOrder.ToString())
+                .Execute(restClient).Return<PathTreeResponseDto>();
+
         //{
         //    //;
         //    var ads = await CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient);

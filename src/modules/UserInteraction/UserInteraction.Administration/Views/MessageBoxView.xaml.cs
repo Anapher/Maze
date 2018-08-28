@@ -8,10 +8,10 @@ namespace UserInteraction.Administration.Views
     /// </summary>
     public partial class MessageBoxView
     {
-        public MessageBoxView(IWindowViewManager viewManager) : base(viewManager)
+        public MessageBoxView(IWindowViewManager viewManager, VisualStudioIcons icons) : base(viewManager)
         {
             InitializeComponent();
-            Icon = VisualStudioImages.MessageBox();
+            Icon = icons.MessageBox;
         }
     }
 }

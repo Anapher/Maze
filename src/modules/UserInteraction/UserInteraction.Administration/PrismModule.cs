@@ -9,10 +9,12 @@ namespace UserInteraction.Administration
     public class PrismModule : IModule
     {
         private readonly IClientCommandRegistrar _registrar;
+        private readonly VisualStudioIcons _icons;
 
-        public PrismModule(IClientCommandRegistrar registrar)
+        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
         {
             _registrar = registrar;
+            _icons = icons;
         }
 
         public void Initialize()
@@ -20,7 +22,7 @@ namespace UserInteraction.Administration
             Tx.LoadFromEmbeddedResource("UserInteraction.Administration.Resources.UserInteraction.Translation.txd");
 
             _registrar.RegisterView(typeof(MessageBoxView), "UserInteraction:MessageBox",
-                VisualStudioImages.MessageBox(), CommandCategory.Interaction);
+                _icons.MessageBox, CommandCategory.Interaction);
         }
     }
 }

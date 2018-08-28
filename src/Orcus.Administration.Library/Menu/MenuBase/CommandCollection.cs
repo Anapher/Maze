@@ -10,5 +10,10 @@ namespace Orcus.Administration.Library.Menu.MenuBase
         {
             Add(new CommandWrapper<TCommandEntry>(command));
         }
+
+        public void AddAtBeginning(TCommandEntry command)
+        {
+            Insert(0, new CommandWrapper<TCommandEntry>(command));
+        }
     }
 }

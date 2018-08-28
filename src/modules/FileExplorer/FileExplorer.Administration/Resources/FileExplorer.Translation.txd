@@ -2,7 +2,14 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="FileExplorer:Archive">Archiv</text>
+		<text key="FileExplorer:CopyDirectoryPath">Verzeichnispfad kopieren</text>
+		<text key="FileExplorer:CopyFilePath">Dateipfad kopieren</text>
+		<text key="FileExplorer:CopyPathOnRemoteComputer">Pfad in Zwischenablage des Remote Computers kopieren</text>
+		<text key="FileExplorer:Delete">Entfernen</text>
 		<text key="FileExplorer:Directory">Ordner</text>
+		<text key="FileExplorer:Download">Herunterladen</text>
+		<text key="FileExplorer:DownloadFileToDirectory">Datei in Verzeichnis herunterladen</text>
 		<text key="FileExplorer:DriveTypes.CDRom">CD-Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Fixed">Lokaler Datenträger</text>
 		<text key="FileExplorer:DriveTypes.Network">Netzwerk Laufwerk</text>
@@ -10,16 +17,31 @@
 		<text key="FileExplorer:DriveTypes.Ram">RAM Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Removable">USB Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
+		<text key="FileExplorer:Execute">Ausführen</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
+		<text key="FileExplorer:New">Neu</text>
 		<text key="FileExplorer:OpenPath">Öffne Pfad...</text>
+		<text key="FileExplorer:ParentFolderPath">Pfad des Oberverzeichnisses</text>
+		<text key="FileExplorer:PathCopy">Pfad kopieren</text>
+		<text key="FileExplorer:Properties">Eigenschaften</text>
+		<text key="FileExplorer:Refresh">Aktualisieren</text>
+		<text key="FileExplorer:Rename">Umbenennen</text>
 		<text key="FileExplorer:SearchWatermark">Suche...</text>
 		<text key="FileExplorer:Size">Größe</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Lade Unterverzeichnisse</text>
 		<text key="FileExplorer:Type">Type</text>
+		<text key="FileExplorer:UploadFile">Datei hochladen</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="FileExplorer:Archive">Archive</text>
+		<text key="FileExplorer:CopyDirectoryPath">Copy directory path</text>
+		<text key="FileExplorer:CopyFilePath">Copy file path</text>
+		<text key="FileExplorer:CopyPathOnRemoteComputer">Copy path to clipboard on remote computer</text>
+		<text key="FileExplorer:Delete">Delete</text>
 		<text key="FileExplorer:Directory">Directory</text>
+		<text key="FileExplorer:Download">Download</text>
+		<text key="FileExplorer:DownloadFileToDirectory">Download file to current directory</text>
 		<text key="FileExplorer:DriveTypes.CDRom">CD Drive</text>
 		<text key="FileExplorer:DriveTypes.Fixed">Local Disk</text>
 		<text key="FileExplorer:DriveTypes.Network">Network Drive</text>
@@ -27,12 +49,20 @@
 		<text key="FileExplorer:DriveTypes.Ram">RAM Drive</text>
 		<text key="FileExplorer:DriveTypes.Removable">USB Drive</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
+		<text key="FileExplorer:Execute">Execute</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
+		<text key="FileExplorer:New">New</text>
 		<text key="FileExplorer:OpenPath">Open path...</text>
+		<text key="FileExplorer:ParentFolderPath">Parent folder path</text>
+		<text key="FileExplorer:PathCopy">Path Copy</text>
+		<text key="FileExplorer:Properties">Properties</text>
+		<text key="FileExplorer:Refresh">Refresh</text>
+		<text key="FileExplorer:Rename">Rename</text>
 		<text key="FileExplorer:SearchWatermark">Search...</text>
 		<text key="FileExplorer:Size">Size</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Load subdirectories</text>
 		<text key="FileExplorer:Type">Type</text>
+		<text key="FileExplorer:UploadFile">Upload file</text>
 	</culture>
 </translation>

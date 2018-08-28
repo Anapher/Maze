@@ -40,15 +40,18 @@ namespace FileExplorer.Client.Controllers
         }
 
         [OrcusPost("pathTree")]
-        public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request)
+        public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request, [FromQuery] bool keepOrder)
         {
             var response = new PathTreeResponseDto();
             var directoryHelper = new DirectoryHelper();
 
-            Task entriesTask = null;
+            Task<IEnumerable<FileExplorerEntry>> entriesTask = null;
             if (request.RequestEntries)
-                entriesTask = directoryHelper.GetEntries(request.Path, CancellationToken.None)
-                    .ContinueWith(task => response.Entries = task.Result.ToList());
+            {
+                entriesTask = keepOrder
+                    ? directoryHelper.GetEntriesKeepOrder(request.Path, CancellationToken.None)
+                    : directoryHelper.GetEntries(request.Path, CancellationToken.None);
+            }
 
             if (request.RequestedDirectories?.Count > 0)
             {
@@ -66,7 +69,7 @@ namespace FileExplorer.Client.Controllers
             }
 
             if (entriesTask != null)
-                await entriesTask;
+                response.Entries = (await entriesTask).ToList();
 
             return Ok(response);
         }

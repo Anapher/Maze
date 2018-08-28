@@ -3,21 +3,21 @@ using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Resources;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Library.Menu
+namespace Orcus.Administration.Library.Menus
 {
     public class ClientsContextMenu : MenuSection<ItemCommand<ClientViewModel>>
     {
-        public ClientsContextMenu()
+        public ClientsContextMenu(ILibraryIcons icons)
         {
             Add(SystemCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>
             {
                 Header = Tx.T("Menu.System"),
-                Icon = VisualStudioIcons.ComputerService()
+                Icon = icons.ComputerService
             });
             Add(InteractionCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>
             {
                 Header = Tx.T("Menu.UserInteraction"),
-                Icon = VisualStudioIcons.UserVoice()
+                Icon = icons.UserVoice
             });
             Add(ClientCommands = new MenuSection<ItemCommand<ClientViewModel>>());
         }

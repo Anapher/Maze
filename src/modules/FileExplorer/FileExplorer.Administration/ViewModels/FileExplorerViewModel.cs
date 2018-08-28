@@ -22,20 +22,22 @@ namespace FileExplorer.Administration.ViewModels
         private CancellationTokenSource _openPathCancellationTokenSource;
         private bool _isLoaded;
 
-        public FileExplorerViewModel(IShellStatusBar statusBar, IWindow window, IMemoryCache cache, ITargetedRestClient client, IAppDispatcher dispatcher)
+        public FileExplorerViewModel(IShellStatusBar statusBar, IWindow window, IMemoryCache cache,
+            ITargetedRestClient client, IAppDispatcher dispatcher, IImageProvider imageProvider)
         {
             StatusBar = statusBar;
             Window = window;
             RestClient = client.CreatePackageSpecific("FileExplorer");
             FileSystem = new RemoteFileSystem(cache, RestClient);
-            ImageProvider = new ImageProvider(cache, FileSystem);
+            ImageProvider = imageProvider;
             Dispatcher = dispatcher;
 
             NavigationBarViewModel = new NavigationBarViewModel();
             DirectoryTreeViewModel = new DirectoryTreeViewModel();
             EntriesViewModel = new EntriesViewModel();
 
-            foreach (var childViewModel in new IFileExplorerChildViewModel[]{NavigationBarViewModel, DirectoryTreeViewModel, EntriesViewModel })
+            foreach (var childViewModel in new IFileExplorerChildViewModel[]
+                {NavigationBarViewModel, DirectoryTreeViewModel, EntriesViewModel})
                 childViewModel.Initialize(this);
         }
 
@@ -71,7 +73,7 @@ namespace FileExplorer.Administration.ViewModels
 
             try
             {
-                pathContent = await FileSystem.FetchPath(path, invalidate, invalidate, token)
+                pathContent = await FileSystem.FetchPath(path, invalidate, false, token)
                     .DisplayOnStatusBar(StatusBar, Tx.T("FileExplorer:OpenPath"), StatusBarAnimation.Search);
             }
             catch (TaskCanceledException)

@@ -24,5 +24,11 @@ namespace FileExplorer.Administration.Utilities
             return string.Equals(directoryEntry.Name, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
                 StringComparison.OrdinalIgnoreCase);
         }
+
+        public static bool IsComputerDirectory(string path)
+        {
+            return string.Equals(path, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}",
+                StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

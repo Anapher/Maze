@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using Orcus.Administration.Library.Menu;
+using Orcus.Administration.Library.Menus;
 
 namespace Orcus.Administration.Views.Main.Overview.Clients
 {

@@ -4,11 +4,11 @@ using System.Reflection;
 using System.Windows;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Orcus.Administration.Core.Modules;
 using Orcus.Administration.Factories;
 using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menu.MenuBase;
+using Orcus.Administration.Library.Menus;
+using Orcus.Administration.Library.Resources;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Prism;
 using Orcus.Administration.Services;
@@ -16,7 +16,6 @@ using Orcus.Administration.ViewModels;
 using Orcus.Administration.Views;
 using Orcus.Administration.Views.Main;
 using Prism.Autofac;
-using Prism.Logging;
 using Prism.Modularity;
 using Prism.Mvvm;
 
@@ -49,13 +48,11 @@ namespace Orcus.Administration
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
             foreach (var type in packageCarrier.Assembly.GetExportedTypes()
                 .Where(x => typeof(IModule).IsAssignableFrom(x)))
-            {
                 moduleCatalog.AddModule(
                     new ModuleInfo(packageCarrier.Context.Package.Id, type.AssemblyQualifiedName)
                     {
                         State = ModuleState.ReadyForInitialization
                     });
-            }
         }
 
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
@@ -73,8 +70,8 @@ namespace Orcus.Administration
                 Assembly.GetEntryAssembly())).As<IViewModelResolver>();
             builder.RegisterType<ClientCommandRegistrar>().As<IClientCommandRegistrar>().SingleInstance();
             builder.RegisterType<ShellWindowFactory>().As<IShellWindowFactory>().SingleInstance();
-            builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions()))
-                .As<IMemoryCache>().SingleInstance();
+            builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
+            builder.RegisterType<VisualStudioIcons>().AsImplementedInterfaces().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

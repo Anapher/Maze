@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -29,6 +28,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         private readonly DirectoryEntry _source;
         private readonly IUiTools _uiTools;
         private bool _isBreadcrumbExpanded;
+        private int _bringIntoViewToken;
 
         public DirectoryNodeViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, int orderNumber,
             IUiTools uiTools) : this(directoryEntry, fileSystem, uiTools)
@@ -86,8 +86,6 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
         public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
         public DirectoryNodeViewModel Parent { get; }
-
-        private int _bringIntoViewToken;
 
         public int BringIntoViewToken
         {

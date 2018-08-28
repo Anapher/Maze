@@ -89,7 +89,9 @@
     <Compile Include="Helpers\ITreeSelector.cs" />
     <Compile Include="Helpers\TreeRootSelector.cs" />
     <Compile Include="Helpers\TreeSelector.cs" />
-    <Compile Include="Menus\FileExplorerContextMenuBuilder.cs" />
+    <Compile Include="Menus\FileExplorerContextMenuManager.cs" />
+    <Compile Include="Menus\ListDirectoryContextMenuManager.cs" />
+    <Compile Include="Menus\ListFileContextMenuManager.cs" />
     <Compile Include="Models\Cache\CachedDirectory.cs" />
     <Compile Include="Models\Cache\FileTypeDescription.cs" />
     <Compile Include="Models\Cache\LoadedLabelLibrary.cs" />
@@ -118,7 +120,7 @@
     <Compile Include="Extensions\TreeViewExtensions.cs" />
     <Compile Include="Extensions\UITools.cs" />
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
-    <Compile Include="Resources\VisualStudioImages.cs" />
+    <Compile Include="Resources\VisualStudioIcons.cs" />
     <Compile Include="Rest\FileExplorerResource.cs" />
     <Compile Include="Rest\FileSystemResource.cs" />
     <Compile Include="Utilities\DirectoryHelper.cs" />
@@ -172,6 +174,10 @@
     <Page Include="Resources\Themes\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\VisualStudioIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DirectoryTreeView.xaml">
       <Generator>MSBuild:Compile</Generator>

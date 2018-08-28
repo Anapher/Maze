@@ -5,6 +5,7 @@
     xmlns:base="clr-namespace:FileExplorer.Administration.ViewModels.Explorer.Base"
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dtos="clr-namespace:FileExplorer.Shared.Dtos"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
     xmlns:extensions1="clr-namespace:Orcus.Administration.Library.Extensions;assembly=Orcus.Administration.Library"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,133 +16,159 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <ContextMenu x:Key="DefaultContextMenu" />
-        <ContextMenu x:Key="FileContextMenu" />
-        <ContextMenu x:Key="DirectoryContextMenu" />
+        <ContextMenu x:Key="DefaultContextMenu" MinWidth="220" />
+        <ContextMenu x:Key="FileContextMenu" MinWidth="220" />
+        <ContextMenu x:Key="DirectoryContextMenu" MinWidth="220" />
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <DataGrid
-            Grid.Row="1"
-            AutoGenerateColumns="False"
-            BorderThickness="0"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            CanUserReorderColumns="True"
-            CanUserResizeColumns="True"
-            CanUserResizeRows="False"
-            CanUserSortColumns="True"
-            ContextMenu="{StaticResource DefaultContextMenu}"
-            EnableRowVirtualization="True"
-            IsSynchronizedWithCurrentItem="True"
-            ItemsSource="{Binding View}"
-            SelectionMode="Extended"
-            VirtualizingPanel.IsVirtualizing="True"
-            VirtualizingPanel.VirtualizationMode="Recycling">
-            <DataGrid.InputBindings>
-                <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoBackCommand}" Gesture="XButton1" />
-                <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoForwardCommand}" Gesture="XButton2" />
-            </DataGrid.InputBindings>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn
-                    Width="2*"
-                    Header="{tx:T Name}"
-                    SortDirection="Ascending"
-                    SortMemberPath="SortName">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                            <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
-                                <Image
-                                    Width="22"
-                                    Height="22"
-                                    Source="{Binding Icon}" />
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding Label}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                            <DockPanel
-                                Margin="5,0,0,0"
-                                Background="Transparent"
-                                LastChildFill="True">
-                                <Image
-                                    Width="22"
-                                    Height="22"
-                                    Source="{Binding Icon}" />
-                                <controls:DataGridTextBox
-                                    Margin="10,0,0,0"
-                                    VerticalAlignment="Center"
-                                    IsDirectorySelected="{Binding IsDirectory}"
-                                    Text="{Binding Name}">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox">
-                                            <Setter Property="BorderThickness" Value="0" />
-                                            <Setter Property="Height" Value="15" />
-                                        </Style>
-                                    </TextBox.Style>
-                                </controls:DataGridTextBox>
-                            </DockPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Description}"
-                    Header="{tx:T FileExplorer:Type}"
-                    IsReadOnly="True" />
-                <DataGridTemplateColumn
-                    Width="150"
-                    Header="{tx:T FileExplorer:Type}"
-                    IsReadOnly="True"
-                    SortMemberPath="Source.LastAccess">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                            <TextBlock VerticalAlignment="Center" Text="{tx:Time Details='YearMonthDayAbbr,HourMinuteSecond', TimeBinding={Binding Source.LastAccess}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    Width="130"
-                    Header="{tx:T FileExplorer:Size}"
-                    IsReadOnly="True"
-                    SortMemberPath="Size">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                            <ContentControl VerticalAlignment="Center">
-                                <ContentControl.Style>
-                                    <Style TargetType="ContentControl">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.File}">
-                                                <Setter Property="Content" Value="{tx:DataSize NumberBinding={Binding Size}}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
+    <DataGrid
+        Grid.Row="1"
+        AutoGenerateColumns="False"
+        BorderThickness="0"
+        CanUserAddRows="False"
+        CanUserDeleteRows="False"
+        CanUserReorderColumns="True"
+        CanUserResizeColumns="True"
+        CanUserResizeRows="False"
+        CanUserSortColumns="True"
+        ContextMenu="{StaticResource DefaultContextMenu}"
+        EnableRowVirtualization="True"
+        IsSynchronizedWithCurrentItem="True"
+        ItemsSource="{Binding View}"
+        SelectionMode="Extended"
+        VirtualizingPanel.IsVirtualizing="True"
+        VirtualizingPanel.VirtualizationMode="Recycling">
+        <DataGrid.InputBindings>
+            <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoBackCommand}" Gesture="XButton1" />
+            <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoForwardCommand}" Gesture="XButton2" />
+        </DataGrid.InputBindings>
+        <DataGrid.Columns>
+            <DataGridTemplateColumn
+                Width="2*"
+                Header="{tx:T Name}"
+                SortDirection="Ascending"
+                SortMemberPath="SortName">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type base:EntryViewModel}">
+                        <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                            <Image
+                                Width="22"
+                                Height="22"
+                                Source="{Binding Icon}" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Label}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate DataType="{x:Type base:EntryViewModel}">
+                        <DockPanel
+                            Margin="5,0,0,0"
+                            Background="Transparent"
+                            LastChildFill="True">
+                            <Image
+                                Width="22"
+                                Height="22"
+                                Source="{Binding Icon}" />
+                            <controls:DataGridTextBox
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                IsDirectorySelected="{Binding IsDirectory}"
+                                Text="{Binding Name}">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Height" Value="15" />
+                                        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
+                                        <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+                                        <Setter Property="SelectionBrush" Value="{DynamicResource AccentColorBrush3}" />
                                     </Style>
-                                </ContentControl.Style>
-                            </ContentControl>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style
-                    d:DataContext="{d:DesignInstance base:EntryViewModel}"
-                    BasedOn="{StaticResource MetroDataGridRow}"
-                    TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.Directory}">
-                            <Setter Property="extensions1:ControlExtensions.DoubleClickCommand" Value="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.OpenDirectoryCommand}" />
-                            <Setter Property="extensions1:ControlExtensions.DoubleClickCommandParameter" Value="{Binding}" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
-    </Grid>
+                                </TextBox.Style>
+                            </controls:DataGridTextBox>
+                        </DockPanel>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn
+                Width="*"
+                Binding="{Binding Description}"
+                Header="{tx:T FileExplorer:Type}"
+                IsReadOnly="True" />
+            <DataGridTemplateColumn
+                Width="150"
+                Header="{tx:T FileExplorer:Type}"
+                IsReadOnly="True"
+                SortMemberPath="Source.LastAccess">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type base:EntryViewModel}">
+                        <TextBlock VerticalAlignment="Center" Text="{tx:Time Details='YearMonthDayAbbr,HourMinuteSecond', TimeBinding={Binding Source.LastAccess}}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn
+                Width="130"
+                Header="{tx:T FileExplorer:Size}"
+                IsReadOnly="True"
+                SortMemberPath="Size">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type base:EntryViewModel}">
+                        <ContentControl VerticalAlignment="Center" Content="{Binding}">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.File}">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{tx:DataSize NumberBinding={Binding Size}}" />
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Source.Type}" Value="{x:Static dtos:FileExplorerEntryType.Drive}">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBlock>
+                                                            <Run Text="{tx:DataSize NumberBinding={Binding Source.UsedSpace}}" />
+                                                            <Run Text="/" />
+                                                            <Run Text="{tx:DataSize NumberBinding={Binding Source.TotalSize}}" />
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+        <DataGrid.RowStyle>
+            <Style
+                d:DataContext="{d:DesignInstance base:EntryViewModel}"
+                BasedOn="{StaticResource MetroDataGridRow}"
+                TargetType="DataGridRow">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.Directory}">
+                        <Setter Property="extensions1:ControlExtensions.DoubleClickCommand" Value="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.OpenDirectoryCommand}" />
+                        <Setter Property="extensions1:ControlExtensions.DoubleClickCommandParameter" Value="{Binding}" />
+                        <Setter Property="ContextMenu" Value="{StaticResource DirectoryContextMenu}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.File}">
+                        <Setter Property="ContextMenu" Value="{StaticResource FileContextMenu}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.RowStyle>
+    </DataGrid>
 </UserControl>

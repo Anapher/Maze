@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using FileExplorer.Administration.Cache;
-using FileExplorer.Administration.Models;
 using FileExplorer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Extensions;
@@ -12,14 +11,11 @@ namespace FileExplorer.Administration.Utilities
     public class ImageProvider : IImageProvider
     {
         private readonly IMemoryCache _globalCache;
-        private readonly IFileSystem _fileSystem;
         private readonly IReadOnlyDictionary<int, string> _knownImages;
 
-        public ImageProvider(IMemoryCache globalCache, IFileSystem fileSystem)
+        public ImageProvider(IMemoryCache globalCache)
         {
             _globalCache = globalCache;
-            _fileSystem = fileSystem;
-
             _knownImages = CreateKnownImages();
         }
 
@@ -33,7 +29,7 @@ namespace FileExplorer.Administration.Utilities
             if (!_knownImages.ContainsKey(iconId))
                 iconId = FindIconId(folderName);
 
-            var cacheKey = new FolderImageKey { IconId = iconId };
+            var cacheKey = new FolderImageKey {IconId = iconId};
             return _globalCache.GetOrSetValueSafe(cacheKey, TimeSpan.FromMinutes(10), () => LoadImage(iconId));
         }
 
@@ -45,10 +41,13 @@ namespace FileExplorer.Administration.Utilities
             return image;
         }
 
-        private int FindIconId(string folderName)
+        private static int FindIconId(string folderName)
         {
             switch (folderName)
             {
+                case var name when name == null:
+                default:
+                    return 3;
                 case var name when name.Equals("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}", StringComparison.OrdinalIgnoreCase):
                     return 109;
                 case var name when name.Equals("Dropbox", StringComparison.OrdinalIgnoreCase):
@@ -60,8 +59,7 @@ namespace FileExplorer.Administration.Utilities
                     return -1;
                 case var name when name.Equals("Google Drive", StringComparison.OrdinalIgnoreCase):
                     return -3;
-                default:
-                    return 3;
+
             }
         }
 

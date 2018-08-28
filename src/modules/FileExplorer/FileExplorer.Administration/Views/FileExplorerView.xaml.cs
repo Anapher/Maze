@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Autofac;
+using FileExplorer.Administration.Menus;
 using FileExplorer.Administration.Resources;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Views;
@@ -17,7 +18,7 @@ namespace FileExplorer.Administration.Views
         public FileExplorerView(IWindowViewManager viewManager, IComponentContext scope) : base(viewManager)
         {
             InitializeComponent();
-            Icon = VisualStudioImages.ListFolder();
+            Icon = scope.Resolve<VisualStudioIcons>().ListFolder;
 
             _scope = scope;
             DataContextChanged += OnDataContextChanged;
@@ -38,40 +39,15 @@ namespace FileExplorer.Administration.Views
 
             if (e.NewValue != null)
             {
-                InitializeContextMenu(_scope, contextMenu);
-                InitializeFileContextMenu(_scope, fileContextMenu);
-                InitializeDirectoryContextMenu(_scope, directoryContextMenu);
+                InitializeContextMenu(contextMenu, _scope.Resolve<FileExplorerContextMenuManager>());
+                InitializeContextMenu(fileContextMenu, _scope.Resolve<ListFileContextMenuManager>());
+                InitializeContextMenu(directoryContextMenu, _scope.Resolve<ListDirectoryContextMenuManager>());
             }
         }
 
-        private void InitializeContextMenu(IComponentContext scope, ContextMenu contextMenu)
+        private void InitializeContextMenu(ContextMenu contextMenu, ContextMenuManager manager)
         {
-            var menuInfo = scope.Resolve<FileExplorerContextMenu>();
-            var factory = scope.Resolve<IMenuFactory>();
-
-            var items = factory.Create(menuInfo, DataContext);
-            foreach (var item in items)
-                contextMenu.Items.Add(item);
-        }
-
-        private void InitializeFileContextMenu(IComponentContext scope, ContextMenu contextMenu)
-        {
-            var menuInfo = scope.Resolve<FileExplorerListFileContextMenu>();
-            var factory = scope.Resolve<IItemMenuFactory>();
-
-            var items = factory.Create(menuInfo, DataContext);
-            foreach (var item in items)
-                contextMenu.Items.Add(item);
-        }
-
-        private void InitializeDirectoryContextMenu(IComponentContext scope, ContextMenu contextMenu)
-        {
-            var menuInfo = scope.Resolve<FileExplorerListDirectoryContextMenu>();
-            var factory = scope.Resolve<IItemMenuFactory>();
-
-            var items = factory.Create(menuInfo, DataContext);
-            foreach (var item in items)
-                contextMenu.Items.Add(item);
+            manager.Fill(contextMenu, DataContext);
         }
     }
 }

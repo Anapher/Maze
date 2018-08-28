@@ -99,7 +99,7 @@ namespace FileExplorer.Administration.Models
             {
                 request.RequestEntries = true;
             }
-            
+
             var parts = PathHelper.GetPathDirectories(path).ToList();
             for (var i = 0; i < parts.Count; i++)
             {
@@ -112,7 +112,8 @@ namespace FileExplorer.Administration.Models
             PathTreeResponseDto queryResponse = null;
             if (request.RequestEntries || request.RequestedDirectories.Any())
             {
-                queryResponse = await FileExplorerResource.GetPathTree(request, _restClient);
+                queryResponse = await FileExplorerResource.GetPathTree(request,
+                    DirectoryHelper.IsComputerDirectory(path), _restClient);
             }
 
             parts.Add(path);
@@ -146,6 +147,9 @@ namespace FileExplorer.Administration.Models
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     directoryEntries = queryResponse.Entries;
+                    foreach (var entry in directoryEntries)
+                        entry.Migrate(directory);
+
                     AddToCache(directory, directoryEntries, false);
                 }
                 else if (queryResponse?.Directories != null && queryResponse.Directories.TryGetValue(i, out var subDirectories))

@@ -101,6 +101,9 @@ namespace Orcus.Administration.Factories
                     if (!items.Any())
                         continue;
 
+                    if (result.Any())
+                        result.Add(CreateSeparator(singleItem && forSingleItem, multipleItems && forMultipleItems));
+
                     if (singleItem)
                         forSingleItem = true;
                     if (multipleItems)
@@ -108,8 +111,6 @@ namespace Orcus.Administration.Factories
 
                     foreach (var menuItem in items)
                         result.Add(menuItem);
-
-                    result.Add(CreateSeparator(singleItem, multipleItems));
                 }
                 else if (menuEntry is NavigationalEntry<TCommand> navigationalEntry)
                 {
@@ -140,8 +141,8 @@ namespace Orcus.Administration.Factories
                 }
 
             //dont finish with separator
-            if (result.Any() && result.Last() is Separator)
-                result.RemoveAt(result.Count - 1);
+            if (result.Any() && result.First() is Separator)
+                result.RemoveAt(0);
 
             return (result, forSingleItem, forMultipleItems);
         }
