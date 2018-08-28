@@ -1,6 +1,6 @@
 ﻿namespace Orcus.Administration.Library.Menu.MenuBase
 {
-    public interface IVisibleMenuitem<in TItem> : IMenuEntry<TItem>
+    public interface IVisibleMenuItem
     {
         object Header { get; }
         object Icon { get; }

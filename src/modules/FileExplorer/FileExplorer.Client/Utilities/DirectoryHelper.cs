@@ -254,16 +254,22 @@ namespace FileExplorer.Client.Utilities
             }
 
             var specialDirectory = new SpecialDirectoryEntry();
-            SetSpecialFolderAttributes(directory, specialDirectory);
-
-            if (specialDirectory.IconId != 0 || specialDirectory.Label != null || specialDirectory.LabelId != 0 ||
-                specialDirectory.LabelPath != null)
+            if (SetSpecialFolderAttributes(directory, specialDirectory))
                 return specialDirectory;
 
             return new DirectoryEntry();
         }
 
-        private static void SetSpecialFolderAttributes(DirectoryInfoEx directory, SpecialDirectoryEntry directoryEntry)
+        private static bool SetSpecialFolderAttributes(DirectoryInfoEx directory, SpecialDirectoryEntry specialDirectory)
+        {
+            SetLabel(directory, specialDirectory);
+            specialDirectory.IconId = GetFolderIcon(directory);
+
+            return specialDirectory.IconId != 0 || specialDirectory.Label != null || specialDirectory.LabelId != 0 ||
+                   specialDirectory.LabelPath != null;
+        }
+
+        private static void SetLabel(DirectoryInfoEx directory, SpecialDirectoryEntry directoryEntry)
         {
             if (directory.Name != directory.Label)
                 directoryEntry.Label = directory.Label;
@@ -292,8 +298,6 @@ namespace FileExplorer.Client.Utilities
                 directoryEntry.LabelPath = sb.ToString();
                 directoryEntry.LabelId = pidsRes;
             }
-
-            directoryEntry.IconId = GetFolderIcon(directory);
         }
 
         private static int GetFolderIcon(DirectoryInfoEx directory)

@@ -186,51 +186,6 @@ namespace FileExplorer.Administration.ViewModels
                             break;
                     }
                 }
-
-                //var pathRoot = e.PathDirectories.First();
-
-                //DirectoryNodeViewModel rootEntry = null;
-                //foreach (var directoryNodeViewModel in Entries.All)
-                //{
-                //    if (directoryNodeViewModel.Source.Equals(pathRoot))
-                //    {
-                //        if (!directoryNodeViewModel.Entries.IsLoaded)
-                //            await directoryNodeViewModel.Entries.LoadAsync();
-
-                //        directoryNodeViewModel.Entries.IsExpanded = true;
-                //        directoryNodeViewModel.Selection.IsSelected = true;
-                //        directoryNodeViewModel.IsBringIntoView = true;
-                //        return;
-                //    }
-
-                //    if (directoryNodeViewModel.Entries.IsLoaded)
-                //    {
-                //        rootEntry = directoryNodeViewModel.Entries.All.FirstOrDefault(x =>
-                //                        e.Path.StartsWith(x.Source.Path,
-                //                            _fileExplorerViewModel.FileSystem.PathStringComparison)) ??
-                //                    directoryNodeViewModel.Entries.All.FirstOrDefault(x => x.Source == pathRoot);
-                //        if (rootEntry != null)
-                //        {
-                //            var pathDirectory = e.PathDirectories.First(x => ComparePaths(x.Path, rootEntry.Source.Path));
-
-                //            var index = e.PathDirectories.IndexOf(pathDirectory) + 1;
-                //            if (index != e.PathDirectories.Count)
-                //            {
-                //                await DownwardSelect(e.PathDirectories, e.PathDirectories.IndexOf(pathDirectory) + 1,
-                //                    rootEntry);
-                //            }
-                //            else
-                //            {
-                //                rootEntry.Selection.IsSelected = true;
-                //                rootEntry.IsBringIntoView = true;
-                //                if (!rootEntry.Entries.IsLoaded)
-                //                    await directoryNodeViewModel.Entries.LoadAsync();
-                //            }
-
-                //            rootEntry.Entries.IsExpanded = true;
-                //        }
-                //    }
-                //}
             }
             
             if (rootSelection.IsChildSelected)

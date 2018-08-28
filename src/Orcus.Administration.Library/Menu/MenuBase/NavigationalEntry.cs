@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-
-namespace Orcus.Administration.Library.Menu.MenuBase
+﻿namespace Orcus.Administration.Library.Menu.MenuBase
 {
-    public class NavigationalEntry<TItem> : Collection<IMenuEntry<TItem>>, IVisibleMenuitem<TItem>
+    public class NavigationalEntry<TCommandEntry> : CommandCollection<TCommandEntry>, IVisibleMenuItem where TCommandEntry : ICommandMenuEntry
     {
         public object Header { get; set; }
         public object Icon { get; set; }

@@ -49,6 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacModule.cs" />
     <Compile Include="Cache\CachedDirectoryKey.cs" />
     <Compile Include="Cache\FileDescriptionKey.cs" />
     <Compile Include="Cache\FileImageKey.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Controls\SuggestBoxBase.cs" />
     <Compile Include="Controls\TreeViewEx.cs" />
     <Compile Include="Controls\TreeViewItemEx.cs" />
+    <Compile Include="FileExplorerContextMenu.cs" />
     <Compile Include="Helpers\EntriesHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\IEntriesHelper.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Helpers\ITreeSelector.cs" />
     <Compile Include="Helpers\TreeRootSelector.cs" />
     <Compile Include="Helpers\TreeSelector.cs" />
+    <Compile Include="Menus\FileExplorerContextMenuBuilder.cs" />
     <Compile Include="Models\Cache\CachedDirectory.cs" />
     <Compile Include="Models\Cache\FileTypeDescription.cs" />
     <Compile Include="Models\Cache\LoadedLabelLibrary.cs" />

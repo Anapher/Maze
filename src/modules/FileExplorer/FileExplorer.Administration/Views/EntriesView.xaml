@@ -5,10 +5,8 @@
     xmlns:base="clr-namespace:FileExplorer.Administration.ViewModels.Explorer.Base"
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dtos="clr-namespace:FileExplorer.Shared.Dtos"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
     xmlns:extensions1="clr-namespace:Orcus.Administration.Library.Extensions;assembly=Orcus.Administration.Library"
-    xmlns:local="clr-namespace:FileExplorer.Administration.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
@@ -16,6 +14,11 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ContextMenu x:Key="DefaultContextMenu" />
+        <ContextMenu x:Key="FileContextMenu" />
+        <ContextMenu x:Key="DirectoryContextMenu" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,6 +34,7 @@
             CanUserResizeColumns="True"
             CanUserResizeRows="False"
             CanUserSortColumns="True"
+            ContextMenu="{StaticResource DefaultContextMenu}"
             EnableRowVirtualization="True"
             IsSynchronizedWithCurrentItem="True"
             ItemsSource="{Binding View}"

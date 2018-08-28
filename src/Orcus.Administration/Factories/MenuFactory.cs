@@ -1,32 +1,105 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Orcus.Administration.Library.Menu;
+using Orcus.Administration.Library.Menu.Internal;
 using Orcus.Administration.Library.Menu.MenuBase;
-using Prism.Commands;
 
 namespace Orcus.Administration.Factories
 {
-    public class MenuFactory : IMenuFactory
+    public class DefaultMenuFactory : IMenuFactory
     {
-        public IEnumerable<UIElement> Create<T>(IEnumerable<IMenuEntry<T>> menuEntries)
+        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : ICommandMenuEntry
         {
-            var (result, _, _) = CreateInternal(menuEntries);
+            return CreateInternal(menuEntries, context);
+        }
+
+        private static IReadOnlyList<UIElement> CreateInternal<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : ICommandMenuEntry
+        {
+            var result = new List<UIElement>();
+
+            foreach (var menuEntry in menuEntries)
+                if (menuEntry is MenuSection<TCommand> section)
+                {
+                    var items = CreateInternal(section, context);
+
+                    if (!items.Any())
+                        continue;
+
+                    foreach (var menuItem in items)
+                        result.Add(menuItem);
+
+                    result.Add(CreateSeparator());
+                }
+                else if (menuEntry is NavigationalEntry<TCommand> navigationalEntry)
+                {
+                    var items = CreateInternal(navigationalEntry, context);
+
+                    if (!items.Any())
+                        continue;
+
+                    var menuItem = CreateMenuItem(navigationalEntry);
+
+                    foreach (var item in items)
+                        menuItem.Items.Add(item);
+                    result.Add(menuItem);
+                }
+                else if (menuEntry is CommandWrapper<TCommand> commandWrapper)
+                {
+                    result.Add(CreateCommandMenuItem(commandWrapper.CommandEntry, context));
+                }
+
+            //dont finish with separator
+            if (result.Any() && result.Last() is Separator)
+                result.RemoveAt(result.Count - 1);
+
             return result;
         }
 
-        private static (IReadOnlyList<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems)
-            CreateInternal<T>(IEnumerable<IMenuEntry<T>> menuEntries)
+        private static Separator CreateSeparator()
+        {
+            return new Separator();
+        }
+
+        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo)
+        {
+            return new MenuItem {Header = menuItemInfo.Header, Icon = menuItemInfo.Icon};
+        }
+
+        private static MenuItem CreateCommandMenuItem(ICommandMenuEntry menuItemInfo, object context)
+        {
+            var menuItem = CreateMenuItem(menuItemInfo);
+            menuItem.Command = menuItemInfo.Command;
+
+            if (menuItem.Command is IContextAwareCommand contextAwareCommand)
+                contextAwareCommand.Context = context;
+
+            return menuItem;
+        }
+    }
+
+    public class ItemMenuFactory : IItemMenuFactory
+    {
+        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : IItemCommandMenuEntry
+        {
+            var (result, _, _) = CreateInternal(menuEntries, context);
+            return result;
+        }
+
+        private static (IReadOnlyList<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems)  CreateInternal<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : IItemCommandMenuEntry
         {
             var result = new List<UIElement>();
             var forSingleItem = false;
             var forMultipleItems = false;
 
             foreach (var menuEntry in menuEntries)
-                if (menuEntry is MenuSection<T> section)
+                if (menuEntry is MenuSection<TCommand> section)
                 {
-                    var (items, singleItem, multipleItems) = CreateInternal(section);
+                    var (items, singleItem, multipleItems) = CreateInternal(section, context);
+
+                    if (!items.Any())
+                        continue;
 
                     if (singleItem)
                         forSingleItem = true;
@@ -38,9 +111,9 @@ namespace Orcus.Administration.Factories
 
                     result.Add(CreateSeparator(singleItem, multipleItems));
                 }
-                else if (menuEntry is NavigationalEntry<T> navigationalEntry)
+                else if (menuEntry is NavigationalEntry<TCommand> navigationalEntry)
                 {
-                    var (items, singleItem, multipleItems) = CreateInternal(navigationalEntry);
+                    var (items, singleItem, multipleItems) = CreateInternal(navigationalEntry, context);
 
                     if (!items.Any())
                         continue;
@@ -56,14 +129,14 @@ namespace Orcus.Administration.Factories
                         menuItem.Items.Add(item);
                     result.Add(menuItem);
                 }
-                else if (menuEntry is CommandMenuEntry<T> commandMenuEntry)
+                else if (menuEntry is CommandWrapper<TCommand> commandWrapper)
                 {
-                    if (commandMenuEntry.Command != null)
+                    if (commandWrapper.CommandEntry.SingleItemCommand != null)
                         forSingleItem = true;
-                    if (commandMenuEntry.MultipleCommand != null)
+                    if (commandWrapper.CommandEntry.MultipleItemsCommand != null)
                         forMultipleItems = true;
 
-                    result.Add(CreateCommandMenuItem(commandMenuEntry));
+                    result.Add(CreateCommandMenuItem(commandWrapper.CommandEntry, context));
                 }
 
             //dont finish with separator
@@ -88,7 +161,7 @@ namespace Orcus.Administration.Factories
             return separator;
         }
 
-        private static MenuItem CreateMenuItem<T>(IVisibleMenuitem<T> menuItemInfo, bool visibleForSingle,
+        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo, bool visibleForSingle,
             bool visibleForMultiple)
         {
             var menuItem = new MenuItem {Header = menuItemInfo.Header, Icon = menuItemInfo.Icon};
@@ -104,33 +177,15 @@ namespace Orcus.Administration.Factories
             return menuItem;
         }
 
-        private static MenuItem CreateCommandMenuItem<T>(CommandMenuEntry<T> menuItemInfo)
+        private static MenuItem CreateCommandMenuItem(IItemCommandMenuEntry menuItemInfo, object context)
         {
-            var menuItem = CreateMenuItem(menuItemInfo, menuItemInfo.Command != null,
-                menuItemInfo.MultipleCommand != null);
+            var menuItem = CreateMenuItem(menuItemInfo, menuItemInfo.SingleItemCommand != null,
+                menuItemInfo.MultipleItemsCommand != null);
 
-            if (menuItemInfo.Command != null && menuItemInfo.MultipleCommand != null)
-                menuItem.Command = new DelegateCommand<object>(o =>
-                {
-                    if (o is T item)
-                        menuItemInfo.Command.Execute(item);
-                    else if (o is IList list)
-                        menuItemInfo.MultipleCommand.Execute(list.Cast<T>().ToList());
-                }, o =>
-                {
-                    if (o is T item)
-                        return menuItemInfo.Command.CanExecute(item);
-                    if (o is IList list)
-                        return menuItemInfo.MultipleCommand.CanExecute(list.Cast<T>().ToList());
+            menuItem.Command = menuItemInfo.Command;
 
-                    return false;
-                });
-            else if (menuItemInfo.Command != null)
-                menuItem.Command = menuItemInfo.Command;
-            else if (menuItemInfo.MultipleCommand != null)
-                menuItem.Command = new DelegateCommand<IList>(
-                    list => menuItemInfo.MultipleCommand.Execute(list.Cast<T>().ToList()),
-                    list => menuItemInfo.MultipleCommand.CanExecute(list.Cast<T>().ToList()));
+            if (menuItem.Command is IContextAwareCommand contextAwareCommand)
+                contextAwareCommand.Context = context;
 
             return menuItem;
         }

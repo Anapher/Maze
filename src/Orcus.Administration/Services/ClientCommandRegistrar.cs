@@ -36,7 +36,7 @@ namespace Orcus.Administration.Services
             _orcusRestClient = orcusRestClient;
         }
 
-        private NavigationalEntry<ClientViewModel> GetNavigationEntry(CommandCategory category)
+        private NavigationalEntry<ItemCommand<ClientViewModel>> GetNavigationEntry(CommandCategory category)
         {
             switch (category)
             {
@@ -51,7 +51,7 @@ namespace Orcus.Administration.Services
 
         public void RegisterView(Type viewType, string txLibResource, object icon, CommandCategory category)
         {
-            GetNavigationEntry(category).Add(new CommandMenuEntry<ClientViewModel>
+            GetNavigationEntry(category).Add(new ItemCommand<ClientViewModel>
             {
                 Header = Tx.T(txLibResource),
                 Icon = icon,

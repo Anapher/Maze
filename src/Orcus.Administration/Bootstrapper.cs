@@ -66,7 +66,8 @@ namespace Orcus.Administration
             builder.RegisterTypeForNavigation<LoginView>();
             builder.RegisterType<AppDispatcher>().As<IAppDispatcher>().SingleInstance();
             builder.RegisterModule<AutofacModule>();
-            builder.RegisterType<MenuFactory>().As<IMenuFactory>().SingleInstance();
+            builder.RegisterType<DefaultMenuFactory>().As<IMenuFactory>().SingleInstance();
+            builder.RegisterType<ItemMenuFactory>().As<IItemMenuFactory>().SingleInstance();
             builder.RegisterType<ClientsContextMenu>().SingleInstance();
             builder.RegisterInstance(new ViewModelResolver(Assembly.GetAssembly(typeof(MainViewModel)),
                 Assembly.GetEntryAssembly())).As<IViewModelResolver>();

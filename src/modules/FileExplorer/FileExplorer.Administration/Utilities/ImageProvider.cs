@@ -54,6 +54,7 @@ namespace FileExplorer.Administration.Utilities
                 case var name when name.Equals("Dropbox", StringComparison.OrdinalIgnoreCase):
                     return -2;
                 case var name when name.Equals("OneDrive", StringComparison.OrdinalIgnoreCase):
+                case var name2 when name2.Equals("{a52bba46-e9e1-435f-b3d9-28daa648c0f6}", StringComparison.OrdinalIgnoreCase):
                     return 1040;
                 case var name when name.Equals("Creative Cloud Files", StringComparison.OrdinalIgnoreCase):
                     return -1;
