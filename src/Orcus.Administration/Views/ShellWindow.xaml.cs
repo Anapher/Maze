@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.Extensions;
 using Microsoft.Win32;
@@ -69,13 +70,24 @@ namespace Orcus.Administration.Views
             {
                 if (_titleBarIcon != value && value != null)
                 {
-                    var factory = new FrameworkElementFactory(typeof(ContentPresenter));
-                    factory.SetValue(ContentPresenter.ContentProperty, new Binding {Source = value});
+                    if (Icon == null && value is ImageSource imageSource)
+                        Icon = imageSource;
+                    else
+                    {
+                        var factory = new FrameworkElementFactory(typeof(ContentPresenter));
+                        factory.SetValue(ContentPresenter.ContentProperty, new Binding { Source = value });
 
-                    IconTemplate = new DataTemplate {VisualTree = factory};
-                    _titleBarIcon = value;
+                        IconTemplate = new DataTemplate { VisualTree = factory };
+                        _titleBarIcon = value;
+                    }
                 }
             }
+        }
+
+        public ImageSource TaskBarIcon
+        {
+            get => Icon;
+            set => Icon = value;
         }
 
         public object RightStatusBarContent

@@ -9,6 +9,4 @@
     Width="850"
     Height="500"
     Style="{StaticResource NormalWindow}"
-    mc:Ignorable="d">
-    <Grid />
-</mah:MetroWindow>
+    mc:Ignorable="d" />

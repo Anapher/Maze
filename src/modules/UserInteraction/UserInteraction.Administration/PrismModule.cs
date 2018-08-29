@@ -1,7 +1,9 @@
-﻿using Orcus.Administration.Library.Services;
+﻿using Orcus.Administration.Library.Menus;
+using Orcus.Administration.Library.Services;
 using Prism.Modularity;
 using Unclassified.TxLib;
 using UserInteraction.Administration.Resources;
+using UserInteraction.Administration.ViewModels;
 using UserInteraction.Administration.Views;
 
 namespace UserInteraction.Administration
@@ -21,8 +23,8 @@ namespace UserInteraction.Administration
         {
             Tx.LoadFromEmbeddedResource("UserInteraction.Administration.Resources.UserInteraction.Translation.txd");
 
-            _registrar.RegisterView(typeof(MessageBoxView), "UserInteraction:MessageBox",
-                _icons.MessageBox, CommandCategory.Interaction);
+            _registrar.Register<MessageBoxViewModel>("UserInteraction:MessageBox", _icons.MessageBox,
+                CommandCategory.Interaction);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
@@ -42,6 +43,19 @@ namespace Orcus.Administration.Library.Views
             new PropertyMetadata(default(FlyoutsControl),
                 (o, args) => GetViewManager(o).Flyouts = (FlyoutsControl) args.NewValue));
 
+        public static readonly DependencyProperty DialogResultProperty = DependencyProperty.Register("DialogResult",
+            typeof(bool?), typeof(WindowUserControl),
+            new PropertyMetadata(default(bool?), (o, args) => GetViewManager(o).DialogResult = (bool?) args.NewValue));
+
+        public static readonly DependencyProperty ShowInTaskBarProperty = DependencyProperty.Register("ShowInTaskBar",
+            typeof(bool), typeof(WindowUserControl),
+            new PropertyMetadata(default(bool), (o, args) => GetViewManager(o).ShowInTaskbar = (bool) args.NewValue));
+
+        public static readonly DependencyProperty TaskBarIconProperty = DependencyProperty.Register("TaskBarIcon",
+            typeof(ImageSource), typeof(WindowUserControl),
+            new PropertyMetadata(default(ImageSource),
+                (o, args) => GetViewManager(o).TaskBarIcon = (ImageSource) args.NewValue));
+
         protected readonly IWindowViewManager ViewManager;
 
         public WindowUserControl(IWindowViewManager viewManager)
@@ -51,6 +65,24 @@ namespace Orcus.Administration.Library.Views
 
         private WindowUserControl()
         {
+        }
+
+        public ImageSource TaskBarIcon
+        {
+            get => (ImageSource) GetValue(TaskBarIconProperty);
+            set => SetValue(TaskBarIconProperty, value);
+        }
+
+        public bool ShowInTaskBar
+        {
+            get => (bool) GetValue(ShowInTaskBarProperty);
+            set => SetValue(ShowInTaskBarProperty, value);
+        }
+
+        public bool? DialogResult
+        {
+            get => (bool?) GetValue(DialogResultProperty);
+            set => SetValue(DialogResultProperty, value);
         }
 
         public string Title
@@ -103,7 +135,6 @@ namespace Orcus.Administration.Library.Views
 #endif
             return ((WindowUserControl) d).ViewManager;
         }
-
 #if DEBUG
 #pragma warning disable CS0067
         private class DummyViewManager : IWindowViewManager
@@ -111,6 +142,7 @@ namespace Orcus.Administration.Library.Views
             public WindowState WindowState { get; set; }
             public event EventHandler Closed;
             public event CancelEventHandler Closing;
+
             public void Close()
             {
                 throw new NotImplementedException();
@@ -118,8 +150,8 @@ namespace Orcus.Administration.Library.Views
 
             public bool Activate() => throw new NotImplementedException();
 
-            public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons, MessageBoxImage icon,
-                MessageBoxResult defResult, MessageBoxOptions options) =>
+            public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons,
+                MessageBoxImage icon, MessageBoxResult defResult, MessageBoxOptions options) =>
                 throw new NotImplementedException();
 
             public bool? ShowDialog(VistaFileDialog fileDialog) => throw new NotImplementedException();
@@ -129,9 +161,12 @@ namespace Orcus.Administration.Library.Views
             public string Title { get; set; }
             public object RightStatusBarContent { get; set; }
             public bool EscapeClosesWindow { get; set; }
+            public bool? DialogResult { get; set; }
+            public bool ShowInTaskbar { get; set; }
             public WindowCommands LeftWindowCommands { get; set; }
             public WindowCommands RightWindowCommands { get; set; }
             public object TitleBarIcon { get; set; }
+            public ImageSource TaskBarIcon { get; set; }
             public FlyoutsControl Flyouts { get; set; }
         }
 #endif

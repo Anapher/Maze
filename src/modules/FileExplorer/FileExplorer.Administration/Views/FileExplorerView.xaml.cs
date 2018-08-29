@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using Autofac;
 using FileExplorer.Administration.Menus;
-using FileExplorer.Administration.Resources;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Views;
 
@@ -18,7 +17,6 @@ namespace FileExplorer.Administration.Views
         public FileExplorerView(IWindowViewManager viewManager, IComponentContext scope) : base(viewManager)
         {
             InitializeComponent();
-            Icon = scope.Resolve<VisualStudioIcons>().ListFolder;
 
             _scope = scope;
             DataContextChanged += OnDataContextChanged;

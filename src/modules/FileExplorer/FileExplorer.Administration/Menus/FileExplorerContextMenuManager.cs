@@ -8,6 +8,7 @@ using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
+using Orcus.Administration.Library.Services;
 using Prism.Commands;
 using Unclassified.TxLib;
 
@@ -17,16 +18,18 @@ namespace FileExplorer.Administration.Menus
     {
         private readonly FileExplorerContextMenu _contextMenu;
         private readonly IImageProvider _imageProvider;
+        private readonly IWindowService _windowService;
         private readonly IMenuFactory _menuFactory;
         private readonly VisualStudioIcons _visualStudioIcons;
 
         public FileExplorerContextMenuManager(FileExplorerContextMenu contextMenu, IMenuFactory menuFactory,
-            VisualStudioIcons visualStudioIcons, IImageProvider imageProvider)
+            VisualStudioIcons visualStudioIcons, IImageProvider imageProvider, IWindowService windowService)
         {
             _contextMenu = contextMenu;
             _menuFactory = menuFactory;
             _visualStudioIcons = visualStudioIcons;
             _imageProvider = imageProvider;
+            _windowService = windowService;
         }
 
         public override void Build()
@@ -70,7 +73,6 @@ namespace FileExplorer.Administration.Menus
 
         private void CreateDirectory(FileExplorerViewModel obj)
         {
-            throw new System.NotImplementedException();
         }
 
         private void DownloadFile(FileExplorerViewModel obj)

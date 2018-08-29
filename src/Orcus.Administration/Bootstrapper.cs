@@ -72,6 +72,7 @@ namespace Orcus.Administration
             builder.RegisterType<ShellWindowFactory>().As<IShellWindowFactory>().SingleInstance();
             builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
             builder.RegisterType<VisualStudioIcons>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<WindowService>().AsImplementedInterfaces().SingleInstance();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

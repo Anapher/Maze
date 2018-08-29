@@ -141,6 +141,9 @@
     <Compile Include="Models\IUiTools.cs" />
     <Compile Include="ViewModels\IFileExplorerChildViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
+    <Compile Include="Views\Dialogs\CreateDirectoryView.xaml.cs">
+      <DependentUpon>CreateDirectoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
     </Compile>
@@ -176,6 +179,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\VisualStudioIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\CreateDirectoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

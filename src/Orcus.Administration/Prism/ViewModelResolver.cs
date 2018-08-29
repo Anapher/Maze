@@ -9,6 +9,7 @@ namespace Orcus.Administration.Prism
     public interface IViewModelResolver
     {
         Type ResolveViewModelType(Type viewType);
+        Type ResolveViewType(Type viewModelType);
     }
 
     public class ViewModelResolver : IViewModelResolver
@@ -32,6 +33,15 @@ namespace Orcus.Administration.Prism
                 return _viewModelMap[name];
 
             return DefaultResolve(viewType);
+        }
+
+        public Type ResolveViewType(Type viewModelType)
+        {
+            var viewName = TrimEnd(viewModelType.FullName, "Model", StringComparison.OrdinalIgnoreCase);
+            viewName = viewName.Replace(".ViewModels.", ".Views.");
+
+            var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelType.Assembly.FullName);
+            return Type.GetType(viewModelName);
         }
 
         private static Type DefaultResolve(Type viewType)

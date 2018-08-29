@@ -4,7 +4,7 @@ using Ookii.Dialogs.Wpf;
 
 namespace Orcus.Administration.Library.Views
 {
-    public interface IMetroWindow : IWindow
+    public interface IDialogWindow : IWindow
     {
         bool? ShowDialog(VistaFileDialog fileDialog);
         bool? ShowDialog(FileDialog fileDialog);
