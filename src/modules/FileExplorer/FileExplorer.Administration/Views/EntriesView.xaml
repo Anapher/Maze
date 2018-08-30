@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:base="clr-namespace:FileExplorer.Administration.ViewModels.Explorer.Base"
     xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
+    xmlns:converters="clr-namespace:FileExplorer.Administration.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dtos="clr-namespace:FileExplorer.Shared.Dtos"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
@@ -16,12 +17,13 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+
         <ContextMenu x:Key="DefaultContextMenu" MinWidth="220" />
         <ContextMenu x:Key="FileContextMenu" MinWidth="220" />
         <ContextMenu x:Key="DirectoryContextMenu" MinWidth="220" />
     </UserControl.Resources>
     <DataGrid
-        Grid.Row="1"
         AutoGenerateColumns="False"
         BorderThickness="0"
         CanUserAddRows="False"
@@ -40,56 +42,40 @@
         <DataGrid.InputBindings>
             <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoBackCommand}" Gesture="XButton1" />
             <extensions:ExtendedMouseBinding Command="{Binding NavigationBarViewModel.GoForwardCommand}" Gesture="XButton2" />
+            <KeyBinding
+                Key="Delete"
+                Command="{Binding RemoveEntriesCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItems}" />
+            <KeyBinding
+                Key="F2"
+                Command="{Binding EnterNameEditingCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItem}" />
         </DataGrid.InputBindings>
         <DataGrid.Columns>
             <DataGridTemplateColumn
                 Width="2*"
                 Header="{tx:T Name}"
+                IsReadOnly="True"
                 SortDirection="Ascending"
                 SortMemberPath="SortName">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                        <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                        <DockPanel Margin="5,0,0,0">
                             <Image
                                 Width="22"
                                 Height="22"
                                 Source="{Binding Icon}" />
-                            <TextBlock
+                            <controls:RenameControl
                                 Margin="10,0,0,0"
                                 VerticalAlignment="Center"
-                                Text="{Binding Label}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-                <DataGridTemplateColumn.CellEditingTemplate>
-                    <DataTemplate DataType="{x:Type base:EntryViewModel}">
-                        <DockPanel
-                            Margin="5,0,0,0"
-                            Background="Transparent"
-                            LastChildFill="True">
-                            <Image
-                                Width="22"
-                                Height="22"
-                                Source="{Binding Icon}" />
-                            <controls:DataGridTextBox
-                                Margin="10,0,0,0"
-                                VerticalAlignment="Center"
-                                IsDirectorySelected="{Binding IsDirectory}"
-                                Text="{Binding Name}">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="Height" Value="15" />
-                                        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
-                                        <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
-                                        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
-                                        <Setter Property="SelectionBrush" Value="{DynamicResource AccentColorBrush3}" />
-                                    </Style>
-                                </TextBox.Style>
-                            </controls:DataGridTextBox>
+                                Command="{Binding RenameCommand}"
+                                DisplayText="{Binding Label, Mode=OneWay}"
+                                IsEditing="{Binding IsEditingName, UpdateSourceTrigger=PropertyChanged}"
+                                IsFilename="{Binding IsDirectory, Converter={StaticResource InvertBooleanConverter}}"
+                                Text="{Binding Name, Mode=OneWay}" />
                         </DockPanel>
                     </DataTemplate>
-                </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
             <DataGridTextColumn
                 Width="*"

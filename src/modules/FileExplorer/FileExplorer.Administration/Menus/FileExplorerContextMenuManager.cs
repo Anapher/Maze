@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,9 +8,12 @@ using System.Windows.Media;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.StatusBar;
+using Orcus.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 
@@ -69,10 +74,21 @@ namespace FileExplorer.Administration.Menus
             });
         }
 
-        private static Task RefreshDirectory(FileExplorerViewModel obj) => obj.OpenPath(obj.CurrentPath, true);
+        private static Task RefreshDirectory(FileExplorerViewModel context) => context.OpenPath(context.CurrentPath, true);
 
-        private void CreateDirectory(FileExplorerViewModel obj)
+        private void CreateDirectory(FileExplorerViewModel context)
         {
+            var inputVm =
+                new InputTextViewModel(Tx.T("FileExplorer:NewFolder"), Tx.T("FileExplorer:FolderName"),
+                    Tx.T("Create"))
+                {
+                    Predicate = s => context.FileSystem.IsValidFilename(s)
+                };
+            if (_windowService.ShowDialog(inputVm, "FileExplorer:CreateNewFolder", context.Window) == true)
+            {
+                context.FileSystem.CreateDirectory(Path.Combine(context.CurrentPath, inputVm.Text))
+                    .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:CreateNewFolder")).Forget();
+            }
         }
 
         private void DownloadFile(FileExplorerViewModel obj)

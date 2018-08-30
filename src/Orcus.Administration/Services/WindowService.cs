@@ -50,6 +50,13 @@ namespace Orcus.Administration.Services
             window.InitalizeContent(view, statusBar);
             SetupLoadUnload(window, viewModel, lifescope);
 
+            if (double.IsNaN(window.ViewManager.Height) && double.IsNaN(window.ViewManager.Width))
+                window.Window.SizeToContent = SizeToContent.WidthAndHeight;
+            else if (double.IsNaN(window.ViewManager.Height))
+                window.Window.SizeToContent = SizeToContent.Height;
+            else if (double.IsNaN(window.ViewManager.Width))
+                window.Window.SizeToContent = SizeToContent.Width;
+
             configureWindow?.Invoke(window);
             return window;
         }
@@ -77,6 +84,14 @@ namespace Orcus.Administration.Services
             window.InitalizeContent(view, statusBar);
             SetupLoadUnload(window, viewModel, lifescope);
 
+            if (double.IsNaN(window.ViewManager.Height) && double.IsNaN(window.ViewManager.Width))
+                window.Window.SizeToContent = SizeToContent.WidthAndHeight;
+            else if (double.IsNaN(window.ViewManager.Height))
+                window.Window.SizeToContent = SizeToContent.Height;
+            else if (double.IsNaN(window.ViewManager.Width))
+                window.Window.SizeToContent = SizeToContent.Width;
+
+            configureWindow?.Invoke(window);
             return window;
         }
 
@@ -106,6 +121,7 @@ namespace Orcus.Administration.Services
             Action<ContainerBuilder> setupContainer)
         {
             var window = Initialize(viewModelType, titleResourceKey, configureWindow, setupContainer);
+            window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             return window.ShowDialog(owner);
         }
 
@@ -113,6 +129,8 @@ namespace Orcus.Administration.Services
             Action<ContainerBuilder> setupContainer)
         {
             var window = Initialize(viewModel, titleResourceKey, configureWindow, setupContainer);
+            window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             return window.ShowDialog(owner);
         }
     }

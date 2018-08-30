@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
+using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
@@ -47,6 +48,41 @@ namespace FileExplorer.Client.Controllers
                 var directoryEntry = new DirectoryHelper().GetDirectoryEntry(directory, null);
                 return Ok(directoryEntry);
             }
+        }
+
+        [OrcusPost("directory")]
+        public IActionResult CreateDirectory([FromQuery] string path)
+        {
+            Directory.CreateDirectory(path);
+            return StatusCode(StatusCodes.Status201Created);
+        }
+
+        [OrcusDelete("directory")]
+        public IActionResult DeleteDirectory([FromQuery] string path)
+        {
+            Directory.Delete(path, true);
+            return Ok();
+        }
+
+        [OrcusDelete("file")]
+        public IActionResult DeleteFile([FromQuery] string path)
+        {
+            System.IO.File.Delete(path);
+            return Ok();
+        }
+
+        [OrcusPatch("file")]
+        public IActionResult MoveFile([FromQuery] string path, [FromQuery] string newPath)
+        {
+            System.IO.File.Move(path, newPath);
+            return Ok();
+        }
+
+        [OrcusPatch("directory")]
+        public IActionResult MoveDirectory([FromQuery] string path, [FromQuery] string newPath)
+        {
+            Directory.Move(path, newPath);
+            return Ok();
         }
     }
 }

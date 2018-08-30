@@ -23,7 +23,7 @@
         </TreeView.InputBindings>
         <TreeView.ItemContainerStyle>
             <Style
-                d:DataContext="{d:DesignInstance explorer:DirectoryNodeViewModel}"
+                d:DataContext="{d:DesignInstance explorer:DirectoryViewModel}"
                 BasedOn="{StaticResource MetroTreeViewItem}"
                 TargetType="controls:TreeViewItemEx">
                 <Setter Property="BringIntoViewToken" Value="{Binding BringIntoViewToken}" />
@@ -32,7 +32,7 @@
             </Style>
         </TreeView.ItemContainerStyle>
         <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type explorer:DirectoryNodeViewModel}" ItemsSource="{Binding Entries.All}">
+            <HierarchicalDataTemplate DataType="{x:Type explorer:DirectoryViewModel}" ItemsSource="{Binding Entries.All}">
                 <StackPanel Orientation="Horizontal">
                     <Image
                         Width="20"

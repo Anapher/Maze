@@ -29,7 +29,7 @@ namespace Orcus.Administration.Library.StatusBar
             set => SetProperty(ref _rightContent, value);
         }
 
-        public IDisposable PushStatus(StatusMessage message)
+        public TMessage PushStatus<TMessage>(TMessage message) where TMessage : StatusMessage
         {
             lock (_messagesLock)
             {

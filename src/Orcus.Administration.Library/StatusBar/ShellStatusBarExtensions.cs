@@ -55,6 +55,20 @@ namespace Orcus.Administration.Library.StatusBar
             }
         }
 
+        public static async void ShowWarning(this IShellStatusBar shellStatusBar, string message,
+            StatusBarAnimation animation = StatusBarAnimation.None, int? seconds = null,
+            CancellationToken cancellationToken = default)
+        {
+            using (shellStatusBar.PushStatus(new TextStatusMessage(message)
+            {
+                Animation = animation,
+                StatusBarMode = StatusBarMode.Warning
+            }))
+            {
+                await Task.Delay((seconds ?? DefaultMessageTimeout) * 1000, cancellationToken);
+            }
+        }
+
         public static async Task ShowMessage(this IShellStatusBar shellStatusBar, string message, Task task,
             StatusBarAnimation animation = StatusBarAnimation.None)
         {
@@ -131,6 +145,26 @@ namespace Orcus.Administration.Library.StatusBar
             {
                 shellStatusBar.ShowError(e.Message);
                 return SuccessOrError<T>.DefaultFailed;
+            }
+        }
+
+        public static async Task<bool> DisplayOnStatusBarCatchErrors(this Task task,
+            IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None)
+        {
+            try
+            {
+                await task.DisplayOnStatusBar(shellStatusBar, message, animation);
+                return true;
+            }
+            catch (RestException e)
+            {
+                shellStatusBar.ShowError(e.GetRestExceptionMessage());
+                return false;
+            }
+            catch (Exception e)
+            {
+                shellStatusBar.ShowError(e.Message);
+                return false;
             }
         }
     }

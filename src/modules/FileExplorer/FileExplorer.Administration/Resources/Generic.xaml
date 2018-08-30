@@ -730,4 +730,40 @@
     <Style BasedOn="{StaticResource MetroTreeView}" TargetType="controls:TreeViewEx" />
 
     <!--#endregion TreeViewEx-->
+
+    <!--#region RenameControl-->
+    <Style TargetType="controls:RenameControl">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:RenameControl">
+                    <Grid>
+                        <TextBlock
+                            x:Name="ContentOn"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Text="{TemplateBinding DisplayText}" />
+                        <TextBox
+                            x:Name="ContentOff"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Visibility="Hidden">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Height" Value="15" />
+                                    <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
+                                    <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+                                    <Setter Property="SelectionBrush" Value="{DynamicResource AccentColorBrush3}" />
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion RenameControl-->
 </ResourceDictionary>

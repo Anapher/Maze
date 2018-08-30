@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Windows;
+using System.Windows.Media;
 using MahApps.Metro.Controls;
 
 namespace Orcus.Administration.Library.Views
@@ -15,5 +16,8 @@ namespace Orcus.Administration.Library.Views
         object TitleBarIcon { get; set; }
         ImageSource TaskBarIcon { get; set; }
         FlyoutsControl Flyouts { get; set; }
+        ResizeMode ResizeMode { get; set; }
+        double Height { get; set; }
+        double Width { get; set; }
     }
 }

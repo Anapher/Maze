@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,33 +24,35 @@ namespace FileExplorer.Administration.Models
     {
         private readonly IMemoryCache _globalCache;
         private readonly IPackageRestClient _restClient;
-        private readonly IMemoryCache _localCache;
+        private readonly ConcurrentDictionary<string, CachedDirectory> _localCache;
         private readonly bool _caseInsensitivePaths = true;
         private CachedDirectory _computerDirectory;
-        private readonly ISet<char> _illegalPathCharacters;
 
         public RemoteFileSystem(IMemoryCache globalCache, IPackageRestClient restClient)
         {
             _globalCache = globalCache;
             _restClient = restClient;
-            _localCache = new MemoryCache(new MemoryCacheOptions());
-            _illegalPathCharacters = new HashSet<char>(Path.GetInvalidFileNameChars());
+            _localCache = new ConcurrentDictionary<string, CachedDirectory>(_caseInsensitivePaths
+                ? StringComparer.OrdinalIgnoreCase
+                : StringComparer.Ordinal);
+
+            InvalidFileNameChars = Path.GetInvalidFileNameChars().ToImmutableHashSet();
         }
 
+        public IImmutableSet<char> InvalidFileNameChars { get; }
         public StringComparison PathStringComparison { get; } = StringComparison.OrdinalIgnoreCase;
+
+        public event EventHandler<FileExplorerEntry> EntryRemoved;
+        public event EventHandler<EntryUpdatedEventArgs> EntryUpdated;
+        public event EventHandler<FileExplorerEntry> EntryAdded;
+        public event EventHandler<DirectoryEntriesUpdatedEventArgs> DirectoryEntriesUpdated;
+
+        public bool IsValidFilename(string filename) =>
+            !string.IsNullOrWhiteSpace(filename) && !filename.Any(x => InvalidFileNameChars.Contains(x));
 
         public bool ComparePaths(string path1, string path2)
         {
             return string.Equals(NormalizePath(path1), NormalizePath(path2), PathStringComparison);
-        }
-
-        public string UnifyPath(string path)
-        {
-            path = NormalizePath(path);
-            if (_caseInsensitivePaths)
-                path = path.ToLower();
-
-            return path;
         }
 
         public string NormalizePath(string path)
@@ -56,7 +60,7 @@ namespace FileExplorer.Administration.Models
             if (string.IsNullOrEmpty(path))
                 return null;
 
-            if (!path.Any(x => _illegalPathCharacters.Contains(x)))
+            if (!path.Any(x => InvalidFileNameChars.Contains(x)))
                 path = Path.GetFullPath(path);
 
             path = path.TrimEnd('\\');
@@ -163,8 +167,7 @@ namespace FileExplorer.Administration.Models
                 }
                 else
                 {
-                    directoryEntries = _localCache
-                        .Get<CachedDirectory>(new CachedDirectoryKey {UnifiedPath = UnifyPath(directoryPath)}).Entries;
+                    directoryEntries = _localCache[NormalizePath(directoryPath)].Entries.ToList();
                 }
 
                 pathDirectories.Add(directory);
@@ -187,10 +190,10 @@ namespace FileExplorer.Administration.Models
                         directoryEntries = directoryEntries.Concat(new[] {nextDirectory}).ToList();
 
                         //update cache
-                        var cacheKey = new CachedDirectoryKey {UnifiedPath = UnifyPath(directoryPath)};
-                        var oldCache = _localCache.Get<CachedDirectory>(cacheKey);
-                        _localCache.CreateEntry(cacheKey).SetValue(new CachedDirectory(oldCache.Directory,
-                            oldCache.DirectoriesOnly, directoryEntries));
+                        var key = NormalizePath(directoryPath);
+                        var oldCache = _localCache[key];
+                        _localCache[key] = new CachedDirectory(oldCache.Directory, oldCache.DirectoriesOnly,
+                            directoryEntries);
                     }
 
                     directory = nextDirectory;
@@ -262,16 +265,109 @@ namespace FileExplorer.Administration.Models
 
         private bool TryGetCachedDirectory(string path, out CachedDirectory cachedDirectory)
         {
-            return _localCache.TryGetValue(new CachedDirectoryKey {UnifiedPath = UnifyPath(path)}, out cachedDirectory);
+            return _localCache.TryGetValue(NormalizePath(path), out cachedDirectory);
         }
 
         public CachedDirectory AddToCache(DirectoryEntry directory, IReadOnlyList<FileExplorerEntry> entries, bool directoriesOnly)
         {
             var cachedDirectory = new CachedDirectory(directory, directoriesOnly, entries);
-            var cacheKey = new CachedDirectoryKey {UnifiedPath = UnifyPath(directory.Path)};
+            var cacheKey = NormalizePath(directory.Path);
             
-            _localCache.Set(cacheKey, cachedDirectory);
+            _localCache[cacheKey] = cachedDirectory;
+            DirectoryEntriesUpdated?.Invoke(this,
+                new DirectoryEntriesUpdatedEventArgs(directory.Path, cachedDirectory.Entries, directoriesOnly));
             return cachedDirectory;
+        }
+
+        public async Task CreateDirectory(string path)
+        {
+            await FileSystemResource.CreateDirectory(path, _restClient);
+
+            var entry = new DirectoryEntry
+            {
+                CreationTime = DateTimeOffset.Now,
+                HasSubFolder = false,
+                Name = Path.GetFileName(path),
+                Path = path
+            };
+            var parentFolderPath = Path.GetDirectoryName(path);
+
+            if (parentFolderPath != null && TryGetCachedDirectory(parentFolderPath, out var cachedDirectory))
+            {
+                entry.Parent = cachedDirectory.Directory;
+                cachedDirectory.Directory.HasSubFolder = true;
+                lock (cachedDirectory.EntriesLock)
+                {
+                    cachedDirectory.Entries = cachedDirectory.Entries.Add(entry);
+                }
+            }
+
+            EntryAdded?.Invoke(this, entry);
+        }
+
+        public async Task Remove(FileExplorerEntry entry)
+        {
+            if (entry.Type == FileExplorerEntryType.File)
+            {
+                await FileSystemResource.DeleteFile(entry.Path, _restClient);
+            }
+            else
+            {
+                await FileSystemResource.DeleteDirectory(entry.Path, _restClient);
+            }
+
+            EntryRemoved?.Invoke(this, entry);
+
+            var parentFolder = Path.GetDirectoryName(entry.Path);
+            if (parentFolder != null && TryGetCachedDirectory(parentFolder, out var cachedDirectory))
+            {
+                lock (cachedDirectory.EntriesLock)
+                {
+                    cachedDirectory.Entries = cachedDirectory.Entries.Remove(entry);
+                }
+            }
+
+            if (entry.Type != FileExplorerEntryType.File)
+            {
+                var normalizedPath = NormalizePath(entry.Path);
+                foreach (var keyValuePair in _localCache.Where(x =>
+                    x.Key.StartsWith(normalizedPath, PathStringComparison)))
+                    _localCache.TryRemove(keyValuePair.Key, out _);
+            }
+        }
+
+        public async Task Move(FileExplorerEntry entry, string path)
+        {
+            path = NormalizePath(path);
+
+            if (entry.Type == FileExplorerEntryType.File)
+                await FileSystemResource.MoveFile(entry.Path, path, _restClient);
+            else
+                await FileSystemResource.MoveDirectory(entry.Path, path, _restClient);
+
+            var oldPath = NormalizePath(entry.Path);
+            entry.Path = path;
+            entry.Name = Path.GetFileName(path);
+
+            EntryUpdated?.Invoke(this, new EntryUpdatedEventArgs(entry, oldPath));
+
+            if (entry.Type != FileExplorerEntryType.File)
+            {
+                foreach (var cachedEntry in _localCache.Where(x => x.Key.StartsWith(oldPath, PathStringComparison)))
+                {
+                    _localCache.TryRemove(cachedEntry.Key, out _);
+                    var newPath = path + cachedEntry.Key.Substring(oldPath.Length);
+                    cachedEntry.Value.Directory.Path = newPath;
+
+                    lock (cachedEntry.Value.EntriesLock)
+                    {
+                        foreach (var fileExplorerEntry in cachedEntry.Value.Entries)
+                            fileExplorerEntry.Path = path + fileExplorerEntry.Path.Substring(oldPath.Length);
+                    }
+
+                    _localCache[newPath] = cachedEntry.Value;
+                }
+            }
         }
     }
 }

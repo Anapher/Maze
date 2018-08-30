@@ -56,6 +56,14 @@ namespace Orcus.Administration.Library.Views
             new PropertyMetadata(default(ImageSource),
                 (o, args) => GetViewManager(o).TaskBarIcon = (ImageSource) args.NewValue));
 
+        public static readonly DependencyProperty WindowWidthProperty = DependencyProperty.Register("WindowWidth",
+            typeof(double), typeof(WindowUserControl),
+            new PropertyMetadata(default(double), (o, args) => GetViewManager(o).Width = (double) args.NewValue));
+
+        public static readonly DependencyProperty WindowHeightProperty = DependencyProperty.Register("WindowHeight",
+            typeof(double), typeof(WindowUserControl),
+            new PropertyMetadata(default(double), (o, args) => GetViewManager(o).Height = (double) args.NewValue));
+
         protected readonly IWindowViewManager ViewManager;
 
         public WindowUserControl(IWindowViewManager viewManager)
@@ -65,6 +73,24 @@ namespace Orcus.Administration.Library.Views
 
         private WindowUserControl()
         {
+        }
+
+        public double WindowHeight
+        {
+            get => (double) GetValue(WindowHeightProperty);
+            set => SetValue(WindowHeightProperty, value);
+        }
+
+        public double WindowWidth
+        {
+            get => (double) GetValue(WindowWidthProperty);
+            set => SetValue(WindowWidthProperty, value);
+        }
+        
+        public ResizeMode ResizeMode
+        {
+            get => GetViewManager(this).ResizeMode;
+            set => GetViewManager(this).ResizeMode = value;
         }
 
         public ImageSource TaskBarIcon
@@ -168,6 +194,9 @@ namespace Orcus.Administration.Library.Views
             public object TitleBarIcon { get; set; }
             public ImageSource TaskBarIcon { get; set; }
             public FlyoutsControl Flyouts { get; set; }
+            public ResizeMode ResizeMode { get; set; }
+            public double Height { get; set; }
+            public double Width { get; set; }
         }
 #endif
     }

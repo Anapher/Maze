@@ -19,20 +19,20 @@ using Prism.Mvvm;
 
 namespace FileExplorer.Administration.ViewModels
 {
-    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryNodeViewModel, FileExplorerEntry>, IAsyncAutoComplete, IFileExplorerChildViewModel
+    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryViewModel, FileExplorerEntry>, IAsyncAutoComplete, IFileExplorerChildViewModel
     {
         private FileExplorerViewModel _fileExplorerViewModel;
-        private ObservableCollection<DirectoryNodeViewModel> _autoCompleteEntries;
-        private List<DirectoryNodeViewModel> _rootViewModels;
-        private DirectoryNodeViewModel _selectedViewModel;
+        private ObservableCollection<DirectoryViewModel> _autoCompleteEntries;
+        private List<DirectoryViewModel> _rootViewModels;
+        private DirectoryViewModel _selectedViewModel;
         private FileExplorerPathComparer _fileExplorerPathComparer;
 
         public void Initialize(FileExplorerViewModel fileExplorerViewModel)
         {
             _fileExplorerViewModel = fileExplorerViewModel;
 
-            Entries = new EntriesHelper<DirectoryNodeViewModel>();
-            Selection = new TreeRootSelector<DirectoryNodeViewModel, FileExplorerEntry>(Entries)
+            Entries = new EntriesHelper<DirectoryViewModel>();
+            Selection = new TreeRootSelector<DirectoryViewModel, FileExplorerEntry>(Entries)
             {
                 Comparers = new[]
                     {_fileExplorerPathComparer = new FileExplorerPathComparer(fileExplorerViewModel.FileSystem)}
@@ -44,26 +44,26 @@ namespace FileExplorer.Administration.ViewModels
 
         public NavigationBarViewModel NavigationBarViewModel => _fileExplorerViewModel.NavigationBarViewModel;
 
-        public List<DirectoryNodeViewModel> RootViewModels
+        public List<DirectoryViewModel> RootViewModels
         {
             get => _rootViewModels;
             private set => SetProperty(ref _rootViewModels, value);
         }
 
-        public ObservableCollection<DirectoryNodeViewModel> AutoCompleteEntries
+        public ObservableCollection<DirectoryViewModel> AutoCompleteEntries
         {
             get => _autoCompleteEntries;
             private set => SetProperty(ref _autoCompleteEntries, value);
         }
 
-        public DirectoryNodeViewModel SelectedViewModel
+        public DirectoryViewModel SelectedViewModel
         {
             get => _selectedViewModel;
             private set => SetProperty(ref _selectedViewModel, value);
         }
 
-        public IEntriesHelper<DirectoryNodeViewModel> Entries { get; set; }
-        public ITreeSelector<DirectoryNodeViewModel, FileExplorerEntry> Selection { get; set; }
+        public IEntriesHelper<DirectoryViewModel> Entries { get; set; }
+        public ITreeSelector<DirectoryViewModel, FileExplorerEntry> Selection { get; set; }
 
         public ValueTask<IEnumerable> GetAutoCompleteEntries()
         {
@@ -73,9 +73,9 @@ namespace FileExplorer.Administration.ViewModels
         public async Task SelectAsync(FileExplorerEntry value)
         {
             await Selection.LookupAsync(value,
-                RecrusiveSearch<DirectoryNodeViewModel, FileExplorerEntry>.LoadSubentriesIfNotLoaded,
-                SetSelected<DirectoryNodeViewModel, FileExplorerEntry>.WhenSelected,
-                SetExpanded<DirectoryNodeViewModel, FileExplorerEntry>.WhenChildSelected);
+                RecrusiveSearch<DirectoryViewModel, FileExplorerEntry>.LoadSubentriesIfNotLoaded,
+                SetSelected<DirectoryViewModel, FileExplorerEntry>.WhenSelected,
+                SetExpanded<DirectoryViewModel, FileExplorerEntry>.WhenChildSelected);
         }
 
         public void InitializeRootElements(RootElementsDto dto)
@@ -84,7 +84,7 @@ namespace FileExplorer.Administration.ViewModels
             rootElements.Add(dto.ComputerDirectory);
 
             RootViewModels = rootElements.Select(x =>
-                    new DirectoryNodeViewModel(this, null, x, _fileExplorerViewModel.FileSystem,
+                    new DirectoryViewModel(this, null, x, _fileExplorerViewModel.FileSystem,
                         _fileExplorerViewModel))
                 .ToList();
             Entries.SetEntries(UpdateMode.Update, RootViewModels.ToArray());
@@ -114,7 +114,7 @@ namespace FileExplorer.Administration.ViewModels
             foreach (var task in tasks)
                 list.AddRange(task.Result);
 
-            AutoCompleteEntries = new ObservableCollection<DirectoryNodeViewModel>(list);
+            AutoCompleteEntries = new ObservableCollection<DirectoryViewModel>(list);
         }
 
         private void OnSelectionChanged(object sender, EventArgs e)
@@ -134,7 +134,7 @@ namespace FileExplorer.Administration.ViewModels
         {
             var rootSelection = Selection.AsRoot();
 
-            DirectoryNodeViewModel directoryViewModel = null;
+            DirectoryViewModel directoryViewModel = null;
             if (rootSelection.IsChildSelected)
             {
                 var relation = _fileExplorerPathComparer.CompareHierarchy(rootSelection.SelectedValue.Path, e.Path);
@@ -204,8 +204,8 @@ namespace FileExplorer.Administration.ViewModels
             directoryViewModel.BringIntoView();
         }
 
-        private (DirectoryNodeViewModel, HierarchicalResult) FindRelatedViewModel(
-            IEnumerable<DirectoryNodeViewModel> entries, DirectoryEntry directoryEntry)
+        private (DirectoryViewModel, HierarchicalResult) FindRelatedViewModel(
+            IEnumerable<DirectoryViewModel> entries, DirectoryEntry directoryEntry)
         {
             var items = entries
                 .Select(directoryVm => (directoryVm,
@@ -215,27 +215,27 @@ namespace FileExplorer.Administration.ViewModels
             return items.FirstOrDefault();
         }
 
-        private DirectoryNodeViewModel UpwardSelect(string path, DirectoryNodeViewModel directoryNodeViewModel)
+        private DirectoryViewModel UpwardSelect(string path, DirectoryViewModel directoryViewModel)
         {
             while (true)
             {
-                directoryNodeViewModel = directoryNodeViewModel.Parent;
+                directoryViewModel = directoryViewModel.Parent;
 
-                if (directoryNodeViewModel == null)
+                if (directoryViewModel == null)
                     return null;
 
-                if (ComparePaths(directoryNodeViewModel.Source.Path, path))
-                    return directoryNodeViewModel;
+                if (ComparePaths(directoryViewModel.Source.Path, path))
+                    return directoryViewModel;
             }
         }
 
-        private async Task<DirectoryNodeViewModel> DownwardSelect(IReadOnlyList<DirectoryEntry> entries, int index, DirectoryNodeViewModel directoryNodeViewModel)
+        private async Task<DirectoryViewModel> DownwardSelect(IReadOnlyList<DirectoryEntry> entries, int index, DirectoryViewModel directoryViewModel)
         {
             var currentEntry = entries[index];
-            if (!directoryNodeViewModel.Entries.IsLoaded)
-                await directoryNodeViewModel.Entries.LoadAsync();
+            if (!directoryViewModel.Entries.IsLoaded)
+                await directoryViewModel.Entries.LoadAsync();
 
-            foreach (var viewModel in directoryNodeViewModel.Entries.All)
+            foreach (var viewModel in directoryViewModel.Entries.All)
             {
                 if (ComparePaths(currentEntry.Path, viewModel.Source.Path))
                 {

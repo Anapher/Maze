@@ -102,7 +102,7 @@
                         <controls:BreadcrumbTree x:Name="btree" ItemsSource="{Binding DirectoryTreeViewModel.Entries.All}">
                             <controls:BreadcrumbTree.ItemContainerStyle>
                                 <Style
-                                    d:DataContext="{d:DesignInstance fileExplorer:DirectoryNodeViewModel}"
+                                    d:DataContext="{d:DesignInstance fileExplorer:DirectoryViewModel}"
                                     BasedOn="{StaticResource BreadcrumbTreeItemStyle}"
                                     TargetType="{x:Type controls:BreadcrumbTreeItem}">
                                     <Setter Property="ValuePath" Value="Selection.Value" />
@@ -113,7 +113,7 @@
                                 </Style>
                             </controls:BreadcrumbTree.ItemContainerStyle>
                             <controls:BreadcrumbTree.MenuItemTemplate>
-                                <DataTemplate DataType="{x:Type fileExplorer:DirectoryNodeViewModel}">
+                                <DataTemplate DataType="{x:Type fileExplorer:DirectoryViewModel}">
                                     <StackPanel Orientation="Horizontal">
                                         <Image
                                             Width="16"
@@ -127,7 +127,7 @@
                                 </DataTemplate>
                             </controls:BreadcrumbTree.MenuItemTemplate>
                             <controls:BreadcrumbTree.ItemTemplate>
-                                <HierarchicalDataTemplate DataType="{x:Type fileExplorer:DirectoryNodeViewModel}" ItemsSource="{Binding Entries.All}">
+                                <HierarchicalDataTemplate DataType="{x:Type fileExplorer:DirectoryViewModel}" ItemsSource="{Binding Entries.All}">
                                     <TextBlock Text="{Binding Label}" />
                                 </HierarchicalDataTemplate>
                             </controls:BreadcrumbTree.ItemTemplate>

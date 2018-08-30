@@ -19,24 +19,24 @@ namespace FileExplorer.Administration
         public NavigationalEntry<ContextCommand<FileExplorerViewModel>> Section3New { get; }
     }
 
-    public class FileExplorerListDirectoryContextMenu : MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>
+    public class FileExplorerListDirectoryContextMenu : MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>
     {
         public FileExplorerListDirectoryContextMenu()
         {
-            Add(Section1 = new MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
-            Section1.Add(Section1Path = new NavigationalEntry<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
-            Add(Section2 = new MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
-            Section2.Add(Section2Archive = new NavigationalEntry<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
-            Add(Section3 = new MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
-            Add(Section4 = new MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Add(Section1 = new MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Section1.Add(Section1Path = new NavigationalEntry<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Add(Section2 = new MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Section2.Add(Section2Archive = new NavigationalEntry<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Add(Section3 = new MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
+            Add(Section4 = new MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>>());
         }
 
-        public MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section1 { get; }
-        public NavigationalEntry<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section1Path { get; }
-        public MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section2 { get; }
-        public NavigationalEntry<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section2Archive { get; }
-        public MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section3 { get; }
-        public MenuSection<ContextDiItemsCommand<DirectoryNodeViewModel, EntryViewModel, FileExplorerViewModel>> Section4 { get; }
+        public MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section1 { get; }
+        public NavigationalEntry<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section1Path { get; }
+        public MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section2 { get; }
+        public NavigationalEntry<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section2Archive { get; }
+        public MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section3 { get; }
+        public MenuSection<ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>> Section4 { get; }
     }
 
     public class FileExplorerListFileContextMenu : MenuSection<ContextDiItemsCommand<FileViewModel, EntryViewModel, FileExplorerViewModel>>

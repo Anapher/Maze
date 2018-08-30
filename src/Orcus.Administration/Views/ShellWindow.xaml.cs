@@ -23,6 +23,7 @@ namespace Orcus.Administration.Views
         public ShellWindow()
         {
             InitializeComponent();
+            ShowIconOnTitleBar = false;
         }
 
         public void InitializeWindow(object content, StatusBarManager statusBarManager)
@@ -60,7 +61,7 @@ namespace Orcus.Administration.Views
         public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons,
             MessageBoxImage icon, MessageBoxResult defResult, MessageBoxOptions options)
         {
-            return MessageBoxEx.Show(text, caption, buttons, icon, defResult, options);
+            return MessageBoxEx.Show(this, text, caption, buttons, icon, defResult, options);
         }
 
         public object TitleBarIcon
@@ -80,6 +81,8 @@ namespace Orcus.Administration.Views
                         IconTemplate = new DataTemplate { VisualTree = factory };
                         _titleBarIcon = value;
                     }
+
+                    ShowIconOnTitleBar = true;
                 }
             }
         }
@@ -87,7 +90,11 @@ namespace Orcus.Administration.Views
         public ImageSource TaskBarIcon
         {
             get => Icon;
-            set => Icon = value;
+            set
+            {
+                Icon = value;
+                ShowIconOnTitleBar = true;
+            }
         }
 
         public object RightStatusBarContent

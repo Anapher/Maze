@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Administration.Models.Cache;
-using FileExplorer.Administration.Utilities;
 using FileExplorer.Shared.Dtos;
 
 namespace FileExplorer.Administration.Models
@@ -16,19 +16,44 @@ namespace FileExplorer.Administration.Models
         StringComparison PathStringComparison { get; }
 
         /// <summary>
+        ///     A hashset of illegal file name characters
+        /// </summary>
+        IImmutableSet<char> InvalidFileNameChars { get; }
+
+        /// <summary>
+        ///     Occurres when an entry was removed
+        /// </summary>
+        event EventHandler<FileExplorerEntry> EntryRemoved;
+
+        /// <summary>
+        ///     Occurres when an entry was updated (path changed)
+        /// </summary>
+        event EventHandler<EntryUpdatedEventArgs> EntryUpdated;
+
+        /// <summary>
+        ///     Occurres when an entry was added
+        /// </summary>
+        event EventHandler<FileExplorerEntry> EntryAdded;
+
+        /// <summary>
+        ///     Occurres when the entries of a directory were updated
+        /// </summary>
+        event EventHandler<DirectoryEntriesUpdatedEventArgs> DirectoryEntriesUpdated;
+
+        /// <summary>
+        ///     Check if the filename is valid
+        /// </summary>
+        /// <param name="filename">The filename to check</param>
+        /// <returns>Return true if the filename is valid</returns>
+        bool IsValidFilename(string filename);
+
+        /// <summary>
         ///     Compare two paths on equality
         /// </summary>
         /// <param name="path1">The first path to compare</param>
         /// <param name="path2">The second path to compare</param>
         /// <returns>Return <code>true</code> if the paths are identical</returns>
         bool ComparePaths(string path1, string path2);
-
-        /// <summary>
-        ///     Unify a path so it can be used as case-sensitive key
-        /// </summary>
-        /// <param name="path">The path to unify</param>
-        /// <returns>Return the unified path</returns>
-        string UnifyPath(string path);
 
         /// <summary>
         ///     Normalize a path but keep casing
@@ -84,5 +109,25 @@ namespace FileExplorer.Administration.Models
         /// <returns>Returns the created cache entry</returns>
         CachedDirectory AddToCache(DirectoryEntry directoryEntry, IReadOnlyList<FileExplorerEntry> entries,
             bool directoriesOnly);
+
+        /// <summary>
+        ///     Create a new directory
+        /// </summary>
+        /// <param name="path">The path of the directory to create</param>
+        /// <returns></returns>
+        Task CreateDirectory(string path);
+
+        /// <summary>
+        ///     Remove a file explorer entry
+        /// </summary>
+        /// <param name="entry">The entry to remove</param>
+        Task Remove(FileExplorerEntry entry);
+
+        /// <summary>
+        ///     Move an entry to a new location
+        /// </summary>
+        /// <param name="entry">The entry that should be moved</param>
+        /// <param name="path">The new path of the entry</param>
+        Task Move(FileExplorerEntry entry, string path);
     }
 }

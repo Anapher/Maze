@@ -6,7 +6,7 @@
 		<text key="FileExplorer:CopyDirectoryPath">Verzeichnispfad kopieren</text>
 		<text key="FileExplorer:CopyFilePath">Dateipfad kopieren</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Pfad in Zwischenablage des Remote Computers kopieren</text>
-		<text key="FileExplorer:Delete">Entfernen</text>
+		<text key="FileExplorer:CreateNewFolder">Neuen Ordner erstellen</text>
 		<text key="FileExplorer:Directory">Ordner</text>
 		<text key="FileExplorer:Download">Herunterladen</text>
 		<text key="FileExplorer:DownloadFileToDirectory">Datei in Verzeichnis herunterladen</text>
@@ -19,17 +19,30 @@
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
 		<text key="FileExplorer:Execute">Ausführen</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
+		<text key="FileExplorer:FolderName">Ordnername</text>
 		<text key="FileExplorer:New">Neu</text>
+		<text key="FileExplorer:NewFolder">Neuer Ordner</text>
 		<text key="FileExplorer:OpenPath">Öffne Pfad...</text>
 		<text key="FileExplorer:ParentFolderPath">Pfad des Oberverzeichnisses</text>
 		<text key="FileExplorer:PathCopy">Pfad kopieren</text>
 		<text key="FileExplorer:Properties">Eigenschaften</text>
 		<text key="FileExplorer:Refresh">Aktualisieren</text>
+		<text key="FileExplorer:Remove">Löschen</text>
+		<text key="FileExplorer:Remove.Directories">{#} Ordner</text>
+		<text key="FileExplorer:Remove.Directories" count="1" acceptplaceholders="true">den Ordner "{name}"</text>
+		<text key="FileExplorer:Remove.Files">{#} Dateien</text>
+		<text key="FileExplorer:Remove.Files" count="1" acceptplaceholders="true">die Datei "{name}"</text>
+		<text key="FileExplorer:Remove.Prompt">Sind Sie sicher, dass Sie {entities} entfernen möchten?</text>
+		<text key="FileExplorer:Remove.PromptMultiple">Sind Sie sicher, dass Sie {entities1} und {entities2} entfernen möchten?</text>
 		<text key="FileExplorer:Rename">Umbenennen</text>
 		<text key="FileExplorer:SearchWatermark">Suche...</text>
 		<text key="FileExplorer:Size">Größe</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries">Entferne {#} Einträge</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne einen Eintrag</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Lade Unterverzeichnisse</text>
+		<text key="FileExplorer:StatusBar.RenameDirectory">Ordner wird zu {name} umbenannt</text>
+		<text key="FileExplorer:StatusBar.RenameFile">Datei wird zu {name} umbenannt</text>
 		<text key="FileExplorer:Type">Type</text>
 		<text key="FileExplorer:UploadFile">Datei hochladen</text>
 	</culture>
@@ -38,7 +51,7 @@
 		<text key="FileExplorer:CopyDirectoryPath">Copy directory path</text>
 		<text key="FileExplorer:CopyFilePath">Copy file path</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Copy path to clipboard on remote computer</text>
-		<text key="FileExplorer:Delete">Delete</text>
+		<text key="FileExplorer:CreateNewFolder">Create new folder</text>
 		<text key="FileExplorer:Directory">Directory</text>
 		<text key="FileExplorer:Download">Download</text>
 		<text key="FileExplorer:DownloadFileToDirectory">Download file to current directory</text>
@@ -51,17 +64,30 @@
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
 		<text key="FileExplorer:Execute">Execute</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
+		<text key="FileExplorer:FolderName">Folder name</text>
 		<text key="FileExplorer:New">New</text>
+		<text key="FileExplorer:NewFolder">New folder</text>
 		<text key="FileExplorer:OpenPath">Open path...</text>
 		<text key="FileExplorer:ParentFolderPath">Parent folder path</text>
 		<text key="FileExplorer:PathCopy">Path Copy</text>
 		<text key="FileExplorer:Properties">Properties</text>
 		<text key="FileExplorer:Refresh">Refresh</text>
+		<text key="FileExplorer:Remove">Remove</text>
+		<text key="FileExplorer:Remove.Directories">{#} directories</text>
+		<text key="FileExplorer:Remove.Directories" count="1" acceptplaceholders="true">the directory "{name}"</text>
+		<text key="FileExplorer:Remove.Files">{#} files</text>
+		<text key="FileExplorer:Remove.Files" count="1" acceptplaceholders="true">the file "{name}"</text>
+		<text key="FileExplorer:Remove.Prompt">Are you sure that you want to remove {entities}?</text>
+		<text key="FileExplorer:Remove.PromptMultiple">Are you sure that you want to remove {entities1} and {entities2}?</text>
 		<text key="FileExplorer:Rename">Rename</text>
 		<text key="FileExplorer:SearchWatermark">Search...</text>
 		<text key="FileExplorer:Size">Size</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries">Delete {#} entries</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one entry</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Load subdirectories</text>
+		<text key="FileExplorer:StatusBar.RenameDirectory">Rename directory to "{name}"</text>
+		<text key="FileExplorer:StatusBar.RenameFile">Rename file to "{name}"</text>
 		<text key="FileExplorer:Type">Type</text>
 		<text key="FileExplorer:UploadFile">Upload file</text>
 	</culture>

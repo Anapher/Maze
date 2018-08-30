@@ -71,7 +71,7 @@ namespace FileExplorer.Administration.Menus
             });
             _contextMenu.Section4.Add(new ContextDiItemsCommand<FileViewModel, EntryViewModel, FileExplorerViewModel>
             {
-                Header = Tx.T("FileExplorer:Delete"),
+                Header = Tx.T("FileExplorer:Remove"),
                 Icon = _icons.Cancel,
                 Command = new ContextDelegateCommand<FileViewModel, FileExplorerViewModel>((model, viewModel) => EntryViewModelCommands.DeleteEntries(model.Yield(), viewModel)),
                 MultipleCommand = new ContextDelegateCommand<IEnumerable<EntryViewModel>, FileExplorerViewModel>(EntryViewModelCommands.DeleteEntries)

@@ -212,6 +212,8 @@
 
     <!--#region StatusBar-->
 
+    <converter:NoNewLinesConverter x:Key="NoNewLinesConverter" />
+
     <Style TargetType="controls:StatusBar">
         <Setter Property="Height" Value="25" />
         <Setter Property="Background" Value="{StaticResource AccentColorBrush}" />
@@ -220,56 +222,72 @@
                 <ControlTemplate TargetType="controls:StatusBar">
                     <Border x:Name="BackgroundBorder" Background="{TemplateBinding Background}">
                         <DockPanel Margin="6,0,0,0" LastChildFill="True">
-                            <ContentControl
-                                x:Name="ImageContentControl"
-                                VerticalAlignment="Center"
-                                Foreground="{StaticResource IdealForegroundColorBrush}">
-                                <ContentControl.Resources>
-                                    <DataTemplate DataType="{x:Type statusBar:TextStatusMessage}">
-                                        <controls:FrameAnimationControl>
-                                            <controls:FrameAnimationControl.Style>
-                                                <Style TargetType="controls:FrameAnimationControl">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.None}">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Build}">
-                                                            <Setter Property="FrameResourceName" Value="BuildSolutionStatusBar*Icon/13" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Save}">
-                                                            <Setter Property="FrameResourceName" Value="SaveStatusBar*Icon/9" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Search}">
-                                                            <Setter Property="FrameResourceName" Value="SearchStatusBar*Icon/7" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Send}">
-                                                            <Setter Property="FrameResourceName" Value="SyncArrowStatusBar*Icon/12" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </controls:FrameAnimationControl.Style>
-                                        </controls:FrameAnimationControl>
-                                    </DataTemplate>
-                                </ContentControl.Resources>
-                                <ContentControl.Style>
-                                    <Style TargetType="ContentControl">
-                                        <Setter Property="Content" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShellStatusBar.CurrentStatusMessage}" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShellStatusBar.CurrentStatusMessage}" Value="{x:Null}">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ContentControl.Style>
-                            </ContentControl>
                             <mah:TransitioningContentControl
-                                Margin="6,0,10,0"
+                                Margin="0,0,10,0"
                                 VerticalAlignment="Center"
                                 Foreground="{StaticResource IdealForegroundColorBrush}"
                                 Transition="Down">
                                 <ContentControl.Resources>
                                     <DataTemplate DataType="{x:Type statusBar:TextStatusMessage}">
-                                        <mah:TransitioningContentControl Content="{Binding Message}" Transition="Down" />
+                                        <DockPanel>
+                                            <controls:FrameAnimationControl VerticalAlignment="Center">
+                                                <controls:FrameAnimationControl.Style>
+                                                    <Style TargetType="controls:FrameAnimationControl">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.None}">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Build}">
+                                                                <Setter Property="FrameResourceName" Value="BuildSolutionStatusBar*Icon/13" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Save}">
+                                                                <Setter Property="FrameResourceName" Value="SaveStatusBar*Icon/9" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Search}">
+                                                                <Setter Property="FrameResourceName" Value="SearchStatusBar*Icon/7" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Animation}" Value="{x:Static statusBar:StatusBarAnimation.Send}">
+                                                                <Setter Property="FrameResourceName" Value="SyncArrowStatusBar*Icon/12" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </controls:FrameAnimationControl.Style>
+                                            </controls:FrameAnimationControl>
+                                            <mah:TransitioningContentControl
+                                                Margin="6,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Content="{Binding Message, Converter={StaticResource NoNewLinesConverter}}"
+                                                Transition="Down" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type statusBar:ProgressStatusMessage}">
+                                        <DockPanel>
+                                            <mah:MetroProgressBar
+                                                Width="75"
+                                                Height="9"
+                                                VerticalAlignment="Center"
+                                                Background="{StaticResource IdealForegroundColorBrush}"
+                                                BorderBrush="{StaticResource GrayBrush8}"
+                                                BorderThickness="1"
+                                                Maximum="1"
+                                                Value="{Binding Progress}">
+                                                <mah:MetroProgressBar.Style>
+                                                    <Style TargetType="mah:MetroProgressBar">
+                                                        <Setter Property="Foreground" Value="#2ecc71" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Progress}" Value="{x:Null}">
+                                                                <Setter Property="IsIndeterminate" Value="True" />
+                                                                <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </mah:MetroProgressBar.Style>
+                                            </mah:MetroProgressBar>
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Message}" />
+                                        </DockPanel>
                                     </DataTemplate>
                                 </ContentControl.Resources>
                                 <mah:TransitioningContentControl.Style>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Utilities;
+using FileExplorer.Administration.ViewModels.Explorer;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;

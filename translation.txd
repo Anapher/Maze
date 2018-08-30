@@ -5,6 +5,7 @@
 		<text key="All">Alle</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Create">Erstellen</text>
 		<text key="DefaultClientListView:Connected">Verbunden</text>
 		<text key="DefaultClientListView:IpAddress">IP-Adresse</text>
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
@@ -216,11 +217,13 @@
 		<text key="Tx:time.span neg.years.single" count="1">einem Jahr</text>
 		<text key="Username">Benutzername</text>
 		<text key="Version">Version</text>
+		<text key="Warning">Warnung</text>
 	</culture>
 	<culture name="en" primary="true">
 		<text key="All">All</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Create">Create</text>
 		<text key="DefaultClientListView:Connected">Connected</text>
 		<text key="DefaultClientListView:IpAddress">Ip Address</text>
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
@@ -448,5 +451,6 @@
 		<text key="Tx:time.span neg.years.single" count="1">a year</text>
 		<text key="Username">Username</text>
 		<text key="Version">Version</text>
+		<text key="Warning">Warning</text>
 	</culture>
 </translation>

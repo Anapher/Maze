@@ -1,4 +1,4 @@
-﻿namespace FileExplorer.Administration.ViewModels
+﻿namespace FileExplorer.Administration.ViewModels.Explorer
 {
     public interface IFileExplorerChildViewModel
     {
