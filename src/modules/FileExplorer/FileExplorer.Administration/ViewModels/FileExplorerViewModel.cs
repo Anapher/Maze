@@ -11,6 +11,7 @@ using Orcus.Administration.Library.Exceptions;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Administration.Library.Views;
 using Prism.Mvvm;
 using Prism.Regions;
 using Unclassified.TxLib;
@@ -23,7 +24,7 @@ namespace FileExplorer.Administration.ViewModels
         private CancellationTokenSource _openPathCancellationTokenSource;
         private bool _isLoaded;
 
-        public FileExplorerViewModel(IShellStatusBar statusBar, IWindow window, IMemoryCache cache,
+        public FileExplorerViewModel(IShellStatusBar statusBar, IDialogWindow window, IMemoryCache cache,
             ITargetedRestClient client, IAppDispatcher dispatcher, IImageProvider imageProvider)
         {
             StatusBar = statusBar;
@@ -36,9 +37,10 @@ namespace FileExplorer.Administration.ViewModels
             NavigationBarViewModel = new NavigationBarViewModel();
             DirectoryTreeViewModel = new DirectoryTreeViewModel();
             EntriesViewModel = new EntriesViewModel();
+            FileTransferManagerViewModel = new FileTransferManagerViewModel();
 
             foreach (var childViewModel in new IFileExplorerChildViewModel[]
-                {NavigationBarViewModel, DirectoryTreeViewModel, EntriesViewModel})
+                {NavigationBarViewModel, DirectoryTreeViewModel, EntriesViewModel, FileTransferManagerViewModel})
                 childViewModel.Initialize(this);
         }
 
@@ -46,7 +48,7 @@ namespace FileExplorer.Administration.ViewModels
 
         public IPackageRestClient RestClient { get; }
         public IShellStatusBar StatusBar { get; }
-        public IWindow Window { get; }
+        public IDialogWindow Window { get; }
         public IImageProvider ImageProvider { get; }
         public IAppDispatcher Dispatcher { get; }
         public IFileSystem FileSystem { get; }
@@ -54,6 +56,7 @@ namespace FileExplorer.Administration.ViewModels
         public EntriesViewModel EntriesViewModel { get; }
         public NavigationBarViewModel NavigationBarViewModel { get; }
         public DirectoryTreeViewModel DirectoryTreeViewModel { get; }
+        public FileTransferManagerViewModel FileTransferManagerViewModel { get; }
 
         public string CurrentPath
         {

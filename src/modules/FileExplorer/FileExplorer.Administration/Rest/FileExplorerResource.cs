@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using FileExplorer.Shared.Dtos;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Clients.Helpers;
@@ -14,16 +16,12 @@ namespace FileExplorer.Administration.Rest
         public static Task<RootElementsDto> GetRoot(IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Get, "root").Execute(restClient).Return<RootElementsDto>();
 
-        public static Task<PathTreeResponseDto> GetPathTree(PathTreeRequestDto requestDto, bool keepOrder,
+        public static Task<PathTreeResponseDto> GetPathTree(PathTreeRequestDto requestDto, bool keepOrder, CancellationToken cancellationToken,
             IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "pathTree", requestDto).AddQueryParam("keepOrder", keepOrder.ToString())
-                .Execute(restClient).Return<PathTreeResponseDto>();
+                .Execute(restClient, cancellationToken).Return<PathTreeResponseDto>();
 
-        //{
-        //    //;
-        //    var ads = await CreateRequest(HttpVerb.Post, "pathTree", requestDto).Execute(restClient);
-        //    var data = await ads.Content.ReadAsStringAsync();
-        //    return JsonConvert.DeserializeObject<PathTreeResponseDto>(data);
-        //}
+        public static Task Upload(HttpContent httpContent, string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "upload", httpContent).AddQueryParam("path", path).Execute(restClient, cancellationToken);
     }
 }

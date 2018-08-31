@@ -44,7 +44,8 @@ namespace Orcus.Service.Commander
                     new MemoryPoolHttpRequestStreamReaderFactory(ArrayPool<byte>.Shared, charPool)),
                 new EnumTypeModelBinderProvider(),
                 new SimpleTypeModelBinderProvider(),
-                new ByteArrayModelBinderProvider()
+                new ByteArrayModelBinderProvider(),
+                new CancellationTokenModelBinderProvider()
             };
         }
 

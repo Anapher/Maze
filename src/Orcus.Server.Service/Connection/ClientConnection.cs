@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Server.Library.Services;
 using Orcus.Sockets;
@@ -30,7 +31,7 @@ namespace Orcus.Server.Service.Connection
             return WebSocketWrapper.ReceiveAsync();
         }
 
-        public Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage) =>
-            OrcusServer.SendRequest(requestMessage);
+        public Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage, CancellationToken cancellationToken) =>
+            OrcusServer.SendRequest(requestMessage, cancellationToken);
     }
 }

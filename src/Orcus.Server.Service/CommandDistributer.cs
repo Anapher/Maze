@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Modules.Api.Request;
 using Orcus.Server.Connection.Commanding;
@@ -10,7 +11,7 @@ namespace Orcus.Server.Service
     public interface ICommandDistributer
     {
         Task Execute(OrcusRequest request, CommandTargetCollection targets, CommandExecutionPolicy executionPolicy);
-        Task<HttpResponseMessage> Execute(HttpRequestMessage request, int clientId);
+        Task<HttpResponseMessage> Execute(HttpRequestMessage request, int clientId, CancellationToken cancellationToken);
     }
 
     public class CommandDistributer : ICommandDistributer
@@ -26,10 +27,10 @@ namespace Orcus.Server.Service
             CommandExecutionPolicy executionPolicy) =>
             throw new NotImplementedException();
 
-        public Task<HttpResponseMessage> Execute(HttpRequestMessage request, int clientId)
+        public Task<HttpResponseMessage> Execute(HttpRequestMessage request, int clientId, CancellationToken cancellationToken)
         {
             if (_connectionManager.ClientConnections.TryGetValue(clientId, out var clientConnection))
-                return clientConnection.SendRequest(request);
+                return clientConnection.SendRequest(request, cancellationToken);
 
             throw new ClientNotFoundException();
         }

@@ -80,6 +80,7 @@
     <Compile Include="Controls\TreeViewEx.cs" />
     <Compile Include="Controls\TreeViewItemEx.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
+    <Compile Include="Converters\IsTransferFinishedConverter.cs" />
     <Compile Include="FileExplorerContextMenu.cs" />
     <Compile Include="Helpers\EntriesHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
@@ -131,6 +132,9 @@
     <Compile Include="Utilities\IImageProvider.cs" />
     <Compile Include="Utilities\ImageProvider.cs" />
     <Compile Include="Utilities\PropertyPathHelper.cs" />
+    <Compile Include="ViewModels\Explorer\FileTransferState.cs" />
+    <Compile Include="ViewModels\Explorer\FileTransferViewModel.cs" />
+    <Compile Include="ViewModels\FileTransferManagerViewModel.cs" />
     <Compile Include="ViewModels\InputTextViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\EntriesViewModel.cs" />
@@ -145,6 +149,8 @@
     <Compile Include="Models\IUiTools.cs" />
     <Compile Include="ViewModels\Explorer\IFileExplorerChildViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
+    <Compile Include="Models\ZipContent.cs" />
+    <Compile Include="Models\ZipContentProgressChangedEventArgs.cs" />
     <Compile Include="Views\Dialogs\InputTextView.xaml.cs">
       <DependentUpon>InputTextView.xaml</DependentUpon>
     </Compile>

@@ -13,7 +13,7 @@ namespace Orcus.Service.Commander
         /// <summary>
         ///     Execute the given <see cref="OrcusRequest" />
         /// </summary>
-        /// <param name="request">The requested method</param>
+        /// <param name="context">The context</param>
         /// <returns>Return the result of the request</returns>
         Task Execute(OrcusContext context);
     }

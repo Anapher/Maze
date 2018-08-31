@@ -2,6 +2,7 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="FileExplorer:AllFilesFilter">Alle Dateien|*.*</text>
 		<text key="FileExplorer:Archive">Archiv</text>
 		<text key="FileExplorer:CopyDirectoryPath">Verzeichnispfad kopieren</text>
 		<text key="FileExplorer:CopyFilePath">Dateipfad kopieren</text>
@@ -36,6 +37,7 @@
 		<text key="FileExplorer:Remove.PromptMultiple">Sind Sie sicher, dass Sie {entities1} und {entities2} entfernen möchten?</text>
 		<text key="FileExplorer:Rename">Umbenennen</text>
 		<text key="FileExplorer:SearchWatermark">Suche...</text>
+		<text key="FileExplorer:SelectFilesToUpload">Bitte wählen Sie die Dateien aus, die in das Zielverzeichnis hochgeladen werden sollen</text>
 		<text key="FileExplorer:Size">Größe</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries">Entferne {#} Einträge</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne einen Eintrag</text>
@@ -47,6 +49,7 @@
 		<text key="FileExplorer:UploadFile">Datei hochladen</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="FileExplorer:AllFilesFilter">All files|*.*</text>
 		<text key="FileExplorer:Archive">Archive</text>
 		<text key="FileExplorer:CopyDirectoryPath">Copy directory path</text>
 		<text key="FileExplorer:CopyFilePath">Copy file path</text>
@@ -81,6 +84,7 @@
 		<text key="FileExplorer:Remove.PromptMultiple">Are you sure that you want to remove {entities1} and {entities2}?</text>
 		<text key="FileExplorer:Rename">Rename</text>
 		<text key="FileExplorer:SearchWatermark">Search...</text>
+		<text key="FileExplorer:SelectFilesToUpload">Please select the files you want to upload to the target directory</text>
 		<text key="FileExplorer:Size">Size</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries">Delete {#} entries</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one entry</text>

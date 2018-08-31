@@ -29,6 +29,7 @@ namespace Orcus.Sockets
             Close = 0x2,
             Request = 0x3,
             Response = 0x4,
+            CancelRequest = 0x5,
             Ping = 0x9,
             Pong = 0xA,
 

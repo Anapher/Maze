@@ -14,6 +14,7 @@ namespace Orcus.Core.Commanding
         {
             Request = args.Request;
             Response = args.Response;
+            RequestAborted = args.CancellationToken;
 
             Request.Context = this;
         }
@@ -27,7 +28,6 @@ namespace Orcus.Core.Commanding
 
         public override void Abort()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.Native;
 using FileExplorer.Shared.Dtos;
 

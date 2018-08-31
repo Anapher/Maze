@@ -51,6 +51,9 @@ namespace Orcus.Service.Commander
             }
             catch (Exception e)
             {
+                if (context.RequestAborted.IsCancellationRequested)
+                    return;
+
                 _logger.LogError(e,
                     $"Error occurred when invoking method {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
                 await WriteError(context,
@@ -59,12 +62,18 @@ namespace Orcus.Service.Commander
                 return;
             }
 
+            if (context.RequestAborted.IsCancellationRequested)
+                return;
+
             try
             {
                 await actionResult.ExecuteResultAsync(actionContext);
             }
             catch (Exception e)
             {
+                if (context.RequestAborted.IsCancellationRequested)
+                    return;
+
                 _logger.LogError(e,
                     $"Error occurred when executing action result {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
                 await WriteError(context,

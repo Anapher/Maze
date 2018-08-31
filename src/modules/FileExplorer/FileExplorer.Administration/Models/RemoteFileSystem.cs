@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Administration.Cache;
 using FileExplorer.Administration.Extensions;
+using FileExplorer.Administration.Models.Args;
 using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
@@ -117,7 +118,7 @@ namespace FileExplorer.Administration.Models
             if (request.RequestEntries || request.RequestedDirectories.Any())
             {
                 queryResponse = await FileExplorerResource.GetPathTree(request,
-                    DirectoryHelper.IsComputerDirectory(path), _restClient);
+                    DirectoryHelper.IsComputerDirectory(path), token, _restClient);
             }
 
             parts.Add(path);

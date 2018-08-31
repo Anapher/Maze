@@ -3,7 +3,7 @@ using System.IO;
 using FileExplorer.Shared.Dtos;
 
 // ReSharper disable once CheckNamespace
-namespace FileExplorer.Administration.Models
+namespace FileExplorer.Administration.Models.Args
 {
     public class EntryUpdatedEventArgs : EventArgs
     {

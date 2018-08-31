@@ -8,6 +8,8 @@ using System.Windows.Media;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels;
+using FileExplorer.Administration.ViewModels.Explorer;
+using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
@@ -96,9 +98,23 @@ namespace FileExplorer.Administration.Menus
             throw new System.NotImplementedException();
         }
 
-        private void UploadFile(FileExplorerViewModel obj)
+        private void UploadFile(FileExplorerViewModel context)
         {
-            throw new System.NotImplementedException();
+            var ofd = new VistaOpenFileDialog
+            {
+                Title = Tx.T("FileExplorer:SelectFilesToUpload"),
+                Filter = Tx.T("FileExplorer:AllFilesFilter"),
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Multiselect = true
+            };
+
+            if (context.Window.ShowDialog(ofd) == true)
+            {
+                foreach (var fileInfo in ofd.FileNames.Select(x => new FileInfo(x)))
+                    context.FileTransferManagerViewModel.ExecuteTransfer(
+                        new FileTransferViewModel(fileInfo, context.CurrentPath));
+            }
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

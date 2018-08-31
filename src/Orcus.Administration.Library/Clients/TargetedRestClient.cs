@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Administration.Library.Extensions;
 
@@ -17,13 +18,13 @@ namespace Orcus.Administration.Library.Clients
             _commandTargetHeader = "C" + clientId;
         }
 
-        public Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
+        public Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             request.Headers.Add("CommandTarget", _commandTargetHeader);
 
             //request.Uri = TestModule/Controller
             request.RequestUri = UriHelper.CombineRelativeUris(RelativeBaseUri, request.RequestUri);
-            return _orcusRestClient.SendMessage(request);
+            return _orcusRestClient.SendMessage(request, cancellationToken);
         }
     }
 }

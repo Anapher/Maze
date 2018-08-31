@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Administration.Library.Extensions;
 
@@ -16,10 +17,10 @@ namespace Orcus.Administration.Library.Clients
             _packageUri = new Uri(packageName, UriKind.Relative);
         }
 
-        public Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
+        public Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             request.RequestUri = UriHelper.CombineRelativeUris(_packageUri, request.RequestUri);
-            return _targetedRestClient.SendMessage(request);
+            return _targetedRestClient.SendMessage(request, cancellationToken);
         }
     }
 }

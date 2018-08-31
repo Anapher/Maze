@@ -81,8 +81,9 @@ namespace Orcus.Sockets.Internal
                 {
                     if (_buffers.Any())
                     {
-                        CopyBuffer(buffer, offset, count, ref currentPosition);
-                        continue;
+                        CopyBuffer(buffer, offset + currentPosition, count - currentPosition, ref currentPosition);
+                        if (currentPosition != count)
+                            continue;
                     }
 
                     if (currentPosition > 0)
@@ -108,8 +109,9 @@ namespace Orcus.Sockets.Internal
                 {
                     if (_buffers.Any())
                     {
-                        CopyBuffer(buffer, offset, count, ref currentPosition);
-                        continue;
+                        CopyBuffer(buffer, offset + currentPosition, count - currentPosition, ref currentPosition);
+                        if (currentPosition != count)
+                            continue;
                     }
 
                     if (currentPosition > 0)
@@ -119,7 +121,7 @@ namespace Orcus.Sockets.Internal
                         return 0;
                 }
 
-                await _bufferWaitingAutoResetEvent.WaitAsync();
+                await _bufferWaitingAutoResetEvent.WaitAsync(cancellationToken);
             }
 
             return currentPosition;

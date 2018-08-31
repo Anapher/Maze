@@ -26,6 +26,7 @@ namespace Orcus.Sockets
         private readonly ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>> _waitingRequests;
         private readonly ConcurrentDictionary<int, OrcusChannel> _channels;
         private readonly ConcurrentDictionary<OrcusChannel, int> _channelsReversed;
+        private readonly ConcurrentDictionary<int, CancellationTokenSource> _cancellableRequests;
 
         private readonly IDataSocket _socket;
         private int _requestCounter;
@@ -41,6 +42,7 @@ namespace Orcus.Sockets
             _activeRequests = new ConcurrentDictionary<int, BufferQueueStream>();
             _activeResponses = new ConcurrentDictionary<int, BufferQueueStream>();
             _waitingRequests = new ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>>();
+            _cancellableRequests = new ConcurrentDictionary<int, CancellationTokenSource>();
 
             socket.DataReceivedEventArgs += SocketOnDataReceivedEventArgs;
 
@@ -59,8 +61,10 @@ namespace Orcus.Sockets
             _channelsReversed.TryAdd(channel, channelId);
         }
 
-        public async Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage)
+        public async Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (requestMessage.Headers.Contains(OrcusSocketRequestIdHeader))
                 throw new ArgumentException($"The orcus request must not have a {OrcusSocketRequestIdHeader} header.",
                     nameof(requestMessage));
@@ -93,7 +97,7 @@ namespace Orcus.Sockets
                 else
                 {
                     //read something
-                    read = await bodyStream.ReadAsync(sendBuffer, offset, maxReadLength);
+                    read = await bodyStream.ReadAsync(sendBuffer, offset, maxReadLength, cancellationToken);
                     if (read < maxReadLength)
                     {
                         if (read == 0)
@@ -104,7 +108,7 @@ namespace Orcus.Sockets
                         else
                         {
                             //we read less than requested. check if we already reached the end
-                            var read2 = await bodyStream.ReadAsync(sendBuffer, offset + read, maxReadLength - read);
+                            var read2 = await bodyStream.ReadAsync(sendBuffer, offset + read, maxReadLength - read, cancellationToken);
                             if (read2 == 0)
                                 opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
                             else
@@ -113,45 +117,70 @@ namespace Orcus.Sockets
                     }
                 }
 
-                await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, read + offset),
-                    CancellationToken.None);
+                cancellationToken.ThrowIfCancellationRequested(); //last chance without having to send a cancel package
 
-                if (opCode == OrcusSocket.MessageOpcode.Request)
+                try
                 {
-                    BinaryUtils.WriteInt32(ref sendBuffer, 0, requestId);
-                    opCode = OrcusSocket.MessageOpcode.RequestContinuation;
-                    maxReadLength = sendBuffer.Length - 4;
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                    while (true)
+                    await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, read + offset),
+                        cancellationToken);
+
+                    if (opCode == OrcusSocket.MessageOpcode.Request)
                     {
-                        read = await bodyStream.ReadAsync(sendBuffer, 4, maxReadLength);
-                        if (read == 0)
+                        BinaryUtils.WriteInt32(ref sendBuffer, 0, requestId);
+                        opCode = OrcusSocket.MessageOpcode.RequestContinuation;
+                        maxReadLength = sendBuffer.Length - 4;
+
+                        while (true)
                         {
-                            opCode = OrcusSocket.MessageOpcode.RequestContinuationFinished;
-                        }
-                        else if (read < maxReadLength)
-                        {
-                            var read2 = await bodyStream.ReadAsync(sendBuffer, 4 + read, maxReadLength - read);
-                            if (read2 == 0)
+                            read = await bodyStream.ReadAsync(sendBuffer, 4, maxReadLength, cancellationToken);
+                            if (read == 0)
+                            {
                                 opCode = OrcusSocket.MessageOpcode.RequestContinuationFinished;
-                            else
-                                read += read2;
+                            }
+                            else if (read < maxReadLength)
+                            {
+                                var read2 = await bodyStream.ReadAsync(sendBuffer, 4 + read, maxReadLength - read,
+                                    cancellationToken);
+                                if (read2 == 0)
+                                    opCode = OrcusSocket.MessageOpcode.RequestContinuationFinished;
+                                else
+                                    read += read2;
+                            }
+
+                            await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, 4 + read),
+                                cancellationToken);
+
+                            if (opCode == OrcusSocket.MessageOpcode.RequestContinuationFinished)
+                                break;
                         }
-
-                        await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, 4 + read),
-                            CancellationToken.None);
-
-                        if (opCode == OrcusSocket.MessageOpcode.RequestContinuationFinished)
-                            break;
                     }
                 }
+                catch (Exception)
+                {
+                    await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CancelRequest,
+                        new ArraySegment<byte>(BitConverter.GetBytes(requestId)),
+                        CancellationToken.None); //DO NOT USE THE CANCELLATION TOKEN HERE
+                    throw;
+                }
             }
+
+            cancellationToken.Register(() =>
+            {
+                _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CancelRequest,
+                    new ArraySegment<byte>(BitConverter.GetBytes(requestId)), CancellationToken.None).Wait();
+                requestWaiter.SetCanceled();
+            });
 
             return await requestWaiter.Task;
         }
 
         public async Task FinishResponse(OrcusRequestReceivedEventArgs e)
         {
+            if (e.CancellationToken.IsCancellationRequested)
+                return;
+
             var defaultResponse = (DefaultOrcusResponse) e.Response;
             defaultResponse.IsCompleted = true;
             await defaultResponse.Body.FlushAsync();
@@ -189,6 +218,9 @@ namespace Orcus.Sockets
                     break;
                 case OrcusSocket.MessageOpcode.ResponseContinuationFinished:
                     AppendResponseData(e.Buffer, true);
+                    break;
+                case OrcusSocket.MessageOpcode.CancelRequest:
+                    CancelRequest(e.Buffer);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -267,6 +299,15 @@ namespace Orcus.Sockets
                 buffer.Count - headerLength));
 
             var requestId = int.Parse(request.Headers[OrcusSocketRequestIdHeader]);
+            var cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
+            var token = cancellationTokenSource.Token;
+
+            if (token.IsCancellationRequested)
+            {
+                cancellationTokenSource.Dispose();
+                _cancellableRequests.TryRemove(requestId, out _);
+                return;
+            }
 
             if (isCompleted)
             {
@@ -289,15 +330,17 @@ namespace Orcus.Sockets
 
             var response = new DefaultOrcusResponse(requestId);
             response.Headers.Add(OrcusSocketRequestIdHeader, requestId.ToString());
-            response.Body = new PackagingBufferStream(data => SendResponsePackage(response, data), _packageBufferSize);
+            response.Body = new PackagingBufferStream(data => SendResponsePackage(response, data, token), _packageBufferSize);
 
-            RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response));
+            Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token)));
         }
 
-        private async Task SendResponsePackage(DefaultOrcusResponse orcusResponse, ArraySegment<byte> data)
+        private async Task SendResponsePackage(DefaultOrcusResponse orcusResponse, ArraySegment<byte> data, CancellationToken cancellationToken)
         {
             if (orcusResponse.IsFinished)
                 throw new InvalidOperationException("The response is already finished and no new data can be written");
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (!orcusResponse.HasStarted)
             {
@@ -434,9 +477,32 @@ namespace Orcus.Sockets
                 response.IsCompleted = true;
                 _activeResponses.TryRemove(requestId, out _);
             }
-            
+
             //important: also push the buffer if it's empty, the stream disposes it and the autoresetevent must be set!
             response.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + 4, buffer.Count - 4));
+        }
+
+        private void CancelRequest(ArraySegment<byte> buffer)
+        {
+            var requestId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
+            if (_cancellableRequests.TryGetValue(requestId, out var cancellationTokenSource))
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                _cancellableRequests.TryRemove(requestId, out _);
+            }
+            else
+            {
+                cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
+                cancellationTokenSource.Cancel();
+
+                //important to prevent memory leak as the request may never come in
+                Task.Delay(TimeSpan.FromMinutes(5)).ContinueWith(task =>
+                {
+                    cancellationTokenSource.Dispose();
+                    _cancellableRequests.TryRemove(requestId, out _);
+                });
+            }
         }
 
         public void Dispose()

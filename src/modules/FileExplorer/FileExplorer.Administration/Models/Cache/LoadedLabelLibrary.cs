@@ -2,7 +2,7 @@
 using System.Text;
 using FileExplorer.Administration.Native;
 
-namespace FileExplorer.Administration.Utilities
+namespace FileExplorer.Administration.Models.Cache
 {
     public class LoadedLabelLibrary : IDisposable
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace FileExplorer.Client.Controllers
     public class FileExplorerController : OrcusController
     {
         [OrcusGet("root")]
-        public async Task<IActionResult> GetRootElements()
+        public async Task<IActionResult> GetRootElements(CancellationToken cancellationToken)
         {
             var result = new RootElementsDto();
             var directoryHelper = new DirectoryHelper();
@@ -31,7 +32,7 @@ namespace FileExplorer.Client.Controllers
                     result.ComputerDirectory =
                         directoryHelper.GetDirectoryEntry(DirectoryInfoEx.MyComputerDirectory, null)),
                 Task.Run(async () => result.ComputerDirectoryEntries =
-                    (await directoryHelper.GetEntriesKeepOrder(DirectoryInfoEx.MyComputerDirectory, CancellationToken.None))
+                    (await directoryHelper.GetEntriesKeepOrder(DirectoryInfoEx.MyComputerDirectory, cancellationToken))
                     .ToList())
             };
 
@@ -40,7 +41,8 @@ namespace FileExplorer.Client.Controllers
         }
 
         [OrcusPost("pathTree")]
-        public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request, [FromQuery] bool keepOrder)
+        public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request, [FromQuery] bool keepOrder,
+            CancellationToken cancellationToken)
         {
             var response = new PathTreeResponseDto();
             var directoryHelper = new DirectoryHelper();
@@ -49,8 +51,8 @@ namespace FileExplorer.Client.Controllers
             if (request.RequestEntries)
             {
                 entriesTask = keepOrder
-                    ? directoryHelper.GetEntriesKeepOrder(request.Path, CancellationToken.None)
-                    : directoryHelper.GetEntries(request.Path, CancellationToken.None);
+                    ? directoryHelper.GetEntriesKeepOrder(request.Path, cancellationToken)
+                    : directoryHelper.GetEntries(request.Path, cancellationToken);
             }
 
             if (request.RequestedDirectories?.Count > 0)
@@ -62,7 +64,7 @@ namespace FileExplorer.Client.Controllers
                 {
                     var directoryPath = pathDirectories[i];
                     directories.TryAdd(i,
-                        (await directoryHelper.GetDirectoryEntries(directoryPath, CancellationToken.None)).ToList());
+                        (await directoryHelper.GetDirectoryEntries(directoryPath, cancellationToken)).ToList());
                 }, CancellationToken.None);
 
                 response.Directories = directories;
@@ -72,6 +74,36 @@ namespace FileExplorer.Client.Controllers
                 response.Entries = (await entriesTask).ToList();
 
             return Ok(response);
+        }
+
+        [OrcusPost("upload")]
+        public async Task<IActionResult> UploadFile([FromQuery] string path, CancellationToken cancellationToken)
+        {
+            using (var archive = new ZipArchive(OrcusContext.Request.Body, ZipArchiveMode.Read, true))
+            {
+                string fullName = Directory.CreateDirectory(path).FullName;
+                foreach (var entry in archive.Entries)
+                {
+                    var entryPath = Path.GetFullPath(Path.Combine(fullName, entry.FullName));
+                    if (Path.GetFileName(entryPath).Length == 0)
+                    {
+                        Directory.CreateDirectory(entryPath);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
+                        using (Stream destination = System.IO.File.Open(entryPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            using (Stream stream = entry.Open())
+                                await stream.CopyToAsync(destination);
+                        }
+
+                        System.IO.File.SetLastWriteTime(entryPath, entry.LastWriteTime.DateTime);
+                    }
+                }
+            }
+
+            return Ok();
         }
     }
 }

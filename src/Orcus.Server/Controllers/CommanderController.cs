@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +51,8 @@ namespace Orcus.Server.Controllers
                 HttpResponseMessage response;
                 try
                 {
-                    response = await commandDistributer.Execute(Request.ToHttpRequestMessage(path), clientId);
+                    response = await commandDistributer.Execute(Request.ToHttpRequestMessage(path), clientId,
+                        HttpContext.RequestAborted);
                 }
                 catch (ClientNotFoundException)
                 {

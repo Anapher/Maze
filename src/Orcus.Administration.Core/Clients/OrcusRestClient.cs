@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -37,9 +38,9 @@ namespace Orcus.Administration.Core.Clients
         public string Username { get; private set; }
         public HubConnection HubConnection { get; private set; }
 
-        public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
+        public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, cancellationToken);
             if (response.IsSuccessStatusCode)
                 return response;
 
@@ -117,7 +118,7 @@ namespace Orcus.Administration.Core.Clients
                     });
                 }
 
-                using (var response = await SendMessage(request))
+                using (var response = await SendMessage(request, CancellationToken.None))
                 {
                     var authorizationToken = await response.Content.ReadAsStringAsync();
                     _httpClient.DefaultRequestHeaders.Authorization =

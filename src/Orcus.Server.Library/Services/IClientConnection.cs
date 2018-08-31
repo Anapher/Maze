@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orcus.Server.Library.Services
@@ -7,7 +8,7 @@ namespace Orcus.Server.Library.Services
     {
         int ClientId { get; }
 
-        Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage);
+        Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage, CancellationToken cancellationToken);
     }
 
 
