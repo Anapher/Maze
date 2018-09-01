@@ -23,6 +23,7 @@ namespace Orcus.Sockets.Internal
         private bool _isDisposed;
         private long _length;
         private int _position;
+        private bool _isCompleted;
 
         public BufferQueueStream(ArrayPool<byte> bufferPool)
         {
@@ -40,7 +41,18 @@ namespace Orcus.Sockets.Internal
             set => throw new NotSupportedException();
         }
 
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set
+            {
+                if (_isCompleted != value)
+                {
+                    _isCompleted = value;
+                    _bufferWaitingAutoResetEvent.Set();
+                }
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {

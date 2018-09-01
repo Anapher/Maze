@@ -2,11 +2,11 @@
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Sockets;
 using Xunit;
 
-namespace Orcus.Server.OrcusSockets.Tests
+namespace Orcus.Sockets.Tests
 {
     public class OrcusServerTests
     {
@@ -23,7 +23,7 @@ namespace Orcus.Server.OrcusSockets.Tests
                 {
                     Content = new StringContent("Hello World!")
                 };
-            var requestTask = server.SendRequest(requestMessage); //will wait for a response
+            var requestTask = server.SendRequest(requestMessage, CancellationToken.None); //will wait for a response
             await Task.Delay(20);
 
             stream.Seek(0, SeekOrigin.Begin);

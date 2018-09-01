@@ -4,19 +4,10 @@ namespace FileExplorer.Administration.Models
 {
     public class ZipContentProgressChangedEventArgs : EventArgs
     {
-        public ZipContentProgressChangedEventArgs(double progress, long totalSize, long processedSize, double speed, TimeSpan estimatedTime)
-        {
-            Progress = progress;
-            TotalSize = totalSize;
-            ProcessedSize = processedSize;
-            Speed = speed;
-            EstimatedTime = estimatedTime;
-        }
-
-        public double Progress { get; }
-        public long TotalSize { get; }
-        public long ProcessedSize { get; }
-        public double Speed { get; }
-        public TimeSpan EstimatedTime { get;}
+        public double Progress { get; set; }
+        public long TotalSize { get; set; }
+        public long ProcessedSize { get; set; }
+        public double Speed { get; set; }
+        public TimeSpan EstimatedTime { get; set; }
     }
 }

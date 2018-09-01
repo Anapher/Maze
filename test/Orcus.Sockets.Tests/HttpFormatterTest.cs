@@ -5,7 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Orcus.Sockets.Internal.Http;
 using Xunit;
 
-namespace Orcus.Server.OrcusSockets.Tests
+namespace Orcus.Sockets.Tests
 {
     public class HttpFormatterTest
     {

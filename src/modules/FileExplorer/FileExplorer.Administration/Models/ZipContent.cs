@@ -15,7 +15,9 @@ namespace FileExplorer.Administration.Models
         private readonly FileSystemInfo _fileSystemInfo;
         private long _totalLength;
         private byte[] _buffer;
+        private static readonly TimeSpan FastUpdateInterval = TimeSpan.FromMilliseconds(50);
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromMilliseconds(400);
+        private DateTimeOffset _lastFastUpdate;
         private DateTimeOffset _lastUpdate;
         private long _actualBytesTransferred;
         private long _lastUpdateActualBytesTransferred;
@@ -33,6 +35,7 @@ namespace FileExplorer.Administration.Models
         protected override async Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
             _buffer = new byte[8192];
+            _lastFastUpdate = DateTimeOffset.UtcNow;
             _lastUpdate = DateTimeOffset.UtcNow;
 
             using (var zipArchive = new ZipArchive(stream, ZipArchiveMode.Create, true))
@@ -95,28 +98,37 @@ namespace FileExplorer.Administration.Models
             }
         }
 
+        private ZipContentProgressChangedEventArgs _args;
+
         private void UpdateProgressCallback()
         {
-            var diff = DateTimeOffset.UtcNow - _lastUpdate;
-            if (diff > UpdateInterval)
+            var diff = DateTimeOffset.UtcNow - _lastFastUpdate;
+            if (diff > FastUpdateInterval)
             {
                 if (ProgressChanged != null)
                 {
-                    var speed = (_actualBytesTransferred - _lastUpdateActualBytesTransferred) / diff.TotalSeconds;
+                    if (_args == null)
+                        _args = new ZipContentProgressChangedEventArgs {TotalSize = _totalLength};
 
-                    var estimatedBytesToTransfer =
-                        _processedSize / (double) _actualBytesTransferred * (_totalLength - _processedSize);
-                    var estimatedTime = TimeSpan.FromSeconds(estimatedBytesToTransfer / speed);
+                    var slowUpdateDiff = DateTimeOffset.UtcNow - _lastUpdate;
+                    if (slowUpdateDiff > UpdateInterval)
+                    {
+                        _args.Speed = (_actualBytesTransferred - _lastUpdateActualBytesTransferred) / slowUpdateDiff.TotalSeconds;
 
-                    var progress = _processedSize / (double) _totalLength;
+                        var estimatedBytesToTransfer =
+                            _processedSize / (double)_actualBytesTransferred * (_totalLength - _processedSize);
+                        _args.EstimatedTime = TimeSpan.FromSeconds(estimatedBytesToTransfer / _args.Speed);
 
-                    ProgressChanged(this,
-                        new ZipContentProgressChangedEventArgs(progress, _totalLength, _processedSize, speed,
-                            estimatedTime));
+                        _lastUpdateActualBytesTransferred = _actualBytesTransferred;
+                        _lastUpdate = DateTimeOffset.UtcNow;
+                    }
+
+                    _args.Progress = _processedSize / (double) _totalLength;
+                    _args.ProcessedSize = _processedSize;
+                    ProgressChanged?.Invoke(this, _args);
+
+                    _lastFastUpdate = DateTimeOffset.UtcNow;
                 }
-
-                _lastUpdate = DateTimeOffset.UtcNow;
-                _lastUpdateActualBytesTransferred = _actualBytesTransferred;
             }
         }
 

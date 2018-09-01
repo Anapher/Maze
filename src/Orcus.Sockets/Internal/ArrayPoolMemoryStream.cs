@@ -12,7 +12,8 @@ namespace Orcus.Sockets.Internal
         private readonly ArraySegment<byte> _buffer;
         private readonly ArrayPool<byte> _pool;
 
-        public ArrayPoolMemoryStream(ArraySegment<byte> buffer, ArrayPool<byte> pool) : base(buffer.Array, buffer.Offset, buffer.Count, false)
+        public ArrayPoolMemoryStream(ArraySegment<byte> buffer, ArrayPool<byte> pool) : base(buffer.Array,
+            buffer.Offset, buffer.Count, false)
         {
             _buffer = buffer;
             _pool = pool;
