@@ -45,7 +45,7 @@ namespace FileExplorer.Administration.Menus
             {
                 Header = Tx.T("FileExplorer:Refresh"),
                 Icon = _visualStudioIcons.Refresh,
-                Command = new DelegateCommand<FileExplorerViewModel>(x => RefreshDirectory(x))
+                Command = new DelegateCommand<FileExplorerViewModel>(RefreshDirectory)
             });
 
             _contextMenu.Section2.Add(new ContextCommand<FileExplorerViewModel>
@@ -76,7 +76,7 @@ namespace FileExplorer.Administration.Menus
             });
         }
 
-        private static Task RefreshDirectory(FileExplorerViewModel context) => context.OpenPath(context.CurrentPath, true);
+        private static void RefreshDirectory(FileExplorerViewModel context) => context.EntriesViewModel.RefreshCommand.Execute();
 
         private void CreateDirectory(FileExplorerViewModel context)
         {

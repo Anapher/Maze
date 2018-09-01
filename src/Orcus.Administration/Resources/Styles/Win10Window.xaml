@@ -282,8 +282,8 @@
                     <Grid>
                         <Grid
                             x:Name="PART_Background"
-                            Background="{StaticResource WhiteBrush}"
-                            Opacity="1" />
+                            Background="#EB2F2F"
+                            Opacity="0" />
                         <controls:ContentControlEx
                             x:Name="PART_ContentPresenter"
                             Padding="{TemplateBinding Padding}"
@@ -303,10 +303,10 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation
+                                        <DoubleAnimation
                                             Storyboard.TargetName="PART_Background"
-                                            Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"
-                                            To="#EB2F2F"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
                                             Duration="0:0:0.1" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -314,10 +314,10 @@
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation
+                                        <DoubleAnimation
                                             Storyboard.TargetName="PART_Background"
-                                            Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"
-                                            To="{StaticResource WhiteColor}"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
                                             Duration="0:0:0.1" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -525,6 +525,7 @@
                         Grid.Row="1"
                         Grid.Column="0"
                         Grid.ColumnSpan="5"
+                        Margin="0,2,0,0"
                         FocusVisualStyle="{x:Null}"
                         IsTabStop="False"
                         OnlyLoadTransition="True"

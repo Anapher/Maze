@@ -81,6 +81,7 @@
     <Compile Include="Controls\TreeViewItemEx.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Converters\IsTransferFinishedConverter.cs" />
+    <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="FileExplorerContextMenu.cs" />
     <Compile Include="Helpers\EntriesHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Utilities\PropertyPathHelper.cs" />
     <Compile Include="ViewModels\Explorer\FileTransferState.cs" />
     <Compile Include="ViewModels\Explorer\FileTransferViewModel.cs" />
+    <Compile Include="ViewModels\Explorer\ProcessingEntryViewModel.cs" />
     <Compile Include="ViewModels\FileTransferManagerViewModel.cs" />
     <Compile Include="ViewModels\InputTextViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
@@ -162,6 +164,9 @@
     </Compile>
     <Compile Include="Views\FileExplorerView.xaml.cs">
       <DependentUpon>FileExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FileTransferView.xaml.cs">
+      <DependentUpon>FileTransferView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NavigationBarView.xaml.cs">
       <DependentUpon>NavigationBarView.xaml</DependentUpon>
@@ -205,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FileExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FileTransferView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\FileExplorer.Administration\FileExplorer.Administration.csproj" />
+  </ItemGroup>
+
 </Project>

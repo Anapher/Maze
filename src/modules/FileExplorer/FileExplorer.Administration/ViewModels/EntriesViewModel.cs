@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace FileExplorer.Administration.ViewModels
         private AsyncRelayCommand<DirectoryViewModel> _openDirectoryCommand;
         private DelegateCommand<IList> _removeEntriesCommand;
         private ListCollectionView _view;
+        private DelegateCommand _refreshCommand;
 
         public EntriesViewModel()
         {
@@ -81,12 +83,24 @@ namespace FileExplorer.Administration.ViewModels
             }
         }
 
+        public DelegateCommand RefreshCommand
+        {
+            get
+            {
+                return _refreshCommand ?? (_refreshCommand = new DelegateCommand(() =>
+                {
+                    _fileExplorerViewModel.OpenPath(_fileExplorerViewModel.CurrentPath, true).Forget();
+                }));
+            }
+        }
+
         public void Initialize(FileExplorerViewModel fileExplorerViewModel)
         {
             _fileExplorerViewModel = fileExplorerViewModel;
             _fileExplorerViewModel.PathChanged += FileExplorerViewModelOnPathChanged;
             _fileExplorerViewModel.FileSystem.EntryAdded += FileSystemOnEntryAdded;
             _fileExplorerViewModel.FileSystem.EntryRemoved += FileSystemOnEntryRemoved;
+            _fileExplorerViewModel.ProcessingEntries.CollectionChanged += ProcessingEntriesOnCollectionChanged;
 
             View = new ListCollectionView(_entryViewModels);
 
@@ -202,6 +216,24 @@ namespace FileExplorer.Administration.ViewModels
                 });
         }
 
+        private void ProcessingEntriesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var entry in e.NewItems.Cast<ProcessingEntryViewModel>())
+                {
+                    AddProcessingEntryIfPathMatches(entry);
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var entry in e.OldItems.Cast<ProcessingEntryViewModel>())
+                {
+                    _entryViewModels.Remove(entry);
+                }
+            }
+        }
+
         private void GenerateEntries(IReadOnlyCollection<FileExplorerEntry> pathEntries, bool isSpecialDirectory)
         {
             if (View.IsEditingItem)
@@ -227,12 +259,25 @@ namespace FileExplorer.Administration.ViewModels
             try
             {
                 _entryViewModels.Clear();
+
                 foreach (var entryViewModel in entries)
                     _entryViewModels.Add(entryViewModel);
+
+                foreach (var entry in _fileExplorerViewModel.ProcessingEntries)
+                    AddProcessingEntryIfPathMatches(entry);
             }
             finally
             {
                 _entryViewModels.NotifyChanges();
+            }
+        }
+
+        private void AddProcessingEntryIfPathMatches(EntryViewModel entry)
+        {
+            if (_fileExplorerViewModel.FileSystem.ComparePaths(_fileExplorerViewModel.CurrentPath,
+                Path.GetDirectoryName(entry.Source.Path)))
+            {
+                _entryViewModels.Add(entry);
             }
         }
     }

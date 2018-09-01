@@ -3,14 +3,18 @@
 <translation xml:space="preserve">
 	<culture name="de">
 		<text key="All">Alle</text>
+		<text key="Cancel">Abbrechen</text>
+		<text key="Canceled">Abgebrochen</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
 		<text key="Create">Erstellen</text>
 		<text key="DefaultClientListView:Connected">Verbunden</text>
 		<text key="DefaultClientListView:IpAddress">IP-Adresse</text>
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
+		<text key="Done">Abgeschlossen</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
+		<text key="Failed">Fehlgeschlagen</text>
 		<text key="ID">ID</text>
 		<text key="Login">Einloggen</text>
 		<text key="LoginView:LoggingIn">Einloggen...</text>
@@ -25,6 +29,7 @@
 		<text key="ModulesView:Source">Modul-Quelle</text>
 		<text key="ModulesView:Source.All">Alle</text>
 		<text key="Name">Name</text>
+		<text key="NotFound">Nicht gefunden</text>
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Ready">Bereit</text>
@@ -221,14 +226,18 @@
 	</culture>
 	<culture name="en" primary="true">
 		<text key="All">All</text>
+		<text key="Cancel">Cancel</text>
+		<text key="Canceled">Canceled</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
 		<text key="Create">Create</text>
 		<text key="DefaultClientListView:Connected">Connected</text>
 		<text key="DefaultClientListView:IpAddress">Ip Address</text>
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
+		<text key="Done">Done</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
+		<text key="Failed">Failed</text>
 		<text key="ID">ID</text>
 		<text key="Login">Login</text>
 		<text key="LoginView:LoggingIn">Logging in...</text>
@@ -243,6 +252,7 @@
 		<text key="ModulesView:Source">Module source</text>
 		<text key="ModulesView:Source.All">All</text>
 		<text key="Name">Name</text>
+		<text key="NotFound">Not found</text>
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
 		<text key="Ready">Ready</text>

@@ -130,5 +130,11 @@ namespace FileExplorer.Administration.Models
         /// <param name="entry">The entry that should be moved</param>
         /// <param name="path">The new path of the entry</param>
         Task Move(FileExplorerEntry entry, string path);
+
+        /// <summary>
+        ///     Adds the entry to the cache and notifies all subscribers
+        /// </summary>
+        /// <param name="entry">The entry that was added</param>
+        void UploadCompleted(FileExplorerEntry entry);
     }
 }

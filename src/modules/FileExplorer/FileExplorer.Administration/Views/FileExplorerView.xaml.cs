@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Autofac;
 using FileExplorer.Administration.Menus;
 using Orcus.Administration.Library.Menu;
@@ -40,12 +41,27 @@ namespace FileExplorer.Administration.Views
                 InitializeContextMenu(contextMenu, _scope.Resolve<FileExplorerContextMenuManager>());
                 InitializeContextMenu(fileContextMenu, _scope.Resolve<ListFileContextMenuManager>());
                 InitializeContextMenu(directoryContextMenu, _scope.Resolve<ListDirectoryContextMenuManager>());
+                ////InitializeStatusBar();
             }
         }
 
         private void InitializeContextMenu(ContextMenu contextMenu, ContextMenuManager manager)
         {
             manager.Fill(contextMenu, DataContext);
+        }
+
+        private void InitializeStatusBar()
+        {
+            var textBlock = new TextBlock
+            {
+                DataContext = DataContext,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            textBlock.SetBinding(TextBlock.TextProperty,
+                new Binding("EntriesViewModel.View.Count") {Mode = BindingMode.OneWay});
+
+            ViewManager.RightStatusBarContent = textBlock;
         }
     }
 }

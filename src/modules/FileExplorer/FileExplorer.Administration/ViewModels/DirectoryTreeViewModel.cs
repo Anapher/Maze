@@ -19,7 +19,8 @@ using Prism.Mvvm;
 
 namespace FileExplorer.Administration.ViewModels
 {
-    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryViewModel, FileExplorerEntry>, IAsyncAutoComplete, IFileExplorerChildViewModel
+    public class DirectoryTreeViewModel : BindableBase, ISupportTreeSelector<DirectoryViewModel, FileExplorerEntry>,
+        IAsyncAutoComplete, IFileExplorerChildViewModel
     {
         private FileExplorerViewModel _fileExplorerViewModel;
         private ObservableCollection<DirectoryViewModel> _autoCompleteEntries;
@@ -84,8 +85,7 @@ namespace FileExplorer.Administration.ViewModels
             rootElements.Add(dto.ComputerDirectory);
 
             RootViewModels = rootElements.Select(x =>
-                    new DirectoryViewModel(this, null, x, _fileExplorerViewModel.FileSystem,
-                        _fileExplorerViewModel))
+                    new DirectoryViewModel(this, null, x, _fileExplorerViewModel.FileSystem, _fileExplorerViewModel))
                 .ToList();
             Entries.SetEntries(UpdateMode.Update, RootViewModels.ToArray());
 
@@ -147,7 +147,8 @@ namespace FileExplorer.Administration.ViewModels
                         directoryViewModel = UpwardSelect(e.Path, rootSelection.SelectedViewModel);
                         break;
                     case HierarchicalResult.Child:
-                        directoryViewModel = await DownwardSelect(e.PathDirectories, 0, rootSelection.SelectedViewModel);
+                        directoryViewModel =
+                            await DownwardSelect(e.PathDirectories, 0, rootSelection.SelectedViewModel);
                         break;
                     case HierarchicalResult.Unrelated:
                         directoryViewModel = null;
@@ -187,7 +188,7 @@ namespace FileExplorer.Administration.ViewModels
                     }
                 }
             }
-            
+
             if (rootSelection.IsChildSelected)
                 rootSelection.SelectedViewModel.Selection.IsSelected = false;
 
@@ -199,13 +200,13 @@ namespace FileExplorer.Administration.ViewModels
 
             if (!directoryViewModel.Entries.IsLoaded)
                 await directoryViewModel.Entries.LoadAsync();
-            
+
             directoryViewModel.Selection.IsSelected = true;
             directoryViewModel.BringIntoView();
         }
 
-        private (DirectoryViewModel, HierarchicalResult) FindRelatedViewModel(
-            IEnumerable<DirectoryViewModel> entries, DirectoryEntry directoryEntry)
+        private (DirectoryViewModel, HierarchicalResult) FindRelatedViewModel(IEnumerable<DirectoryViewModel> entries,
+            DirectoryEntry directoryEntry)
         {
             var items = entries
                 .Select(directoryVm => (directoryVm,
@@ -229,7 +230,8 @@ namespace FileExplorer.Administration.ViewModels
             }
         }
 
-        private async Task<DirectoryViewModel> DownwardSelect(IReadOnlyList<DirectoryEntry> entries, int index, DirectoryViewModel directoryViewModel)
+        private async Task<DirectoryViewModel> DownwardSelect(IReadOnlyList<DirectoryEntry> entries, int index,
+            DirectoryViewModel directoryViewModel)
         {
             var currentEntry = entries[index];
             if (!directoryViewModel.Entries.IsLoaded)

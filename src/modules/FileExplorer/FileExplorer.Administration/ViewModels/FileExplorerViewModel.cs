@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Anapher.Wpf.Swan.ViewInterface;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
@@ -34,6 +34,8 @@ namespace FileExplorer.Administration.ViewModels
             ImageProvider = imageProvider;
             Dispatcher = dispatcher;
 
+            ProcessingEntries = new ObservableCollection<ProcessingEntryViewModel>();
+
             NavigationBarViewModel = new NavigationBarViewModel();
             DirectoryTreeViewModel = new DirectoryTreeViewModel();
             EntriesViewModel = new EntriesViewModel();
@@ -57,6 +59,7 @@ namespace FileExplorer.Administration.ViewModels
         public NavigationBarViewModel NavigationBarViewModel { get; }
         public DirectoryTreeViewModel DirectoryTreeViewModel { get; }
         public FileTransferManagerViewModel FileTransferManagerViewModel { get; }
+        public ObservableCollection<ProcessingEntryViewModel> ProcessingEntries { get; }
 
         public string CurrentPath
         {

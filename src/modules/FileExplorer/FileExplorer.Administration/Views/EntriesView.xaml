@@ -9,6 +9,7 @@
     xmlns:dtos="clr-namespace:FileExplorer.Shared.Dtos"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
     xmlns:extensions1="clr-namespace:Orcus.Administration.Library.Extensions;assembly=Orcus.Administration.Library"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
@@ -22,6 +23,10 @@
         <ContextMenu x:Key="DefaultContextMenu" MinWidth="220" />
         <ContextMenu x:Key="FileContextMenu" MinWidth="220" />
         <ContextMenu x:Key="DirectoryContextMenu" MinWidth="220" />
+
+        <ContextMenu x:Key="ProcessingEntryContextMenu">
+            <MenuItem Command="{Binding CancelCommand}" Header="{tx:T Cancel}" />
+        </ContextMenu>
     </UserControl.Resources>
     <DataGrid
         AutoGenerateColumns="False"
@@ -50,6 +55,7 @@
                 Key="F2"
                 Command="{Binding EnterNameEditingCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItem}" />
+            <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
         </DataGrid.InputBindings>
         <DataGrid.Columns>
             <DataGridTemplateColumn
@@ -131,6 +137,15 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.Processing}">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{tx:DataSize NumberBinding={Binding Size}}" />
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </ContentControl.Style>
@@ -152,6 +167,87 @@
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.File}">
                         <Setter Property="ContextMenu" Value="{StaticResource FileContextMenu}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static base:EntryViewModelType.Processing}">
+                        <Setter Property="ContextMenu" Value="{StaticResource ProcessingEntryContextMenu}" />
+                        <Setter Property="extensions:FrameworkElementExtensions.Progress" Value="{Binding Progress}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type DataGridRow}">
+                                    <Border
+                                        Name="DGR_Border"
+                                        Background="{TemplateBinding Panel.Background}"
+                                        BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                        BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                        SnapsToDevicePixels="True">
+                                        <Grid>
+                                            <mah:MetroProgressBar
+                                                x:Name="BackgroundProgress"
+                                                MaxHeight="200"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                Background="{StaticResource WhiteBrush}"
+                                                Foreground="{StaticResource GrayBrush9}"
+                                                Maximum="1"
+                                                Value="{Binding Path=(extensions:FrameworkElementExtensions.Progress), RelativeSource={RelativeSource TemplatedParent}}" />
+                                            <SelectiveScrollingGrid>
+                                                <SelectiveScrollingGrid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </SelectiveScrollingGrid.ColumnDefinitions>
+                                                <SelectiveScrollingGrid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="Auto" />
+                                                </SelectiveScrollingGrid.RowDefinitions>
+                                                <DataGridCellsPresenter
+                                                    Grid.Column="1"
+                                                    ItemsPanel="{TemplateBinding ItemsControl.ItemsPanel}"
+                                                    SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                                <DataGridDetailsPresenter
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    SelectiveScrollingGrid.SelectiveScrollingOrientation="Both"
+                                                    Visibility="{TemplateBinding DataGridRow.DetailsVisibility}" />
+                                                <DataGridRowHeader
+                                                    Grid.RowSpan="2"
+                                                    SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                                                    Visibility="Visible" />
+                                            </SelectiveScrollingGrid>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                            <Setter TargetName="BackgroundProgress" Property="Background" Value="{DynamicResource AccentColorBrush2}" />
+                                            <Setter TargetName="BackgroundProgress" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                                            <Setter TargetName="DGR_Border" Property="BorderBrush" Value="#FF143c65" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="BackgroundProgress" Property="Background" Value="{DynamicResource AccentColorBrush4}" />
+                                            <Setter TargetName="BackgroundProgress" Property="Foreground" Value="{DynamicResource AccentColorBrush2}" />
+                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="true" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                            <Setter TargetName="BackgroundProgress" Property="Background" Value="{DynamicResource AccentColorBrush2}" />
+                                            <Setter TargetName="BackgroundProgress" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsEnabled" Value="False" />
+                                                <Condition Property="IsSelected" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <MultiTrigger.Setters>
+                                                <Setter TargetName="DGR_Border" Property="Background" Value="{DynamicResource GrayBrush7}" />
+                                            </MultiTrigger.Setters>
+                                        </MultiTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

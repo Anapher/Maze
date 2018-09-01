@@ -7,12 +7,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Threading;
 using FileExplorer.Administration.Converters;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels.Explorer;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Utilities;
+using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
 
@@ -76,6 +79,27 @@ namespace FileExplorer.Administration.ViewModels
             set => SetProperty(ref _totalSpeed, value);
         }
 
+        private bool _isFlyoutOpen;
+
+        public bool IsFlyoutOpen
+        {
+            get => _isFlyoutOpen;
+            set => SetProperty(ref _isFlyoutOpen, value);
+        }
+
+        private DelegateCommand _openDownloadsFlyoutCommand;
+
+        public DelegateCommand OpenDownloadsFlyoutCommand
+        {
+            get
+            {
+                return _openDownloadsFlyoutCommand ?? (_openDownloadsFlyoutCommand = new DelegateCommand(() =>
+                           {
+                               IsFlyoutOpen = true;
+                           }));
+            }
+        }
+
         public Task ExecuteTransfer(FileTransferViewModel transfer)
         {
             _transfers.Add(transfer);
@@ -127,6 +151,11 @@ namespace FileExplorer.Administration.ViewModels
                         return;
                     }
 
+                    var processingEntry = new ProcessingEntryViewModel(transfer, _baseVm.FileSystem, _baseVm);
+                    _baseVm.Dispatcher.Current.BeginInvoke(
+                        new Action(() => _baseVm.ProcessingEntries.Add(processingEntry)),
+                        DispatcherPriority.ApplicationIdle).Task.Forget();
+
                     var zipContent = new ZipContent(fs);
                     zipContent.ProgressChanged += (sender, args) =>
                     {
@@ -138,15 +167,25 @@ namespace FileExplorer.Administration.ViewModels
                         transfer.CurrentSpeed = args.Speed;
                         transfer.EstimatedRemainingTime = args.EstimatedTime;
 
+                        processingEntry.Progress = args.Progress;
+                        processingEntry.SetSize(args.ProcessedSize);
+
                         UpdateStatus();
                     };
 
+                    var isRemoved = false;
                     try
                     {
                         await FileExplorerResource.Upload(zipContent, transfer.TargetPath, transfer.CancellationToken,
                             _restClient);
 
-                        transfer.State = FileTransferState.Succeeded;
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                        {
+                            transfer.State = FileTransferState.Succeeded;
+                            isRemoved = true;
+                            _baseVm.ProcessingEntries.Remove(processingEntry);
+                            _baseVm.FileSystem.UploadCompleted(processingEntry.Source);
+                        }));
                     }
                     catch (OperationCanceledException)
                     {
@@ -155,6 +194,13 @@ namespace FileExplorer.Administration.ViewModels
                     catch (Exception)
                     {
                         transfer.State = FileTransferState.Failed;
+                    }
+                    finally
+                    {
+                        if (!isRemoved)
+                            _baseVm.Dispatcher.Current
+                                .BeginInvoke(new Action(() => _baseVm.ProcessingEntries.Remove(processingEntry)),
+                                    DispatcherPriority.ApplicationIdle).Task.Forget();
                     }
                 }
                 finally
@@ -188,7 +234,7 @@ namespace FileExplorer.Administration.ViewModels
                                 _progressStatusMessage = null;
                                 Progress = 0;
 
-                                _baseVm.StatusBar.ShowSuccess("Transmissions completed");
+                                _baseVm.StatusBar.ShowSuccess(Tx.T("FileExplorer:StatusBar.TransmissionCompleted"));
                             }
                         }
                         else
@@ -205,8 +251,7 @@ namespace FileExplorer.Administration.ViewModels
                             _progressStatusMessage.Progress = Progress;
 
                             TotalSpeed = _activeTransfers.Sum(x => x.CurrentSpeed);
-                            _progressStatusMessage.Message =
-                                $"Transfer {_activeTransfers.Count} files and directories ({Tx.DataSize((long) TotalSpeed)}/s)";
+                            _progressStatusMessage.Message = GetTransmissionStatusMessage() + " " + Tx.DataSize((long) TotalSpeed) + "/s";
                         }
                     }
                 }
@@ -215,6 +260,26 @@ namespace FileExplorer.Administration.ViewModels
                     _statusBarLock.Release();
                 }
             }
+        }
+
+        private string GetTransmissionStatusMessage()
+        {
+            var directoriesCount = _activeTransfers.Count(x => x.IsDirectory);
+            var filesCount = _activeTransfers.Count - directoriesCount;
+
+            if (directoriesCount == 0)
+            {
+                return Tx.T("FileExplorer:StatusBar.Transmission.Files", _activeTransfers.Count, "name",
+                    _activeTransfers[0].Name);
+            }
+
+            if (filesCount == 0)
+                return Tx.T("FileExplorer:StatusBar.Transmission.Directories", _activeTransfers.Count, "name",
+                    _activeTransfers[0].Name);
+
+            return Tx.T("FileExplorer:StatusBar.Transmission.FilesAndDirectories", "files",
+                Tx.T("FileExplorer:StatusBar.Transmission.FilesAndDirectories.Files", filesCount), "directories",
+                Tx.T("FileExplorer:StatusBar.Transmission.FilesAndDirectories.Directories", directoriesCount));
         }
     }
 }

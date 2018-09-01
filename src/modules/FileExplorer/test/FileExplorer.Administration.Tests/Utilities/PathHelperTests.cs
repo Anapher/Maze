@@ -1,4 +1,4 @@
-﻿using FileExplorer.Administration.Utilities;
+﻿using FileExplorer.Shared.Utilities;
 using Xunit;
 
 namespace FileExplorer.Administration.Tests.Utilities

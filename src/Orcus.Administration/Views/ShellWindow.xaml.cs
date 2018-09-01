@@ -19,6 +19,7 @@ namespace Orcus.Administration.Views
     {
         private StatusBarManager _statusBarManager;
         private object _titleBarIcon;
+        private object _rightStatusBarContent;
 
         public ShellWindow()
         {
@@ -33,6 +34,7 @@ namespace Orcus.Administration.Views
             else
             {
                 _statusBarManager = statusBarManager;
+                statusBarManager.RightContent = _rightStatusBarContent;
 
                 var grid = new Grid();
                 grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(1, GridUnitType.Star)});
@@ -56,6 +58,9 @@ namespace Orcus.Administration.Views
 
                 Content = grid;
             }
+
+            if (content is FrameworkElement fw)
+                DataContext = fw.DataContext;
         }
 
         public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons,
@@ -99,8 +104,13 @@ namespace Orcus.Administration.Views
 
         public object RightStatusBarContent
         {
-            get => _statusBarManager.RightContent;
-            set => _statusBarManager.RightContent = value;
+            get => _statusBarManager?.RightContent;
+            set
+            {
+                if (_statusBarManager != null)
+                    _statusBarManager.RightContent = value;
+                else _rightStatusBarContent = value;
+            }
         }
 
         public bool EscapeClosesWindow

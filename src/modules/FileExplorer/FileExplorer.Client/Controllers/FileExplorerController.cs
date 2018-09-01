@@ -79,29 +79,44 @@ namespace FileExplorer.Client.Controllers
         [OrcusPost("upload")]
         public async Task<IActionResult> UploadFile([FromQuery] string path, CancellationToken cancellationToken)
         {
-            using (var archive = new ZipArchive(OrcusContext.Request.Body, ZipArchiveMode.Read, true))
-            {
-                string fullName = Directory.CreateDirectory(path).FullName;
-                foreach (var entry in archive.Entries)
-                {
-                    var entryPath = Path.GetFullPath(Path.Combine(fullName, entry.FullName));
-                    if (Path.GetFileName(entryPath).Length == 0)
-                    {
-                        Directory.CreateDirectory(entryPath);
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
-                        using (Stream destination = System.IO.File.Open(entryPath, FileMode.Create, FileAccess.Write, FileShare.None))
-                        {
-                            using (Stream stream = entry.Open())
-                                await stream.CopyToAsync(destination);
-                        }
+            //var sha = SHA256.Create();
 
-                        System.IO.File.SetLastWriteTime(entryPath, entry.LastWriteTime.DateTime);
+            var tmpFile = Path.GetTempFileName();
+
+            using (var fs = new FileStream(tmpFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
+            {
+                //var crypto = new CryptoStream(fs, sha, CryptoStreamMode.Write);
+                await OrcusContext.Request.Body.CopyToAsync(fs);
+
+                //crypto.FlushFinalBlock();
+                //var hash = BitConverter.ToString(sha.Hash).Replace("-", null);
+
+                fs.Position = 0;
+                using (var archive = new ZipArchive(fs, ZipArchiveMode.Read, true))
+                {
+                    string fullName = Directory.CreateDirectory(path).FullName;
+                    foreach (var entry in archive.Entries)
+                    {
+                        var entryPath = Path.GetFullPath(Path.Combine(fullName, entry.FullName));
+                        if (Path.GetFileName(entryPath).Length == 0)
+                        {
+                            Directory.CreateDirectory(entryPath);
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
+                            using (Stream destination = System.IO.File.Open(entryPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            {
+                                using (Stream stream = entry.Open())
+                                    await stream.CopyToAsync(destination);
+                            }
+
+                            System.IO.File.SetLastWriteTime(entryPath, entry.LastWriteTime.DateTime);
+                        }
                     }
                 }
             }
+
 
             return Ok();
         }

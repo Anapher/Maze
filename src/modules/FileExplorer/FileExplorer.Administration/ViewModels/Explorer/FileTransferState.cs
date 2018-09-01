@@ -2,7 +2,7 @@
 {
     public enum FileTransferState
     {
-        Waiting,
+        Pending,
         Preparing,
         Transferring,
         Failed,

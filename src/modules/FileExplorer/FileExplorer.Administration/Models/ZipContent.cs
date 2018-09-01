@@ -30,13 +30,16 @@ namespace FileExplorer.Administration.Models
             Headers.ContentType = new MediaTypeHeaderValue("application/zip");
         }
 
-        public event EventHandler<ZipContentProgressChangedEventArgs> ProgressChanged; 
+        public event EventHandler<ZipContentProgressChangedEventArgs> ProgressChanged;
 
         protected override async Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
             _buffer = new byte[8192];
             _lastFastUpdate = DateTimeOffset.UtcNow;
             _lastUpdate = DateTimeOffset.UtcNow;
+
+            //var sha = SHA256.Create();
+            //var cryptoStream = new CryptoStream(stream, sha, CryptoStreamMode.Write);
 
             using (var zipArchive = new ZipArchive(stream, ZipArchiveMode.Create, true))
             {
@@ -48,15 +51,20 @@ namespace FileExplorer.Administration.Models
                 }
                 else
                 {
-                    var directory = (DirectoryInfo)_fileSystemInfo;
+                    var directory = (DirectoryInfo) _fileSystemInfo;
                     var allFiles = directory.GetFiles("*", SearchOption.AllDirectories);
 
                     _totalLength = allFiles.Sum(info => info.Length);
 
-                    int folderOffset = _fileSystemInfo.FullName.Length + (_fileSystemInfo.FullName.EndsWith("\\") ? 0 : 1);
+                    int folderOffset = _fileSystemInfo.FullName.Length +
+                                       (_fileSystemInfo.FullName.EndsWith("\\") ? 0 : 1);
                     await CompressFolder(directory, zipArchive, folderOffset);
                 }
             }
+
+            //await cryptoStream.FlushAsync();
+            //cryptoStream.FlushFinalBlock();
+            //var hash = BitConverter.ToString(sha.Hash).Replace("-", null);
         }
 
         private async Task CompressFolder(DirectoryInfo directory, ZipArchive zipStream, int folderOffset)

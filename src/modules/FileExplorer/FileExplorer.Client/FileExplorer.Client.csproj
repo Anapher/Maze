@@ -12,10 +12,6 @@
     <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  </ItemGroup>
-
   <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
 
 </Project>

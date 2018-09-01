@@ -21,11 +21,16 @@
 		<text key="FileExplorer:Execute">Ausführen</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
 		<text key="FileExplorer:FolderName">Ordnername</text>
+		<text key="FileExplorer:Items">Elemente</text>
+		<text key="FileExplorer:Items" count="1">Element</text>
 		<text key="FileExplorer:New">Neu</text>
 		<text key="FileExplorer:NewFolder">Neuer Ordner</text>
+		<text key="FileExplorer:OpenFolder">Ordner öffnen</text>
 		<text key="FileExplorer:OpenPath">Öffne Pfad...</text>
 		<text key="FileExplorer:ParentFolderPath">Pfad des Oberverzeichnisses</text>
 		<text key="FileExplorer:PathCopy">Pfad kopieren</text>
+		<text key="FileExplorer:Pending">Ausstehend</text>
+		<text key="FileExplorer:Preparing">Bereitet vor</text>
 		<text key="FileExplorer:Properties">Eigenschaften</text>
 		<text key="FileExplorer:Refresh">Aktualisieren</text>
 		<text key="FileExplorer:Remove">Löschen</text>
@@ -39,13 +44,25 @@
 		<text key="FileExplorer:SearchWatermark">Suche...</text>
 		<text key="FileExplorer:SelectFilesToUpload">Bitte wählen Sie die Dateien aus, die in das Zielverzeichnis hochgeladen werden sollen</text>
 		<text key="FileExplorer:Size">Größe</text>
-		<text key="FileExplorer:StatusBar.DeleteEntries">Entferne {#} Einträge</text>
-		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne einen Eintrag</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries">Entferne {#} Elemente</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne ein Element</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Lade Unterverzeichnisse</text>
 		<text key="FileExplorer:StatusBar.RenameDirectory">Ordner wird zu {name} umbenannt</text>
 		<text key="FileExplorer:StatusBar.RenameFile">Datei wird zu {name} umbenannt</text>
+		<text key="FileExplorer:StatusBar.Transmission.Directories">Übertrage {#} Ordner</text>
+		<text key="FileExplorer:StatusBar.Transmission.Directories" count="1" acceptplaceholders="true">Übertrage Ordner "{name}"</text>
+		<text key="FileExplorer:StatusBar.Transmission.Files">Übertrage {#} Dateien</text>
+		<text key="FileExplorer:StatusBar.Transmission.Files" count="1" acceptplaceholders="true">Übertrage Datei "{name}"</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories">Übertrage {files} und {directories}</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Directories">Ordner</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Files">Dateien</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Files" count="1">Datei</text>
+		<text key="FileExplorer:StatusBar.TransmissionCompleted">Übertragung abgeschlossen</text>
+		<text key="FileExplorer:TimeRemainingAt">verbleibend bei</text>
+		<text key="FileExplorer:Transfers">Übertragungen</text>
 		<text key="FileExplorer:Type">Type</text>
+		<text key="FileExplorer:Upload">Hochladen</text>
 		<text key="FileExplorer:UploadFile">Datei hochladen</text>
 	</culture>
 	<culture name="en" primary="true">
@@ -68,11 +85,16 @@
 		<text key="FileExplorer:Execute">Execute</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
 		<text key="FileExplorer:FolderName">Folder name</text>
+		<text key="FileExplorer:Items">Items</text>
+		<text key="FileExplorer:Items" count="1">Item</text>
 		<text key="FileExplorer:New">New</text>
 		<text key="FileExplorer:NewFolder">New folder</text>
+		<text key="FileExplorer:OpenFolder">Open folder</text>
 		<text key="FileExplorer:OpenPath">Open path...</text>
 		<text key="FileExplorer:ParentFolderPath">Parent folder path</text>
 		<text key="FileExplorer:PathCopy">Path Copy</text>
+		<text key="FileExplorer:Pending">Pending</text>
+		<text key="FileExplorer:Preparing">Preparing</text>
 		<text key="FileExplorer:Properties">Properties</text>
 		<text key="FileExplorer:Refresh">Refresh</text>
 		<text key="FileExplorer:Remove">Remove</text>
@@ -86,13 +108,26 @@
 		<text key="FileExplorer:SearchWatermark">Search...</text>
 		<text key="FileExplorer:SelectFilesToUpload">Please select the files you want to upload to the target directory</text>
 		<text key="FileExplorer:Size">Size</text>
-		<text key="FileExplorer:StatusBar.DeleteEntries">Delete {#} entries</text>
-		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one entry</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries">Delete {#} items</text>
+		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one item</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Load subdirectories</text>
 		<text key="FileExplorer:StatusBar.RenameDirectory">Rename directory to "{name}"</text>
 		<text key="FileExplorer:StatusBar.RenameFile">Rename file to "{name}"</text>
+		<text key="FileExplorer:StatusBar.Transmission.Directories">Transfer {#} directories</text>
+		<text key="FileExplorer:StatusBar.Transmission.Directories" count="1" acceptplaceholders="true">Transfer directory "{name}"</text>
+		<text key="FileExplorer:StatusBar.Transmission.Files">Transfer {#} files</text>
+		<text key="FileExplorer:StatusBar.Transmission.Files" count="1" acceptplaceholders="true">Transfer file "{name}"</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories">Transfer {files} and {directories}</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Directories">directories</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Directories" count="1">directory</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Files">files</text>
+		<text key="FileExplorer:StatusBar.Transmission.FilesAndDirectories.Files" count="1">file</text>
+		<text key="FileExplorer:StatusBar.TransmissionCompleted">Transmission completed</text>
+		<text key="FileExplorer:TimeRemainingAt" comment="&quot;00:01:45 remaining at 100 KiB/s (45,4 MiB / 70,1 MiB)&quot; - this translation should contain the phrase after the estimated time and before the current speed">remaining at</text>
+		<text key="FileExplorer:Transfers">Transfers</text>
 		<text key="FileExplorer:Type">Type</text>
+		<text key="FileExplorer:Upload">Upload</text>
 		<text key="FileExplorer:UploadFile">Upload file</text>
 	</culture>
 </translation>

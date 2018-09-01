@@ -12,7 +12,18 @@ namespace FileExplorer.Administration.Extensions
                 typeof(FrameworkElementExtensions), new PropertyMetadata(default(bool), OnSupressBringIntoViewChanged));
 
         public static readonly DependencyProperty SetClickHandledProperty =
-            DependencyProperty.RegisterAttached("SetClickHandled", typeof(bool), typeof(FrameworkElementExtensions), new PropertyMetadata(default(bool), PropertyChangedCallback));
+            DependencyProperty.RegisterAttached("SetClickHandled", typeof(bool), typeof(FrameworkElementExtensions),
+                new PropertyMetadata(default(bool), PropertyChangedCallback));
+
+        public static readonly DependencyProperty ProgressProperty = DependencyProperty.RegisterAttached("Progress",
+            typeof(double), typeof(FrameworkElementExtensions), new PropertyMetadata(default(double)));
+
+        public static void SetProgress(DependencyObject element, double value)
+        {
+            element.SetValue(ProgressProperty, value);
+        }
+
+        public static double GetProgress(DependencyObject element) => (double) element.GetValue(ProgressProperty);
 
         public static void SetSupressBringIntoView(DependencyObject element, bool value)
         {
@@ -20,17 +31,15 @@ namespace FileExplorer.Administration.Extensions
         }
 
         public static bool GetSupressBringIntoView(DependencyObject element) =>
-            (bool)element.GetValue(SupressBringIntoViewProperty);
+            (bool) element.GetValue(SupressBringIntoViewProperty);
 
         public static void SetSetClickHandled(DependencyObject element, bool value)
         {
             element.SetValue(SetClickHandledProperty, value);
         }
 
-        public static bool GetSetClickHandled(DependencyObject element)
-        {
-            return (bool) element.GetValue(SetClickHandledProperty);
-        }
+        public static bool GetSetClickHandled(DependencyObject element) =>
+            (bool) element.GetValue(SetClickHandledProperty);
 
         private static void OnSupressBringIntoViewChanged(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -69,17 +78,11 @@ namespace FileExplorer.Administration.Extensions
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var frameworkElement = (FrameworkElement)d;
+            var frameworkElement = (FrameworkElement) d;
 
-            if (e.OldValue as bool? == true)
-            {
-                frameworkElement.PreviewMouseDown -= FrameworkElementOnMouseDown;
-            }
+            if (e.OldValue as bool? == true) frameworkElement.PreviewMouseDown -= FrameworkElementOnMouseDown;
 
-            if (e.NewValue as bool? == true)
-            {
-                frameworkElement.PreviewMouseDown += FrameworkElementOnMouseDown;
-            }
+            if (e.NewValue as bool? == true) frameworkElement.PreviewMouseDown += FrameworkElementOnMouseDown;
         }
 
         private static void FrameworkElementOnMouseDown(object sender, MouseButtonEventArgs e)

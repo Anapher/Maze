@@ -3,8 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:explorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:FileExplorer.Administration.Views"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     d:DataContext="{d:DesignInstance viewModels:FileExplorerViewModel}"
@@ -20,6 +24,52 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    <views:WindowUserControl.RightStatusBarContent>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button
+                VerticalAlignment="Center"
+                Command="{Binding FileTransferManagerViewModel.OpenDownloadsFlyoutCommand}"
+                Content="{tx:T FileExplorer:Transfers}"
+                Style="{StaticResource TextButton}" />
+            <TextBlock
+                Width="80"
+                Margin="10,0,10,0"
+                VerticalAlignment="Center"
+                TextAlignment="Right">
+                <Run Text="{Binding EntriesViewModel.View.Count, Mode=OneWay}" />
+                <Run Text="{tx:T FileExplorer:Items, CountBinding={Binding EntriesViewModel.View.Count, Mode=OneWay}}" />
+            </TextBlock>
+        </StackPanel>
+    </views:WindowUserControl.RightStatusBarContent>
+    <views:WindowUserControl.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout
+                Width="350"
+                Header="{tx:T FileExplorer:Transfers}"
+                IsOpen="{Binding FileTransferManagerViewModel.IsFlyoutOpen}"
+                Position="Right"
+                Theme="Adapt">
+                <ListBox ItemsSource="{Binding FileTransferManagerViewModel.TransfersView}">
+                    <ListBox.Resources>
+                        <ContextMenu x:Key="FileTransferContextMenu">
+                            <MenuItem Command="{Binding CancelCommand}" Header="{tx:T Cancel}" />
+                            <MenuItem Command="{Binding OpenFolderCommand}" Header="{tx:T FileExplorer:OpenFolder}" />
+                        </ContextMenu>
+                    </ListBox.Resources>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type explorer:FileTransferViewModel}">
+                            <local:FileTransferView Margin="0,4,10,4" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource MetroListBoxItem}" TargetType="ListBoxItem">
+                            <Setter Property="ContextMenu" Value="{StaticResource FileTransferContextMenu}" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </views:WindowUserControl.Flyouts>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

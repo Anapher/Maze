@@ -291,7 +291,12 @@ namespace FileExplorer.Administration.Models
                 Name = Path.GetFileName(path),
                 Path = path
             };
-            var parentFolderPath = Path.GetDirectoryName(path);
+            UploadCompleted(entry);
+        }
+
+        public void UploadCompleted(FileExplorerEntry entry)
+        {
+            var parentFolderPath = Path.GetDirectoryName(entry.Path);
 
             if (parentFolderPath != null && TryGetCachedDirectory(parentFolderPath, out var cachedDirectory))
             {
