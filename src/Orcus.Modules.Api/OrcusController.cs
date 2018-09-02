@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api.Response;
 
 namespace Orcus.Modules.Api
@@ -95,6 +96,18 @@ namespace Orcus.Modules.Api
         public virtual ExceptionResult Exception(Exception exception)
         {
             return new ExceptionResult(exception);
+        }
+
+        [NonAction]
+        public virtual StatusCodeResult NotFound()
+        {
+            return new StatusCodeResult(StatusCodes.Status404NotFound);
+        }
+
+        [NonAction]
+        public virtual ObjectResult NotFound(object value)
+        {
+            return new ObjectResult(value) {StatusCode = StatusCodes.Status404NotFound};
         }
     }
 }

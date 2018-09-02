@@ -3,12 +3,13 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Orcus.Sockets.Internal;
+using Orcus.Sockets.Internal.Extensions;
 using Orcus.Sockets.Internal.Http;
 using Orcus.Sockets.Logging;
 
@@ -18,9 +19,8 @@ namespace Orcus.Sockets
     {
         private static readonly ILog Logger = LogProvider.For<OrcusServer>();
 
-        private const string OrcusSocketRequestIdHeader = "orcussocket-requestid";
-        private readonly int _packageBufferSize = 8192;
-        private readonly int _maxHeaderSize = 4096;
+        private readonly int _packageBufferSize;
+        private readonly int _maxHeaderSize;
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeRequests;
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeResponses;
         private readonly ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>> _waitingRequests;
@@ -31,9 +31,22 @@ namespace Orcus.Sockets
         private readonly IDataSocket _socket;
         private int _requestCounter;
 
+        public OrcusServer(IDataSocket socket) : this(socket, 8192, 4096)
+        {
+        }
+
         public OrcusServer(IDataSocket socket, int packageBufferSize, int maxHeaderSize)
         {
-            _socket = socket;
+            if (packageBufferSize < 6)
+                throw new ArgumentException("Package buffer size must be greater than 6", nameof(packageBufferSize));
+
+            if (maxHeaderSize < 100)
+                throw new ArgumentException("Max header size must be greater than 100", nameof(packageBufferSize));
+
+            if (packageBufferSize < maxHeaderSize)
+                throw new ArgumentException("Package buffer size must be greater than max header size", nameof(packageBufferSize));
+
+            _socket = socket ?? throw new ArgumentNullException(nameof(socket));
             _packageBufferSize = packageBufferSize - 5;
             _maxHeaderSize = maxHeaderSize;
 
@@ -65,12 +78,12 @@ namespace Orcus.Sockets
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (requestMessage.Headers.Contains(OrcusSocketRequestIdHeader))
-                throw new ArgumentException($"The orcus request must not have a {OrcusSocketRequestIdHeader} header.",
+            if (requestMessage.Headers.Contains(OrcusHeaders.OrcusSocketRequestIdHeader))
+                throw new ArgumentException($"The orcus request must not have a {OrcusHeaders.OrcusSocketRequestIdHeader} header.",
                     nameof(requestMessage));
 
             var requestId = Interlocked.Increment(ref _requestCounter);
-            requestMessage.Headers.Add(OrcusSocketRequestIdHeader, requestId.ToString());
+            requestMessage.Headers.Add(OrcusHeaders.OrcusSocketRequestIdHeader, requestId.ToString());
 
             var requestWaiter = new TaskCompletionSource<HttpResponseMessage>();
             _waitingRequests.TryAdd(requestId, requestWaiter);
@@ -183,9 +196,12 @@ namespace Orcus.Sockets
 
             var defaultResponse = (DefaultOrcusResponse) e.Response;
             defaultResponse.IsCompleted = true;
-            await defaultResponse.Body.FlushAsync();
 
+            await defaultResponse.Body.FlushAsync();
             e.Request.Body.Dispose();
+
+            await defaultResponse.HttpResponseStream.FinalFlushAsync();
+            defaultResponse.Finished();
         }
 
         private void SocketOnDataReceivedEventArgs(object sender, DataReceivedEventArgs e)
@@ -298,7 +314,7 @@ namespace Orcus.Sockets
             stream.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength,
                 buffer.Count - headerLength));
 
-            var requestId = int.Parse(request.Headers[OrcusSocketRequestIdHeader]);
+            var requestId = int.Parse(request.Headers[OrcusHeaders.OrcusSocketRequestIdHeader]);
             var cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
             var token = cancellationTokenSource.Token;
 
@@ -329,104 +345,28 @@ namespace Orcus.Sockets
             }
 
             var response = new DefaultOrcusResponse(requestId);
-            response.Headers.Add(OrcusSocketRequestIdHeader, requestId.ToString());
-            response.Body = new PackagingBufferStream(data => SendResponsePackage(response, data, token), _packageBufferSize);
+            response.Headers.Add(OrcusHeaders.OrcusSocketRequestIdHeader, requestId.ToString());
+
+            var rawStream =
+                new HttpResponseStream(response, request, _socket, _packageBufferSize, _maxHeaderSize, token);
+            response.HttpResponseStream = rawStream;
+            response.Body = new BufferingWriteStream(rawStream, _packageBufferSize);
 
             Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token)));
         }
 
-        private async Task SendResponsePackage(DefaultOrcusResponse orcusResponse, ArraySegment<byte> data, CancellationToken cancellationToken)
-        {
-            if (orcusResponse.IsFinished)
-                throw new InvalidOperationException("The response is already finished and no new data can be written");
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (!orcusResponse.HasStarted)
-            {
-                orcusResponse.StartResponse();
-
-                if (!orcusResponse.Headers.ContainsKey(OrcusSocketRequestIdHeader)) //automatically set
-                    throw new InvalidOperationException($"Response must have the header {OrcusSocketRequestIdHeader}");
-
-                var sendBuffer = ArrayPool<byte>.Shared.Rent(data.Count + _maxHeaderSize);
-                try
-                {
-                    var offset = HttpFormatter.FormatResponse(orcusResponse, new ArraySegment<byte>(sendBuffer));
-                    if (offset > _maxHeaderSize)
-                        throw new InvalidOperationException(
-                            $"The header size {offset}B exceeds the maximum allowed header size ({_maxHeaderSize}B)");
-
-                    if (data.Count > 0)
-                        Buffer.BlockCopy(data.Array, data.Offset, sendBuffer, offset, data.Count);
-
-                    var opCode = OrcusSocket.MessageOpcode.Response;
-                    if (orcusResponse.IsCompleted)
-                        opCode = OrcusSocket.MessageOpcode.ResponseSinglePackage;
-
-                    LogDataPackage("Send HTTP Response", sendBuffer, 0, offset + data.Count);
-                    await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, offset + data.Count),
-                        CancellationToken.None);
-
-                    if (opCode == OrcusSocket.MessageOpcode.ResponseSinglePackage)
-                        orcusResponse.Finished();
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(sendBuffer);
-                }
-            }
-            else
-            {
-                var buffer = ArrayPool<byte>.Shared.Rent(data.Count + 4);
-                var opcode = orcusResponse.IsCompleted
-                    ? OrcusSocket.MessageOpcode.ResponseContinuationFinished
-                    : OrcusSocket.MessageOpcode.ResponseContinuation;
-
-                try
-                {
-                    Buffer.BlockCopy(data.Array, data.Offset, buffer, 4, data.Count);
-                    BinaryUtils.WriteInt32(ref buffer, 0, orcusResponse.RequestId);
-
-                    LogDataPackage("Send HTTP Response Continuation", buffer, 0, data.Count + 4);
-                    await _socket.SendFrameAsync(opcode, new ArraySegment<byte>(buffer, 0, data.Count + 4),
-                        CancellationToken.None);
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(buffer);
-                }
-
-                if (opcode == OrcusSocket.MessageOpcode.ResponseContinuationFinished)
-                    orcusResponse.Finished();
-            }
-        }
-
-        private static void LogDataPackage(string name, byte[] buffer, int offset, int count)
-        {
-            if (Logger.IsDebugEnabled())
-            {
-                var hash = HashHelper.HashData(buffer, offset, count);
-                var s = Encoding.UTF8.GetString(buffer, offset, count);
-                Logger.Debug(name + " [{size} => {hash}]:\r\n{data}", count, hash, "");
-            }
-        }
-
         private void ProcessResponse(ArraySegment<byte> buffer, bool isCompleted)
         {
-            LogDataPackage("Received Response", buffer.Array, buffer.Offset, buffer.Count);
+            Logger.LogDataPackage("Received Response", buffer.Array, buffer.Offset, buffer.Count);
             
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
-            var requestId = int.Parse(response.Headers.GetValues(OrcusSocketRequestIdHeader).First());
+            var requestId = int.Parse(response.Headers.GetValues(OrcusHeaders.OrcusSocketRequestIdHeader).Single());
             var bufferSegment =
                 new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength, buffer.Count - headerLength);
 
             if (isCompleted)
             {
                 response.Content = new RawStreamContent(new ArrayPoolMemoryStream(bufferSegment, _socket.BufferPool));
-
-                foreach (var contentHeader in contentHeaders)
-                    response.Content.Headers.Add(contentHeader.Key, (IEnumerable<string>) contentHeader.Value);
             }
             else
             {
@@ -447,6 +387,9 @@ namespace Orcus.Sockets
                 response.Content = new RawStreamContent(stream);
             }
 
+            foreach (var contentHeader in contentHeaders)
+                response.Content.Headers.Add(contentHeader.Key, (IEnumerable<string>)contentHeader.Value);
+
             if (!_waitingRequests.TryRemove(requestId, out var taskCompletionSource))
             {
                 Logger.Error("No TaskCompletionSource for request {requestId} found.", requestId);
@@ -459,7 +402,7 @@ namespace Orcus.Sockets
 
         private void AppendResponseData(ArraySegment<byte> buffer, bool isCompleted)
         {
-            LogDataPackage("Received Response Continuation", buffer.Array, buffer.Offset, buffer.Count);
+            Logger.LogDataPackage("Received Response Continuation", buffer.Array, buffer.Offset, buffer.Count);
 
             var requestId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
 

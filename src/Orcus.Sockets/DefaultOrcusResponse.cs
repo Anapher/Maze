@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Response;
+using Orcus.Sockets.Internal;
+using Orcus.Sockets.Internal.Http;
 
 namespace Orcus.Sockets
 {
@@ -51,6 +53,8 @@ namespace Orcus.Sockets
         ///     Tells if the <code>OpCodeModifier.IsFinished</code> was sent
         /// </summary>
         public bool IsFinished { get; private set; }
+        
+        public HttpResponseStream HttpResponseStream { get; set; }
 
         public override void OnStarting(Func<object, Task> callback, object state)
         {

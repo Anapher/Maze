@@ -10,11 +10,11 @@ namespace Orcus.Sockets.Tests.Internal
     public class PackagingBufferStreamTests : StreamTestBase
     {
         private readonly List<byte[]> _pushedPackages = new List<byte[]>();
-        private readonly PackagingBufferStream _stream;
+        private readonly BufferingWriteStream _stream;
 
         public PackagingBufferStreamTests()
         {
-            _stream = new PackagingBufferStream(SendPackageDelegate, DataSize);
+            _stream = new BufferingWriteStream(new DelegatingWriteStream(SendPackageDelegate), DataSize);
         }
 
         [Theory]

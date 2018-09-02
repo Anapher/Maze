@@ -7,20 +7,34 @@ using Orcus.Sockets.Internal.Infrastructure;
 
 namespace Orcus.Sockets.Internal
 {
-    public delegate Task OnSendPackageDelegate(ArraySegment<byte> data);
-
-    public class PackagingBufferStream : WriteOnlyStream
+    /// <summary>
+    ///     A stream that buffers data up to a given size and writes the package all at once
+    /// </summary>
+    public class BufferingWriteStream : WriteOnlyStream
     {
-        private readonly OnSendPackageDelegate _sendPackageDelegate;
         private readonly int _packageBufferSize;
         private long _length;
         private byte[] _packageBuffer;
         private int _packageBufferOffset;
+        private bool _disposed;
 
-        public PackagingBufferStream(OnSendPackageDelegate sendPackageDelegate, int packageBufferSize)
+        public BufferingWriteStream(Stream stream, int packageBufferSize)
         {
-            _sendPackageDelegate = sendPackageDelegate;
+            InnerStream = stream;
             _packageBufferSize = packageBufferSize;
+        }
+
+        public Stream InnerStream { get; private set; }
+        public Func<Task> FlushCallback { get; set; }
+
+        public void SetInnerStream(Stream inner)
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(WrappingStream));
+            }
+
+            InnerStream = inner;
         }
 
         public override void Flush()
@@ -28,14 +42,21 @@ namespace Orcus.Sockets.Internal
             FlushAsync().Wait();
         }
 
-        public override Task FlushAsync(CancellationToken cancellationToken)
+        public override async Task FlushAsync(CancellationToken cancellationToken)
         {
             if (_packageBufferOffset == 0)
-                return _sendPackageDelegate(new ArraySegment<byte>());
+            {
+                await InnerStream.FlushAsync(cancellationToken);
+                return;
+            }
 
             var packageBufferOffset = _packageBufferOffset;
             _packageBufferOffset = 0;
-            return _sendPackageDelegate(new ArraySegment<byte>(_packageBuffer, 0, packageBufferOffset));
+            await InnerStream.WriteAsync(_packageBuffer, 0, packageBufferOffset, cancellationToken);
+            await InnerStream.FlushAsync(cancellationToken);
+
+            if (FlushCallback != null)
+                await FlushCallback.Invoke();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -63,7 +84,7 @@ namespace Orcus.Sockets.Internal
                 if (_packageBufferOffset == 0)
                 {
                     //if the stream buffer is empty and the write buffer exceeds the package buffer, we directly send from the write buffer
-                    await _sendPackageDelegate(new ArraySegment<byte>(buffer, offset, _packageBufferSize));
+                    await InnerStream.WriteAsync(buffer, offset, _packageBufferSize, cancellationToken);
                     offset += _packageBufferSize;
                     count -= _packageBufferSize;
                 }
@@ -73,7 +94,7 @@ namespace Orcus.Sockets.Internal
                     Buffer.BlockCopy(buffer, offset, _packageBuffer, _packageBufferOffset, spaceLeft);
                     offset += spaceLeft;
                     count -= spaceLeft;
-                    await _sendPackageDelegate(new ArraySegment<byte>(_packageBuffer, 0, _packageBufferSize));
+                    await InnerStream.WriteAsync(_packageBuffer, 0, _packageBufferSize, cancellationToken);
 
                     _packageBufferOffset = 0;
                 }
@@ -84,6 +105,19 @@ namespace Orcus.Sockets.Internal
         {
             if (_packageBuffer == null)
                 _packageBuffer = ArrayPool<byte>.Shared.Rent(_packageBufferSize);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _disposed = true;
+
+                InnerStream.Dispose();
+
+                if (_packageBuffer != null)
+                    ArrayPool<byte>.Shared.Return(_packageBuffer);
+            }
         }
 
         public override bool CanSeek { get; } = false;

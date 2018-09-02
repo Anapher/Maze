@@ -9,6 +9,7 @@ using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using FileExplorer.Shared.Utilities;
+using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
@@ -80,7 +81,6 @@ namespace FileExplorer.Client.Controllers
         public async Task<IActionResult> UploadFile([FromQuery] string path, CancellationToken cancellationToken)
         {
             //var sha = SHA256.Create();
-
             var tmpFile = Path.GetTempFileName();
 
             using (var fs = new FileStream(tmpFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
@@ -119,6 +119,21 @@ namespace FileExplorer.Client.Controllers
 
 
             return Ok();
+        }
+
+        public IActionResult DownloadFile([FromQuery] string path)
+        {
+            var file = new FileInfo(path);
+            if (!file.Exists)
+                return NotFound();
+
+            var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var result = File(fileStream, "application/octet-stream", file.Name);
+            result.EnableRangeProcessing = true;
+            result.LastModified = file.LastWriteTimeUtc;
+            result.EntityTag = EntityTagHeaderValue.Parse(file.Length.ToString());
+
+            return result;
         }
     }
 }

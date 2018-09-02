@@ -90,9 +90,8 @@ namespace FileExplorer.Administration.Menus
             });
         }
 
-        private void DownloadFile(FileViewModel arg1, FileExplorerViewModel arg2)
+        private void DownloadFile(FileViewModel file, FileExplorerViewModel context)
         {
-            throw new System.NotImplementedException();
         }
 
         private void ExecuteFile(FileViewModel file, FileExplorerViewModel context)
