@@ -123,8 +123,7 @@ namespace FileExplorer.Administration.ViewModels
             {
                 transfer.State = FileTransferState.Preparing;
 
-                var streamCopyUtil = new StreamCopyUtil();
-
+                var streamCopyUtil = new StreamCopyUtil {TotalSize = transfer.TotalSize};
                 streamCopyUtil.ProgressChanged += (sender, args) =>
                 {
                     transfer.UpdateProgress(args);

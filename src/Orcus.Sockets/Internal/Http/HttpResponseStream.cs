@@ -88,10 +88,14 @@ namespace Orcus.Sockets.Internal.Http
                             var bodyStream = (BufferingWriteStream) _response.Body;
                             var newPackagingStream = new BufferingWriteStream(this, _packageBufferSize);
 
-                            var gzipStream = new GZipStream(newPackagingStream, CompressionLevel.Fastest, false);
+                            var gzipStream = new GZipStream(newPackagingStream, CompressionLevel.Fastest, true);
                             bodyStream.SetInnerStream(gzipStream);
 
-                            bodyStream.FlushCallback = () => newPackagingStream.FlushAsync();
+                            bodyStream.FlushCallback = async () =>
+                            {
+                                gzipStream.Close();
+                                await newPackagingStream.FlushAsync();
+                            };
 
                             await gzipStream.WriteAsync(buffer, offset, count, cancellationToken);
                             return;
