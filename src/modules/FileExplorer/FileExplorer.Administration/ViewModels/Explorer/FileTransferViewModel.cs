@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -111,6 +112,27 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                                        $"/select, \"{(IsUpload ? SourcePath : TargetPath)}\"");
                                }, () => State == FileTransferState.Succeeded).ObservesProperty(() => State));
             }
+        }
+
+        public void UpdateProgress(TransferProgressChangedEventArgs args)
+        {
+            State = FileTransferState.Transferring;
+
+            Progress = args.Progress;
+            TotalSize = args.TotalSize;
+            ProcessedSize = args.ProcessedSize;
+            CurrentSpeed = args.Speed;
+            EstimatedRemainingTime = args.EstimatedTime;
+        }
+
+        public void CompleteProgress(FileTransferState state)
+        {
+            State = state;
+
+            Progress = 1;
+            ProcessedSize = TotalSize;
+            CurrentSpeed = 0;
+            EstimatedRemainingTime = TimeSpan.Zero;
         }
     }
 }

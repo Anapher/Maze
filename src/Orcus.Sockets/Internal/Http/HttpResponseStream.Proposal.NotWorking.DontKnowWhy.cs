@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if FALSE
+using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Compression;
@@ -41,8 +42,10 @@ namespace Orcus.Sockets.Internal.Http
             _requestCancellationToken = requestCancellationToken;
         }
 
-        public async Task FinalFlushAsync()
+        public async Task DisposeAsync()
         {
+            //with this switch, the behavior of SendData is changed so it instantly sends the data
+            //and it uses a finishing opcode
             _isFinalPackage = true;
 
             if (_latestSendBuffer == default)
@@ -50,8 +53,8 @@ namespace Orcus.Sockets.Internal.Http
                 //if no package was written, the response wasn't started. we have to do that now
                 await WriteAsync(new byte[0], 0, 0);
             }
-
-            await SendData(default);
+            else
+                await SendData(_latestSendBuffer);
 
             _isFinalPackagePushed = true;
         }
@@ -81,8 +84,7 @@ namespace Orcus.Sockets.Internal.Http
                                 ?.Contains(new StringWithQualityHeaderValue("gzip")) == true)
                         {
                             _isCompressionEnabled = true;
-                            _response.Headers.Add(HeaderNames.ContentEncoding, "gzip");
-                            _response.Headers.Remove(HeaderNames.ContentLength);
+                            _response.Headers.Add("Content-Encoding", "gzip");
 
                             //if the response has not been completed, we compress the body
                             var bodyStream = (BufferingWriteStream) _response.Body;
@@ -135,14 +137,19 @@ namespace Orcus.Sockets.Internal.Http
             if (_disposed)
                 throw new ObjectDisposedException("The stream is disposed and no data can be pushed");
 
-            var latestBuffer = _latestSendBuffer;
-            _latestSendBuffer = data;
+            if (!_isFinalPackage)
+            {
+                //if it is not the final package, we always cache one package
+                var latestBuffer = _latestSendBuffer;
+                _latestSendBuffer = data;
+                data = latestBuffer;
 
-            if (latestBuffer == default)
-                return;
+                if (data == default)
+                    return;
+            }
 
-            Logger.LogDataPackage("Send HTTP Response Continuation", latestBuffer.Array, latestBuffer.Offset,
-                latestBuffer.Count);
+            Logger.LogDataPackage("Send HTTP Response Continuation", data.Array, data.Offset,
+                data.Count);
 
             OrcusSocket.MessageOpcode opcode;
             if (_hasSentPackage)
@@ -156,11 +163,11 @@ namespace Orcus.Sockets.Internal.Http
             
             try
             {
-                await _socket.SendFrameAsync(opcode, latestBuffer, CancellationToken.None);
+                await _socket.SendFrameAsync(opcode, data, CancellationToken.None);
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(latestBuffer.Array);
+                ArrayPool<byte>.Shared.Return(data.Array);
             }
 
             _hasSentPackage = true;
@@ -192,7 +199,6 @@ namespace Orcus.Sockets.Internal.Http
             if (disposing)
             {
                 _disposed = true;
-                
                 if (_latestSendBuffer != default)
                 {
                     ArrayPool<byte>.Shared.Return(_latestSendBuffer.Array);
@@ -202,3 +208,5 @@ namespace Orcus.Sockets.Internal.Http
         }
     }
 }
+
+#endif

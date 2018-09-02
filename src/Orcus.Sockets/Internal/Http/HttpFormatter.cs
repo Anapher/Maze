@@ -103,7 +103,10 @@ namespace Orcus.Sockets.Internal.Http
                 var key = line.Substring(0, keyEnd);
                 var values = line.Substring(keyEnd + 2, line.Length - 2 - keyEnd);
 
-                headers.AppendCommaSeparatedValues(key, values);
+                if (values[0] == '"')
+                    headers.AppendCommaSeparatedValues(key, values);
+                else
+                    headers.Add(key, values);
             }
         }
 

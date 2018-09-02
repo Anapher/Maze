@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
 using Orcus.Administration.Library.Clients;
@@ -12,7 +13,11 @@ namespace Orcus.Administration.Core.Clients
         public static async Task<IOrcusRestClient> TryConnect(string username, SecureString password, IServerInfo serverInfo)
         {
             if (_cachedHttpClient == null)
-                _cachedHttpClient = new HttpClient();
+                _cachedHttpClient =
+                    new HttpClient(new HttpClientHandler
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip,
+                    });
 
             _cachedHttpClient.BaseAddress = serverInfo.ServerUri;
             var client = new OrcusRestClient(username, password, _cachedHttpClient);

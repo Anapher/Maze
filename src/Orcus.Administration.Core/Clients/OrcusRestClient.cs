@@ -46,8 +46,7 @@ namespace Orcus.Administration.Core.Clients
 
             var result = await response.Content.ReadAsStringAsync();
 
-            RestError[] errors;
-
+            RestError[] errors = null;
             if (!string.IsNullOrEmpty(result))
             {
                 if (result[0] == '[')
@@ -68,10 +67,6 @@ namespace Orcus.Administration.Core.Clients
                     {
                         throw new HttpRequestException(result);
                     }
-            }
-            else
-            {
-                throw new HttpRequestException(result);
             }
 
             if (errors == null)

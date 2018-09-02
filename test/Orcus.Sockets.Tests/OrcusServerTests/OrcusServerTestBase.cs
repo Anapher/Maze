@@ -11,17 +11,6 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
 {
     public abstract class OrcusServerTestBase
     {
-        protected readonly Stream DataStream;
-        protected readonly OrcusSocket RequestSocket;
-        protected readonly OrcusServer RequestServer;
-
-        protected OrcusServerTestBase()
-        {
-            DataStream = new MemoryStream();
-            RequestSocket = new OrcusSocket(DataStream, keepAliveInterval: null);
-            RequestServer = new OrcusServer(RequestSocket, PackageSize, MaxHeaderSize);
-        }
-
         protected virtual int PackageSize { get; } = 1024;
         protected virtual int MaxHeaderSize { get; } = 1024;
 
@@ -47,13 +36,17 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
         [Fact]
         public async Task ExecuteTest()
         {
+            var dataStream = new MemoryStream();
+            var requestSocket = new OrcusSocket(dataStream, keepAliveInterval: null);
+            var requestServer = new OrcusServer(requestSocket, PackageSize, MaxHeaderSize);
+
             var request = GetRequest();
-            var requestTask = RequestServer.SendRequest(request, CancellationToken.None); //will wait for a response
+            var requestTask = requestServer.SendRequest(request, CancellationToken.None); //will wait for a response
             await Task.Delay(20);
 
-            DataStream.Position = 0;
+            dataStream.Position = 0;
 
-            var receiverSocket = new OrcusSocket(DataStream, null);
+            var receiverSocket = new OrcusSocket(dataStream, null);
             var receiverServer = new OrcusServer(receiverSocket, PackageSize, MaxHeaderSize);
 
             var completionSource = new TaskCompletionSource<OrcusRequestReceivedEventArgs>();
@@ -71,16 +64,16 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             var result = await completionSource.Task;
             await AssertReceivedRequest(request, result.Request);
 
-            DataStream.SetLength(0);
+            dataStream.SetLength(0);
 
             await WriteResponse(result.Response);
 
             await receiverServer.FinishResponse(result);
 
-            DataStream.Seek(0, SeekOrigin.Begin);
+            dataStream.Seek(0, SeekOrigin.Begin);
             try
             {
-                await RequestSocket.ReceiveAsync();
+                await requestSocket.ReceiveAsync();
             }
             catch (WebSocketException) //EOF
             {

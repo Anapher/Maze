@@ -121,6 +121,7 @@ namespace FileExplorer.Client.Controllers
             return Ok();
         }
 
+        [OrcusGet("download")]
         public IActionResult DownloadFile([FromQuery] string path)
         {
             var file = new FileInfo(path);
@@ -131,7 +132,7 @@ namespace FileExplorer.Client.Controllers
             var result = File(fileStream, "application/octet-stream", file.Name);
             result.EnableRangeProcessing = true;
             result.LastModified = file.LastWriteTimeUtc;
-            result.EntityTag = EntityTagHeaderValue.Parse(file.Length.ToString());
+            result.EntityTag = EntityTagHeaderValue.Parse("\"" + file.Length + "\"");
 
             return result;
         }

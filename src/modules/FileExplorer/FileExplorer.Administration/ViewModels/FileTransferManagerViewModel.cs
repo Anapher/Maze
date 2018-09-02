@@ -13,6 +13,7 @@ using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels.Explorer;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Logging;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Utilities;
 using Prism.Commands;
@@ -23,6 +24,8 @@ namespace FileExplorer.Administration.ViewModels
 {
     public class FileTransferManagerViewModel : BindableBase, IFileExplorerChildViewModel
     {
+        private static readonly ILog Logger = LogProvider.For<FileTransferViewModel>();
+
         private IPackageRestClient _restClient;
         private FileExplorerViewModel _baseVm;
         private readonly ObservableCollection<FileTransferViewModel> _transfers;
@@ -118,12 +121,52 @@ namespace FileExplorer.Administration.ViewModels
             await _concurrentDownloadsSemaphore.WaitAsync();
             try
             {
+                transfer.State = FileTransferState.Preparing;
 
+                var streamCopyUtil = new StreamCopyUtil();
+
+                streamCopyUtil.ProgressChanged += (sender, args) =>
+                {
+                    transfer.UpdateProgress(args);
+                    UpdateStatus();
+                };
+
+                try
+                {
+                    var downloadTask =
+                        FileExplorerResource.Download(transfer.SourcePath, transfer.CancellationToken, _restClient);
+
+                    using (var downloadResponse = await downloadTask)
+                    {
+                        using (var localStream = File.Create(transfer.TargetPath))
+                        using (var remoteStream = await downloadResponse.Content.ReadAsStreamAsync())
+                        {
+                            await streamCopyUtil.CopyToAsync(remoteStream, localStream, transfer.CancellationToken);
+                        }
+                    }
+
+                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                        transfer.CompleteProgress(FileTransferState.Succeeded)));
+                }
+                catch (OperationCanceledException)
+                {
+                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                        transfer.CompleteProgress(FileTransferState.Canceled)));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "An error occurred on file download");
+
+                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                        transfer.CompleteProgress(FileTransferState.Failed)));
+                }
             }
             finally
             {
                 _concurrentDownloadsSemaphore.Release();
             }
+
+            UpdateStatus();
         }
 
         private async Task InternalExecuteUpload(FileTransferViewModel transfer)
@@ -151,21 +194,12 @@ namespace FileExplorer.Administration.ViewModels
                         return;
                     }
 
-                    var processingEntry = new ProcessingEntryViewModel(transfer, _baseVm.FileSystem, _baseVm);
-                    _baseVm.Dispatcher.Current.BeginInvoke(
-                        new Action(() => _baseVm.ProcessingEntries.Add(processingEntry)),
-                        DispatcherPriority.ApplicationIdle).Task.Forget();
+                    var processingEntry = AddProcessingViewModel(transfer);
 
-                    var zipContent = new ZipContent(fs);
+                    var zipContent = new ZipContent(fs) {CancellationToken = transfer.CancellationToken};
                     zipContent.ProgressChanged += (sender, args) =>
                     {
-                        transfer.State = FileTransferState.Transferring;
-
-                        transfer.Progress = args.Progress;
-                        transfer.TotalSize = args.TotalSize;
-                        transfer.ProcessedSize = args.ProcessedSize;
-                        transfer.CurrentSpeed = args.Speed;
-                        transfer.EstimatedRemainingTime = args.EstimatedTime;
+                        transfer.UpdateProgress(args);
 
                         processingEntry.Progress = args.Progress;
                         processingEntry.SetSize(args.ProcessedSize);
@@ -181,7 +215,7 @@ namespace FileExplorer.Administration.ViewModels
 
                         await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
                         {
-                            transfer.State = FileTransferState.Succeeded;
+                            transfer.CompleteProgress(FileTransferState.Succeeded);
                             isRemoved = true;
                             _baseVm.ProcessingEntries.Remove(processingEntry);
                             _baseVm.FileSystem.UploadCompleted(processingEntry.Source);
@@ -189,11 +223,14 @@ namespace FileExplorer.Administration.ViewModels
                     }
                     catch (OperationCanceledException)
                     {
-                        transfer.State = FileTransferState.Canceled;
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                            transfer.CompleteProgress(FileTransferState.Canceled)));
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        transfer.State = FileTransferState.Failed;
+                        Logger.Error(e, "An error occurred on file upload");
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                            transfer.CompleteProgress(FileTransferState.Failed)));
                     }
                     finally
                     {
@@ -215,6 +252,16 @@ namespace FileExplorer.Administration.ViewModels
             }
 
             UpdateStatus();
+        }
+
+        private ProcessingEntryViewModel AddProcessingViewModel(FileTransferViewModel transfer)
+        {
+            var processingEntry = new ProcessingEntryViewModel(transfer, _baseVm.FileSystem, _baseVm);
+            _baseVm.Dispatcher.Current.BeginInvoke(
+                new Action(() => _baseVm.ProcessingEntries.Add(processingEntry)),
+                DispatcherPriority.ApplicationIdle);
+
+            return processingEntry;
         }
 
         private void UpdateStatus()

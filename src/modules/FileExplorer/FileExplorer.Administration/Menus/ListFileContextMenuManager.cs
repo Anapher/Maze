@@ -92,6 +92,7 @@ namespace FileExplorer.Administration.Menus
 
         private void DownloadFile(FileViewModel file, FileExplorerViewModel context)
         {
+            context.FileTransferManagerViewModel.ExecuteTransfer(new FileTransferViewModel(file, "D:\\test.rar"));
         }
 
         private void ExecuteFile(FileViewModel file, FileExplorerViewModel context)

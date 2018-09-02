@@ -2,7 +2,7 @@
 
 namespace FileExplorer.Administration.Models
 {
-    public class ZipContentProgressChangedEventArgs : EventArgs
+    public class TransferProgressChangedEventArgs : EventArgs
     {
         public double Progress { get; set; }
         public long TotalSize { get; set; }

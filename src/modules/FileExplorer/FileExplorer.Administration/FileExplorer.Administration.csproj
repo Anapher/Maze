@@ -103,6 +103,7 @@
     <Compile Include="Models\IFileSystem.cs" />
     <Compile Include="Models\PathContent.cs" />
     <Compile Include="Models\RemoteFileSystem.cs" />
+    <Compile Include="Models\StreamCopyUtil.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\SHFILEINFO.cs" />
     <Compile Include="PrismModule.cs" />
@@ -152,7 +153,7 @@
     <Compile Include="ViewModels\Explorer\IFileExplorerChildViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="Models\ZipContent.cs" />
-    <Compile Include="Models\ZipContentProgressChangedEventArgs.cs" />
+    <Compile Include="Models\TransferProgressChangedEventArgs.cs" />
     <Compile Include="Views\Dialogs\InputTextView.xaml.cs">
       <DependentUpon>InputTextView.xaml</DependentUpon>
     </Compile>

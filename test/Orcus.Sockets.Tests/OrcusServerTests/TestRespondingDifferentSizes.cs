@@ -39,7 +39,8 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
                     await responseMessage.Content.CopyToAsync(memoryStream);
 
                     var expected = Merge(_packages.Select(x => new ArraySegment<byte>(x)).ToList());
-                    Assert.Equal(expected, memoryStream.ToArray());
+                    var actual = memoryStream.ToArray();
+                    Assert.Equal(expected, actual);
                 }
             }
         }

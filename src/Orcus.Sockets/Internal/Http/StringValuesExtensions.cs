@@ -13,6 +13,9 @@ namespace Orcus.Sockets.Internal.Http
             if (values.Count == 0)
                 return QuoteIfNeeded(values[0]);
 
+            if (values.Count == 1)
+                return values.First();
+
             return string.Join(",", values.Select(QuoteIfNeeded));
         }
 

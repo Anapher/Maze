@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Shared.Dtos;
@@ -23,5 +24,10 @@ namespace FileExplorer.Administration.Rest
 
         public static Task Upload(HttpContent httpContent, string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "upload", httpContent).AddQueryParam("path", path).Execute(restClient, cancellationToken);
+
+        public static Task<HttpResponseMessage> Download(string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "download").AddQueryParam("path", path)
+                .ConfigureHeader(x => x.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip")))
+                .Execute(restClient, cancellationToken);
     }
 }

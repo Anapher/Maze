@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -198,10 +197,9 @@ namespace Orcus.Sockets
             defaultResponse.IsCompleted = true;
 
             await defaultResponse.Body.FlushAsync();
-            e.Request.Body.Dispose();
-
             await defaultResponse.HttpResponseStream.FinalFlushAsync();
-            defaultResponse.Finished();
+
+            defaultResponse.Finished(); //disposes the streams
         }
 
         private void SocketOnDataReceivedEventArgs(object sender, DataReceivedEventArgs e)
