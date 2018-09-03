@@ -5,12 +5,14 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using FileExplorer.Shared.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using Orcus.Client.Library.Services;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
@@ -166,6 +168,13 @@ namespace FileExplorer.Client.Controllers
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
             }
+        }
+
+        [OrcusPost("clipboard")]
+        public IActionResult CopyPathToClipboard([FromQuery] string path, [FromServices] IStaSynchronizationContext context )
+        {
+            context.Current.Post(state => Clipboard.SetText((string) state, TextDataFormat.UnicodeText), path);
+            return Ok();
         }
     }
 }

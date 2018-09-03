@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
 </Project>

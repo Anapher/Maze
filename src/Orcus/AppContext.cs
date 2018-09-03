@@ -1,21 +1,25 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Extensions.Options;
 using NuGet.Frameworks;
 using NuGet.Versioning;
 using Orcus.Client.Library.Interfaces;
+using Orcus.Client.Library.Services;
 using Orcus.Core;
 using Orcus.Core.Connection;
 using Orcus.Core.Modules;
 using Orcus.ModuleManagement;
 using Orcus.Options;
+using IContainer = Autofac.IContainer;
 
 namespace Orcus
 {
-    public class AppContext : ApplicationContext, IApplicationInfo
+    public class AppContext : ApplicationContext, IApplicationInfo, IStaSynchronizationContext
     {
         public AppContext(ContainerBuilder builder)
         {
@@ -28,7 +32,13 @@ namespace Orcus
             StartConnecting();
 
             Container.Execute<IStartupAction>();
+            Application.Idle += ApplicationOnIdle;
         }
+
+        /// <summary>
+        ///     The current synchronization context
+        /// </summary>
+        public SynchronizationContext Current { get; private set; }
 
         /// <summary>
         ///     The root container that contains all services of Orcus
@@ -66,6 +76,11 @@ namespace Orcus
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName == args.Name);
+        }
+
+        private void ApplicationOnIdle(object sender, EventArgs e)
+        {
+            Current = SynchronizationContext.Current;
         }
     }
 }

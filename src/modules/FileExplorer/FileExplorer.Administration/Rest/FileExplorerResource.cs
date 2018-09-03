@@ -34,5 +34,9 @@ namespace FileExplorer.Administration.Rest
             CreateRequest(HttpVerb.Get, "downloadDirectory").AddQueryParam("path", path)
                 .ConfigureHeader(x => x.AcceptEncoding.Add(new StringWithQualityHeaderValue("zip")))
                 .Execute(restClient, cancellationToken);
+
+        public static Task CopyPathToClipboard(string path, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "clipboard").AddQueryParam("path", path)
+                .Execute(restClient);
     }
 }

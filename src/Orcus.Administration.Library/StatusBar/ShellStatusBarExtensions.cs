@@ -97,20 +97,29 @@ namespace Orcus.Administration.Library.StatusBar
         }
 
         public static async Task<T> DisplayOnStatusBar<T>(this Task<T> task, IShellStatusBar shellStatusBar,
-            string message, StatusBarAnimation animation = StatusBarAnimation.None)
+            string message, StatusBarAnimation animation = StatusBarAnimation.None, bool mustShow = false)
+        {
+            await DisplayOnStatusBar((Task) task, shellStatusBar, message, animation, mustShow);
+            return task.Result;
+        }
+
+        public static async Task DisplayOnStatusBar(this Task task, IShellStatusBar shellStatusBar,
+            string message, StatusBarAnimation animation = StatusBarAnimation.None, bool mustShow =false)
         {
             //if the task executes synchronously, don't display anything to avoid "flickering"
-            var completedTask = await Task.WhenAny(task, Task.Delay(200));
-            if (completedTask == task)
-                return task.Result;
+            if (!mustShow)
+            {
+                var completedTask = await Task.WhenAny(task, Task.Delay(200));
+                if (completedTask == task)
+                    return;
+            }
 
             var beginTime = DateTimeOffset.UtcNow;
             var status = shellStatusBar.PushStatus(new TextStatusMessage(message) {Animation = animation});
 
-            T result;
             try
             {
-                result = await task;
+                await task;
             }
             catch (Exception)
             {
@@ -125,16 +134,14 @@ namespace Orcus.Administration.Library.StatusBar
             if (diff < TimeSpan.Zero)
                 status.Dispose();
             else Task.Delay(diff).ContinueWith(_ => status.Dispose()).Forget();
-
-            return result;
         }
 
         public static async Task<SuccessOrError<T>> DisplayOnStatusBarCatchErrors<T>(this Task<T> task,
-            IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None)
+            IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None, bool mustShow = false)
         {
             try
             {
-                return await task.DisplayOnStatusBar(shellStatusBar, message, animation);
+                return await task.DisplayOnStatusBar(shellStatusBar, message, animation, mustShow);
             }
             catch (RestException e)
             {
@@ -148,12 +155,12 @@ namespace Orcus.Administration.Library.StatusBar
             }
         }
 
-        public static async Task<bool> DisplayOnStatusBarCatchErrors(this Task task,
-            IShellStatusBar shellStatusBar, string message, StatusBarAnimation animation = StatusBarAnimation.None)
+        public static async Task<bool> DisplayOnStatusBarCatchErrors(this Task task, IShellStatusBar shellStatusBar,
+            string message, StatusBarAnimation animation = StatusBarAnimation.None, bool mustShow = false)
         {
             try
             {
-                await task.DisplayOnStatusBar(shellStatusBar, message, animation);
+                await task.DisplayOnStatusBar(shellStatusBar, message, animation, mustShow);
                 return true;
             }
             catch (RestException e)

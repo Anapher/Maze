@@ -2,12 +2,14 @@
 using System.IO;
 using System.Windows;
 using FileExplorer.Administration.Resources;
+using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
+using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Utilities;
 using Unclassified.TxLib;
@@ -33,7 +35,9 @@ namespace FileExplorer.Administration.Menus
 
         public static void CopyPathOnRemoteComputer(EntryViewModel viewModel, FileExplorerViewModel context)
         {
-            Clipboard.SetText(context.CurrentPath);
+            FileExplorerResource.CopyPathToClipboard(viewModel.Source.Path, context.RestClient)
+                .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:CopyPathOnRemoteComputer"),
+                    StatusBarAnimation.Save, true).Forget();
         }
 
         public static void DeleteEntries(IEnumerable<EntryViewModel> entries, FileExplorerViewModel context)

@@ -48,6 +48,7 @@
 		<text key="FileExplorer:SearchWatermark">Suche...</text>
 		<text key="FileExplorer:SelectFilesToUpload">Bitte wählen Sie die Dateien aus, die in das Zielverzeichnis hochgeladen werden sollen</text>
 		<text key="FileExplorer:Size">Größe</text>
+		<text key="FileExplorer:StatusBar.CopyToRemoteClipboard">Kopiere den Pfad in die Zwischenablage des Remote Computers</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries">Entferne {#} Elemente</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne ein Element</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
@@ -117,6 +118,7 @@
 		<text key="FileExplorer:SearchWatermark">Search...</text>
 		<text key="FileExplorer:SelectFilesToUpload">Please select the files you want to upload to the target directory</text>
 		<text key="FileExplorer:Size">Size</text>
+		<text key="FileExplorer:StatusBar.CopyToRemoteClipboard">Copy path to remote clipboard</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries">Delete {#} items</text>
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one item</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
