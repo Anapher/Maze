@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Orcus.Modules.Api.Request;
 using Orcus.Modules.Api.Response;
 
 namespace Orcus.Modules.Api
@@ -8,6 +9,8 @@ namespace Orcus.Modules.Api
     public abstract class OrcusController : IDisposable
     {
         public OrcusContext OrcusContext { get; set; }
+        public OrcusRequest Request => OrcusContext.Request;
+        public OrcusResponse Response => OrcusContext.Response;
 
         [NonAction]
         public virtual void Dispose()

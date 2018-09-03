@@ -75,10 +75,9 @@ namespace Orcus.Sockets.Internal.Http
 
                 if (!_response.HasStarted)
                 {
-                    if (!_response.IsCompleted && !_isCompressionEnabled && !_isFinalPackage)
+                    if (!_response.IsCompleted && !_isCompressionEnabled && !_isFinalPackage && !_response.Headers.ContainsKey(HeaderNames.ContentEncoding))
                     {
-                        if (_request.GetTypedHeaders().AcceptEncoding
-                                ?.Contains(new StringWithQualityHeaderValue("gzip")) == true)
+                        if (_request.GetTypedHeaders().AcceptEncoding?.Contains(new StringWithQualityHeaderValue("gzip")) == true)
                         {
                             _isCompressionEnabled = true;
                             _response.Headers.Add(HeaderNames.ContentEncoding, "gzip");

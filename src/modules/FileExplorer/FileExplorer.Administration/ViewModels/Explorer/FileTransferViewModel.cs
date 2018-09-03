@@ -18,9 +18,10 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         private TimeSpan _estimatedRemainingTime;
         private DelegateCommand _openFolderCommand;
         private long _processedSize;
-        private double _progress;
+        private double? _progress;
         private FileTransferState _state;
         private long _totalSize;
+        private bool _isCompleted;
 
         public FileTransferViewModel(EntryViewModel entryViewModel, string targetPath)
         {
@@ -66,7 +67,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             set => SetProperty(ref _processedSize, value);
         }
 
-        public double Progress
+        public double? Progress
         {
             get => _progress;
             set => SetProperty(ref _progress, value);
@@ -87,7 +88,17 @@ namespace FileExplorer.Administration.ViewModels.Explorer
         public FileTransferState State
         {
             get => _state;
-            set => SetProperty(ref _state, value);
+            set
+            {
+                if (SetProperty(ref _state, value))
+                    IsCompleted = State > FileTransferState.Transferring;
+            }
+        }
+
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set => SetProperty(ref _isCompleted, value);
         }
 
         public DelegateCommand CancelCommand
@@ -116,8 +127,6 @@ namespace FileExplorer.Administration.ViewModels.Explorer
 
         public void UpdateProgress(TransferProgressChangedEventArgs args)
         {
-            State = FileTransferState.Transferring;
-
             Progress = args.Progress;
             TotalSize = args.TotalSize;
             ProcessedSize = args.ProcessedSize;

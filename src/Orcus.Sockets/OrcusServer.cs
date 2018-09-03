@@ -133,8 +133,6 @@ namespace Orcus.Sockets
 
                 try
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
                     await _socket.SendFrameAsync(opCode, new ArraySegment<byte>(sendBuffer, 0, read + offset),
                         cancellationToken);
 
@@ -182,7 +180,8 @@ namespace Orcus.Sockets
             {
                 _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CancelRequest,
                     new ArraySegment<byte>(BitConverter.GetBytes(requestId)), CancellationToken.None).Wait();
-                requestWaiter.SetCanceled();
+
+                requestWaiter.TrySetCanceled();
             });
 
             return await requestWaiter.Task;

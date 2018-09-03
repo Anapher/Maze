@@ -9,10 +9,12 @@ using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using FileExplorer.Shared.Utilities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
+using Orcus.Server.Connection;
 using Orcus.Utilities;
 
 namespace FileExplorer.Client.Controllers
@@ -86,7 +88,7 @@ namespace FileExplorer.Client.Controllers
             using (var fs = new FileStream(tmpFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
             {
                 //var crypto = new CryptoStream(fs, sha, CryptoStreamMode.Write);
-                await OrcusContext.Request.Body.CopyToAsync(fs);
+                await Request.Body.CopyToAsync(fs);
 
                 //crypto.FlushFinalBlock();
                 //var hash = BitConverter.ToString(sha.Hash).Replace("-", null);
@@ -116,25 +118,54 @@ namespace FileExplorer.Client.Controllers
                     }
                 }
             }
-
-
             return Ok();
         }
 
         [OrcusGet("download")]
-        public IActionResult DownloadFile([FromQuery] string path)
+        public IActionResult DownloadFile([FromQuery] string path, CancellationToken cancellationToken)
         {
             var file = new FileInfo(path);
-            if (!file.Exists)
-                return NotFound();
+            if (file.Exists)
+            {
+                var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var result = File(fileStream, ContentTypes.Binary, file.Name);
+                result.EnableRangeProcessing = true;
+                result.LastModified = file.LastWriteTimeUtc;
+                result.EntityTag = EntityTagHeaderValue.Parse("\"" + file.Length + "\"");
+                return result;
+            }
 
-            var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var result = File(fileStream, "application/octet-stream", file.Name);
-            result.EnableRangeProcessing = true;
-            result.LastModified = file.LastWriteTimeUtc;
-            result.EntityTag = EntityTagHeaderValue.Parse("\"" + file.Length + "\"");
+            return NotFound();
+        }
 
-            return result;
+        [OrcusGet("downloadDirectory")]
+        public async Task DownloadDirectory([FromQuery] string path, CancellationToken cancellationToken)
+        {
+            var directory = new DirectoryInfo(path);
+            if (directory.Exists)
+            {
+                Response.ContentType = ContentTypes.Binary;
+                Response.Headers.Add(HeaderNames.ContentEncoding, "zip");
+                
+                using (var zipArchive = new ZipArchive(Response.Body, ZipArchiveMode.Create, true))
+                {
+                    var folderOffset = directory.FullName.Length + (directory.FullName.EndsWith("\\") ? 0 : 1);
+                    foreach (var fi in directory.EnumerateFiles("*", SearchOption.AllDirectories))
+                    {
+                        var entryName = fi.FullName.Substring(folderOffset); // Makes the name in zip based on the folder
+                        var entry = zipArchive.CreateEntry(entryName, CompressionLevel.Optimal);
+                        using (var reader = fi.OpenRead())
+                        using (var writer = entry.Open())
+                        {
+                            await reader.CopyToAsync(writer, 8192, cancellationToken);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+            }
         }
     }
 }

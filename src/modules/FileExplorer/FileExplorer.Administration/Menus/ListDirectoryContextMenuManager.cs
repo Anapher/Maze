@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
+using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Utilities;
 using Unclassified.TxLib;
@@ -39,6 +39,25 @@ namespace FileExplorer.Administration.Menus
         public static void DeleteEntries(IEnumerable<EntryViewModel> entries, FileExplorerViewModel context)
         {
             context.EntriesViewModel.RemoveEntries(entries).Forget();
+        }
+
+        public static void DownloadEntries(IEnumerable<EntryViewModel> entries, FileExplorerViewModel context)
+        {
+            var fbd = new VistaFolderBrowserDialog();
+
+            var downloadsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "downloads");
+            Directory.CreateDirectory(downloadsDirectory);
+
+            fbd.SelectedPath = downloadsDirectory;
+
+            if (context.Window.ShowDialog(fbd) != true)
+                return;
+
+            foreach (var entryViewModel in entries)
+            {
+                context.FileTransferManagerViewModel.ExecuteTransfer(new FileTransferViewModel(entryViewModel,
+                    Path.Combine(fbd.SelectedPath, entryViewModel.Label)));
+            }
         }
 
         public static void OpenProperties(EntryViewModel viewModel, FileExplorerViewModel context)
@@ -100,7 +119,8 @@ namespace FileExplorer.Administration.Menus
             {
                 Header = Tx.T("FileExplorer:Download"),
                 Icon = _icons.DownloadFile,
-                Command = new ContextDelegateCommand<DirectoryViewModel, FileExplorerViewModel>(DownloadDirectory)
+                Command = new ContextDelegateCommand<DirectoryViewModel, FileExplorerViewModel>((model, viewModel) => EntryViewModelCommands.DownloadEntries(model.Yield(), viewModel)),
+                MultipleCommand = new ContextDelegateCommand<IEnumerable<EntryViewModel>, FileExplorerViewModel>(EntryViewModelCommands.DownloadEntries)
             });
             _contextMenu.Section3.Add(new ContextDiItemsCommand<DirectoryViewModel, EntryViewModel, FileExplorerViewModel>
             {
@@ -121,11 +141,6 @@ namespace FileExplorer.Administration.Menus
                 Icon = _icons.Property,
                 Command = new ContextDelegateCommand<DirectoryViewModel, FileExplorerViewModel>(EntryViewModelCommands.OpenProperties)
             });
-        }
-
-        private void DownloadDirectory(DirectoryViewModel arg1, FileExplorerViewModel arg2)
-        {
-            throw new System.NotImplementedException();
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

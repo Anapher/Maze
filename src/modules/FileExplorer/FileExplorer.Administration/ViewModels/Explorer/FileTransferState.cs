@@ -4,6 +4,7 @@
     {
         Pending,
         Preparing,
+        Extracting,
         Transferring,
         Failed,
         Succeeded,

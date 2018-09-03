@@ -183,6 +183,7 @@ namespace Orcus.Administration.Library.Views
             public bool? ShowDialog(VistaFileDialog fileDialog) => throw new NotImplementedException();
 
             public bool? ShowDialog(FileDialog fileDialog) => throw new NotImplementedException();
+            public bool? ShowDialog(VistaFolderBrowserDialog folderDialog) => throw new NotImplementedException();
 
             public string Title { get; set; }
             public object RightStatusBarContent { get; set; }

@@ -80,7 +80,6 @@
     <Compile Include="Controls\TreeViewEx.cs" />
     <Compile Include="Controls\TreeViewItemEx.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
-    <Compile Include="Converters\IsTransferFinishedConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="FileExplorerContextMenu.cs" />
     <Compile Include="Helpers\EntriesHelper.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -24,6 +25,11 @@ namespace Orcus.Service.Commander.Commanding
 
             MethodReturnType = methodInfo.ReturnType;
             IsAsync = typeof(Task).IsAssignableFrom(MethodReturnType);
+
+            if (IsAsync && MethodReturnType.IsGenericType)
+            {
+                AsyncResultType = MethodReturnType.GetGenericArguments().First();
+            }
         }
 
         /// <summary>
@@ -37,9 +43,14 @@ namespace Orcus.Service.Commander.Commanding
         public MethodInfo MethodInfo { get; }
 
         /// <summary>
-        /// The return type of the method
+        ///     The return type of the method
         /// </summary>
         public Type MethodReturnType { get; }
+
+        /// <summary>
+        ///     The actual return type if the method returns a task
+        /// </summary>
+        public Type AsyncResultType { get; }
 
         /// <summary>
         /// True if the method is asynchronous

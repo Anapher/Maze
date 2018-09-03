@@ -128,5 +128,10 @@ namespace Orcus.Administration.Views
         {
             return fileDialog.ShowDialog(this);
         }
+
+        public bool? ShowDialog(VistaFolderBrowserDialog folderDialog)
+        {
+            return folderDialog.ShowDialog(this);
+        }
     }
 }

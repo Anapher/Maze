@@ -76,11 +76,9 @@ namespace FileExplorer.Administration.Models
 
         public async Task CopyToAsync(Stream source, Stream destination, CancellationToken cancellationToken)
         {
-            if (TotalSize == 0)
-                throw new InvalidOperationException("The TotalSize must be set before this method is called");
-
             _lastFastUpdate = DateTimeOffset.UtcNow;
             _lastSlowUpdate = DateTimeOffset.UtcNow;
+            _lastUpdateBytesTransferred = 0;
 
             var buffer = _buffer;
             int bytesRead;
@@ -92,6 +90,14 @@ namespace FileExplorer.Administration.Models
 
                 UpdateProgressCallback();
             }
+        }
+
+        public void Reset()
+        {
+            _args = null;
+            TotalSize = 0;
+            _bytesTransferred = 0;
+            _processedSize = 0;
         }
 
         private void UpdateProgressCallback()
@@ -109,15 +115,19 @@ namespace FileExplorer.Administration.Models
                     {
                         _args.Speed = (_bytesTransferred - _lastUpdateBytesTransferred) / slowUpdateDiff.TotalSeconds;
 
-                        var estimatedBytesToTransfer =
-                            _processedSize / (double) _bytesTransferred * (TotalSize - _processedSize);
-                        _args.EstimatedTime = TimeSpan.FromSeconds(estimatedBytesToTransfer / _args.Speed);
+                        if (TotalSize > 0)
+                        {
+                            var estimatedBytesToTransfer =
+                                _processedSize / (double)_bytesTransferred * (TotalSize - _processedSize);
+                            _args.EstimatedTime = TimeSpan.FromSeconds(estimatedBytesToTransfer / _args.Speed);
+                        }
 
                         _lastUpdateBytesTransferred = _bytesTransferred;
                         _lastSlowUpdate = now;
                     }
 
-                    _args.Progress = _processedSize / (double) TotalSize;
+                    if (TotalSize > 0)
+                        _args.Progress = _processedSize / (double) TotalSize;
                     _args.ProcessedSize = _processedSize;
                     ProgressChanged?.Invoke(this, _args);
 

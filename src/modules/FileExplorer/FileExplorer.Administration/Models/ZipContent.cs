@@ -21,7 +21,8 @@ namespace FileExplorer.Administration.Models
         {
             _fileSystemInfo = fileSystemInfo;
 
-            Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+            Headers.ContentEncoding.Add("zip");
+            Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         }
 
         public CancellationToken CancellationToken { get; set; }
@@ -54,21 +55,14 @@ namespace FileExplorer.Administration.Models
 
                     var folderOffset = _fileSystemInfo.FullName.Length +
                                        (_fileSystemInfo.FullName.EndsWith("\\") ? 0 : 1);
-                    await CompressFolder(directory, zipArchive, folderOffset, streamCopy);
+
+                    foreach (var fi in allFiles)
+                    {
+                        var entryName = fi.FullName.Substring(folderOffset); // Makes the name in zip based on the folder
+                        await CompressFile(fi, zipArchive, entryName, streamCopy).ConfigureAwait(false);
+                    }
                 }
             }
-        }
-
-        private async Task CompressFolder(DirectoryInfo directory, ZipArchive zipStream, int folderOffset, StreamCopyUtil streamCopy)
-        {
-            foreach (var fi in directory.EnumerateFiles())
-            {
-                var entryName = fi.FullName.Substring(folderOffset); // Makes the name in zip based on the folder
-                await CompressFile(fi, zipStream, entryName, streamCopy).ConfigureAwait(false);
-            }
-
-            foreach (var folder in directory.EnumerateDirectories())
-                await CompressFolder(folder, zipStream, folderOffset, streamCopy).ConfigureAwait(false);
         }
 
         private async Task CompressFile(FileInfo fi, ZipArchive zipArchive, string entryName, StreamCopyUtil streamCopy)

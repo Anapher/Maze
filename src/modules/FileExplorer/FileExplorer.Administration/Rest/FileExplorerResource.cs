@@ -25,9 +25,14 @@ namespace FileExplorer.Administration.Rest
         public static Task Upload(HttpContent httpContent, string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "upload", httpContent).AddQueryParam("path", path).Execute(restClient, cancellationToken);
 
-        public static Task<HttpResponseMessage> Download(string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
+        public static Task<HttpResponseMessage> DownloadFile(string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Get, "download").AddQueryParam("path", path)
                 .ConfigureHeader(x => x.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip")))
+                .Execute(restClient, cancellationToken);
+
+        public static Task<HttpResponseMessage> DownloadDirectory(string path, CancellationToken cancellationToken, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "downloadDirectory").AddQueryParam("path", path)
+                .ConfigureHeader(x => x.AcceptEncoding.Add(new StringWithQualityHeaderValue("zip")))
                 .Execute(restClient, cancellationToken);
     }
 }

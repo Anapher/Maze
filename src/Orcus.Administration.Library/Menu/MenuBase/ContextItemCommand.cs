@@ -30,13 +30,19 @@ namespace Orcus.Administration.Library.Menu.MenuBase
                     if (o is TItem item)
                         Command.Execute(item, (TContext) command.Context);
                     else if (o is IList list)
-                        MultipleCommand.Execute(list.Cast<TItem>().ToList(), (TContext) command.Context);
+                        if (list.Count == 1)
+                            Command.Execute(list.Cast<TItem>().Single(), (TContext) command.Context);
+                        else
+                            MultipleCommand.Execute(list.Cast<TItem>().ToList(), (TContext) command.Context);
                 }, o =>
                 {
                     if (o is TItem item)
                         return Command.CanExecute(item, (TContext) command.Context);
                     if (o is IList list)
-                        return MultipleCommand.CanExecute(list.Cast<TItem>().ToList(), (TContext) command.Context);
+                        if (list.Count == 1)
+                            return Command.CanExecute(list.Cast<TItem>().Single(), (TContext) command.Context);
+                        else
+                            return MultipleCommand.CanExecute(list.Cast<TItem>().ToList(), (TContext) command.Context);
 
                     return true;
                 });
@@ -87,15 +93,21 @@ namespace Orcus.Administration.Library.Menu.MenuBase
                 command = new ContextAwareDelegateCommand<object>(o =>
                 {
                     if (o is TItem item)
-                        Command.Execute(item, (TContext)command.Context);
+                        Command.Execute(item, (TContext) command.Context);
                     else if (o is IList list)
-                        MultipleCommand.Execute(list.Cast<TItemBase>(), (TContext)command.Context);
+                        if (list.Count == 1)
+                            Command.Execute(list.Cast<TItem>().Single(), (TContext) command.Context);
+                        else
+                            MultipleCommand.Execute(list.Cast<TItemBase>(), (TContext) command.Context);
                 }, o =>
                 {
                     if (o is TItem item)
-                        return Command.CanExecute(item, (TContext)command.Context);
+                        return Command.CanExecute(item, (TContext) command.Context);
                     if (o is IList list)
-                        return MultipleCommand.CanExecute(list.Cast<TItemBase>(), (TContext)command.Context);
+                        if (list.Count == 1)
+                            return Command.CanExecute(list.Cast<TItem>().Single(), (TContext) command.Context);
+                        else
+                            return MultipleCommand.CanExecute(list.Cast<TItemBase>(), (TContext) command.Context);
 
                     return true;
                 });

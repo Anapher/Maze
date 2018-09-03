@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
+using Microsoft.Win32;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.ViewModels;
@@ -67,7 +69,8 @@ namespace FileExplorer.Administration.Menus
             {
                 Header = Tx.T("FileExplorer:Download"),
                 Icon = _icons.DownloadFile,
-                Command = new ContextDelegateCommand<FileViewModel, FileExplorerViewModel>(DownloadFile)
+                Command = new ContextDelegateCommand<FileViewModel, FileExplorerViewModel>(DownloadFile),
+                MultipleCommand = new ContextDelegateCommand<IEnumerable<EntryViewModel>, FileExplorerViewModel>(EntryViewModelCommands.DownloadEntries)
             });
             _contextMenu.Section4.Add(new ContextDiItemsCommand<FileViewModel, EntryViewModel, FileExplorerViewModel>
             {
@@ -92,7 +95,24 @@ namespace FileExplorer.Administration.Menus
 
         private void DownloadFile(FileViewModel file, FileExplorerViewModel context)
         {
-            context.FileTransferManagerViewModel.ExecuteTransfer(new FileTransferViewModel(file, "D:\\test.rar"));
+            var sfd = new SaveFileDialog();
+
+            var ext = Path.GetExtension(file.Name);
+            sfd.Filter = ext != null
+                ? $"{Tx.T("FileExplorer:OriginalFileExtension")}|*{ext}|{Tx.T("FileExplorer:AllFilesFilter")}"
+                : Tx.T("FileExplorer:AllFilesFilter");
+            sfd.OverwritePrompt = true;
+
+            var downloadsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "downloads");
+            Directory.CreateDirectory(downloadsDirectory);
+            sfd.CustomPlaces.Add(new FileDialogCustomPlace(downloadsDirectory));
+            sfd.InitialDirectory = downloadsDirectory;
+            sfd.FileName = file.Name;
+
+            if (context.Window.ShowDialog(sfd) != true)
+                return;
+        
+            context.FileTransferManagerViewModel.ExecuteTransfer(new FileTransferViewModel(file, sfd.FileName));
         }
 
         private void ExecuteFile(FileViewModel file, FileExplorerViewModel context)

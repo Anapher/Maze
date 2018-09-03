@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,8 @@ namespace FileExplorer.Administration.ViewModels
         private ProgressStatusMessage _progressStatusMessage;
         private readonly List<FileTransferViewModel> _activeTransfers;
         private readonly object _activeTransfersLock = new object();
+        private bool _isFlyoutOpen;
+        private DelegateCommand _openDownloadsFlyoutCommand;
 
         public FileTransferManagerViewModel()
         {
@@ -48,10 +51,11 @@ namespace FileExplorer.Administration.ViewModels
             _activeTransfers = new List<FileTransferViewModel>();
 
             TransfersView = new ListCollectionView(_transfers);
-            TransfersView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(FileTransferViewModel.State),
-                new IsTransferFinishedConverter()));
-            TransfersView.LiveGroupingProperties.Add(nameof(FileTransferViewModel.State));
+            TransfersView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(FileTransferViewModel.IsCompleted)));
+            TransfersView.LiveGroupingProperties.Add(nameof(FileTransferViewModel.IsCompleted));
             TransfersView.IsLiveGrouping = true;
+            TransfersView.SortDescriptions.Add(new SortDescription(nameof(FileTransferViewModel.IsCompleted),
+                ListSortDirection.Ascending));
             TransfersView.SortDescriptions.Add(new SortDescription(nameof(FileTransferViewModel.Timestamp),
                 ListSortDirection.Descending));
         }
@@ -82,24 +86,18 @@ namespace FileExplorer.Administration.ViewModels
             set => SetProperty(ref _totalSpeed, value);
         }
 
-        private bool _isFlyoutOpen;
-
         public bool IsFlyoutOpen
         {
             get => _isFlyoutOpen;
             set => SetProperty(ref _isFlyoutOpen, value);
         }
 
-        private DelegateCommand _openDownloadsFlyoutCommand;
-
         public DelegateCommand OpenDownloadsFlyoutCommand
         {
             get
             {
-                return _openDownloadsFlyoutCommand ?? (_openDownloadsFlyoutCommand = new DelegateCommand(() =>
-                           {
-                               IsFlyoutOpen = true;
-                           }));
+                return _openDownloadsFlyoutCommand ?? (_openDownloadsFlyoutCommand =
+                           new DelegateCommand(() => { IsFlyoutOpen = !IsFlyoutOpen; }));
             }
         }
 
@@ -118,51 +116,122 @@ namespace FileExplorer.Administration.ViewModels
             if (transfer.IsUpload)
                 throw new InvalidOperationException("The transfer must be a download");
 
-            await _concurrentDownloadsSemaphore.WaitAsync();
+            lock (_activeTransfersLock)
+                _activeTransfers.Add(transfer);
             try
             {
-                transfer.State = FileTransferState.Preparing;
-
-                var streamCopyUtil = new StreamCopyUtil {TotalSize = transfer.TotalSize};
-                streamCopyUtil.ProgressChanged += (sender, args) =>
-                {
-                    transfer.UpdateProgress(args);
-                    UpdateStatus();
-                };
-
+                await _concurrentDownloadsSemaphore.WaitAsync();
                 try
                 {
-                    var downloadTask =
-                        FileExplorerResource.Download(transfer.SourcePath, transfer.CancellationToken, _restClient);
+                    transfer.State = FileTransferState.Preparing;
+                    UpdateStatus();
 
-                    using (var downloadResponse = await downloadTask)
+                    var streamCopyUtil = new StreamCopyUtil();
+                    streamCopyUtil.ProgressChanged += (sender, args) =>
                     {
-                        using (var localStream = File.Create(transfer.TargetPath))
-                        using (var remoteStream = await downloadResponse.Content.ReadAsStreamAsync())
+                        transfer.UpdateProgress(args);
+                        UpdateStatus();
+                    };
+
+                    try
+                    {
+                        if (transfer.IsDirectory)
                         {
-                            await streamCopyUtil.CopyToAsync(remoteStream, localStream, transfer.CancellationToken);
+                            var downloadTask = FileExplorerResource.DownloadDirectory(transfer.SourcePath,
+                                transfer.CancellationToken, _restClient);
+                            using (var downloadResponse = await downloadTask)
+                            {
+                                streamCopyUtil.TotalSize = downloadResponse.Content.Headers.ContentLength ?? 0;
+
+                                var tmpFile = Path.GetTempFileName();
+                                using (var localStream = new FileStream(tmpFile, FileMode.Create, FileAccess.ReadWrite,
+                                    FileShare.None, 8192, FileOptions.Asynchronous | FileOptions.DeleteOnClose))
+                                {
+                                    using (var remoteStream = await downloadResponse.Content.ReadAsStreamAsync())
+                                    {
+                                        transfer.State = FileTransferState.Transferring;
+                                        await streamCopyUtil.CopyToAsync(remoteStream, localStream,
+                                            transfer.CancellationToken);
+                                    }
+
+                                    transfer.State = FileTransferState.Extracting;
+
+                                    localStream.Position = 0;
+
+                                    var targetDirectory = Directory.CreateDirectory(transfer.TargetPath);
+                                    using (var zipArchive = new ZipArchive(localStream, ZipArchiveMode.Read, false))
+                                    {
+                                        streamCopyUtil.Reset();
+                                        streamCopyUtil.TotalSize = zipArchive.Entries.Sum(x => x.Length);
+
+                                        string fullName = targetDirectory.FullName;
+                                        foreach (var entry in zipArchive.Entries)
+                                        {
+                                            var entryPath = Path.GetFullPath(Path.Combine(fullName, entry.FullName));
+                                            if (Path.GetFileName(entryPath).Length == 0)
+                                            {
+                                                Directory.CreateDirectory(entryPath);
+                                            }
+                                            else
+                                            {
+                                                Directory.CreateDirectory(Path.GetDirectoryName(entryPath));
+                                                using (Stream destination = File.Open(entryPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                                                {
+                                                    using (Stream stream = entry.Open())
+                                                        await streamCopyUtil.CopyToAsync(stream, destination,
+                                                            transfer.CancellationToken);
+                                                }
+
+                                                File.SetLastWriteTime(entryPath, entry.LastWriteTime.DateTime);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+                        else
+                        {
+                            streamCopyUtil.TotalSize = transfer.TotalSize;
+
+                            var downloadTask =
+                                FileExplorerResource.DownloadFile(transfer.SourcePath, transfer.CancellationToken, _restClient);
+
+                            using (var downloadResponse = await downloadTask)
+                            {
+                                using (var localStream = File.Create(transfer.TargetPath))
+                                using (var remoteStream = await downloadResponse.Content.ReadAsStreamAsync())
+                                {
+                                    transfer.State = FileTransferState.Transferring;
+                                    await streamCopyUtil.CopyToAsync(remoteStream, localStream, transfer.CancellationToken);
+                                }
+                            }
+                        }
+
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                            transfer.CompleteProgress(FileTransferState.Succeeded)));
                     }
+                    catch (OperationCanceledException)
+                    {
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                            transfer.CompleteProgress(FileTransferState.Canceled)));
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "An error occurred on file download");
 
-                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
-                        transfer.CompleteProgress(FileTransferState.Succeeded)));
+                        await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
+                            transfer.CompleteProgress(FileTransferState.Failed)));
+                    }
                 }
-                catch (OperationCanceledException)
+                finally
                 {
-                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
-                        transfer.CompleteProgress(FileTransferState.Canceled)));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, "An error occurred on file download");
-
-                    await _baseVm.Dispatcher.Current.BeginInvoke(new Action(() =>
-                        transfer.CompleteProgress(FileTransferState.Failed)));
+                    _concurrentDownloadsSemaphore.Release();
                 }
             }
             finally
             {
-                _concurrentDownloadsSemaphore.Release();
+                lock (_activeTransfersLock)
+                    _activeTransfers.Remove(transfer);
             }
 
             UpdateStatus();
@@ -209,6 +278,7 @@ namespace FileExplorer.Administration.ViewModels
                     var isRemoved = false;
                     try
                     {
+                        transfer.State = FileTransferState.Transferring;
                         await FileExplorerResource.Upload(zipContent, transfer.TargetPath, transfer.CancellationToken,
                             _restClient);
 
@@ -293,11 +363,28 @@ namespace FileExplorer.Administration.ViewModels
                                 _baseVm.StatusBar.PushStatus(_progressStatusMessage);
                             }
 
-                            Progress = _activeTransfers.Sum(x => x.Progress) / _activeTransfers.Count;
-                            _progressStatusMessage.Progress = Progress;
+                            if (_activeTransfers.Any(x => x.State == FileTransferState.Transferring))
+                            {
+                                Progress = _activeTransfers.Sum(x => x.Progress ?? 0) / _activeTransfers.Count;
+                                _progressStatusMessage.Progress = Progress > 0 ? Progress : (double?) null;
 
-                            TotalSpeed = _activeTransfers.Sum(x => x.CurrentSpeed);
-                            _progressStatusMessage.Message = GetTransmissionStatusMessage() + " " + Tx.DataSize((long) TotalSpeed) + "/s";
+                                TotalSpeed = _activeTransfers.Sum(x => x.CurrentSpeed);
+                                _progressStatusMessage.Message =
+                                    GetTransmissionStatusMessage() + " " + Tx.DataSize((long) TotalSpeed) + "/s";
+                            }
+                            else if (_activeTransfers.Any(x => x.State == FileTransferState.Extracting))
+                            {
+                                Progress = _activeTransfers.Sum(x => x.Progress ?? 0) / _activeTransfers.Count;
+                                _progressStatusMessage.Progress = Progress > 0 ? Progress : (double?)null;
+
+                                TotalSpeed = _activeTransfers.Sum(x => x.CurrentSpeed);
+                                _progressStatusMessage.Message = Tx.T("FileExplorer:Extracting");
+                            }
+                            else
+                            {
+                                _progressStatusMessage.Progress = null;
+                                _progressStatusMessage.Message = Tx.T("FileExplorer:StatusBar.PreparingTransmission");
+                            }
                         }
                     }
                 }

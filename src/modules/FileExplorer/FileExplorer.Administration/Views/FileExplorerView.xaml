@@ -49,7 +49,10 @@
                 IsOpen="{Binding FileTransferManagerViewModel.IsFlyoutOpen}"
                 Position="Right"
                 Theme="Adapt">
-                <ListBox ItemsSource="{Binding FileTransferManagerViewModel.TransfersView}">
+                <ListBox
+                    ItemsSource="{Binding FileTransferManagerViewModel.TransfersView}"
+                    ScrollViewer.CanContentScroll="False"
+                    VirtualizingStackPanel.IsVirtualizing="False">
                     <ListBox.Resources>
                         <ContextMenu x:Key="FileTransferContextMenu">
                             <MenuItem Command="{Binding CancelCommand}" Header="{tx:T Cancel}" />
@@ -61,6 +64,53 @@
                             <local:FileTransferView Margin="0,4,10,4" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition Height="1" />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <DockPanel>
+                                                        <TextBlock
+                                                            Margin="10,0,0,0"
+                                                            FontSize="13"
+                                                            Foreground="{StaticResource BlackBrush}">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="true">
+                                                                            <Setter Property="Text" Value="{tx:T FileExplorer:Completed}" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Name}" Value="false">
+                                                                            <Setter Property="Text" Value="{tx:T FileExplorer:Active}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <Rectangle
+                                                            Height="1"
+                                                            Margin="10,0,0,0"
+                                                            VerticalAlignment="Center"
+                                                            Fill="{StaticResource BlackBrush}"
+                                                            SnapsToDevicePixels="True" />
+                                                    </DockPanel>
+                                                    <ItemsPresenter Grid.Row="2" Width="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=ActualWidth}" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
                     <ListBox.ItemContainerStyle>
                         <Style BasedOn="{StaticResource MetroListBoxItem}" TargetType="ListBoxItem">
                             <Setter Property="ContextMenu" Value="{StaticResource FileTransferContextMenu}" />

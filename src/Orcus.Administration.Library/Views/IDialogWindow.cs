@@ -8,5 +8,6 @@ namespace Orcus.Administration.Library.Views
     {
         bool? ShowDialog(VistaFileDialog fileDialog);
         bool? ShowDialog(FileDialog fileDialog);
+        bool? ShowDialog(VistaFolderBrowserDialog folderDialog);
     }
 }

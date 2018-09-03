@@ -36,13 +36,19 @@ namespace Orcus.Administration.Library.Menu.MenuBase
                     if (o is TItem item)
                         Command.Execute(item);
                     else if (o is IList list)
-                        MultipleCommand.Execute(list.Cast<TItem>().ToList());
+                        if (list.Count == 1)
+                            Command.Execute(list.Cast<TItem>().Single());
+                        else
+                            MultipleCommand.Execute(list.Cast<TItem>().ToList());
                 }, o =>
                 {
                     if (o is TItem item)
                         return Command.CanExecute(item);
                     if (o is IList list)
-                        return MultipleCommand.CanExecute(list.Cast<TItem>().ToList());
+                        if (list.Count == 1)
+                            return Command.CanExecute(list.Cast<TItem>().Single());
+                        else
+                            return MultipleCommand.CanExecute(list.Cast<TItem>().ToList());
 
                     return false;
                 });

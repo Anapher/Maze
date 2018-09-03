@@ -2,8 +2,10 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="FileExplorer:Active">Aktiv</text>
 		<text key="FileExplorer:AllFilesFilter">Alle Dateien|*.*</text>
 		<text key="FileExplorer:Archive">Archiv</text>
+		<text key="FileExplorer:Completed">Fertiggestellt</text>
 		<text key="FileExplorer:CopyDirectoryPath">Verzeichnispfad kopieren</text>
 		<text key="FileExplorer:CopyFilePath">Dateipfad kopieren</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Pfad in Zwischenablage des Remote Computers kopieren</text>
@@ -19,6 +21,7 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
 		<text key="FileExplorer:Execute">Ausführen</text>
+		<text key="FileExplorer:Extracting">Entpacken</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
 		<text key="FileExplorer:FolderName">Ordnername</text>
 		<text key="FileExplorer:Items">Elemente</text>
@@ -27,6 +30,7 @@
 		<text key="FileExplorer:NewFolder">Neuer Ordner</text>
 		<text key="FileExplorer:OpenFolder">Ordner öffnen</text>
 		<text key="FileExplorer:OpenPath">Öffne Pfad...</text>
+		<text key="FileExplorer:OriginalFileExtension">Originaldateiendung</text>
 		<text key="FileExplorer:ParentFolderPath">Pfad des Oberverzeichnisses</text>
 		<text key="FileExplorer:PathCopy">Pfad kopieren</text>
 		<text key="FileExplorer:Pending">Ausstehend</text>
@@ -48,6 +52,7 @@
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Entferne ein Element</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Lade Elemente</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Lade Unterverzeichnisse</text>
+		<text key="FileExplorer:StatusBar.PreparingTransmission">Übertragung wird vorbereitet</text>
 		<text key="FileExplorer:StatusBar.RenameDirectory">Ordner wird zu {name} umbenannt</text>
 		<text key="FileExplorer:StatusBar.RenameFile">Datei wird zu {name} umbenannt</text>
 		<text key="FileExplorer:StatusBar.Transmission.Directories">Übertrage {#} Ordner</text>
@@ -66,8 +71,10 @@
 		<text key="FileExplorer:UploadFile">Datei hochladen</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="FileExplorer:Active">Active</text>
 		<text key="FileExplorer:AllFilesFilter">All files|*.*</text>
 		<text key="FileExplorer:Archive">Archive</text>
+		<text key="FileExplorer:Completed">Completed</text>
 		<text key="FileExplorer:CopyDirectoryPath">Copy directory path</text>
 		<text key="FileExplorer:CopyFilePath">Copy file path</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Copy path to clipboard on remote computer</text>
@@ -83,6 +90,7 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Drive</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
 		<text key="FileExplorer:Execute">Execute</text>
+		<text key="FileExplorer:Extracting">Extracting</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
 		<text key="FileExplorer:FolderName">Folder name</text>
 		<text key="FileExplorer:Items">Items</text>
@@ -91,6 +99,7 @@
 		<text key="FileExplorer:NewFolder">New folder</text>
 		<text key="FileExplorer:OpenFolder">Open folder</text>
 		<text key="FileExplorer:OpenPath">Open path...</text>
+		<text key="FileExplorer:OriginalFileExtension">Original file extension</text>
 		<text key="FileExplorer:ParentFolderPath">Parent folder path</text>
 		<text key="FileExplorer:PathCopy">Path Copy</text>
 		<text key="FileExplorer:Pending">Pending</text>
@@ -112,6 +121,7 @@
 		<text key="FileExplorer:StatusBar.DeleteEntries" count="1">Delete one item</text>
 		<text key="FileExplorer:StatusBar.LoadingRoot">Loading root elements</text>
 		<text key="FileExplorer:StatusBar.LoadSubDirectories">Load subdirectories</text>
+		<text key="FileExplorer:StatusBar.PreparingTransmission">Preparing transmission</text>
 		<text key="FileExplorer:StatusBar.RenameDirectory">Rename directory to "{name}"</text>
 		<text key="FileExplorer:StatusBar.RenameFile">Rename file to "{name}"</text>
 		<text key="FileExplorer:StatusBar.Transmission.Directories">Transfer {#} directories</text>

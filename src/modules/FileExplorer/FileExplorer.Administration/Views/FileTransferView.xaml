@@ -15,12 +15,7 @@
     <UserControl.Resources>
         <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <DockPanel LastChildFill="True">
         <iconPacks:PackIconMaterial
             Width="26"
             Height="26"
@@ -43,10 +38,13 @@
             </iconPacks:PackIconMaterial.Style>
         </iconPacks:PackIconMaterial>
         <StackPanel
-            Grid.Column="2"
+            Margin="10,0,0,0"
             VerticalAlignment="Center"
             Orientation="Vertical">
-            <TextBlock FontSize="16" Text="{Binding Name}" />
+            <TextBlock
+                FontSize="16"
+                Text="{Binding Name}"
+                TextTrimming="CharacterEllipsis" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -56,10 +54,13 @@
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Pending}">
+                            <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Preparing}">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Transferring}">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Extracting}">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -77,9 +78,16 @@
                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="true">
                                     <Setter Property="Foreground" Value="{StaticResource AccentColorBrush3}" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Preparing}">
+                                <!--<DataTrigger Binding="{Binding Progress}" Value="{x:Null}">
                                     <Setter Property="IsIndeterminate" Value="True" />
                                 </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Progress}" Value="{x:Null}" />
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="true" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                                </MultiDataTrigger>-->
                             </Style.Triggers>
                         </Style>
                     </mah:MetroProgressBar.Style>
@@ -88,10 +96,31 @@
                     Grid.Column="1"
                     Margin="5,0,0,0"
                     VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Progress}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
                     <Run Text="{Binding Progress, StringFormat=P0, Mode=OneWay}" />
                 </TextBlock>
             </Grid>
             <ContentControl>
+                <ContentControl.Resources>
+                    <DataTemplate x:Key="ProgressContentTemplate">
+                        <TextBlock>
+                            <Run Text="{Binding EstimatedRemainingTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" />
+                            <Run Text="{tx:T FileExplorer:TimeRemainingAt}" />
+                            <Run Text="{tx:DataSize NumberBinding={Binding CurrentSpeed}}" /><Run Text="/s" />
+                            <Run Text="(" /><Run Text="{tx:DataSize NumberBinding={Binding ProcessedSize}}" />
+                            <Run Text="/" />
+                            <Run Text="{tx:DataSize NumberBinding={Binding TotalSize}}" /><Run Text=")" />
+                        </TextBlock>
+                    </DataTemplate>
+                </ContentControl.Resources>
                 <ContentControl.Style>
                     <Style TargetType="ContentControl">
                         <Style.Triggers>
@@ -118,18 +147,12 @@
                                 <Setter Property="Content" Value="{tx:T FileExplorer:Preparing}" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Transferring}">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <TextBlock>
-                                            <Run Text="{Binding EstimatedRemainingTime, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" />
-                                            <Run Text="{tx:T FileExplorer:TimeRemainingAt}" />
-                                            <Run Text="{tx:DataSize NumberBinding={Binding CurrentSpeed}}" /><Run Text="/s" />
-                                            <Run Text="(" /><Run Text="{tx:DataSize NumberBinding={Binding ProcessedSize}}" />
-                                            <Run Text="/" />
-                                            <Run Text="{tx:DataSize NumberBinding={Binding TotalSize}}" /><Run Text=")" />
-                                        </TextBlock>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Content" Value="{Binding}" />
+                                <Setter Property="ContentTemplate" Value="{StaticResource ProgressContentTemplate}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding State}" Value="{x:Static explorer:FileTransferState.Extracting}">
+                                <Setter Property="Content" Value="{Binding}" />
+                                <Setter Property="ContentTemplate" Value="{StaticResource ProgressContentTemplate}" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="true">
                                 <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
@@ -139,5 +162,5 @@
                 </ContentControl.Style>
             </ContentControl>
         </StackPanel>
-    </Grid>
+    </DockPanel>
 </UserControl>

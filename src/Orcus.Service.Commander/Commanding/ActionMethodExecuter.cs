@@ -25,9 +25,13 @@ namespace Orcus.Service.Commander.Commanding
             // Executors for sync methods
             new VoidResultExecutor(),
             new SyncActionResultExecutor(),
+            new SyncObjectResultExecutor(), 
 
             // Executors for async methods
-            new TaskOfIActionResultExecutor()
+            new TaskResultExecutor(),
+            new TaskOfIActionResultExecutor(),
+            new TaskOfActionResultExecutor(),
+            new AwaitableObjectResultExecutor()
         };
 
         protected abstract bool CanExecute(ActionMethodMetadata metadata);
@@ -102,6 +106,27 @@ namespace Orcus.Service.Commander.Commanding
             }
         }
 
+        // Person GetPerson(..)
+        // object Index(..)
+        private class SyncObjectResultExecutor : ActionMethodExecutor
+        {
+            public override ReturnTask Execute(ObjectMethodExecutor executor, object controller, object[] arguments,
+                ActionMethodMetadata metadata)
+            {
+                // Sync method returning arbitrary object
+                var returnValue = executor.Execute(controller, arguments);
+                var actionResult = new ObjectResult(returnValue) {DeclaredType = metadata.MethodReturnType};
+
+#if NETSTANDARD
+                return Task.FromResult<IActionResult>(actionResult);
+#else
+                return new ValueTask<IActionResult>(actionResult); 
+#endif
+            }
+
+            protected override bool CanExecute(ActionMethodMetadata metadata) => !metadata.IsAsync;
+        }
+
         // Task<IActionResult> Post(..)
         private class TaskOfIActionResultExecutor : ActionMethodExecutor
         {
@@ -119,6 +144,66 @@ namespace Orcus.Service.Commander.Commanding
                 var actionResult = await (Task<IActionResult>) returnValue;
                 EnsureActionResultNotNull(metadata, actionResult);
 
+                return actionResult;
+            }
+        }
+
+        // Task SaveState(..)
+        private class TaskResultExecutor : ActionMethodExecutor
+        {
+            public override async ReturnTask Execute(ObjectMethodExecutor executor, object controller,
+                object[] arguments, ActionMethodMetadata metadata)
+            {
+                await (Task) executor.Execute(controller, arguments);
+                return new EmptyResult();
+            }
+
+            protected override bool CanExecute(ActionMethodMetadata metadata)
+            {
+                return metadata.MethodReturnType == typeof(Task);
+            }
+        }
+
+        // Task<PhysicalfileResult> DownloadFile(..)
+        // ValueTask<ViewResult> GetViewsAsync(..)
+        private class TaskOfActionResultExecutor : ActionMethodExecutor
+        {
+            public override async ReturnTask Execute(ObjectMethodExecutor executor, object controller, object[] arguments,
+                ActionMethodMetadata metadata)
+            {
+                // Async method returning awaitable-of-IActionResult (e.g., Task<ViewResult>)
+                // We have to use ExecuteAsync because we don't know the awaitable's type at compile time.
+                var task = (Task) executor.Execute(controller, arguments);
+                await task;
+
+                var resultProperty = typeof(Task<>).MakeGenericType(metadata.AsyncResultType).GetProperty("Result");
+                var actionResult = (IActionResult) resultProperty.GetValue(task);
+
+                EnsureActionResultNotNull(metadata, actionResult);
+                return actionResult;
+            }
+
+            protected override bool CanExecute(ActionMethodMetadata metadata) =>
+                metadata.IsAsync && typeof(IActionResult).IsAssignableFrom(metadata.AsyncResultType);
+        }
+
+        // Task<object> GetPerson(..)
+        // Task<Customer> GetCustomerAsync(..)
+        private class AwaitableObjectResultExecutor : ActionMethodExecutor
+        {
+            protected override bool CanExecute(ActionMethodMetadata metadata) => true;
+
+            public override async ReturnTask Execute(ObjectMethodExecutor executor, object controller,
+                object[] arguments, ActionMethodMetadata metadata)
+            {
+                // Async method returning awaitable-of-nonvoid
+                var task = (Task) executor.Execute(controller, arguments);
+                await task;
+
+                var resultProperty = typeof(Task<>).MakeGenericType(metadata.AsyncResultType).GetProperty("Result");
+                var result = resultProperty.GetValue(task);
+
+                var actionResult = new ObjectResult(result) {DeclaredType = metadata.AsyncResultType};
                 return actionResult;
             }
         }

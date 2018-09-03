@@ -40,8 +40,11 @@
         ContextMenu="{StaticResource DefaultContextMenu}"
         EnableRowVirtualization="True"
         IsSynchronizedWithCurrentItem="True"
+        IsTextSearchEnabled="True"
         ItemsSource="{Binding View}"
         SelectionMode="Extended"
+        SelectionUnit="FullRow"
+        TextSearch.TextPath="Label"
         VirtualizingPanel.IsVirtualizing="True"
         VirtualizingPanel.VirtualizationMode="Recycling">
         <DataGrid.InputBindings>
