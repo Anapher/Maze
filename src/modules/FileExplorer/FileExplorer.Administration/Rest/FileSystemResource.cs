@@ -39,5 +39,8 @@ namespace FileExplorer.Administration.Rest
 
         public static Task MoveDirectory(string path, string newPath, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Patch, "directory").AddQueryParam("path", path).AddQueryParam("newPath", newPath).Execute(restClient);
+
+        public static Task<FilePropertiesDto> GetFileProperties(string path, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "file/properties").AddQueryParam("path", path).Execute(restClient).Return<FilePropertiesDto>();
     }
 }

@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Extensions;
+using FileExplorer.Client.FileProperties;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using Microsoft.AspNetCore.Http;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
+using Orcus.Utilities;
 
 namespace FileExplorer.Client.Controllers
 {
@@ -83,6 +86,29 @@ namespace FileExplorer.Client.Controllers
         {
             Directory.Move(path, newPath);
             return Ok();
+        }
+
+        [OrcusGet("directory/properties")]
+        public IActionResult GetDirectoryProperties([FromQuery] string path)
+        {
+            return Ok();
+        }
+
+        [OrcusGet("file/properties")]
+        public async Task<IActionResult> GetFileProperties([FromQuery] string path, [FromServices] IEnumerable<IFilePropertyValueProvider> propertyValueProviders)
+        {
+            var result = new FilePropertiesDto();
+            var fileInfo = new FileInfo(path);
+            var properties = new ConcurrentBag<FileProperty>();
+
+            await TaskCombinators.ThrottledCatchErrorsAsync(propertyValueProviders, (provider, token) => Task.Run(() =>
+            {
+                foreach (var fileProperty in provider.ProvideValues(fileInfo, result).ToList())
+                    properties.Add(fileProperty);
+            }), CancellationToken.None);
+
+            result.Properties = properties.ToList();
+            return Ok(result);
         }
     }
 }

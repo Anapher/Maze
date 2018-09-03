@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using FileExplorer.Administration.Resources;
+using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
@@ -89,8 +90,13 @@ namespace FileExplorer.Administration.Menus
             {
                 Header = Tx.T("FileExplorer:Properties"),
                 Icon = _icons.Property,
-                Command = new ContextDelegateCommand<FileViewModel, FileExplorerViewModel>(EntryViewModelCommands.OpenProperties)
+                Command = new ContextDelegateCommand<FileViewModel, FileExplorerViewModel>(OpenFileProperties)
             });
+        }
+
+        private async void OpenFileProperties(FileViewModel file, FileExplorerViewModel context)
+        {
+            var properties = await FileSystemResource.GetFileProperties(file.Source.Path, context.RestClient);
         }
 
         private void DownloadFile(FileViewModel file, FileExplorerViewModel context)

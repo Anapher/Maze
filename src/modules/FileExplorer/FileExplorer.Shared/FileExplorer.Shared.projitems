@@ -15,8 +15,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntryType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FilePropertiesDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FilePropertyGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\FilePropertyValueType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\PathTreeRequestDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\PathTreeResponseDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\PropertiesDtoBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\RootElementsDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\SpecialDirectoryEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\PathHelper.cs" />

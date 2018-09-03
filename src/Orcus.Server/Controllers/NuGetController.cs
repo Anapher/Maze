@@ -22,7 +22,7 @@ namespace Orcus.Server.Controllers
         [Route("{moduleName}/{version}/{filename}")]
         public IActionResult DownloadModule(string moduleName, string version, string filename)
         {
-            if (moduleName.Any(x => !char.IsLetterOrDigit(x) && x != '.'))
+            if (moduleName.Any(x => !char.IsLetterOrDigit(x) && x != '.' && x != '-' && x != '_'))
                 return BadRequest();
 
             var packageIdentity = new PackageIdentity(moduleName, NuGetVersion.Parse(version));

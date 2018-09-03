@@ -17,6 +17,9 @@ namespace Orcus.ModuleManagement.Loader
                 var frameworkFolders = libFolder.GetDirectories()
                     .ToDictionary(x => NuGetFramework.ParseFolder(x.Name), x => x, NuGetFramework.Comparer);
 
+                if (!frameworkFolders.Any() && libFolder.GetFiles("*.dll").Any())
+                    return (libFolder, framework);
+
                 var bestFramework =
                     NuGetFrameworkUtility.GetNearest(frameworkFolders.Select(x => x.Key), framework, x => x);
 

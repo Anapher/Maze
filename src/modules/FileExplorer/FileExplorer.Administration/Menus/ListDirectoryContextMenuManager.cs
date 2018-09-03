@@ -64,11 +64,6 @@ namespace FileExplorer.Administration.Menus
             }
         }
 
-        public static void OpenProperties(EntryViewModel viewModel, FileExplorerViewModel context)
-        {
-
-        }
-
         public static void Rename(EntryViewModel viewModel, FileExplorerViewModel context)
         {
             context.EntriesViewModel.EnterNameEditingCommand.Execute(viewModel);
@@ -143,8 +138,13 @@ namespace FileExplorer.Administration.Menus
             {
                 Header = Tx.T("FileExplorer:Properties"),
                 Icon = _icons.Property,
-                Command = new ContextDelegateCommand<DirectoryViewModel, FileExplorerViewModel>(EntryViewModelCommands.OpenProperties)
+                Command = new ContextDelegateCommand<DirectoryViewModel, FileExplorerViewModel>(OpenDirectoryProperties)
             });
+        }
+
+        private void OpenDirectoryProperties(DirectoryViewModel arg1, FileExplorerViewModel arg2)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

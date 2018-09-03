@@ -75,7 +75,8 @@ namespace Orcus
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName == args.Name);
+            var name = args.Name.Split(',').First();
+            return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName.Split(',').First() == name);
         }
 
         private void ApplicationOnIdle(object sender, EventArgs e)

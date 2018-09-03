@@ -1,254 +1,35 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8F8A07C3-7C4E-49D2-9997-0836F51F44AC}</ProjectGuid>
-    <OutputType>library</OutputType>
-    <RootNamespace>FileExplorer.Administration</RootNamespace>
-    <AssemblyName>FileExplorer.Administration</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>true</Deterministic>
+    <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
+    <TargetFramework>net47</TargetFramework>
+    <Description>Interact with the user.</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <!-- XAML elements -->
+    <Page Include="**\*.xaml" Exclude="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
+    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+
+    <!-- Resources -->
+
+    <!-- Settings -->
+
   </ItemGroup>
+  
   <ItemGroup>
-    <Compile Include="AutofacModule.cs" />
-    <Compile Include="Cache\FileDescriptionKey.cs" />
-    <Compile Include="Cache\FileImageKey.cs" />
-    <Compile Include="Cache\FolderImageKey.cs" />
-    <Compile Include="Cache\LoadedLabelLibraryKey.cs" />
-    <Compile Include="Controls\BreadcrumbTree.cs" />
-    <Compile Include="Controls\BreadcrumbTreeItem.cs" />
-    <Compile Include="Controls\ContentSwitch.cs" />
-    <Compile Include="Controls\DropDown.cs" />
-    <Compile Include="Controls\DropDownList.cs" />
-    <Compile Include="Controls\ExplorerTextBox.cs" />
-    <Compile Include="Controls\HotTrack.cs" />
-    <Compile Include="Controls\IconButton.cs" />
-    <Compile Include="Controls\ICustomFocusLoosingControl.cs" />
-    <Compile Include="Controls\Models\AsyncAutoSuggestSource.cs" />
-    <Compile Include="Controls\Models\AutoSuggestSource.cs" />
-    <Compile Include="Controls\Models\Enums.cs" />
-    <Compile Include="Controls\Models\IEntryHierarchyComparer.cs" />
-    <Compile Include="Controls\Models\IHierarchyHelper.cs" />
-    <Compile Include="Controls\Models\ISuggestSource.cs" />
-    <Compile Include="Controls\ModernTrack.cs" />
-    <Compile Include="Controls\OneItemPanel.cs" />
-    <Compile Include="Controls\OverflowableStackPanel.cs" />
-    <Compile Include="Controls\PathExistsValidationRule.cs" />
-    <Compile Include="Controls\PathHierarchyHelper.cs" />
-    <Compile Include="Controls\RenameControl.cs" />
-    <Compile Include="Controls\SuggestBox.cs" />
-    <Compile Include="Controls\SuggestBoxBase.cs" />
-    <Compile Include="Controls\TreeViewEx.cs" />
-    <Compile Include="Controls\TreeViewItemEx.cs" />
-    <Compile Include="Converters\InvertBooleanConverter.cs" />
-    <Compile Include="Converters\TimeSpanToStringConverter.cs" />
-    <Compile Include="FileExplorerContextMenu.cs" />
-    <Compile Include="Helpers\EntriesHelper.cs" />
-    <Compile Include="Helpers\ExtensionMethods.cs" />
-    <Compile Include="Helpers\IEntriesHelper.cs" />
-    <Compile Include="Helpers\ITreeLookup.cs" />
-    <Compile Include="Helpers\ITreeLookupProcessor.cs" />
-    <Compile Include="Helpers\ITreeSelector.cs" />
-    <Compile Include="Helpers\TreeRootSelector.cs" />
-    <Compile Include="Helpers\TreeSelector.cs" />
-    <Compile Include="Menus\FileExplorerContextMenuManager.cs" />
-    <Compile Include="Menus\ListDirectoryContextMenuManager.cs" />
-    <Compile Include="Menus\ListFileContextMenuManager.cs" />
-    <Compile Include="Models\Cache\CachedDirectory.cs" />
-    <Compile Include="Models\Cache\FileTypeDescription.cs" />
-    <Compile Include="Models\Cache\LoadedLabelLibrary.cs" />
-    <Compile Include="Models\Args\DirectoryEntriesUpdatedEventArgs.cs" />
-    <Compile Include="Models\Args\EntryUpdatedEventArgs.cs" />
-    <Compile Include="Models\FileSystemExtensions.cs" />
-    <Compile Include="Models\IFileSystem.cs" />
-    <Compile Include="Models\PathContent.cs" />
-    <Compile Include="Models\RemoteFileSystem.cs" />
-    <Compile Include="Models\StreamCopyUtil.cs" />
-    <Compile Include="Native\NativeMethods.cs" />
-    <Compile Include="Native\SHFILEINFO.cs" />
-    <Compile Include="PrismModule.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Extensions\ExtendedMouseBinding.cs" />
-    <Compile Include="Extensions\FileExplorerEntryExtensions.cs" />
-    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
-    <Compile Include="Extensions\TreeViewExtensions.cs" />
-    <Compile Include="Extensions\UITools.cs" />
-    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
-    <Compile Include="Resources\VisualStudioIcons.cs" />
-    <Compile Include="Rest\FileExplorerResource.cs" />
-    <Compile Include="Rest\FileSystemResource.cs" />
-    <Compile Include="Utilities\DirectoryHelper.cs" />
-    <Compile Include="Utilities\FileHelper.cs" />
-    <Compile Include="Utilities\IImageProvider.cs" />
-    <Compile Include="Utilities\ImageProvider.cs" />
-    <Compile Include="Utilities\PropertyPathHelper.cs" />
-    <Compile Include="ViewModels\Explorer\FileTransferState.cs" />
-    <Compile Include="ViewModels\Explorer\FileTransferViewModel.cs" />
-    <Compile Include="ViewModels\Explorer\ProcessingEntryViewModel.cs" />
-    <Compile Include="ViewModels\FileTransferManagerViewModel.cs" />
-    <Compile Include="ViewModels\InputTextViewModel.cs" />
-    <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
-    <Compile Include="ViewModels\EntriesViewModel.cs" />
-    <Compile Include="ViewModels\Explorer\Base\EntryViewModel.cs" />
-    <Compile Include="ViewModels\Explorer\Base\EntryViewModelType.cs" />
-    <Compile Include="ViewModels\Explorer\DirectoryViewModel.cs" />
-    <Compile Include="ViewModels\Explorer\FileViewModel.cs" />
-    <Compile Include="ViewModels\Explorer\Helpers\FileExplorerPathComparer.cs" />
-    <Compile Include="ViewModels\Explorer\Helpers\PathComparer.cs" />
-    <Compile Include="ViewModels\Explorer\Helpers\PathHistoryManager.cs" />
-    <Compile Include="ViewModels\FileExplorerViewModel.cs" />
-    <Compile Include="Models\IUiTools.cs" />
-    <Compile Include="ViewModels\Explorer\IFileExplorerChildViewModel.cs" />
-    <Compile Include="ViewModels\NavigationBarViewModel.cs" />
-    <Compile Include="Models\ZipContent.cs" />
-    <Compile Include="Models\TransferProgressChangedEventArgs.cs" />
-    <Compile Include="Views\Dialogs\InputTextView.xaml.cs">
-      <DependentUpon>InputTextView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DirectoryTreeView.xaml.cs">
-      <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EntriesView.xaml.cs">
-      <DependentUpon>EntriesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FileExplorerView.xaml.cs">
-      <DependentUpon>FileExplorerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FileTransferView.xaml.cs">
-      <DependentUpon>FileTransferView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\NavigationBarView.xaml.cs">
-      <DependentUpon>NavigationBarView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Virtualization\AsyncVirtualizingCollection.cs" />
-    <Compile Include="Virtualization\IItemsProvider.cs" />
-    <Compile Include="Virtualization\VirtualizingCollection.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Resources\Generic.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Themes\Colors.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\VisualStudioIcons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dialogs\InputTextView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DirectoryTreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\EntriesView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FileExplorerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FileTransferView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NavigationBarView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj">
-      <Project>{8b7888a3-a402-4d7c-82bb-e1a2494c023d}</Project>
-      <Name>Orcus.Administration.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Orcus.Utilities\Orcus.Utilities.csproj">
-      <Project>{28abf583-643f-488c-b5fc-b285e41ed342}</Project>
-      <Name>Orcus.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj">
-      <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>
-      <Name>Anapher.Wpf.Swan</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\submodules\TxTranslation\TxLib\TxLib.csproj">
-      <Project>{dc6ba170-806f-4d6e-9165-401de852e304}</Project>
-      <Name>TxLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MahApps.Metro.IconPacks.Material">
-      <Version>2.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="Prism.Autofac">
-      <Version>6.3.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
+
     <Resource Include="Resources\Images\Drives\CD-DVD.png" />
     <Resource Include="Resources\Images\Drives\Drive.png" />
     <Resource Include="Resources\Images\Drives\DriveWindows.png" />
@@ -277,6 +58,25 @@
     <Resource Include="Resources\Images\Other\ThisPC.png" />
     <Resource Include="Resources\Images\Other\TrashFull.png" />
   </ItemGroup>
-  <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\DirectoryTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\NavigationBarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+  
+   <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
 </Project>
