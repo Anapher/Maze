@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Orcus.Sockets.Tests.Internal
 
         public PackagingBufferStreamTests()
         {
-            _stream = new BufferingWriteStream(new DelegatingWriteStream(SendPackageDelegate), DataSize);
+            _stream = new BufferingWriteStream(new DelegatingWriteStream(SendPackageDelegate), DataSize, ArrayPool<byte>.Shared);
         }
 
         [Theory]

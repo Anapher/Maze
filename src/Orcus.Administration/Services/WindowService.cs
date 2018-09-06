@@ -7,7 +7,6 @@ using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
 using Prism.Regions;
-using Unclassified.TxLib;
 
 namespace Orcus.Administration.Services
 {
@@ -25,12 +24,12 @@ namespace Orcus.Administration.Services
             _shellWindowFactory = shellWindowFactory;
         }
 
-        private IShellWindow Initialize(Type viewModelType, string titleResourceKey, Action<IShellWindow> configureWindow,
+        private IShellWindow Initialize(Type viewModelType, string title, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
             var viewType = _viewModelResolver.ResolveViewType(viewModelType);
             var window = _shellWindowFactory.Create();
-            window.InitializeTitleBar(Tx.T(titleResourceKey), null);
+            window.InitializeTitleBar(title, null);
 
             StatusBarManager statusBar = null;
             var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
@@ -61,12 +60,12 @@ namespace Orcus.Administration.Services
             return window;
         }
 
-        public IShellWindow Initialize(object viewModel, string titleResourceKey, Action<IShellWindow> configureWindow,
+        public IShellWindow Initialize(object viewModel, string title, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
             var viewType = _viewModelResolver.ResolveViewType(viewModel.GetType());
             var window = _shellWindowFactory.Create();
-            window.InitializeTitleBar(Tx.T(titleResourceKey), null);
+            window.InitializeTitleBar(title, null);
 
             StatusBarManager statusBar = null;
             var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
@@ -103,32 +102,32 @@ namespace Orcus.Administration.Services
             window.Window.Closed += (sender, args) => lifescope.Dispose();
         }
 
-        public void Show(Type viewModelType, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        public void Show(Type viewModelType, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
-            var window = Initialize(viewModelType, titleResourceKey, configureWindow, setupContainer);
+            var window = Initialize(viewModelType, title, configureWindow, setupContainer);
             window.Show(owner);
         }
 
-        public void Show(object viewModel, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        public void Show(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
-            var window = Initialize(viewModel, titleResourceKey, configureWindow, setupContainer);
+            var window = Initialize(viewModel, title, configureWindow, setupContainer);
             window.Show(owner);
         }
 
-        public bool? ShowDialog(Type viewModelType, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        public bool? ShowDialog(Type viewModelType, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
-            var window = Initialize(viewModelType, titleResourceKey, configureWindow, setupContainer);
+            var window = Initialize(viewModelType, title, configureWindow, setupContainer);
             window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             return window.ShowDialog(owner);
         }
 
-        public bool? ShowDialog(object viewModel, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        public bool? ShowDialog(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer)
         {
-            var window = Initialize(viewModel, titleResourceKey, configureWindow, setupContainer);
+            var window = Initialize(viewModel, title, configureWindow, setupContainer);
             window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             return window.ShowDialog(owner);

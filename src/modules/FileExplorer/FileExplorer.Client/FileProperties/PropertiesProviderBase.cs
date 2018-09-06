@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using FileExplorer.Shared.Dtos;
 
@@ -13,7 +14,7 @@ namespace FileExplorer.Client.FileProperties
                 return (string.Join(", ", collection.Cast<object>().Select(x => x?.ToString()).ToArray()),
                     FilePropertyValueType.String);
             if (obj is DateTime dateTime)
-                return (dateTime.ToUniversalTime().ToString("O"), FilePropertyValueType.DateTime);
+                return (dateTime.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture), FilePropertyValueType.DateTime);
 
             return (obj?.ToString(), FilePropertyValueType.String);
         }

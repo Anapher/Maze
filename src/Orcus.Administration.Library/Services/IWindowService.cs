@@ -6,16 +6,16 @@ namespace Orcus.Administration.Library.Services
 {
     public interface IWindowService
     {
-        void Show(Type viewModelType, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        void Show(Type viewModelType, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer);
 
-        void Show(object viewModel, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        void Show(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer);
 
-        bool? ShowDialog(Type viewModelType, string titleResourceKey, IWindow owner,
+        bool? ShowDialog(Type viewModelType, string title, IWindow owner,
             Action<IShellWindow> configureWindow, Action<ContainerBuilder> setupContainer);
 
-        bool? ShowDialog(object viewModel, string titleResourceKey, IWindow owner, Action<IShellWindow> configureWindow,
+        bool? ShowDialog(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer);
     }
 }

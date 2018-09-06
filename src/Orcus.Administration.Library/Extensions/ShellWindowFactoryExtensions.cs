@@ -10,16 +10,15 @@ namespace Orcus.Administration.Library.Extensions
             windowService.Show(viewModel, null, null, null, null);
         }
 
-        public static void Show<TViewModel>(this IWindowService windowService, TViewModel viewModel,
-            string titleResourceKey)
+        public static void Show<TViewModel>(this IWindowService windowService, TViewModel viewModel, string title)
         {
-            windowService.Show(viewModel, titleResourceKey, null, null, null);
+            windowService.Show(viewModel, title, null, null, null);
         }
 
-        public static void Show<TViewModel>(this IWindowService windowService, TViewModel viewModel,
-            string titleResourceKey, IWindow owner)
+        public static void Show<TViewModel>(this IWindowService windowService, TViewModel viewModel, string title,
+            IWindow owner)
         {
-            windowService.Show(viewModel, titleResourceKey, owner, null, null);
+            windowService.Show(viewModel, title, owner, null, null);
         }
 
         public static void Show<TViewModel>(this IWindowService windowService)
@@ -27,35 +26,34 @@ namespace Orcus.Administration.Library.Extensions
             windowService.Show(typeof(TViewModel), null, null, null, null);
         }
 
-        public static void Show<TViewModel>(this IWindowService windowService, string titleResourceKey)
+        public static void Show<TViewModel>(this IWindowService windowService, string title)
         {
-            windowService.Show(typeof(TViewModel), titleResourceKey, null, null, null);
+            windowService.Show(typeof(TViewModel), title, null, null, null);
         }
 
-        public static void Show<TViewModel>(this IWindowService windowService, string titleResourceKey, IWindow owner)
+        public static void Show<TViewModel>(this IWindowService windowService, string title, IWindow owner)
         {
-            windowService.Show(typeof(TViewModel), titleResourceKey, owner, null, null);
+            windowService.Show(typeof(TViewModel), title, owner, null, null);
         }
 
         public static bool? ShowDialog<TViewModel>(this IWindowService windowService, TViewModel viewModel) =>
             windowService.ShowDialog(viewModel, null, null, null, null);
 
         public static bool? ShowDialog<TViewModel>(this IWindowService windowService, TViewModel viewModel,
-            string titleResourceKey) =>
-            windowService.ShowDialog(viewModel, titleResourceKey, null, null, null);
+            string title) =>
+            windowService.ShowDialog(viewModel, title, null, null, null);
 
         public static bool? ShowDialog<TViewModel>(this IWindowService windowService, TViewModel viewModel,
-            string titleResourceKey, IWindow owner) =>
-            windowService.ShowDialog(viewModel, titleResourceKey, owner, null, null);
+            string title, IWindow owner) =>
+            windowService.ShowDialog(viewModel, title, owner, null, null);
 
         public static bool? ShowDialog<TViewModel>(this IWindowService windowService) =>
             windowService.ShowDialog(typeof(TViewModel), null, null, null, null);
 
-        public static bool? ShowDialog<TViewModel>(this IWindowService windowService, string titleResourceKey) =>
-            windowService.ShowDialog(typeof(TViewModel), titleResourceKey, null, null, null);
+        public static bool? ShowDialog<TViewModel>(this IWindowService windowService, string title) =>
+            windowService.ShowDialog(typeof(TViewModel), title, null, null, null);
 
-        public static bool? ShowDialog<TViewModel>(this IWindowService windowService, string titleResourceKey,
-            IWindow owner) =>
-            windowService.ShowDialog(typeof(TViewModel), titleResourceKey, owner, null, null);
+        public static bool? ShowDialog<TViewModel>(this IWindowService windowService, string title, IWindow owner) =>
+            windowService.ShowDialog(typeof(TViewModel), title, owner, null, null);
     }
 }

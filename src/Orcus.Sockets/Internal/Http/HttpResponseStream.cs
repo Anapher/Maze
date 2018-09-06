@@ -22,6 +22,7 @@ namespace Orcus.Sockets.Internal.Http
         private readonly IDataSocket _socket;
         private readonly int _packageBufferSize;
         private readonly int _maxHeaderSize;
+        private readonly ArrayPool<byte> _bufferPool;
         private readonly CancellationToken _requestCancellationToken;
         private bool _isFinalPackage;
         private bool _isFinalPackagePushed;
@@ -29,16 +30,19 @@ namespace Orcus.Sockets.Internal.Http
         private bool _disposed;
         private bool _isCompressionEnabled;
         private bool _hasSentPackage;
+        private readonly int _customOffset;
 
         public HttpResponseStream(DefaultOrcusResponse response, OrcusRequest request, IDataSocket socket,
-            int packageBufferSize, int maxHeaderSize, CancellationToken requestCancellationToken)
+            int packageBufferSize, int maxHeaderSize, ArrayPool<byte> bufferPool, CancellationToken requestCancellationToken)
         {
             _response = response;
             _request = request;
             _socket = socket;
             _packageBufferSize = packageBufferSize;
             _maxHeaderSize = maxHeaderSize;
+            _bufferPool = bufferPool;
             _requestCancellationToken = requestCancellationToken;
+            _customOffset = socket.RequiredPreBufferLength ?? 0;
         }
 
         public async Task FinalFlushAsync()
@@ -85,7 +89,7 @@ namespace Orcus.Sockets.Internal.Http
 
                             //if the response has not been completed, we compress the body
                             var bodyStream = (BufferingWriteStream) _response.Body;
-                            var newPackagingStream = new BufferingWriteStream(this, _packageBufferSize);
+                            var newPackagingStream = new BufferingWriteStream(this, _packageBufferSize, _bufferPool);
 
                             var gzipStream = new GZipStream(newPackagingStream, CompressionLevel.Fastest, true);
                             bodyStream.SetInnerStream(gzipStream);
@@ -107,25 +111,26 @@ namespace Orcus.Sockets.Internal.Http
                         throw new InvalidOperationException(
                             $"Response must have the header {OrcusHeaders.OrcusSocketRequestIdHeader}");
 
-                    var sendBuffer = ArrayPool<byte>.Shared.Rent(count + _maxHeaderSize);
-                    var headerOffset = HttpFormatter.FormatResponse(_response, new ArraySegment<byte>(sendBuffer));
+                    var length = count + _maxHeaderSize + _customOffset;
+                    var sendBuffer = _bufferPool.Rent(count + _maxHeaderSize + _customOffset);
+                    var headerOffset = HttpFormatter.FormatResponse(_response, new ArraySegment<byte>(sendBuffer, _customOffset, length - _customOffset));
                     if (headerOffset > _maxHeaderSize)
                         throw new InvalidOperationException(
                             $"The header size {headerOffset}B exceeds the maximum allowed header size ({_maxHeaderSize}B)");
 
                     if (count > 0)
-                        Buffer.BlockCopy(buffer, offset, sendBuffer, headerOffset, count);
+                        Buffer.BlockCopy(buffer, offset, sendBuffer, headerOffset + _customOffset, count);
 
                     Logger.LogDataPackage("Send HTTP Response", sendBuffer, 0, headerOffset + count);
-                    await SendData(new ArraySegment<byte>(sendBuffer, 0, headerOffset + count));
+                    await SendData(new ArraySegment<byte>(sendBuffer, _customOffset, headerOffset + count));
                 }
                 else
                 {
-                    var sendBuffer = ArrayPool<byte>.Shared.Rent(count + 4);
-                    Buffer.BlockCopy(buffer, offset, sendBuffer, 4, count);
-                    BinaryUtils.WriteInt32(ref sendBuffer, 0, _response.RequestId);
+                    var sendBuffer = _bufferPool.Rent(count + 4 + _customOffset);
+                    BinaryUtils.WriteInt32(sendBuffer, _customOffset, _response.RequestId);
+                    Buffer.BlockCopy(buffer, offset, sendBuffer, 4 + _customOffset, count);
 
-                    await SendData(new ArraySegment<byte>(sendBuffer, 0, count + 4));
+                    await SendData(new ArraySegment<byte>(sendBuffer, _customOffset, count + 4));
                 }
             }
         }
@@ -159,11 +164,12 @@ namespace Orcus.Sockets.Internal.Http
             
             try
             {
-                await _socket.SendFrameAsync(opcode, latestBuffer, CancellationToken.None);
+                await _socket.SendFrameAsync(opcode, latestBuffer, _socket.RequiredPreBufferLength.HasValue,
+                    CancellationToken.None);
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(latestBuffer.Array);
+                _bufferPool.Return(latestBuffer.Array);
             }
 
             _hasSentPackage = true;
@@ -198,7 +204,7 @@ namespace Orcus.Sockets.Internal.Http
                 
                 if (_latestSendBuffer != default)
                 {
-                    ArrayPool<byte>.Shared.Return(_latestSendBuffer.Array);
+                    _bufferPool.Return(_latestSendBuffer.Array);
                     _latestSendBuffer = default;
                 }
             }

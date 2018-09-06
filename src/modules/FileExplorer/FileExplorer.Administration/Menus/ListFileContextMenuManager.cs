@@ -7,8 +7,11 @@ using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using Microsoft.Win32;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
+using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Utilities;
 using Unclassified.TxLib;
@@ -19,14 +22,16 @@ namespace FileExplorer.Administration.Menus
     {
         private readonly FileExplorerListFileContextMenu _contextMenu;
         private readonly VisualStudioIcons _icons;
+        private readonly IWindowService _windowService;
         private readonly IItemMenuFactory _menuFactory;
 
         public ListFileContextMenuManager(FileExplorerListFileContextMenu contextMenu, IItemMenuFactory menuFactory,
-            VisualStudioIcons icons)
+            VisualStudioIcons icons, IWindowService windowService)
         {
             _contextMenu = contextMenu;
             _menuFactory = menuFactory;
             _icons = icons;
+            _windowService = windowService;
         }
 
         public override void Build()
@@ -96,7 +101,14 @@ namespace FileExplorer.Administration.Menus
 
         private async void OpenFileProperties(FileViewModel file, FileExplorerViewModel context)
         {
-            var properties = await FileSystemResource.GetFileProperties(file.Source.Path, context.RestClient);
+            var properties = await FileSystemResource.GetFileProperties(file.Source.Path, context.RestClient)
+                .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:StatusBar.LoadProperties"));
+            if (!properties.Failed)
+            {
+                _windowService.Show(new PropertiesViewModel(file, properties.Result),
+                    Tx.T("FileExplorer:Properties.Title", "name", file.Name), context.Window,
+                    window => window.ViewManager.TaskBarIcon = file.Icon, null);
+            }
         }
 
         private void DownloadFile(FileViewModel file, FileExplorerViewModel context)

@@ -13,15 +13,17 @@ namespace Orcus.Sockets.Internal
     public class BufferingWriteStream : WriteOnlyStream
     {
         private readonly int _packageBufferSize;
+        private readonly ArrayPool<byte> _bufferPool;
         private long _length;
         private byte[] _packageBuffer;
         private int _packageBufferOffset;
         private bool _disposed;
 
-        public BufferingWriteStream(Stream stream, int packageBufferSize)
+        public BufferingWriteStream(Stream stream, int packageBufferSize, ArrayPool<byte> bufferPool)
         {
             InnerStream = stream;
             _packageBufferSize = packageBufferSize;
+            _bufferPool = bufferPool;
         }
 
         public Stream InnerStream { get; private set; }
@@ -104,7 +106,7 @@ namespace Orcus.Sockets.Internal
         private void CreateBufferIfNull()
         {
             if (_packageBuffer == null)
-                _packageBuffer = ArrayPool<byte>.Shared.Rent(_packageBufferSize);
+                _packageBuffer = _bufferPool.Rent(_packageBufferSize);
         }
 
         protected override void Dispose(bool disposing)
@@ -116,7 +118,7 @@ namespace Orcus.Sockets.Internal
                 InnerStream.Dispose();
 
                 if (_packageBuffer != null)
-                    ArrayPool<byte>.Shared.Return(_packageBuffer);
+                    _bufferPool.Return(_packageBuffer);
             }
         }
 

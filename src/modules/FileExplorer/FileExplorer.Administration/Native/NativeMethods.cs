@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace FileExplorer.Administration.Native
 {
@@ -23,5 +24,12 @@ namespace FileExplorer.Administration.Native
 
         [DllImport("User32.dll")]
         internal static extern int DestroyIcon(IntPtr hIcon);
+
+        [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern int PSGetPropertyDescription(
+            ref PropertyKey propkey,
+            ref Guid riid,
+            [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyDescription ppv
+        );
     }
 }

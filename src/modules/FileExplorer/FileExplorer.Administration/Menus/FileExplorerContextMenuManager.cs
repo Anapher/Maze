@@ -85,7 +85,7 @@ namespace FileExplorer.Administration.Menus
                 {
                     Predicate = s => context.FileSystem.IsValidFilename(s)
                 };
-            if (_windowService.ShowDialog(inputVm, "FileExplorer:CreateNewFolder", context.Window) == true)
+            if (_windowService.ShowDialog(inputVm, Tx.T("FileExplorer:CreateNewFolder"), context.Window) == true)
             {
                 context.FileSystem.CreateDirectory(Path.Combine(context.CurrentPath, inputVm.Text))
                     .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:CreateNewFolder")).Forget();

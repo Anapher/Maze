@@ -15,7 +15,7 @@ namespace Orcus.Sockets
         {
             WebSocket = webSocket;
             _packageBufferSize = packageBufferSize + 1 + 1000;
-            BufferPool = ArrayPool<byte>.Create(_packageBufferSize * 5, 10);
+            BufferPool = ArrayPool<byte>.Shared;
             _sendFrameAsyncLock = new SemaphoreSlim(1, 1);
         }
 
@@ -27,6 +27,7 @@ namespace Orcus.Sockets
         public WebSocket WebSocket { get; }
 
         public ArrayPool<byte> BufferPool { get; }
+        public int? RequiredPreBufferLength { get; } = 1;
         public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public async Task ReceiveAsync()
@@ -60,18 +61,18 @@ namespace Orcus.Sockets
         }
 
         public Task SendFrameAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
-            CancellationToken cancellationToken) =>
-             !_sendFrameAsyncLock.Wait(0)
-                ? SendFrameFallbackAsync(opcode, payloadBuffer, cancellationToken)
-                : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer, cancellationToken);
+            bool bufferHasRequiredLength, CancellationToken cancellationToken) =>
+            !_sendFrameAsyncLock.Wait(0)
+                ? SendFrameFallbackAsync(opcode, payloadBuffer, bufferHasRequiredLength, cancellationToken)
+                : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer, bufferHasRequiredLength, cancellationToken);
 
-        private Task SendFrameLockAcquiredNonCancelableAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, CancellationToken cancellationToken)
+        private Task SendFrameLockAcquiredNonCancelableAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength, CancellationToken cancellationToken)
         {
             // If we get here, the cancellation token is not cancelable so we don't have to worry about it,
             // and we own the semaphore, so we don't need to asynchronously wait for it.
-            Task writeTask = default;
+            Task writeTask;
             var releaseSemaphoreAndSendBuffer = true;
-            var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer);
+            var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer, bufferHasRequiredLength);
 
             try
             {
@@ -94,7 +95,9 @@ namespace Orcus.Sockets
                 if (releaseSemaphoreAndSendBuffer)
                 {
                     _sendFrameAsyncLock.Release();
-                    ReleaseSendBuffer(sendBuffer.Array);
+
+                    if (!bufferHasRequiredLength)
+                        ReleaseSendBuffer(sendBuffer.Array);
                 }
             }
 
@@ -102,14 +105,16 @@ namespace Orcus.Sockets
             {
                 var thisRef = (WebSocketWrapper) s;
                 thisRef._sendFrameAsyncLock.Release();
-                thisRef.ReleaseSendBuffer(sendBuffer.Array);
+
+                if (!bufferHasRequiredLength)
+                    thisRef.ReleaseSendBuffer(sendBuffer.Array);
             }, this, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
-        private async Task SendFrameFallbackAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
+        private async Task SendFrameFallbackAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength,
             CancellationToken cancellationToken)
         {
-            var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer);
+            var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer, bufferHasRequiredLength);
 
             try
             {
@@ -125,13 +130,20 @@ namespace Orcus.Sockets
             }
             finally
             {
-                ReleaseSendBuffer(sendBuffer.Array);
+                if (!bufferHasRequiredLength)
+                    ReleaseSendBuffer(sendBuffer.Array);
             }
         }
 
         /// <summary>Writes a frame into the send buffer, which can then be sent over the network.</summary>
-        private ArraySegment<byte> WriteFrameToSendBuffer(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer)
+        private ArraySegment<byte> WriteFrameToSendBuffer(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength)
         {
+            if (bufferHasRequiredLength)
+            {
+                payloadBuffer.Array[payloadBuffer.Offset - 1] = (byte) opcode;
+                return new ArraySegment<byte>(payloadBuffer.Array, payloadBuffer.Offset - 1, payloadBuffer.Count + 1);
+            }
+
             var sendBuffer = AllocateSendBuffer(payloadBuffer.Count + 1);
             sendBuffer[0] = (byte) opcode;
 
@@ -142,11 +154,11 @@ namespace Orcus.Sockets
             return new ArraySegment<byte>(sendBuffer, 0, 1 + payloadBuffer.Count);
         }
 
-        private byte[] AllocateSendBuffer(int minLength) => ArrayPool<byte>.Shared.Rent(minLength);
+        private byte[] AllocateSendBuffer(int minLength) => BufferPool.Rent(minLength);
 
         private void ReleaseSendBuffer(byte[] buffer)
         {
-            ArrayPool<byte>.Shared.Return(buffer);
+            BufferPool.Return(buffer);
         }
     }
 }

@@ -128,7 +128,19 @@ namespace Orcus.Sockets
         }
 
         public ArrayPool<byte> BufferPool { get; } = ArrayPool<byte>.Shared;
+        public int? RequiredPreBufferLength { get; } = null;
         public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
+
+        /// <summary>Sends a websocket frame to the network.</summary>
+        /// <param name="opcode">The opcode for the message.</param>
+        /// <param name="payloadBuffer">The buffer containing the payload data fro the message.</param>
+        /// <param name="bufferHasRequiredLength">True if the buffer has the required length</param>
+        /// <param name="cancellationToken">The CancellationToken to use to cancel the websocket.</param>
+        public Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength,
+            CancellationToken cancellationToken) =>
+            cancellationToken.CanBeCanceled || !_sendFrameAsyncLock.Wait(0)
+                ? SendFrameFallbackAsync(opcode, payloadBuffer, cancellationToken)
+                : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer);
 
         public void Abort()
         {
@@ -214,17 +226,7 @@ namespace Orcus.Sockets
 
             return count;
         }
-
-        /// <summary>Sends a websocket frame to the network.</summary>
-        /// <param name="opcode">The opcode for the message.</param>
-        /// <param name="payloadBuffer">The buffer containing the payload data fro the message.</param>
-        /// <param name="cancellationToken">The CancellationToken to use to cancel the websocket.</param>
-        public Task SendFrameAsync(MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
-            CancellationToken cancellationToken) =>
-            cancellationToken.CanBeCanceled || !_sendFrameAsyncLock.Wait(0)
-                ? SendFrameFallbackAsync(opcode, payloadBuffer, cancellationToken)
-                : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer);
-
+        
         /// <summary>Sends a websocket frame to the network. The caller must hold the sending lock.</summary>
         /// <param name="opcode">The opcode for the message.</param>
         /// <param name="payloadBuffer">The buffer containing the payload data fro the message.</param>
@@ -406,7 +408,7 @@ namespace Orcus.Sockets
         }
 
         private Task HandleReceivedPingPongAsync() =>
-            SendFrameAsync(MessageOpcode.Pong, default, CancellationToken.None);
+            SendFrameAsync(MessageOpcode.Pong, default, false, CancellationToken.None);
 
         private void SendKeepAliveFrameAsync()
         {

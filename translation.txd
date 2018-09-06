@@ -7,6 +7,7 @@
 		<text key="Canceled">Abgebrochen</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Copy">Kopieren</text>
 		<text key="Create">Erstellen</text>
 		<text key="DefaultClientListView:Connected">Verbunden</text>
 		<text key="DefaultClientListView:IpAddress">IP-Adresse</text>
@@ -221,6 +222,7 @@
 		<text key="Tx:time.span neg.years.single">{#} Jahren</text>
 		<text key="Tx:time.span neg.years.single" count="1">einem Jahr</text>
 		<text key="Username">Benutzername</text>
+		<text key="Value">Wert</text>
 		<text key="Version">Version</text>
 		<text key="Warning">Warnung</text>
 	</culture>
@@ -230,6 +232,7 @@
 		<text key="Canceled">Canceled</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Copy">Copy</text>
 		<text key="Create">Create</text>
 		<text key="DefaultClientListView:Connected">Connected</text>
 		<text key="DefaultClientListView:IpAddress">Ip Address</text>
@@ -460,6 +463,7 @@
 		<text key="Tx:time.span neg.years.single">{#} years</text>
 		<text key="Tx:time.span neg.years.single" count="1">a year</text>
 		<text key="Username">Username</text>
+		<text key="Value">Value</text>
 		<text key="Version">Version</text>
 		<text key="Warning">Warning</text>
 	</culture>

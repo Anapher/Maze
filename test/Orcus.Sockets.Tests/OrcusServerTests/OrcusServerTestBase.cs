@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Buffers;
+using System.IO;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
@@ -38,7 +39,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
         {
             var dataStream = new MemoryStream();
             var requestSocket = new OrcusSocket(dataStream, keepAliveInterval: null);
-            var requestServer = new OrcusServer(requestSocket, PackageSize, MaxHeaderSize);
+            var requestServer = new OrcusServer(requestSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
 
             var request = GetRequest();
             var requestTask = requestServer.SendRequest(request, CancellationToken.None); //will wait for a response
@@ -47,7 +48,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             dataStream.Position = 0;
 
             var receiverSocket = new OrcusSocket(dataStream, null);
-            var receiverServer = new OrcusServer(receiverSocket, PackageSize, MaxHeaderSize);
+            var receiverServer = new OrcusServer(receiverSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
 
             var completionSource = new TaskCompletionSource<OrcusRequestReceivedEventArgs>();
 

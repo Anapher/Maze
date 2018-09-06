@@ -24,16 +24,16 @@ namespace Orcus.Administration.Services
             _orcusRestClient = orcusRestClient;
         }
 
-        public void Register<TViewModel>(string txLibResource, object icon, CommandCategory category)
+        public void Register<TViewModel>(string txLibResource, IIconFactory iconFactory, CommandCategory category)
         {
             GetNavigationEntry(category).Add(new ItemCommand<ClientViewModel>
             {
                 Header = Tx.T(txLibResource),
-                Icon = icon,
+                Icon = iconFactory.Create(),
                 Command = new DelegateCommand<ClientViewModel>(model =>
                 {
-                    _windowService.Show(typeof(TViewModel), txLibResource, null,
-                        window => window.ViewManager.TitleBarIcon = icon, builder =>
+                    _windowService.Show(typeof(TViewModel), Tx.T(txLibResource), null,
+                        window => window.ViewManager.TitleBarIcon = iconFactory.Create(), builder =>
                         {
                             builder.RegisterInstance(model);
                             builder.Register(context => _orcusRestClient.CreateTargeted(model.ClientId))

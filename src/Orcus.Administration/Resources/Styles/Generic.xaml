@@ -606,4 +606,66 @@
         <Setter Property="Template" Value="{StaticResource FlyoutTemplate}" />
     </Style>
     <!--#endregion-->
+
+    <!--#region ValueText-->
+    <Style x:Key="ValueText" TargetType="TextBox">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Text" Value="" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="ContextMenu" Value="{DynamicResource TextBoxMetroContextMenu}" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource LightColorBrush}" />
+    </Style>
+    <!--#endregion ValueText-->
+
+    <!--#region Windows10TabControl-->
+    <Style x:Key="Windows10TabItem" TargetType="TabItem">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Grid Margin="-1,0,0,-1">
+                        <Border
+                            x:Name="Border"
+                            Margin="0,0,0,1"
+                            Background="{DynamicResource TabItemBackgroundBrush}"
+                            BorderBrush="{DynamicResource TabItemBorderBrush}"
+                            BorderThickness="1,1,1,0" />
+                        <ContentPresenter
+                            x:Name="ContentSite"
+                            Margin="8,3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ContentSource="Header"
+                            IsHitTestVisible="False"
+                            RecognizesAccessKey="True"
+                            TextBlock.Foreground="{StaticResource BlackBrush}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource TabItemMouseOverBorderBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabItemMouseOverBackgroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabItemSelectedBackgroundBrush}" />
+                            <Setter TargetName="Border" Property="Margin" Value="0,-2,0,0" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource TabItemBorderBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Windows10TabControl" TargetType="TabControl">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource Windows10TabItem}" />
+    </Style>
+    <!--#endregion Windows10TabControl-->
 </ResourceDictionary>

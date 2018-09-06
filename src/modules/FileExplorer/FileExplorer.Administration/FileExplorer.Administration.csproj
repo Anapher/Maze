@@ -18,6 +18,8 @@
     </Page>
 
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
+
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 

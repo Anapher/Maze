@@ -161,9 +161,10 @@ namespace Orcus.Administration.Library.Extensions
         public static string GetRestExceptionMessage(this RestException exception)
         {
             var keyName = "RestErrors:" + (ErrorCode) exception.ErrorId;
-            var result = Tx.T(keyName);
-            if (string.IsNullOrEmpty(result) || keyName == result.Trim('[', ']'))
+            if (!Tx.TryGetText(keyName, out var result))
+            {
                 return exception.Message;
+            }
 
             return result;
         }

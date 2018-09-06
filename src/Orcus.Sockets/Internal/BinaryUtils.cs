@@ -15,7 +15,7 @@ namespace Orcus.Sockets.Internal
         /// <param name="value">The <see cref="int" /> that should be encoded</param>
         /// <returns>Return the amount of bytes written to the <see cref="bytes" /></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int WriteInt32(ref byte[] bytes, int offset, int value)
+        public static unsafe int WriteInt32(byte[] bytes, int offset, int value)
         {
             fixed (byte* ptr = bytes)
             {
