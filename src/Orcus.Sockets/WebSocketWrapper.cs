@@ -52,7 +52,7 @@ namespace Orcus.Sockets
                     }
 
                     var opCode = (OrcusSocket.MessageOpcode) buffer[0];
-                    var payload = new ArraySegment<byte>(buffer, 1, result.Count + i - 1);
+                    var payload = new BufferSegment(buffer, 1, result.Count + i - 1, BufferPool);
 
                     DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(payload, opCode));
                     break;

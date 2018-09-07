@@ -9,6 +9,7 @@ namespace Orcus.Sockets
     public struct BufferSegment : IDisposable
     {
         private readonly ArrayPool<byte> _arrayPool;
+        private bool _isDisposed;
 
         /// <summary>
         ///     Initialize a new instance of <see cref="BufferSegment" /> with a buffer
@@ -23,6 +24,7 @@ namespace Orcus.Sockets
             Length = length;
 
             _arrayPool = null;
+            _isDisposed = false;
         }
 
         /// <summary>
@@ -63,9 +65,9 @@ namespace Orcus.Sockets
         /// </summary>
         public int Length { get; }
 
-        public static implicit operator ArraySegment<byte>(BufferSegment buffer)
+        public static implicit operator ArraySegment<byte>(BufferSegment bufferSegment)
         {
-            return new ArraySegment<byte>(buffer.Buffer, buffer.Offset, buffer.Length);
+            return new ArraySegment<byte>(bufferSegment.Buffer, bufferSegment.Offset, bufferSegment.Length);
         }
 
         /// <summary>
@@ -73,6 +75,10 @@ namespace Orcus.Sockets
         /// </summary>
         public void Dispose()
         {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
             _arrayPool?.Return(Buffer);
             Buffer = null;
         }

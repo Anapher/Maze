@@ -156,7 +156,7 @@ namespace Orcus.Sockets
                 var opcode = (MessageOpcode) _receiveBuffer[0];
                 var length = ReadPayloadLength(_receiveBuffer[1]);
 
-                ArraySegment<byte> receiveBuffer = default;
+                BufferSegment receiveBuffer = default;
                 if (length > 0)
                 {
                     var buffer = ArrayPool<byte>.Shared.Rent(length);
@@ -175,7 +175,7 @@ namespace Orcus.Sockets
                     if (numRead != length)
                         ThrowIfEofUnexpected(true);
 
-                    receiveBuffer = new ArraySegment<byte>(buffer, 0, length);
+                    receiveBuffer = new BufferSegment(buffer, 0, length, BufferPool);
                 }
 
                 if (opcode == MessageOpcode.Ping || opcode == MessageOpcode.Pong)

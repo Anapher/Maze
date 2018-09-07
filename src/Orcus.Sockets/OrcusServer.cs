@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Orcus.Modules.Api;
 using Orcus.Sockets.Internal;
 using Orcus.Sockets.Internal.Extensions;
 using Orcus.Sockets.Internal.Http;
@@ -23,8 +24,7 @@ namespace Orcus.Sockets
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeRequests;
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeResponses;
         private readonly ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>> _waitingRequests;
-        private readonly ConcurrentDictionary<int, OrcusChannel> _channels;
-        private readonly ConcurrentDictionary<OrcusChannel, int> _channelsReversed;
+        private readonly ConcurrentDictionary<int, IDataChannel> _channels;
         private readonly ConcurrentDictionary<int, CancellationTokenSource> _cancellableRequests;
 
         private readonly IDataSocket _socket;
@@ -53,8 +53,7 @@ namespace Orcus.Sockets
             _maxHeaderSize = maxHeaderSize;
             _customOffset = socket.RequiredPreBufferLength ?? 0;
 
-            _channels = new ConcurrentDictionary<int, OrcusChannel>();
-            _channelsReversed = new ConcurrentDictionary<OrcusChannel, int>();
+            _channels = new ConcurrentDictionary<int, IDataChannel>();
             _activeRequests = new ConcurrentDictionary<int, BufferQueueStream>();
             _activeResponses = new ConcurrentDictionary<int, BufferQueueStream>();
             _waitingRequests = new ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>>();
@@ -69,12 +68,12 @@ namespace Orcus.Sockets
 
         public event EventHandler<OrcusRequestReceivedEventArgs> RequestReceived;
 
-        public void RegisterChannel(OrcusChannel channel, int channelId)
+        public void RegisterChannel(IDataChannel channel, int channelId)
         {
-            channel.SendMessage = SendMessage;
+            if (!_channels.TryAdd(channelId, channel))
+                throw new InvalidOperationException("The channel id is already in use");
 
-            _channels.TryAdd(channelId, channel);
-            _channelsReversed.TryAdd(channel, channelId);
+            channel.Send = (buffer, offset, count, hasOffset) => Send(channelId, buffer, offset, count, hasOffset);
         }
 
         public async Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage,
@@ -263,38 +262,39 @@ namespace Orcus.Sockets
             }
         }
 
-        private Task SendMessage(OrcusChannel channel, ArraySegment<byte> data)
+        private async Task Send(int channelId, byte[] buffer, int offset, int count, bool hasOffset)
         {
-            throw new NotImplementedException();
-            //var channelId = _channelsReversed[channel];
-
-            //var sendBuffer = ArrayPool<byte>.Shared.Rent(data.Count + 4);
-            //try
-            //{
-            //    BinaryUtils.WriteInt32(ref sendBuffer, 0, channelId);
-            //    Buffer.BlockCopy(data.Array, data.Offset, sendBuffer, 4, data.Count);
-
-            //    return _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
-            //        new ArraySegment<byte>(sendBuffer, 0, data.Count + 4), CancellationToken.None);
-            //}
-            //finally
-            //{
-            //    ArrayPool<byte>.Shared.Return(sendBuffer);
-            //}
-        }
-
-        private void ProcessMessage(ArraySegment<byte> buffer)
-        {
-            var channelId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
-            if (!_channels.TryGetValue(channelId, out var channel))
+            if (hasOffset)
             {
-                Logger.Error("Received message for channel {channelId} which does not exist.", channelId);
-                throw new InvalidOperationException($"Received message for channel {channelId} which does not exist.");
+                BinaryUtils.WriteInt32(buffer, offset - 4, channelId);
+                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
+                    new ArraySegment<byte>(buffer, offset - 4, count + 4), true, CancellationToken.None);
+                return;
             }
 
-            Task.Run(() =>
-                    channel.InvokeMessage(new ArraySegment<byte>(buffer.Array, buffer.Offset + 4, buffer.Count - 4)))
-                .ContinueWith(task => ArrayPool<byte>.Shared.Return(buffer.Array));
+            using (var newBuffer = AllocateBuffer(count + 4 + _customOffset))
+            {
+                BinaryUtils.WriteInt32(newBuffer.Buffer, newBuffer.Offset + _customOffset, channelId);
+                Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + _customOffset + 4, count);
+                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
+                    new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset + _customOffset, count), true,
+                    CancellationToken.None);
+            }
+        }
+
+        private async void ProcessMessage(BufferSegment buffer)
+        {
+            using (buffer)
+            {
+                var channelId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
+                if (!_channels.TryGetValue(channelId, out var channel))
+                {
+                    Logger.Error("Received message for channel {channelId} which does not exist.", channelId);
+                    throw new InvalidOperationException($"Received message for channel {channelId} which does not exist.");
+                }
+
+                await Task.Run(() => channel.ReceiveData(buffer.Buffer, buffer.Offset + 4, buffer.Length - 4));
+            }
         }
 
         private void AppendRequestData(ArraySegment<byte> buffer, bool isCompleted)
@@ -320,10 +320,10 @@ namespace Orcus.Sockets
             request.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + 4, buffer.Count - 4));
         }
 
-        private void ProcessRequest(ArraySegment<byte> buffer, bool isCompleted)
+        private void ProcessRequest(BufferSegment buffer, bool isCompleted)
         {
             Logger.Debug("Request received (isCompleted = {isCompleted}), length = {length}",
-                isCompleted, buffer.Count);
+                isCompleted, buffer.Length);
 
             var headerLength = HttpFormatter.ParseRequest(buffer, out var request);
 
@@ -332,8 +332,8 @@ namespace Orcus.Sockets
             var stream = new BufferQueueStream(_socket.BufferPool);
             request.Body = stream;
 
-            stream.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength,
-                buffer.Count - headerLength));
+            stream.PushBuffer(new ArraySegment<byte>(buffer.Buffer, buffer.Offset + headerLength,
+                buffer.Length - headerLength));
 
             var requestId = int.Parse(request.Headers[OrcusHeaders.OrcusSocketRequestIdHeader]);
             var cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
@@ -376,14 +376,14 @@ namespace Orcus.Sockets
             Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token)));
         }
 
-        private void ProcessResponse(ArraySegment<byte> buffer, bool isCompleted)
+        private void ProcessResponse(BufferSegment buffer, bool isCompleted)
         {
-            Logger.LogDataPackage("Received Response", buffer.Array, buffer.Offset, buffer.Count);
+            Logger.LogDataPackage("Received Response", buffer.Buffer, buffer.Offset, buffer.Length);
             
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
             var requestId = int.Parse(response.Headers.GetValues(OrcusHeaders.OrcusSocketRequestIdHeader).Single());
             var bufferSegment =
-                new ArraySegment<byte>(buffer.Array, buffer.Offset + headerLength, buffer.Count - headerLength);
+                new ArraySegment<byte>(buffer.Buffer, buffer.Offset + headerLength, buffer.Length - headerLength);
 
             if (isCompleted)
             {
@@ -421,11 +421,11 @@ namespace Orcus.Sockets
             taskCompletionSource.SetResult(response);
         }
 
-        private void AppendResponseData(ArraySegment<byte> buffer, bool isCompleted)
+        private void AppendResponseData(BufferSegment buffer, bool isCompleted)
         {
-            Logger.LogDataPackage("Received Response Continuation", buffer.Array, buffer.Offset, buffer.Count);
+            Logger.LogDataPackage("Received Response Continuation", buffer.Buffer, buffer.Offset, buffer.Length);
 
-            var requestId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
+            var requestId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
 
             if (!_activeResponses.TryGetValue(requestId, out var response))
             {
@@ -443,29 +443,32 @@ namespace Orcus.Sockets
             }
 
             //important: also push the buffer if it's empty, the stream disposes it and the autoresetevent must be set!
-            response.PushBuffer(new ArraySegment<byte>(buffer.Array, buffer.Offset + 4, buffer.Count - 4));
+            response.PushBuffer(new ArraySegment<byte>(buffer.Buffer, buffer.Offset + 4, buffer.Length - 4));
         }
 
-        private void CancelRequest(ArraySegment<byte> buffer)
+        private void CancelRequest(BufferSegment buffer)
         {
-            var requestId = BitConverter.ToInt32(buffer.Array, buffer.Offset);
-            if (_cancellableRequests.TryGetValue(requestId, out var cancellationTokenSource))
+            using (buffer)
             {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource.Dispose();
-                _cancellableRequests.TryRemove(requestId, out _);
-            }
-            else
-            {
-                cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
-                cancellationTokenSource.Cancel();
-
-                //important to prevent memory leak as the request may never come in
-                Task.Delay(TimeSpan.FromMinutes(5)).ContinueWith(task =>
+                var requestId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
+                if (_cancellableRequests.TryGetValue(requestId, out var cancellationTokenSource))
                 {
+                    cancellationTokenSource.Cancel();
                     cancellationTokenSource.Dispose();
                     _cancellableRequests.TryRemove(requestId, out _);
-                });
+                }
+                else
+                {
+                    cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
+                    cancellationTokenSource.Cancel();
+
+                    //important to prevent memory leak as the request may never come in
+                    Task.Delay(TimeSpan.FromMinutes(5)).ContinueWith(task =>
+                    {
+                        cancellationTokenSource.Dispose();
+                        _cancellableRequests.TryRemove(requestId, out _);
+                    });
+                }
             }
         }
 

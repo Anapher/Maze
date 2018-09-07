@@ -22,7 +22,7 @@ namespace Orcus.Sockets
 
         /// <summary>
         ///     The event that occurres when data was received. This event executes synchronously on the reading thread, meaning
-        ///     that this must only block as long as neccessary
+        ///     that this must only block as long as neccessary. The buffer must be returned to <see cref="BufferPool"/>
         /// </summary>
         event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 

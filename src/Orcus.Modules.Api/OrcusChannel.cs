@@ -1,29 +1,22 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orcus.Modules.Api
 {
-    public abstract class OrcusChannel : OrcusController
+    public abstract class OrcusChannel : OrcusController, IDataChannel
     {
         public int ChannelId { get; set; }
-        public SendDelegate SendDelegate { get; set; }
         public CancellationToken CancellationToken { get; set; }
+        public int RequiredOffset { get; set; }
 
-        public abstract Task ReceiveData(byte[] buffer, int offset, int count);
+        public SendDelegate Send { get; set; }
+
+        public abstract void ReceiveData(byte[] buffer, int offset, int count);
 
         public virtual void Initialize()
         {
         }
     }
 
-    public abstract class OrcusEventChannel : OrcusChannel
-    {
-        public override Task ReceiveData(byte[] buffer, int offset, int count)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public delegate Task SendDelegate(byte[] buffer, int offset, int count);
+    public delegate Task SendDelegate(byte[] buffer, int offset, int count, bool hasOffset);
 }

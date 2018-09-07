@@ -10,3 +10,6 @@
 [submodule "src/submodules/TxTranslation"]
 	path = src/submodules/TxTranslation
 	url = https://github.com/Anapher/TxTranslation
+[submodule "src/submodules/NetworkCallTransmission"]
+	path = src/submodules/NetworkCallTransmission
+	url = https://github.com/CodeElements/NetworkCallTransmission.git

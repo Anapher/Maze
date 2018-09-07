@@ -119,11 +119,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92618B4D-D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.csproj", "{28ABF583-643F-488C-B5FC-B285E41ED342}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Administration", "src\modules\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj", "{8F8A07C3-7C4E-49D2-9997-0836F51F44AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration", "src\modules\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj", "{8F8A07C3-7C4E-49D2-9997-0836F51F44AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxLib", "src\submodules\TxTranslation\TxLib\TxLib.csproj", "{DC6BA170-806F-4D6E-9165-401DE852E304}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Sockets.Tests", "test\Orcus.Sockets.Tests\Orcus.Sockets.Tests.csproj", "{69082050-9353-4CA3-B29A-05F37CE1D1F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.ControllerExtensions", "src\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj", "{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall", "src\submodules\NetworkCallTransmission\CodeElements.NetworkCall\CodeElements.NetworkCall.csproj", "{932E830B-6E94-470F-BC56-01BA3E0DD066}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\CodeElements.NetworkCall.NetSerializer\CodeElements.NetworkCall.NetSerializer.csproj", "{E388EF83-7406-4679-80D4-4213B5D858C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\NetSerializer\NetSerializer\NetSerializer.csproj", "{F78E166A-9CFF-444C-8D55-5058F2D86773}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -293,6 +301,22 @@ Global
 		{69082050-9353-4CA3-B29A-05F37CE1D1F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69082050-9353-4CA3-B29A-05F37CE1D1F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69082050-9353-4CA3-B29A-05F37CE1D1F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{932E830B-6E94-470F-BC56-01BA3E0DD066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{932E830B-6E94-470F-BC56-01BA3E0DD066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{932E830B-6E94-470F-BC56-01BA3E0DD066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{932E830B-6E94-470F-BC56-01BA3E0DD066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E388EF83-7406-4679-80D4-4213B5D858C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E388EF83-7406-4679-80D4-4213B5D858C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E388EF83-7406-4679-80D4-4213B5D858C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E388EF83-7406-4679-80D4-4213B5D858C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -340,6 +364,10 @@ Global
 		{8F8A07C3-7C4E-49D2-9997-0836F51F44AC} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{DC6BA170-806F-4D6E-9165-401DE852E304} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 		{69082050-9353-4CA3-B29A-05F37CE1D1F0} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
+		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
+		{932E830B-6E94-470F-BC56-01BA3E0DD066} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
+		{E388EF83-7406-4679-80D4-4213B5D858C7} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
+		{F78E166A-9CFF-444C-8D55-5058F2D86773} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

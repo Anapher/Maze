@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api.Response;
-using Orcus.Sockets.Internal;
 using Orcus.Sockets.Internal.Http;
 
 namespace Orcus.Sockets

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
+    <ProjectReference Include="..\submodules\NetworkCallTransmission\CodeElements.NetworkCall\CodeElements.NetworkCall.csproj" />
+    <ProjectReference Include="..\submodules\NetworkCallTransmission\NetSerializer\CodeElements.NetworkCall.NetSerializer\CodeElements.NetworkCall.NetSerializer.csproj" />
+  </ItemGroup>
+
+</Project>
