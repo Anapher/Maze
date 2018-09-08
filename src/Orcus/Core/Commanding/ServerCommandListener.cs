@@ -37,7 +37,7 @@ namespace Orcus.Core.Commanding
                 Connection = new WebSocketConnectionInfo(_connector)
             };
 
-            await _container.Resolve<IOrcusRequestExecuter>().Execute(context);
+            await _container.Resolve<IOrcusRequestExecuter>().Execute(context, _orcusServer);
             await _orcusServer.FinishResponse(e);
         }
     }

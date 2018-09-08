@@ -9,6 +9,7 @@
     <Import_RootNamespace>FileExplorer.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Channels\IHashFileAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\FileExplorerEntryConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\DirectoryEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\DriveDirectoryEntry.cs" />

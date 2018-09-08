@@ -14,7 +14,8 @@ namespace Orcus.Service.Commander
         ///     Execute the given <see cref="OrcusRequest" />
         /// </summary>
         /// <param name="context">The context</param>
+        /// <param name="channelServer">The server that manages the active channel</param>
         /// <returns>Return the result of the request</returns>
-        Task Execute(OrcusContext context);
+        Task Execute(OrcusContext context, IChannelServer channelServer);
     }
 }

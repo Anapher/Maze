@@ -2,7 +2,11 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
+using Microsoft.AspNetCore.SignalR.Client;
+using Orcus.Administration.Library.Channels;
 using Orcus.Administration.Library.Extensions;
+using Orcus.Modules.Api;
 
 namespace Orcus.Administration.Library.Clients
 {
@@ -17,10 +21,29 @@ namespace Orcus.Administration.Library.Clients
             _packageUri = new Uri(packageName, UriKind.Relative);
         }
 
+        public void Dispose()
+        {
+        }
+
+        public string Username => _targetedRestClient.Username;
+        public HubConnection HubConnection => _targetedRestClient.HubConnection;
+        public IComponentContext ServiceProvider => _targetedRestClient.ServiceProvider;
+
         public Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.RequestUri = UriHelper.CombineRelativeUris(_packageUri, request.RequestUri);
+            PatchMessage(request);
             return _targetedRestClient.SendMessage(request, cancellationToken);
+        }
+
+        public Task<TChannel> OpenChannel<TChannel>(HttpRequestMessage message, CancellationToken cancellationToken) where TChannel : IAwareDataChannel
+        {
+            PatchMessage(message);
+            return _targetedRestClient.OpenChannel<TChannel>(message, cancellationToken);
+        }
+
+        private void PatchMessage(HttpRequestMessage request)
+        {
+            request.RequestUri = UriHelper.CombineRelativeUris(_packageUri, request.RequestUri);
         }
     }
 }

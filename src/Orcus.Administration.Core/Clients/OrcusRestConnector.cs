@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Clients;
 
 namespace Orcus.Administration.Core.Clients
 {
@@ -10,7 +9,7 @@ namespace Orcus.Administration.Core.Clients
     {
         private static HttpClient _cachedHttpClient;
 
-        public static async Task<IOrcusRestClient> TryConnect(string username, SecureString password, IServerInfo serverInfo)
+        public static async Task<OrcusRestClient> TryConnect(string username, SecureString password, IServerInfo serverInfo)
         {
             if (_cachedHttpClient == null)
                 _cachedHttpClient =

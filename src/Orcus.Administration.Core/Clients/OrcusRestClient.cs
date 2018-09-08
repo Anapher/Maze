@@ -1,22 +1,30 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.WebSockets;
 using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Orcus.Administration.Core.Extensions;
+using Orcus.Administration.Library.Channels;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Authentication;
 using Orcus.Server.Connection.Error;
+using Orcus.Sockets;
+using Orcus.Sockets.Client;
 
 namespace Orcus.Administration.Core.Clients
 {
@@ -27,6 +35,9 @@ namespace Orcus.Administration.Core.Clients
         private readonly SecureString _password;
         private JwtSecurityToken _jwtSecurityToken;
 
+        private OrcusServer _orcusServer;
+        private WebSocketWrapper _webSocket;
+
         public OrcusRestClient(string username, SecureString password, HttpClient httpClient)
         {
             _password = password;
@@ -35,8 +46,39 @@ namespace Orcus.Administration.Core.Clients
             _jwtHandler = new JwtSecurityTokenHandler();
         }
 
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+            _password.Dispose();
+        }
+
         public string Username { get; private set; }
         public HubConnection HubConnection { get; private set; }
+        public IComponentContext ServiceProvider { get; set; }
+
+        public async Task<TChannel> OpenChannel<TChannel>(HttpRequestMessage message, CancellationToken cancellationToken)
+            where TChannel : IAwareDataChannel
+        {
+            var connection = await GetServerConnection();
+
+            var response = await SendMessage(message, cancellationToken);
+            if (response.StatusCode != HttpStatusCode.Created)
+                throw new InvalidOperationException("The channel was not created");
+
+            var channelId = int.Parse(response.Headers.Location.AbsolutePath.Trim('/'));
+            var channel = ServiceProvider.Resolve<TChannel>();
+            channel.CloseChannel += ChannelOnCloseChannel;
+            connection.AddChannel(channel, channelId);
+
+            channel.Initialize(response);
+
+            return channel;
+        }
+
+        private void ChannelOnCloseChannel(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -89,15 +131,9 @@ namespace Orcus.Administration.Core.Clients
             throw new NotSupportedException(error.Message);
         }
 
-        public void Dispose()
-        {
-            _httpClient.Dispose();
-            _password.Dispose();
-        }
-
         private void ConfigureHttpConnection(HttpConnectionOptions obj)
         {
-            obj.Headers.Add("Authorization", _httpClient.DefaultRequestHeaders.Authorization.ToString());
+            obj.Headers.Add(HeaderNames.Authorization, _httpClient.DefaultRequestHeaders.Authorization.ToString());
         }
 
         public async Task Initialize()
@@ -129,6 +165,23 @@ namespace Orcus.Administration.Core.Clients
 
                 await HubConnection.StartAsync();
             }
+        }
+
+        protected async Task<OrcusServer> GetServerConnection()
+        {
+            //TODO: Make thread safe, timeout server
+            if (_orcusServer != null)
+                return _orcusServer;
+
+            var builder = new UriBuilder(_httpClient.BaseAddress) {Path = "ws", Scheme = _httpClient.BaseAddress.Scheme == "https" ? "wss" : "ws"};
+
+            var connector = new OrcusSocketConnector(builder.Uri) {AuthenticationHeaderValue = _httpClient.DefaultRequestHeaders.Authorization};
+            var dataStream = await connector.ConnectAsync();
+            var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, 8192, 8192, TimeSpan.FromMinutes(2), true,
+                WebSocket.CreateClientBuffer(8192, 8192));
+            _webSocket = new WebSocketWrapper(webSocket, 8192);
+            _orcusServer = new OrcusServer(_webSocket, 8192, 4096, ArrayPool<byte>.Shared);
+            return _orcusServer;
         }
     }
 }

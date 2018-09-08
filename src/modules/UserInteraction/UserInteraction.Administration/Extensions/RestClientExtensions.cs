@@ -1,4 +1,5 @@
 ﻿using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 
 namespace UserInteraction.Administration.Extensions
 {

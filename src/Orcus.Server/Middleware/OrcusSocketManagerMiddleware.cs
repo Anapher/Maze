@@ -1,12 +1,11 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Buffers;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Orcus.Server.Authentication;
 using Orcus.Server.Library.Services;
-using Orcus.Server.OrcusSockets;
 using Orcus.Server.Service.Connection;
 using Orcus.Sockets;
 
@@ -44,10 +43,22 @@ namespace Orcus.Server.Middleware
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
             var wrapper = new WebSocketWrapper(socket, _options.PackageBufferSize);
-            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize);
+            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize, ArrayPool<byte>.Shared);
 
             if (context.User.IsAdministrator())
             {
+                var accountId = context.User.GetAccountId();
+                var connection = new AdministrationConnection(accountId, wrapper, server);
+
+                _connectionManager.AdministrationConnections.TryAdd(accountId, connection);
+                try
+                {
+                    await connection.BeginListen();
+                }
+                finally
+                {
+                    _connectionManager.AdministrationConnections.TryRemove(accountId, out _);
+                }
             }
             else
             {
@@ -55,7 +66,14 @@ namespace Orcus.Server.Middleware
                 var connection = new ClientConnection(clientId, wrapper, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
 
-                await connection.BeginListen();
+                try
+                {
+                    await connection.BeginListen();
+                }
+                finally
+                {
+                    _connectionManager.ClientConnections.TryRemove(clientId, out _);
+                }
             }
         }
     }

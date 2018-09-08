@@ -16,13 +16,14 @@ namespace Orcus.Service.Commander.Routing
     /// </summary>
     public class RouteCache : IRouteCache
     {
-        private const string DefaultMethod = "GET";
-
         public IImmutableDictionary<RouteDescription, Route> Routes { get; set; }
 
         public void BuildCache(IReadOnlyDictionary<PackageIdentity, List<Type>> controllers)
         {
             var routes = new Dictionary<RouteDescription, Route>();
+            var channelBaseType = typeof(OrcusChannel);
+            var channelInitMethod = channelBaseType.GetMethod(nameof(OrcusChannel.Initialize),
+                BindingFlags.Instance | BindingFlags.Public);
 
 #if NETCOREAPP
             foreach (var (package, types) in controllers)
@@ -33,6 +34,7 @@ namespace Orcus.Service.Commander.Routing
                 var package = keyValuePair.Key;
                 var types = keyValuePair.Value;
 #endif
+
                 foreach (var controllerType in types)
                 {
                     if (controllerType.IsAbstract)
@@ -43,6 +45,16 @@ namespace Orcus.Service.Commander.Routing
                     var routeAttribute = controllerType.GetCustomAttribute<RouteAttribute>();
                     if (routeAttribute != null)
                         routeFragments.Add(routeAttribute);
+
+                    var routeType = RouteType.Http;
+                    if (controllerType.IsSubclassOf(channelBaseType))
+                    {
+                        var segments = GetSegments(routeFragments, controllerType, methodInfo: null);
+                        var description = new RouteDescription(package, "GET", segments);
+                        routes.Add(description,
+                            new Route(description, controllerType, channelInitMethod, RouteType.ChannelInit));
+                        routeType = RouteType.Channel;
+                    }
 
                     foreach (var methodInfo in controllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public))
                     {
@@ -65,7 +77,7 @@ namespace Orcus.Service.Commander.Routing
 
                         var segments = GetSegments(methodPath, controllerType, methodInfo);
                         var description = new RouteDescription(package, method, segments);
-                        routes.Add(description, new Route(description, controllerType, methodInfo));
+                        routes.Add(description, new Route(description, controllerType, methodInfo, routeType));
                     }
                 }
             }
@@ -86,7 +98,7 @@ namespace Orcus.Service.Commander.Routing
                 if (string.IsNullOrEmpty(routeFragment.Path))
                     continue;
 
-                foreach (var segment in routeFragment.Path.Split(new[] {'/'}))
+                foreach (var segment in routeFragment.Path.Split('/'))
                 {
                     if (segment.First() == '[' && segment.Last() == ']')
                         segments.Add(GetTokenSegmentValue(segment, controllerType, methodInfo));

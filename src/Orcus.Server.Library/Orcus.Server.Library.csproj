@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
+    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj" />
     <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
   </ItemGroup>
 

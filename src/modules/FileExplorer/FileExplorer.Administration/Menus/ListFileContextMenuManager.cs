@@ -105,7 +105,7 @@ namespace FileExplorer.Administration.Menus
                 .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:StatusBar.LoadProperties"));
             if (!properties.Failed)
             {
-                _windowService.Show(new PropertiesViewModel(file, properties.Result),
+                _windowService.Show(new PropertiesViewModel(file, properties.Result, context.RestClient),
                     Tx.T("FileExplorer:Properties.Title", "name", file.Name), context.Window,
                     window => window.ViewManager.TaskBarIcon = file.Icon, null);
             }

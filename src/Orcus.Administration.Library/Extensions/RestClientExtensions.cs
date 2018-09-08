@@ -1,7 +1,8 @@
 ﻿using NuGet.Packaging.Core;
+using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Models;
 
-namespace Orcus.Administration.Library.Clients
+namespace Orcus.Administration.Library.Extensions
 {
     public static class RestClientExtensions
     {

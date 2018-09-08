@@ -15,7 +15,7 @@ using Orcus.Sockets.Logging;
 
 namespace Orcus.Sockets
 {
-    public class OrcusServer : IDisposable
+    public class OrcusServer : IChannelServer, IDisposable
     {
         private static readonly ILog Logger = LogProvider.For<OrcusServer>();
 
@@ -31,6 +31,8 @@ namespace Orcus.Sockets
         private int _requestCounter;
         private readonly int _customOffset;
         private readonly ArrayPool<byte> _bufferPool;
+        private bool? _isRegisteringChannels;
+        private int _channelCounter;
 
         public OrcusServer(IDataSocket socket) : this(socket, 8192, 4096, ArrayPool<byte>.Shared)
         {
@@ -68,13 +70,29 @@ namespace Orcus.Sockets
 
         public event EventHandler<OrcusRequestReceivedEventArgs> RequestReceived;
 
-        public void RegisterChannel(IDataChannel channel, int channelId)
+        public void AddChannel(IDataChannel channel, int channelId)
         {
-            if (!_channels.TryAdd(channelId, channel))
-                throw new InvalidOperationException("The channel id is already in use");
+            if (_isRegisteringChannels == true)
+                throw new InvalidOperationException("A server that is registering channels cannot add them.");
 
-            channel.Send = (buffer, offset, count, hasOffset) => Send(channelId, buffer, offset, count, hasOffset);
+            _isRegisteringChannels = false;
+            InternalAddChannel(channel, channelId);
         }
+
+        public int RegisterChannel(IDataChannel channel)
+        {
+            if (_isRegisteringChannels == false)
+                throw new InvalidOperationException("A server that is adding channels cannot register them.");
+
+            _isRegisteringChannels = true;
+
+            var id = Interlocked.Increment(ref _channelCounter);
+            InternalAddChannel(channel, id);
+
+            return id;
+        }
+
+        public IDataChannel GetChannel(int id) => _channels[id];
 
         public async Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage,
             CancellationToken cancellationToken)
@@ -472,7 +490,17 @@ namespace Orcus.Sockets
             }
         }
 
-        private BufferSegment AllocateBuffer(int size)
+        protected void InternalAddChannel(IDataChannel channel, int channelId)
+        {
+            if (!_channels.TryAdd(channelId, channel))
+                throw new InvalidOperationException("The channel id is already in use");
+
+            Logger.Debug("Add channel with id {channelId}", channelId);
+
+            channel.Send = (buffer, offset, count, hasOffset) => Send(channelId, buffer, offset, count, hasOffset);
+        }
+
+        protected BufferSegment AllocateBuffer(int size)
         {
             var buffer = _bufferPool.Rent(size + _customOffset);
             return new BufferSegment(buffer, _customOffset, buffer.Length - _customOffset);

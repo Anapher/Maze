@@ -9,5 +9,8 @@ namespace Orcus.Server.Authentication
 
         public static int GetClientId(this ClaimsPrincipal principal) =>
             int.Parse(principal.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
+        public static int GetAccountId(this ClaimsPrincipal principal) =>
+            int.Parse(principal.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
     }
 }

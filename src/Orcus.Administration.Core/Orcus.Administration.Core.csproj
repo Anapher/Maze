@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
+    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj" />
   </ItemGroup>
 
 </Project>

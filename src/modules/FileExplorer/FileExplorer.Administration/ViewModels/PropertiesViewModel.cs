@@ -5,12 +5,17 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
+using FileExplorer.Shared.Channels;
 using FileExplorer.Shared.Dtos;
+using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
@@ -19,18 +24,23 @@ namespace FileExplorer.Administration.ViewModels
 {
     public class PropertiesViewModel : BindableBase
     {
-        public PropertiesViewModel(FileViewModel fileViewModel, FilePropertiesDto dto)
+        public PropertiesViewModel(FileViewModel fileViewModel, FilePropertiesDto dto, IPackageRestClient restClient)
         {
             var properties = GeneralPropertyViewModel.CreateFileProperties(fileViewModel, dto).ToList();
             GeneralProperties = CreateGeneralProperties(properties);
             Entry = fileViewModel;
             DetailsViewModel = new DetailsPropertyViewModel(dto.Properties);
+
+            if (!Entry.IsDirectory)
+                HashViewModels = Enum.GetValues(typeof(FileHashAlgorithm)).Cast<FileHashAlgorithm>()
+                    .Select(x => new ComputeHashViewModel(Entry.Source.Path, x, restClient)).ToList();
         }
 
         public EntryViewModel Entry { get; }
         public bool IsFile => !Entry.IsDirectory;
         public ListCollectionView GeneralProperties { get; }
         public DetailsPropertyViewModel DetailsViewModel { get; }
+        public List<ComputeHashViewModel> HashViewModels { get; }
 
         private ListCollectionView CreateGeneralProperties(IList properties)
         {
@@ -38,6 +48,113 @@ namespace FileExplorer.Administration.ViewModels
             result.GroupDescriptions.Add(new PropertyGroupDescription(nameof(GeneralPropertyViewModel.Group)));
 
             return result;
+        }
+    }
+
+    public class ComputeHashViewModel : BindableBase
+    {
+        private readonly string _path;
+        private readonly IPackageRestClient _restClient;
+
+        private DelegateCommand _copyHashCommand;
+
+        private string _hashValue;
+        private bool _isComputing;
+
+        private double _progress;
+
+        private DelegateCommand _startComputingCommand;
+
+        public ComputeHashViewModel(string path, FileHashAlgorithm hashAlgorithm, IPackageRestClient restClient)
+        {
+            _path = path;
+            HashAlgorithm = hashAlgorithm;
+            _restClient = restClient;
+        }
+
+        public FileHashAlgorithm HashAlgorithm { get; }
+
+        public bool IsComputing
+        {
+            get => _isComputing;
+            set => SetProperty(ref _isComputing, value);
+        }
+
+        public string HashValue
+        {
+            get => _hashValue;
+            set => SetProperty(ref _hashValue, value);
+        }
+
+        public double Progress
+        {
+            get => _progress;
+            set => SetProperty(ref _progress, value);
+        }
+
+        public DelegateCommand CopyHashCommand
+        {
+            get
+            {
+                return _copyHashCommand ?? (_copyHashCommand =
+                           new DelegateCommand(() => { Clipboard.SetText(HashValue); }, () => HashValue != null).ObservesProperty(() => HashValue));
+            }
+        }
+
+        public DelegateCommand StartComputingCommand
+        {
+            get
+            {
+                return _startComputingCommand ?? (_startComputingCommand = new DelegateCommand(async () =>
+                {
+                    IsComputing = true;
+                    try
+                    {
+                        using (var channel = await FileExplorerResource.ComputeHash(_restClient))
+                        {
+                            channel.Interface.ProgressChanged += OnProgressChanged;
+                            var value = await channel.Interface.ComputeAsync(_path, HashAlgorithm);
+                            HashValue = BitConverter.ToString(value).Replace("-", null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.ShowMessage(null);
+                    }
+                    finally
+                    {
+                        IsComputing = false;
+                    }
+                }, () => !IsComputing && HashValue == null).ObservesProperty(() => IsComputing).ObservesProperty(() => HashValue));
+            }
+        }
+
+        private void OnProgressChanged(object sender, ProgressChangedArgs e)
+        {
+            Progress = e.Progress;
+        }
+    }
+
+    public class HashesViewModel
+    {
+        private readonly IPackageRestClient _fileViewModel;
+
+        public HashesViewModel(IPackageRestClient fileViewModel)
+        {
+            _fileViewModel = fileViewModel;
+        }
+
+        private async Task Test()
+        {
+            using (var channel = await FileExplorerResource.ComputeHash(_fileViewModel))
+            {
+                channel.Interface.ProgressChanged += InterfaceOnProgressChanged;
+                await channel.Interface.ComputeAsync("", FileHashAlgorithm.MD5);
+            }
+        }
+
+        private void InterfaceOnProgressChanged(object sender, ProgressChangedArgs e)
+        {
         }
     }
 
@@ -114,8 +231,7 @@ namespace FileExplorer.Administration.ViewModels
             {
                 return _copyAllCommand ?? (_copyAllCommand = new DelegateCommand(() =>
                 {
-                    Clipboard.SetDataObject(string.Join(Environment.NewLine,
-                        _properties.Select(x => $"{x.Name} = {x.Value}")));
+                    Clipboard.SetDataObject(string.Join(Environment.NewLine, _properties.Select(x => $"{x.Name} = {x.Value}")));
                 }));
             }
         }
@@ -128,16 +244,14 @@ namespace FileExplorer.Administration.ViewModels
                 if (fileProperty.FormatId != null && fileProperty.PropertyId != null)
                     translatedName = fileProperty.GetShellDisplayName();
                 else
-                    Tx.TryGetText($"FileExplorer:Properties.Details.Translations.{fileProperty.Name}",
-                        out translatedName);
+                    Tx.TryGetText($"FileExplorer:Properties.Details.Translations.{fileProperty.Name}", out translatedName);
 
                 if (string.IsNullOrEmpty(translatedName))
                     translatedName = fileProperty.Name;
 
                 string value;
                 if (fileProperty.ValueType == FilePropertyValueType.DateTime)
-                    value = DateTimeOffset.ParseExact(fileProperty.Value, "O", CultureInfo.InvariantCulture)
-                        .LocalDateTime.ToString("F");
+                    value = DateTimeOffset.ParseExact(fileProperty.Value, "O", CultureInfo.InvariantCulture).LocalDateTime.ToString("F");
                 else
                     value = fileProperty.Value;
 
@@ -152,31 +266,21 @@ namespace FileExplorer.Administration.ViewModels
         public string Label { get; set; }
         public string Value { get; set; }
 
-        public static IEnumerable<GeneralPropertyViewModel> CreateFileProperties(FileViewModel fileViewModel,
-            FilePropertiesDto dto)
+        public static IEnumerable<GeneralPropertyViewModel> CreateFileProperties(FileViewModel fileViewModel, FilePropertiesDto dto)
         {
-            yield return new GeneralPropertyViewModel
-            {
-                Label = Tx.TC("FileExplorer:Type"),
-                Value = fileViewModel.Description
-            };
+            yield return new GeneralPropertyViewModel {Label = Tx.TC("FileExplorer:Type"), Value = fileViewModel.Description};
             if (!string.IsNullOrEmpty(dto.OpenWithProgramName))
                 yield return new GeneralPropertyViewModel
                 {
-                    Label = Tx.TC("FileExplorer:Properties.General.OpenWith"),
-                    Value = dto.OpenWithProgramName + "\r\n" + dto.OpenWithProgramPath
+                    Label = Tx.TC("FileExplorer:Properties.General.OpenWith"), Value = dto.OpenWithProgramName + "\r\n" + dto.OpenWithProgramPath
                 };
             yield return new GeneralPropertyViewModel
             {
-                Group = 2,
-                Label = Tx.TC("FileExplorer:Properties.General.Location"),
-                Value = fileViewModel.Source.Path
+                Group = 2, Label = Tx.TC("FileExplorer:Properties.General.Location"), Value = fileViewModel.Source.Path
             };
             yield return new GeneralPropertyViewModel
             {
-                Group = 2,
-                Label = Tx.TC("FileExplorer:Size"),
-                Value = Tx.DataSize(dto.Size) + $" ({Tx.Number(dto.SizeOnDisk)} B)"
+                Group = 2, Label = Tx.TC("FileExplorer:Size"), Value = Tx.DataSize(dto.Size) + $" ({Tx.Number(dto.SizeOnDisk)} B)"
             };
             yield return new GeneralPropertyViewModel
             {
@@ -204,9 +308,7 @@ namespace FileExplorer.Administration.ViewModels
             };
             yield return new GeneralPropertyViewModel
             {
-                Group = 4,
-                Label = Tx.TC("FileExplorer:Properties.General.Attributes"),
-                Value = dto.Attributes.ToString()
+                Group = 4, Label = Tx.TC("FileExplorer:Properties.General.Attributes"), Value = dto.Attributes.ToString()
             };
         }
     }

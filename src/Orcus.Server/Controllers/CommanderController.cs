@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Orcus.Server.Authentication;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.ControllersBase;
@@ -37,7 +38,7 @@ namespace Orcus.Server.Controllers
             if (targets.TargetsServer)
             {
                 var orcusContext = new HttpOrcusContextWrapper(HttpContext) {Request = {Path = "/" + path}};
-                await requestExecuter.Execute(orcusContext);
+                await requestExecuter.Execute(orcusContext, null /* TODO */);
             }
             else
             {
@@ -51,7 +52,7 @@ namespace Orcus.Server.Controllers
                 HttpResponseMessage response;
                 try
                 {
-                    response = await commandDistributer.Execute(Request.ToHttpRequestMessage(path), clientId,
+                    response = await commandDistributer.Execute(Request.ToHttpRequestMessage(path), clientId, User.GetAccountId(),
                         HttpContext.RequestAborted);
                 }
                 catch (ClientNotFoundException)

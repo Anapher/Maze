@@ -81,9 +81,16 @@ namespace Orcus.Administration
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
-
+            
             var resolver = Container.Resolve<IViewModelResolver>();
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(resolver.ResolveViewModelType);
+        }
+
+        protected override IContainer CreateContainer(ContainerBuilder containerBuilder)
+        {
+            var container = base.CreateContainer(containerBuilder);
+            _appLoadContext.RestClient.ServiceProvider = container;
+            return container;
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)

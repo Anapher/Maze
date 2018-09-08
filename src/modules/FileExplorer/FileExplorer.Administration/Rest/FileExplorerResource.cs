@@ -2,13 +2,15 @@
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using FileExplorer.Shared.Channels;
 using FileExplorer.Shared.Dtos;
+using Orcus.Administration.ControllerExtensions;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Clients.Helpers;
 
 namespace FileExplorer.Administration.Rest
 {
-    public class FileExplorerResource : ResourceBase<FileExplorerResource>
+    public class FileExplorerResource : ChannelResource<FileExplorerResource>
     {
         public FileExplorerResource() : base(null)
         {
@@ -38,5 +40,8 @@ namespace FileExplorer.Administration.Rest
         public static Task CopyPathToClipboard(string path, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "clipboard").AddQueryParam("path", path)
                 .Execute(restClient);
+
+        public static Task<CallTransmissionChannel<IHashFileAction>> ComputeHash(IPackageRestClient restClient) =>
+            restClient.CreateChannel<FileExplorerResource, IHashFileAction>("computeHash");
     }
 }

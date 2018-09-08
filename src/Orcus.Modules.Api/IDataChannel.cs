@@ -1,6 +1,8 @@
-﻿namespace Orcus.Modules.Api
+﻿using System;
+
+namespace Orcus.Modules.Api
 {
-    public interface IDataChannel
+    public interface IDataChannel : IDisposable
     {
         /// <summary>
         ///     Reserve bytes at the beginning of the <see cref="Send" /> buffer for custom headers

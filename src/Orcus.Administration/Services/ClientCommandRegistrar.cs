@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Models;

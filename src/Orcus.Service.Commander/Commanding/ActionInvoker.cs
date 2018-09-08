@@ -61,11 +61,22 @@ namespace Orcus.Service.Commander.Commanding
         /// <returns>Return the action result of the method</returns>
         public async Task<IActionResult> Invoke(ActionContext actionContext)
         {
-            var controller = (OrcusController) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+            var controller =
+                (OrcusController) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+
+            using (controller)
+            {
+                return await InvokeMethod(actionContext, controller);
+            }
+        }
+
+        private async Task<IActionResult> InvokeMethod(ActionContext actionContext, OrcusController controller)
+        {
             controller.OrcusContext = actionContext.Context;
 
             var parameterBindingInfo =
-                GetParameterBindingInfo(actionContext.Context.RequestServices.GetRequiredService<IModelBinderFactory>());
+                GetParameterBindingInfo(actionContext.Context.RequestServices
+                    .GetRequiredService<IModelBinderFactory>());
 
             var arguments = new object[Parameters.Count];
             var parameterBinding = new ParameterBinder();
@@ -81,16 +92,29 @@ namespace Orcus.Service.Commander.Commanding
                 var parameterDescriptor = Parameters[i];
                 var bindingInfo = parameterBindingInfo[i];
 
-                var result = await parameterBinding.BindModelAsync(actionContext, bindingInfo.ModelBinder, valueProvider, parameterDescriptor,
-                    bindingInfo.ModelMetadata, value: null);
+                var result = await parameterBinding.BindModelAsync(actionContext, bindingInfo.ModelBinder,
+                    valueProvider, parameterDescriptor, bindingInfo.ModelMetadata, value: null);
 
                 if (result.IsModelSet)
                     arguments[i] = result.Model;
             }
 
-            var actionResult = await _executor.Execute(_objectMethodExecutor, controller, arguments, Metadata);
-            controller.Dispose();
-            return actionResult;
+            return await _executor.Execute(_objectMethodExecutor, controller, arguments, Metadata);
+        }
+
+        public Task<IActionResult> InvokeChannel(ActionContext actionContext, OrcusChannel channel)
+        {
+            return InvokeMethod(actionContext, channel);
+        }
+
+        public async Task<OrcusChannel> InitializeChannel(ActionContext actionContext, IChannelServer channelServer)
+        {
+            var channel = (OrcusChannel) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+            channel.OrcusContext = actionContext.Context;
+            channel.ChannelId = channelServer.RegisterChannel(channel);
+
+            await _executor.Execute(_objectMethodExecutor, channel, new object[0], Metadata);
+            return channel;
         }
 
         private static BindingInfo GetBindingInfo(ParameterInfo parameter)

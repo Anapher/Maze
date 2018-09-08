@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -15,7 +14,6 @@ using Orcus.Core.Connection;
 using Orcus.Core.Modules;
 using Orcus.ModuleManagement;
 using Orcus.Options;
-using IContainer = Autofac.IContainer;
 
 namespace Orcus
 {

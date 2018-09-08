@@ -22,7 +22,7 @@ namespace Orcus.Service.Commander
             builder.RegisterType<RouteResolverTrie>().As<IRouteResolverTrie>().SingleInstance();
             builder.RegisterType<RouteResolver>().As<IRouteResolver>().InstancePerLifetimeScope();
             builder.RegisterInstance(routeCache).As<IRouteCache>();
-            builder.RegisterType<OrcusRequestExecuter>().As<IOrcusRequestExecuter>().InstancePerLifetimeScope();
+            builder.RegisterType<OrcusRequestExecuter>().As<IOrcusRequestExecuter>().SingleInstance();
 
             builder.RegisterType<ModelBinderFactory>().As<IModelBinderFactory>().SingleInstance();
             builder.RegisterInstance(new OptionsWrapper<OrcusServerOptions>(new OrcusServerOptions()))

@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Response;
 using Orcus.Server.Connection;
@@ -26,14 +27,15 @@ namespace Orcus.Service.Commander
         }
 
         /// <inheritdoc />
-        public async Task Execute(OrcusContext context)
+        public async Task Execute(OrcusContext context, IChannelServer channelServer)
         {
             _logger.LogDebug($"Resolve Orcus path {context.Request.Path}");
             var result = _routeResolver.Resolve(context);
             if (!result.Success)
             {
                 _logger.LogDebug("Path not found");
-                await WriteError(context, BusinessErrors.Commander.RouteNotFound(context.Request.Path), StatusCodes.Status404NotFound);
+                await WriteError(context, BusinessErrors.Commander.RouteNotFound(context.Request.Path),
+                    StatusCodes.Status404NotFound);
                 return;
             }
 
@@ -47,7 +49,29 @@ namespace Orcus.Service.Commander
             IActionResult actionResult;
             try
             {
-                actionResult = await route.ActionInvoker.Value.Invoke(actionContext);
+                switch (route.RouteType)
+                {
+                    case RouteType.Http:
+                        actionResult = await route.ActionInvoker.Value.Invoke(actionContext);
+                        break;
+                    case RouteType.ChannelInit:
+                        _logger.LogDebug("Create channel {channelName}", actionContext.Route.ControllerType.FullName);
+                        var channel = await route.ActionInvoker.Value.InitializeChannel(actionContext, channelServer);
+
+                        context.Response.Headers.Add(HeaderNames.Location, "ws://channels/" + channel.ChannelId);
+                        actionResult = new StatusCodeResult(StatusCodes.Status201Created);
+                        break;
+                    case RouteType.Channel:
+                        var channelId = int.Parse(actionContext.Context.Request.Headers["ChannelId"]);
+                        _logger.LogDebug("Request channel with id {channelId}", channelId);
+
+                        var foundChannel = channelServer.GetChannel(channelId);
+                        actionResult =
+                            await route.ActionInvoker.Value.InvokeChannel(actionContext, (OrcusChannel) foundChannel);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             catch (Exception e)
             {
@@ -77,8 +101,8 @@ namespace Orcus.Service.Commander
                 _logger.LogError(e,
                     $"Error occurred when executing action result {route.RouteMethod} of package {result.RouteDescription.PackageIdentity} (path: {context.Request.Path})");
                 await WriteError(context,
-                    BusinessErrors.Commander.ResultExecutionError(e.GetType().Name, actionResult?.GetType().Name, e.Message),
-                    StatusCodes.Status500InternalServerError);
+                    BusinessErrors.Commander.ResultExecutionError(e.GetType().Name, actionResult?.GetType().Name,
+                        e.Message), StatusCodes.Status500InternalServerError);
                 return;
             }
 
