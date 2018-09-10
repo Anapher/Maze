@@ -11,7 +11,7 @@ namespace Orcus.Administration.Library.Channels
         protected bool IsDisposed;
         private readonly object _disposeLock = new object();
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             if (!IsDisposed)
             {
@@ -28,12 +28,12 @@ namespace Orcus.Administration.Library.Channels
                 if (dispose)
                 {
                     CloseChannel?.Invoke(this, EventArgs.Empty);
-                    Dispose();
+                    InternalDispose();
                 }
             }
         }
 
-        protected virtual void Dispose()
+        protected virtual void InternalDispose()
         {
 
         }

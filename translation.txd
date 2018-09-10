@@ -12,6 +12,7 @@
 		<text key="DefaultClientListView:Connected">Verbunden</text>
 		<text key="DefaultClientListView:IpAddress">IP-Adresse</text>
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
+		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
@@ -237,6 +238,7 @@
 		<text key="DefaultClientListView:Connected">Connected</text>
 		<text key="DefaultClientListView:IpAddress">Ip Address</text>
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
+		<text key="Description">Description</text>
 		<text key="Done">Done</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>

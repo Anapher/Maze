@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
+using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using Orcus.Administration.Core.Modules;
 using Orcus.Administration.Factories;
@@ -89,8 +91,20 @@ namespace Orcus.Administration
         protected override IContainer CreateContainer(ContainerBuilder containerBuilder)
         {
             var container = base.CreateContainer(containerBuilder);
-            _appLoadContext.RestClient.ServiceProvider = container;
+            Initialize(container);
+
             return container;
+        }
+
+        private void Initialize(IContainer container)
+        {
+            _appLoadContext.RestClient.ServiceProvider = container;
+
+            Mapper.Initialize(config =>
+            {
+                foreach (var profile in container.Resolve<IEnumerable<Profile>>())
+                    config.AddProfile(profile);
+            });
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)

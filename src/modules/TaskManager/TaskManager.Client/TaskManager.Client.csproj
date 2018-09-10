@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.Utilities\Orcus.Utilities.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\TaskManager.Shared\TaskManager.Shared.projitems" Label="Shared" />
+</Project>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="TaskManager:CompanyName">Firma</text>
+		<text key="TaskManager:PrivateBytes">Private Bytes</text>
+		<text key="TaskManager:SearchProcess">Prozess suchen...</text>
+		<text key="TaskManager:StartTime">Startzeit</text>
+		<text key="TaskManager:TaskManager">Task-Manager</text>
+		<text key="TaskManager:WorkingSet">Working Set</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="TaskManager:CompanyName">Company Name</text>
+		<text key="TaskManager:PrivateBytes">Private Bytes</text>
+		<text key="TaskManager:SearchProcess">Search Process...</text>
+		<text key="TaskManager:StartTime">Start time</text>
+		<text key="TaskManager:TaskManager">Task Manager</text>
+		<text key="TaskManager:WorkingSet">Working Set</text>
+	</culture>
+</translation>
