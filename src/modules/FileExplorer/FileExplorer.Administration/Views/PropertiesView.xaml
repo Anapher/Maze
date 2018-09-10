@@ -88,6 +88,84 @@
                 </ItemsControl>
             </StackPanel>
         </TabItem>
+        <TabItem Header="{tx:T FileExplorer:FileHashes}">
+            <DataGrid
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserResizeRows="False"
+                CanUserSortColumns="True"
+                ItemsSource="{Binding HashViewModels}">
+                <DataGrid.Resources>
+                    <ContextMenu x:Key="HashContextMenu">
+                        <MenuItem Command="{Binding StartComputingCommand}" Header="{tx:T FileExplorer:ComputeHash}" />
+                        <MenuItem Command="{Binding CopyHashCommand}" Header="{tx:T FileExplorer:CopyHashValue}" />
+                    </ContextMenu>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn
+                        Width="*"
+                        MaxWidth="150"
+                        IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:ComputeHashViewModel}">
+                                <Button Command="{Binding StartComputingCommand}" Content="{Binding HashAlgorithm}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="3*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:ComputeHashViewModel}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding HashValue}" />
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsComputing}" Value="true">
+                                                    <Setter Property="ContentTemplate">
+                                                        <Setter.Value>
+                                                            <DataTemplate>
+                                                                <ProgressBar Maximum="1" Value="{Binding Progress}" />
+                                                            </DataTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsComputing}" Value="false" />
+                                                        <Condition Binding="{Binding HashValue}" Value="{x:Null}" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="ContentTemplate">
+                                                        <Setter.Value>
+                                                            <DataTemplate>
+                                                                <TextBlock FontStyle="Italic" Text="{tx:T FileExplorer:NoComputed}" />
+                                                            </DataTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">
+                        <Setter Property="ContextMenu" Value="{StaticResource HashContextMenu}" />
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
+        </TabItem>
         <TabItem Header="{tx:T FileExplorer:Properties.Details}" Visibility="{Binding IsFile, Converter={StaticResource BooleanToVisibilityConverter}}">
             <DataGrid
                 AutoGenerateColumns="False"

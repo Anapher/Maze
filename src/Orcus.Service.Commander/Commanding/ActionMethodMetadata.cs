@@ -18,7 +18,7 @@ namespace Orcus.Service.Commander.Commanding
         /// <param name="methodInfo">The method</param>
         public ActionMethodMetadata(Type controllerType, MethodInfo methodInfo)
         {
-            Debug.Assert(controllerType == methodInfo.DeclaringType);
+            //Debug.Assert(controllerType == methodInfo.DeclaringType);
 
             ControllerType = controllerType;
             MethodInfo = methodInfo;

@@ -290,13 +290,12 @@ namespace Orcus.Sockets
                 return;
             }
 
-            using (var newBuffer = AllocateBuffer(count + 4 + _customOffset))
+            using (var newBuffer = AllocateBuffer(count + 4))
             {
-                BinaryUtils.WriteInt32(newBuffer.Buffer, newBuffer.Offset + _customOffset, channelId);
-                Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + _customOffset + 4, count);
-                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
-                    new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset + _customOffset, count), true,
-                    CancellationToken.None);
+                BinaryUtils.WriteInt32(newBuffer.Buffer, newBuffer.Offset, channelId);
+                Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + 4, count);
+                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset, count + 4),
+                    true, CancellationToken.None);
             }
         }
 
@@ -498,6 +497,7 @@ namespace Orcus.Sockets
             Logger.Debug("Add channel with id {channelId}", channelId);
 
             channel.Send = (buffer, offset, count, hasOffset) => Send(channelId, buffer, offset, count, hasOffset);
+            channel.RequiredOffset = _customOffset + 4;
         }
 
         protected BufferSegment AllocateBuffer(int size)

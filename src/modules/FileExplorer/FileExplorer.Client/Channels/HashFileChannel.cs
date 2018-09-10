@@ -5,9 +5,11 @@ using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Channels;
 using Force.Crc32;
 using Orcus.ControllerExtensions;
+using Orcus.Modules.Api.Routing;
 
 namespace FileExplorer.Client.Channels
 {
+    [Route("computeHash")]
     public class HashFileChannel : CallTransmissionChannel<IHashFileAction>, IHashFileAction
     {
         public event EventHandler<ProgressChangedArgs> ProgressChanged;

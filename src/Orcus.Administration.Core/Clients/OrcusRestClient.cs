@@ -25,6 +25,7 @@ using Orcus.Server.Connection.Authentication;
 using Orcus.Server.Connection.Error;
 using Orcus.Sockets;
 using Orcus.Sockets.Client;
+using Orcus.Utilities;
 
 namespace Orcus.Administration.Core.Clients
 {
@@ -77,7 +78,7 @@ namespace Orcus.Administration.Core.Clients
 
         private void ChannelOnCloseChannel(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -181,6 +182,8 @@ namespace Orcus.Administration.Core.Clients
                 WebSocket.CreateClientBuffer(8192, 8192));
             _webSocket = new WebSocketWrapper(webSocket, 8192);
             _orcusServer = new OrcusServer(_webSocket, 8192, 4096, ArrayPool<byte>.Shared);
+
+            _webSocket.ReceiveAsync().Forget();
             return _orcusServer;
         }
     }

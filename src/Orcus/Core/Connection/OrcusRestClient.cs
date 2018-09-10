@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Orcus.Client.Library.Services;
@@ -30,7 +31,7 @@ namespace Orcus.Core.Connection
             Jwt = jwt;
         }
 
-        public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request)
+        public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (!request.RequestUri.IsAbsoluteUri)
                 request.RequestUri = new Uri(BaseUri, request.RequestUri);
@@ -38,7 +39,7 @@ namespace Orcus.Core.Connection
             if (Jwt != null)
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Jwt);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (response.IsSuccessStatusCode)
                 return response;
 

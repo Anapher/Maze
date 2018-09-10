@@ -56,7 +56,7 @@ namespace FileExplorer.Client.Utilities
         public override int Read(byte[] buffer, int offset, int count)
         {
             var progress = Position / (double) Length;
-            var progressRounded = (int) progress * 100;
+            var progressRounded = (int) (progress * 100);
             if (_lastProgressChanged != progressRounded)
             {
                 _lastProgressChanged = progressRounded;

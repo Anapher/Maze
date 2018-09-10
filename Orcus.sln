@@ -131,9 +131,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\CodeElements.NetworkCall.NetSerializer\CodeElements.NetworkCall.NetSerializer.csproj", "{E388EF83-7406-4679-80D4-4213B5D858C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\NetSerializer\NetSerializer\NetSerializer.csproj", "{F78E166A-9CFF-444C-8D55-5058F2D86773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ControllerExtensions", "src\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj", "{E689F881-DAB5-403E-97D2-161056929844}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration.ControllerExtensions", "src\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj", "{E689F881-DAB5-403E-97D2-161056929844}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\NetSerializer\NetSerializer\CodeElements.NetSerializer.csproj", "{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -315,14 +315,14 @@ Global
 		{E388EF83-7406-4679-80D4-4213B5D858C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E388EF83-7406-4679-80D4-4213B5D858C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E388EF83-7406-4679-80D4-4213B5D858C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78E166A-9CFF-444C-8D55-5058F2D86773}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E689F881-DAB5-403E-97D2-161056929844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E689F881-DAB5-403E-97D2-161056929844}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E689F881-DAB5-403E-97D2-161056929844}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E689F881-DAB5-403E-97D2-161056929844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,8 +373,8 @@ Global
 		{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 		{932E830B-6E94-470F-BC56-01BA3E0DD066} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 		{E388EF83-7406-4679-80D4-4213B5D858C7} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
-		{F78E166A-9CFF-444C-8D55-5058F2D86773} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 		{E689F881-DAB5-403E-97D2-161056929844} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
+		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

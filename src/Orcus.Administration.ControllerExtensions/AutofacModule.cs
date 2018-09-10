@@ -9,7 +9,7 @@ namespace Orcus.Administration.ControllerExtensions
         {
             base.Load(builder);
             builder.RegisterType<NetSerializerNetworkSerializer>().SingleInstance();
-            builder.RegisterType(typeof(CallTransmissionChannel<>));
+            builder.RegisterGeneric(typeof(CallTransmissionChannel<>)).InstancePerDependency();
         }
     }
 }

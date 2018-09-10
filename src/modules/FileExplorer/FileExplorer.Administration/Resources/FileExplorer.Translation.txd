@@ -6,8 +6,10 @@
 		<text key="FileExplorer:AllFilesFilter">Alle Dateien|*.*</text>
 		<text key="FileExplorer:Archive">Archiv</text>
 		<text key="FileExplorer:Completed">Fertiggestellt</text>
+		<text key="FileExplorer:ComputeHash">Hashwert berechnen</text>
 		<text key="FileExplorer:CopyDirectoryPath">Verzeichnispfad kopieren</text>
 		<text key="FileExplorer:CopyFilePath">Dateipfad kopieren</text>
+		<text key="FileExplorer:CopyHashValue">Hashwert kopieren</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Pfad in Zwischenablage des Remote Computers kopieren</text>
 		<text key="FileExplorer:CreateNewFolder">Neuen Ordner erstellen</text>
 		<text key="FileExplorer:Directory">Ordner</text>
@@ -23,11 +25,13 @@
 		<text key="FileExplorer:Execute">Ausführen</text>
 		<text key="FileExplorer:Extracting">Entpacken</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
+		<text key="FileExplorer:FileHashes">Hashwerte</text>
 		<text key="FileExplorer:FolderName">Ordnername</text>
 		<text key="FileExplorer:Items">Elemente</text>
 		<text key="FileExplorer:Items" count="1">Element</text>
 		<text key="FileExplorer:New">Neu</text>
 		<text key="FileExplorer:NewFolder">Neuer Ordner</text>
+		<text key="FileExplorer:NoComputed">Nicht berechnet</text>
 		<text key="FileExplorer:OpenFolder">Ordner öffnen</text>
 		<text key="FileExplorer:OpenPath">Öffne Pfad...</text>
 		<text key="FileExplorer:OriginalFileExtension">Originaldateiendung</text>
@@ -122,8 +126,10 @@
 		<text key="FileExplorer:AllFilesFilter">All files|*.*</text>
 		<text key="FileExplorer:Archive">Archive</text>
 		<text key="FileExplorer:Completed">Completed</text>
+		<text key="FileExplorer:ComputeHash">Compute Hash</text>
 		<text key="FileExplorer:CopyDirectoryPath">Copy directory path</text>
 		<text key="FileExplorer:CopyFilePath">Copy file path</text>
+		<text key="FileExplorer:CopyHashValue">Copy hash value</text>
 		<text key="FileExplorer:CopyPathOnRemoteComputer">Copy path to clipboard on remote computer</text>
 		<text key="FileExplorer:CreateNewFolder">Create new folder</text>
 		<text key="FileExplorer:Directory">Directory</text>
@@ -139,11 +145,13 @@
 		<text key="FileExplorer:Execute">Execute</text>
 		<text key="FileExplorer:Extracting">Extracting</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
+		<text key="FileExplorer:FileHashes">File Hashes</text>
 		<text key="FileExplorer:FolderName">Folder name</text>
 		<text key="FileExplorer:Items">Items</text>
 		<text key="FileExplorer:Items" count="1">Item</text>
 		<text key="FileExplorer:New">New</text>
 		<text key="FileExplorer:NewFolder">New folder</text>
+		<text key="FileExplorer:NoComputed">Not computed</text>
 		<text key="FileExplorer:OpenFolder">Open folder</text>
 		<text key="FileExplorer:OpenPath">Open path...</text>
 		<text key="FileExplorer:OriginalFileExtension">Original file extension</text>

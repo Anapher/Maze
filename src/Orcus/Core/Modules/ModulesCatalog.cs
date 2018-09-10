@@ -48,7 +48,13 @@ namespace Orcus.Core.Modules
                     if (Packages.Any(x => x.Context.PackageDirectory == context.PackageDirectory))
                         return Task.CompletedTask;
 
-                    return Task.Run(() => loadedPackages.Add(_packageLoader.Load(context)));
+                    return Task.Run(() =>
+                    {
+                        foreach (var module in _packageLoader.Load(context))
+                        {
+                            loadedPackages.Add(module);
+                        }
+                    });
                 }, CancellationToken.None);
             }
 

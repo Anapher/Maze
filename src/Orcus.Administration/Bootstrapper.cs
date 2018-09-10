@@ -59,7 +59,7 @@ namespace Orcus.Administration
         {
             base.ConfigureContainerBuilder(builder);
 
-            builder.RegisterInstance(_appLoadContext.RestClient);
+            builder.RegisterInstance(_appLoadContext.RestClient).AsImplementedInterfaces();
             builder.RegisterTypeForNavigation<LoginView>();
             builder.RegisterType<AppDispatcher>().As<IAppDispatcher>().SingleInstance();
             builder.RegisterModule<AutofacModule>();

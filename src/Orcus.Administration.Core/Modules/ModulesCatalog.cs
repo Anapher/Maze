@@ -46,7 +46,13 @@ namespace Orcus.Administration.Core.Modules
 
                 await TaskCombinators.ThrottledAsync(dependencyLayer, (context, token) =>
                 {
-                    return Task.Run(() => loadedPackages.Add(LoadModule(context)));
+                    return Task.Run(() =>
+                    {
+                        foreach (var module in LoadModule(context))
+                        {
+                            loadedPackages.Add(module);
+                        }
+                    });
                 }, CancellationToken.None);
             }
 
@@ -55,20 +61,12 @@ namespace Orcus.Administration.Core.Modules
             return loadedPackages.ToList();
         }
 
-        private PackageCarrier LoadModule(PackageLoadingContext loadingContext)
+        private IEnumerable<PackageCarrier> LoadModule(PackageLoadingContext loadingContext)
         {
             var libFolder = new DirectoryInfo(loadingContext.LibraryDirectory);
-            var dlls = libFolder.GetFiles("*.dll");
+            var files = LibraryLocator.GetFilesToLoad(libFolder, loadingContext);
 
-            if (!dlls.Any())
-                throw new InvalidOperationException(
-                    $"Cannot load package {loadingContext.Package} ({loadingContext.PackageDirectory}) because there are no dlls");
-
-            if (dlls.Length > 1)
-                throw new NotImplementedException();
-
-            var file = dlls.Single();
-            return new PackageCarrier(Assembly.LoadFile(file.FullName), loadingContext);
+            return files.Select(x => new PackageCarrier(Assembly.LoadFile(x.FullName), loadingContext));
         }
     }
 }

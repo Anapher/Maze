@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Anapher.Wpf.Swan;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
@@ -15,7 +15,6 @@ using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Channels;
 using FileExplorer.Shared.Dtos;
 using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
@@ -119,7 +118,7 @@ namespace FileExplorer.Administration.ViewModels
                     }
                     catch (Exception e)
                     {
-                        e.ShowMessage(null);
+                        MessageBoxEx.Show(e.ToString());
                     }
                     finally
                     {
@@ -132,29 +131,6 @@ namespace FileExplorer.Administration.ViewModels
         private void OnProgressChanged(object sender, ProgressChangedArgs e)
         {
             Progress = e.Progress;
-        }
-    }
-
-    public class HashesViewModel
-    {
-        private readonly IPackageRestClient _fileViewModel;
-
-        public HashesViewModel(IPackageRestClient fileViewModel)
-        {
-            _fileViewModel = fileViewModel;
-        }
-
-        private async Task Test()
-        {
-            using (var channel = await FileExplorerResource.ComputeHash(_fileViewModel))
-            {
-                channel.Interface.ProgressChanged += InterfaceOnProgressChanged;
-                await channel.Interface.ComputeAsync("", FileHashAlgorithm.MD5);
-            }
-        }
-
-        private void InterfaceOnProgressChanged(object sender, ProgressChangedArgs e)
-        {
         }
     }
 

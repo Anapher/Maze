@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orcus.Client.Library.Services
@@ -9,6 +10,6 @@ namespace Orcus.Client.Library.Services
         Uri BaseUri { get; }
         string Jwt { get; }
 
-        Task<HttpResponseMessage> SendMessage(HttpRequestMessage request);
+        Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken);
     }
 }
