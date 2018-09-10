@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Channels;
@@ -12,16 +13,31 @@ namespace FileExplorer.Client.Channels
     [Route("computeHash")]
     public class HashFileChannel : CallTransmissionChannel<IHashFileAction>, IHashFileAction
     {
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
+        public HashFileChannel()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
         public event EventHandler<ProgressChangedArgs> ProgressChanged;
 
         public Task<byte[]> ComputeAsync(string path, FileHashAlgorithm hashAlgorithm)
         {
-            using (var fileStream = System.IO.File.OpenRead(path))
-            using (var progressingStream = new ProgressingReadStream(fileStream, OnProgressChanged))
-            using (var hash = CreateHashAlgorithm(hashAlgorithm))
+            try
             {
-                var result = hash.ComputeHash(progressingStream);
-                return Task.FromResult(result);
+                using (var fileStream = System.IO.File.OpenRead(path))
+                using (var progressingStream = new ProgressingReadStream(fileStream, OnProgressChanged))
+                using (var hash = CreateHashAlgorithm(hashAlgorithm))
+                using (_cancellationTokenSource.Token.Register(() => fileStream.Dispose()))
+                {
+                    var result = hash.ComputeHash(progressingStream);
+                    return Task.FromResult(result);
+                }
+            }
+            catch (Exception) when (_cancellationTokenSource.IsCancellationRequested)
+            {
+                return null;
             }
         }
 
@@ -49,6 +65,12 @@ namespace FileExplorer.Client.Channels
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hashAlgorithm), hashAlgorithm, null);
             }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _cancellationTokenSource.Dispose();
         }
     }
 }

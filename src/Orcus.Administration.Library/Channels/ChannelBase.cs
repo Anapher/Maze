@@ -8,10 +8,34 @@ namespace Orcus.Administration.Library.Channels
     {
         protected int RequiredOffset;
         protected SendDelegate Send;
+        protected bool IsDisposed;
+        private readonly object _disposeLock = new object();
 
-        public virtual void Dispose()
+        void IDisposable.Dispose()
         {
-            CloseChannel?.Invoke(this, EventArgs.Empty);
+            if (!IsDisposed)
+            {
+                bool dispose = false;
+                lock (_disposeLock)
+                {
+                    if (!IsDisposed)
+                    {
+                        IsDisposed = true;
+                        dispose = true;
+                    }
+                }
+
+                if (dispose)
+                {
+                    CloseChannel?.Invoke(this, EventArgs.Empty);
+                    Dispose();
+                }
+            }
+        }
+
+        protected virtual void Dispose()
+        {
+
         }
 
         event EventHandler IAwareDataChannel.CloseChannel

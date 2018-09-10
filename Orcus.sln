@@ -115,13 +115,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileExplorer.Shared", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration.Tests", "src\modules\FileExplorer\test\FileExplorer.Administration.Tests\FileExplorer.Administration.Tests.csproj", "{C8A05842-CAF4-49E0-86B9-FEBD69B47627}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92618B4D-D919-448F-88CD-C9044A48DD38}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.csproj", "{28ABF583-643F-488C-B5FC-B285E41ED342}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration", "src\modules\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj", "{8F8A07C3-7C4E-49D2-9997-0836F51F44AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TxLib", "src\submodules\TxTranslation\TxLib\TxLib.csproj", "{DC6BA170-806F-4D6E-9165-401DE852E304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxLib", "src\submodules\TxTranslation\TxLib\TxLib.csproj", "{DC6BA170-806F-4D6E-9165-401DE852E304}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Sockets.Tests", "test\Orcus.Sockets.Tests\Orcus.Sockets.Tests.csproj", "{69082050-9353-4CA3-B29A-05F37CE1D1F0}"
 EndProject
@@ -134,6 +132,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ControllerExtensions", "src\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj", "{E689F881-DAB5-403E-97D2-161056929844}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\NetSerializer\NetSerializer\CodeElements.NetSerializer.csproj", "{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9EA8B0D2-8CD6-4F59-89F7-40CF82D55F01}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -366,7 +366,6 @@ Global
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{41D81D49-8C6A-47F0-8F66-B533473BC004} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{C8A05842-CAF4-49E0-86B9-FEBD69B47627} = {92618B4D-D919-448F-88CD-C9044A48DD38}
-		{92618B4D-D919-448F-88CD-C9044A48DD38} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{8F8A07C3-7C4E-49D2-9997-0836F51F44AC} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 		{DC6BA170-806F-4D6E-9165-401DE852E304} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 		{69082050-9353-4CA3-B29A-05F37CE1D1F0} = {0074EF5C-A141-4A92-A085-89775EA5E8EF}
@@ -375,6 +374,7 @@ Global
 		{E388EF83-7406-4679-80D4-4213B5D858C7} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
 		{E689F881-DAB5-403E-97D2-161056929844} = {C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}
 		{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
+		{9EA8B0D2-8CD6-4F59-89F7-40CF82D55F01} = {56A6743C-4904-4C7D-B84A-6B5D0FA78E7F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

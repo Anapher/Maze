@@ -37,7 +37,6 @@ namespace Orcus.Administration.Core.Clients
         private JwtSecurityToken _jwtSecurityToken;
 
         private OrcusServer _orcusServer;
-        private WebSocketWrapper _webSocket;
 
         public OrcusRestClient(string username, SecureString password, HttpClient httpClient)
         {
@@ -51,6 +50,7 @@ namespace Orcus.Administration.Core.Clients
         {
             _httpClient.Dispose();
             _password.Dispose();
+            _orcusServer.Dispose();
         }
 
         public string Username { get; private set; }
@@ -68,17 +68,12 @@ namespace Orcus.Administration.Core.Clients
 
             var channelId = int.Parse(response.Headers.Location.AbsolutePath.Trim('/'));
             var channel = ServiceProvider.Resolve<TChannel>();
-            channel.CloseChannel += ChannelOnCloseChannel;
+            channel.CloseChannel += (sender, args) => OnCloseChannel(channelId);
             connection.AddChannel(channel, channelId);
 
             channel.Initialize(response);
 
             return channel;
-        }
-
-        private void ChannelOnCloseChannel(object sender, EventArgs e)
-        {
-            //TODO
         }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -168,6 +163,20 @@ namespace Orcus.Administration.Core.Clients
             }
         }
 
+        private void OnCloseChannel(int channelId)
+        {
+            if (_orcusServer != null)
+                try
+                {
+                    _orcusServer?.CloseChannel(channelId);
+                }
+                catch (Exception)
+                {
+                    _orcusServer.Dispose();
+                    _orcusServer = null;
+                }
+        }
+
         protected async Task<OrcusServer> GetServerConnection()
         {
             //TODO: Make thread safe, timeout server
@@ -180,10 +189,11 @@ namespace Orcus.Administration.Core.Clients
             var dataStream = await connector.ConnectAsync();
             var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, 8192, 8192, TimeSpan.FromMinutes(2), true,
                 WebSocket.CreateClientBuffer(8192, 8192));
-            _webSocket = new WebSocketWrapper(webSocket, 8192);
-            _orcusServer = new OrcusServer(_webSocket, 8192, 4096, ArrayPool<byte>.Shared);
 
-            _webSocket.ReceiveAsync().Forget();
+            var webSocketWrapper = new WebSocketWrapper(webSocket, 8192);
+            _orcusServer = new OrcusServer(webSocketWrapper, 8192, 4096, ArrayPool<byte>.Shared);
+
+            webSocketWrapper.ReceiveAsync().Forget();
             return _orcusServer;
         }
     }

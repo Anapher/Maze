@@ -64,9 +64,8 @@ namespace Orcus.Administration.ControllerExtensions
             return _serverProvider.Resolve<NetSerializerNetworkSerializer>(); //default
         }
 
-        public override void Dispose()
+        protected override void Dispose()
         {
-            base.Dispose();
             Client?.Dispose();
         }
     }

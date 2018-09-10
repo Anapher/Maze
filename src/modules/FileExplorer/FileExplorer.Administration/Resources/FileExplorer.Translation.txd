@@ -27,6 +27,7 @@
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
 		<text key="FileExplorer:FileHashes">Hashwerte</text>
 		<text key="FileExplorer:FolderName">Ordnername</text>
+		<text key="FileExplorer:HashValue">Hashwert</text>
 		<text key="FileExplorer:Items">Elemente</text>
 		<text key="FileExplorer:Items" count="1">Element</text>
 		<text key="FileExplorer:New">Neu</text>
@@ -147,6 +148,7 @@
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
 		<text key="FileExplorer:FileHashes">File Hashes</text>
 		<text key="FileExplorer:FolderName">Folder name</text>
+		<text key="FileExplorer:HashValue">Hash Value</text>
 		<text key="FileExplorer:Items">Items</text>
 		<text key="FileExplorer:Items" count="1">Item</text>
 		<text key="FileExplorer:New">New</text>

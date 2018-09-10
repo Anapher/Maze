@@ -92,7 +92,25 @@ namespace Orcus.Sockets
             return id;
         }
 
-        public IDataChannel GetChannel(int id) => _channels[id];
+        public IDataChannel GetChannel(int channelId) => _channels[channelId];
+
+        public async Task CloseChannel(int channelId)
+        {
+            if (!_channels.TryRemove(channelId, out var channel))
+            {
+                Logger.Error("Received close for channel {channelId} which does not exist.", channelId);
+                return; //already closed so it's not such a huge inconvenience
+            }
+
+            channel.Dispose();
+
+            using (var buffer = AllocateBuffer(4))
+            {
+                BinaryUtils.WriteInt32(buffer.Buffer, buffer.Offset, channelId);
+                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CloseChannel, new ArraySegment<byte>(buffer.Buffer, buffer.Offset, 4),
+                    bufferHasRequiredLength: true, CancellationToken.None);
+            }
+        }
 
         public async Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage,
             CancellationToken cancellationToken)
@@ -248,6 +266,9 @@ namespace Orcus.Sockets
                 case OrcusSocket.MessageOpcode.Message:
                     ProcessMessage(e.Buffer);
                     break;
+                case OrcusSocket.MessageOpcode.CloseChannel:
+                    CloseChannel(e.Buffer);
+                    break;
                 case OrcusSocket.MessageOpcode.Request:
                     ProcessRequest(e.Buffer, false);
                     break;
@@ -280,7 +301,7 @@ namespace Orcus.Sockets
             }
         }
 
-        private async Task Send(int channelId, byte[] buffer, int offset, int count, bool hasOffset)
+        private async Task ChannelSendData(int channelId, byte[] buffer, int offset, int count, bool hasOffset)
         {
             if (hasOffset)
             {
@@ -311,6 +332,21 @@ namespace Orcus.Sockets
                 }
 
                 await Task.Run(() => channel.ReceiveData(buffer.Buffer, buffer.Offset + 4, buffer.Length - 4));
+            }
+        }
+
+        private void CloseChannel(BufferSegment buffer)
+        {
+            using (buffer)
+            {
+                var channelId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
+                if (!_channels.TryRemove(channelId, out var channel))
+                {
+                    Logger.Error("Received close for channel {channelId} which does not exist.", channelId);
+                    return; //already closed so it's not such a huge inconvenience
+                }
+
+                Task.Run(() => channel.Dispose());
             }
         }
 
@@ -496,7 +532,7 @@ namespace Orcus.Sockets
 
             Logger.Debug("Add channel with id {channelId}", channelId);
 
-            channel.Send = (buffer, offset, count, hasOffset) => Send(channelId, buffer, offset, count, hasOffset);
+            channel.Send = (buffer, offset, count, hasOffset) => ChannelSendData(channelId, buffer, offset, count, hasOffset);
             channel.RequiredOffset = _customOffset + 4;
         }
 
