@@ -3,7 +3,7 @@ using Prism.Regions;
 
 namespace Orcus.Administration.Library.ViewModels
 {
-    public abstract class ViewModelBase : BindableBase
+    public abstract class ViewModelBase : BindableBase, INavigationAware
     {
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {

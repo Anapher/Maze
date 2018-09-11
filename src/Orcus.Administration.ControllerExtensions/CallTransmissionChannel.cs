@@ -41,7 +41,10 @@ namespace Orcus.Administration.ControllerExtensions
         protected override void Initialize(HttpResponseMessage responseMessage)
         {
             var serializer = GetSerializer(responseMessage.Content.Headers);
-            Client = new NetworkCallClient<TInterface>(serializer, ArrayPool<byte>.Shared) {SendData = SendData, CustomOffset = RequiredOffset};
+            Client = new NetworkCallClient<TInterface>(serializer, ArrayPool<byte>.Shared)
+            {
+                SendData = SendData, CustomOffset = RequiredOffset, WaitTimeout = TimeSpan.Zero
+            };
         }
 
         private Task SendData(BufferSegment data)

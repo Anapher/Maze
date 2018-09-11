@@ -10,5 +10,9 @@
     <ProjectReference Include="..\..\..\Orcus.Utilities\Orcus.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
   <Import Project="..\TaskManager.Shared\TaskManager.Shared.projitems" Label="Shared" />
 </Project>

@@ -1,32 +1,24 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using TaskManager.Shared.Dtos;
+using System.Management;
+using TaskManager.Client.Utilities;
 
 namespace TaskManager.Client.ProcessInfo
 {
     public class FileVersionInfoProvider : IProcessValueProvider
     {
-        public void ProvideValue(ProcessDto processDto, Process process, ConcurrentDictionary<string, string> otherProperties, object dtoLock)
+        public IEnumerable<KeyValuePair<string, object>> ProvideValues(ManagementObject managementObject, Process process, bool updateProcess)
         {
-            var filename = process.MainModule.FileName;
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(filename);
-            processDto.Description = fileVersionInfo.FileDescription;
-            processDto.CompanyName = fileVersionInfo.CompanyName;
-            processDto.ProductVersion = fileVersionInfo.ProductVersion;
-            processDto.FileVersion = fileVersionInfo.FileVersion;
-
-            if (processDto.Status != ProcessStatus.Immersive)
-            {
-                AssemblyName.GetAssemblyName(filename);
-
-                lock (dtoLock)
+            if (!updateProcess)
+                if (managementObject.TryGetProperty("ExecutablePath", out string executablePath))
                 {
-                    //if this code is reached (AssemblyName.GetAssemblyName did not throw an exception)
-                    if (processDto.Status != ProcessStatus.Immersive)
-                        processDto.Status = ProcessStatus.NetAssembly;
+                    var fileVersionInfo = FileVersionInfo.GetVersionInfo(executablePath);
+
+                    yield return new KeyValuePair<string, object>("Description", fileVersionInfo.FileDescription);
+                    yield return new KeyValuePair<string, object>("CompanyName", fileVersionInfo.CompanyName);
+                    yield return new KeyValuePair<string, object>("ProductVersion", fileVersionInfo.ProductVersion);
+                    yield return new KeyValuePair<string, object>("FileVersion", fileVersionInfo.FileVersion);
                 }
-            }
         }
     }
 }

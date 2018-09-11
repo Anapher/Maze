@@ -2,18 +2,11 @@
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 
 namespace TaskManager.Client.Native
 {
     internal static class NativeMethods
     {
-        [DllImport("ProcCmdLine32.dll", CharSet = CharSet.Unicode, EntryPoint = "GetProcCmdLine")]
-        public static extern bool GetProcCmdLine32(uint nProcId, StringBuilder sb, uint dwSizeBuf);
-
-        [DllImport("ProcCmdLine64.dll", CharSet = CharSet.Unicode, EntryPoint = "GetProcCmdLine")]
-        public static extern bool GetProcCmdLine64(uint nProcId, StringBuilder sb, uint dwSizeBuf);
-
         [DllImport("ntdll.dll")]
         public static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass,
             ref ProcessBasicInformation processInformation, int processInformationLength, out int returnLength);

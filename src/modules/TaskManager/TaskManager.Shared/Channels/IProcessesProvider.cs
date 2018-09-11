@@ -6,6 +6,6 @@ namespace TaskManager.Shared.Channels
 {
     public interface IProcessesProvider
     {
-        Task<List<ChangeSet<ProcessDto>>> GetProcesses();
+        Task<List<ProcessDto>> GetProcesses();
     }
 }

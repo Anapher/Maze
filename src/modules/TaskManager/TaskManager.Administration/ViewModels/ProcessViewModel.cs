@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 using TaskManager.Shared.Dtos;
 
-namespace TaskManager.Administration.ViewModel
+namespace TaskManager.Administration.ViewModels
 {
     public class ProcessViewModel : BindableBase
     {
@@ -16,19 +15,19 @@ namespace TaskManager.Administration.ViewModel
         private string _commandLine;
         private string _companyName;
         private string _description;
-        private string _fileName;
+        private string _executablePath;
         private string _fileVersion;
         private long? _mainWindowHandle;
         private string _name;
-        private int _parentProcess;
+        private int _parentProcessId;
         private ProcessPriorityClass _priorityClass;
         private long _privateBytes;
         private string _processOwner;
         private string _productVersion;
-        private DateTimeOffset _startTime;
+        private DateTimeOffset _creationDate;
         private ProcessStatus _status;
         private long _workingSet;
-        private bool _isExpanded;
+        private bool _isExpanded = true;
         private bool _isFiltered;
 
         public ProcessViewModel()
@@ -81,10 +80,10 @@ namespace TaskManager.Administration.ViewModel
             set => SetProperty(ref _privateBytes, value);
         }
 
-        public DateTimeOffset StartTime
+        public DateTimeOffset CreationDate
         {
-            get => _startTime;
-            set => SetProperty(ref _startTime, value);
+            get => _creationDate;
+            set => SetProperty(ref _creationDate, value);
         }
 
         public ProcessPriorityClass PriorityClass
@@ -99,10 +98,10 @@ namespace TaskManager.Administration.ViewModel
             set => SetProperty(ref _canChangePriorityClass, value);
         }
 
-        public int ParentProcess
+        public int ParentProcessId
         {
-            get => _parentProcess;
-            set => SetProperty(ref _parentProcess, value);
+            get => _parentProcessId;
+            set => SetProperty(ref _parentProcessId, value);
         }
 
         public string ProcessOwner
@@ -117,10 +116,10 @@ namespace TaskManager.Administration.ViewModel
             set => SetProperty(ref _status, value);
         }
 
-        public string FileName
+        public string ExecutablePath
         {
-            get => _fileName;
-            set => SetProperty(ref _fileName, value);
+            get => _executablePath;
+            set => SetProperty(ref _executablePath, value);
         }
 
         public string CommandLine
@@ -147,22 +146,6 @@ namespace TaskManager.Administration.ViewModel
             set => SetProperty(ref _mainWindowHandle, value);
         }
 
-        public IDictionary<string, string> Properties { get; set; }
-
-        public void UpdateIcon(byte[] iconData)
-        {
-            using (var memoryStream = new MemoryStream(iconData, false))
-            {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.StreamSource = memoryStream;
-                bitmapImage.EndInit(); ;
-
-                Icon = bitmapImage;
-            }
-        }
-
         public void UpdateView()
         {
             CollectionView.Refresh();
@@ -172,6 +155,68 @@ namespace TaskManager.Administration.ViewModel
             {
                 _isFiltered = isFiltered;
                 RaisePropertyChanged(nameof(IsExpanded));
+            }
+        }
+
+        public void Apply(ProcessDto processDto)
+        {
+            Id = processDto.ProcessId;
+
+            if (processDto.TryGetProperty("Description", out string description))
+                Description = description;
+            if (processDto.TryGetProperty("CompanyName", out string companyName))
+                CompanyName = companyName;
+            if (processDto.TryGetProperty("ProductVersion", out string productVersion))
+                ProductVersion = productVersion;
+            if (processDto.TryGetProperty("FileVersion", out string fileVersion))
+                FileVersion = fileVersion;
+
+            if (processDto.TryGetProperty("Icon", out byte[] iconData))
+                UpdateIcon(iconData);
+
+            if (processDto.TryGetProperty("ProcessOwner", out string processOwner))
+                ProcessOwner = processOwner;
+            if (processDto.TryGetProperty("Status", out int status))
+                Status = (ProcessStatus) status;
+
+            if (processDto.TryGetProperty("PrivateBytes", out long privateBytes))
+                PrivateBytes = privateBytes;
+            if (processDto.TryGetProperty("WorkingSet", out long workingSet))
+                WorkingSet = workingSet;
+            if (processDto.TryGetProperty("MainWindowHandle", out long mainWindowHandle))
+                MainWindowHandle = mainWindowHandle;
+            if (processDto.TryGetProperty("PriorityClass", out int priorityClass))
+            {
+                PriorityClass = (ProcessPriorityClass) priorityClass;
+                CanChangePriorityClass = true;
+            }
+
+            if (processDto.TryGetProperty("Name", out string name))
+                Name = name;
+            if (processDto.TryGetProperty("CreationDate", out DateTimeOffset creationDate))
+                CreationDate = creationDate;
+            if (processDto.TryGetProperty("ExecutablePath", out string executablePath))
+                ExecutablePath = executablePath;
+            if (processDto.TryGetProperty("CommandLine", out string commandLine))
+                CommandLine = commandLine;
+            if (processDto.TryGetProperty("ParentProcessId", out int parentProcessId))
+                ParentProcessId = parentProcessId;
+        }
+
+        private void UpdateIcon(byte[] iconData)
+        {
+            if (iconData == null)
+                return;
+
+            using (var memoryStream = new MemoryStream(iconData, false))
+            {
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.EndInit(); ;
+
+                Icon = bitmapImage;
             }
         }
     }

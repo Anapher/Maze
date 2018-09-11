@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 using Orcus.ControllerExtensions;
@@ -18,69 +20,61 @@ namespace TaskManager.Client.Channels
     public class ProcessesChannel : CallTransmissionChannel<IProcessesProvider>, IProcessesProvider
     {
         private readonly IEnumerable<IProcessValueProvider> _processValueProviders;
-        private readonly object _getProcessesLock = new object();
         private HashSet<int> _latestProcessIds;
+        private readonly ManagementObjectSearcher _searcher;
+        private readonly SemaphoreSlim _getProcessesLock = new SemaphoreSlim(1, 1);
 
         public ProcessesChannel(IEnumerable<IProcessValueProvider> processValueProviders)
         {
             _processValueProviders = processValueProviders;
+            _searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Process");
         }
 
-        public async Task<List<ChangeSet<ProcessDto>>> GetProcesses()
+        public override void Dispose()
         {
-            var processes = Process.GetProcesses();
-            var processDtos = await TaskCombinators.ThrottledAsync(processes, CreateProcessDto, CancellationToken);
-            var changes = new List<ChangeSet<ProcessDto>>();
-            var newProcesses = new List<ProcessDto>();
+            base.Dispose();
+            _searcher.Dispose();
+        }
 
-            lock (_getProcessesLock)
+        public async Task<List<ProcessDto>> GetProcesses()
+        {
+            await _getProcessesLock.WaitAsync();
+            try
             {
-                var newProcessList = new HashSet<int>();
-                foreach (var processDto in processDtos)
+                using (var processCollection = _searcher.Get())
                 {
-                    newProcessList.Add(processDto.Id);
+                    var dtos = (await TaskCombinators.ThrottledAsync(processCollection.Cast<ManagementObject>(), CreateProcessDto, CancellationToken))
+                        .ToList();
 
-                    if (_latestProcessIds?.Contains(processDto.Id) != true)
-                    {
-                        newProcesses.Add(processDto);
-                    }
-
-                    changes.Add(new ChangeSet<ProcessDto> {Action = EntryAction.Add, Value = processDto});
+                    _latestProcessIds = new HashSet<int>(dtos.Select(x => x.ProcessId));
+                    return dtos;
                 }
-
-                if (_latestProcessIds != null)
-                    foreach (var latestProcessId in _latestProcessIds)
-                    {
-                        if (!newProcessList.Contains(latestProcessId))
-                            changes.Add(new ChangeSet<ProcessDto> {Action = EntryAction.Remove, Value = new ProcessDto {Id = latestProcessId}});
-                    }
-
-                _latestProcessIds = newProcessList;
             }
-
-            await TaskCombinators.ThrottledCatchErrorsAsync(newProcesses, LoadProcessIcon, CancellationToken);
-            return changes;
+            finally
+            {
+                _getProcessesLock.Release();
+            }
         }
 
-        private static Task LoadProcessIcon(ProcessDto processDto, CancellationToken arg2)
+        private Task<ProcessDto> CreateProcessDto(ManagementObject managementObject, CancellationToken cancellationToken)
         {
-            if (!string.IsNullOrEmpty(processDto.FileName))
-                processDto.IconData = FileUtilities.GetFileIcon(processDto.FileName);
+            Process process;
+            if (managementObject.TryGetProperty("ProcessId", out uint processId))
+                process = Process.GetProcessById((int) processId);
+            else
+                return null;
 
-            return Task.CompletedTask;
-        }
-
-        private Task<ProcessDto> CreateProcessDto(Process processDto, CancellationToken arg2)
-        {
-            var dto = new ProcessDto();
-            var properties = new ConcurrentDictionary<string, string>();
-            var lockObj = new object();
+            var processDto = new ProcessDto {ProcessId = (int) processId};
+            var isUpdate = _latestProcessIds?.Contains((int) processId) == true;
 
             foreach (var processValueProvider in _processValueProviders)
             {
                 try
                 {
-                    processValueProvider.ProvideValue(dto, processDto, properties, lockObj);
+                    foreach (var property in processValueProvider.ProvideValues(managementObject, process, isUpdate))
+                    {
+                        processDto.Add(property.Key, property.Value);
+                    }
                 }
                 catch (Exception)
                 {
@@ -88,8 +82,7 @@ namespace TaskManager.Client.Channels
                 }
             }
 
-            dto.Properties = properties;
-            return Task.FromResult(dto);
+            return Task.FromResult(processDto);
         }
     }
 }

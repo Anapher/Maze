@@ -68,13 +68,18 @@ namespace ModuleLocalUpdater
                                 "Orcus\\modules");
                     }
 
-                    packageDirectory =
-                        GetLatestDirectory(new DirectoryInfo(packagesDirectory).GetDirectories(moduleName + "*"));
+                    var directoryInfo = new DirectoryInfo(packagesDirectory);
+                    if (!directoryInfo.Exists)
+                        return 0;
+
+                    packageDirectory = GetLatestDirectory(directoryInfo.GetDirectories(moduleName + "*"));
                     break;
                 case "Server":
-                    packageDirectory =
-                        GetLatestDirectory(new DirectoryInfo(Path.Combine(solutionDirectory,
-                            "src\\Orcus.Server\\modules\\" + moduleName)).GetDirectories());
+                    directoryInfo = new DirectoryInfo(Path.Combine(solutionDirectory, "src\\Orcus.Server\\modules\\" + moduleName));
+                    if (!directoryInfo.Exists)
+                        return 0;
+
+                    packageDirectory = GetLatestDirectory(directoryInfo.GetDirectories());
                     nugetFolderName = "server10";
                     break;
                 default:

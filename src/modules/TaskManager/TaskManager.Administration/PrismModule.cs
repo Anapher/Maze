@@ -3,7 +3,7 @@ using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
 using Prism.Modularity;
 using TaskManager.Administration.Resources;
-using TaskManager.Administration.ViewModel;
+using TaskManager.Administration.ViewModels;
 using Unclassified.TxLib;
 
 namespace TaskManager.Administration

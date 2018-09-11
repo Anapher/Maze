@@ -35,8 +35,8 @@ namespace Orcus.Administration.Core.Clients
         private readonly JwtSecurityTokenHandler _jwtHandler;
         private readonly SecureString _password;
         private JwtSecurityToken _jwtSecurityToken;
-
         private OrcusServer _orcusServer;
+        private readonly SemaphoreSlim _orcusServerLock = new SemaphoreSlim(1, 1);
 
         public OrcusRestClient(string username, SecureString password, HttpClient httpClient)
         {
@@ -50,7 +50,8 @@ namespace Orcus.Administration.Core.Clients
         {
             _httpClient.Dispose();
             _password.Dispose();
-            _orcusServer.Dispose();
+            _orcusServer?.Dispose();
+            _orcusServer = null;
         }
 
         public string Username { get; private set; }
@@ -179,22 +180,38 @@ namespace Orcus.Administration.Core.Clients
 
         protected async Task<OrcusServer> GetServerConnection()
         {
-            //TODO: Make thread safe, timeout server
             if (_orcusServer != null)
                 return _orcusServer;
 
-            var builder = new UriBuilder(_httpClient.BaseAddress) {Path = "ws", Scheme = _httpClient.BaseAddress.Scheme == "https" ? "wss" : "ws"};
+            await _orcusServerLock.WaitAsync();
+            try
+            {
+                if (_orcusServer != null)
+                    return _orcusServer;
 
-            var connector = new OrcusSocketConnector(builder.Uri) {AuthenticationHeaderValue = _httpClient.DefaultRequestHeaders.Authorization};
-            var dataStream = await connector.ConnectAsync();
-            var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, 8192, 8192, TimeSpan.FromMinutes(2), true,
-                WebSocket.CreateClientBuffer(8192, 8192));
+                var builder = new UriBuilder(_httpClient.BaseAddress) { Path = "ws", Scheme = _httpClient.BaseAddress.Scheme == "https" ? "wss" : "ws" };
 
-            var webSocketWrapper = new WebSocketWrapper(webSocket, 8192);
-            _orcusServer = new OrcusServer(webSocketWrapper, 8192, 4096, ArrayPool<byte>.Shared);
+                var connector = new OrcusSocketConnector(builder.Uri) { AuthenticationHeaderValue = _httpClient.DefaultRequestHeaders.Authorization };
+                var dataStream = await connector.ConnectAsync();
+                var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, 8192, 8192, TimeSpan.FromMinutes(2), true,
+                    WebSocket.CreateClientBuffer(8192, 8192));
 
-            webSocketWrapper.ReceiveAsync().Forget();
-            return _orcusServer;
+                var webSocketWrapper = new WebSocketWrapper(webSocket, 8192);
+                _orcusServer = new OrcusServer(webSocketWrapper, 8192, 4096, ArrayPool<byte>.Shared);
+
+                webSocketWrapper.ReceiveAsync().ContinueWith(ReceiveAsyncContinuation).Forget();
+                return _orcusServer;
+            }
+            finally
+            {
+                _orcusServerLock.Release();
+            }
+        }
+
+        private void ReceiveAsyncContinuation(Task obj)
+        {
+            _orcusServer?.Dispose();
+            _orcusServer = null;
         }
     }
 }

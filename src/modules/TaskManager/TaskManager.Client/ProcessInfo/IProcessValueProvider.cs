@@ -1,11 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using TaskManager.Shared.Dtos;
+using System.Management;
 
 namespace TaskManager.Client.ProcessInfo
 {
     public interface IProcessValueProvider
     {
-        void ProvideValue(ProcessDto processDto, Process process, ConcurrentDictionary<string, string> otherProperties, object dtoLock);
+        IEnumerable<KeyValuePair<string, object>> ProvideValues(ManagementObject managementObject, Process process, bool updateProcess);
     }
 }

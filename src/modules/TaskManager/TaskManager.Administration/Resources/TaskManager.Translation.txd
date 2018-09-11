@@ -3,6 +3,7 @@
 <translation xml:space="preserve">
 	<culture name="de">
 		<text key="TaskManager:CompanyName">Firma</text>
+		<text key="TaskManager:LoadProcesses">Prozesse werden geladen...</text>
 		<text key="TaskManager:PrivateBytes">Private Bytes</text>
 		<text key="TaskManager:SearchProcess">Prozess suchen...</text>
 		<text key="TaskManager:StartTime">Startzeit</text>
@@ -11,6 +12,7 @@
 	</culture>
 	<culture name="en" primary="true">
 		<text key="TaskManager:CompanyName">Company Name</text>
+		<text key="TaskManager:LoadProcesses">Load processes...</text>
 		<text key="TaskManager:PrivateBytes">Private Bytes</text>
 		<text key="TaskManager:SearchProcess">Search Process...</text>
 		<text key="TaskManager:StartTime">Start time</text>

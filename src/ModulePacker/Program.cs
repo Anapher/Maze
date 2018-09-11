@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -24,24 +25,34 @@ namespace ModulePacker
                 return -1;
             }
 
-            FileInfo[] packages;
+            List<FileInfo> packages;
             if (!string.IsNullOrEmpty(obj.ModuleName))
             {
-                packages = directory.GetFiles($"{obj.ModuleName}.*.nupkg");
+                packages = directory.GetFiles($"{obj.ModuleName}.*.nupkg").ToList();
             }
             else
             {
-                packages = directory.GetFiles("*.nupkg");
+                packages = directory.GetFiles("*.nupkg").ToList();
 
                 var firstGroup = packages.GroupBy(x => x.Name.Split('.').First()).First();
                 obj.ModuleName = firstGroup.Key;
-                packages = firstGroup.ToArray();
+                packages = firstGroup.ToList();
             }
 
             if (!packages.Any())
             {
-                Console.Error.WriteLine("No packages found");
+                Console.Error.WriteLine("No packages found for {0}", obj.ModuleName);
                 return -1;
+            }
+
+            var actualPackage = packages.FirstOrDefault(x => Regex.Match(x.Name, $"^{obj.ModuleName}\\.[0-9]").Success);
+            if (actualPackage != null)
+            {
+                Console.WriteLine("Package is already created at {0}", actualPackage.Name);
+                if (packages.Count == 1)
+                    return -1;
+
+                packages.Remove(actualPackage);
             }
 
             var output = obj.Output;
@@ -53,7 +64,6 @@ namespace ModulePacker
                 outputDirectory.Delete(true);
 
             outputDirectory.Create();
-
             Console.WriteLine($"Packages that will be merged in directory {output}");
             foreach (var fileInfo in packages)
                 Console.WriteLine($"\t{fileInfo.Name}");

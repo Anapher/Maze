@@ -12,6 +12,6 @@ namespace TaskManager.Administration.Rest
         }
 
         public static Task<CallTransmissionChannel<IProcessesProvider>> GetProcessProvider(IPackageRestClient restClient) =>
-            restClient.CreateChannel<TaskManagerResource, IProcessesProvider>("processProvider");
+            restClient.CreateChannel<TaskManagerResource, IProcessesProvider>("processesProvider");
     }
 }

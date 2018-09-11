@@ -1,31 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using TaskManager.Client.Native;
 
 namespace TaskManager.Client.Utilities
 {
     public static class ProcessExtensions
     {
-        public static string GetCommandLine(this Process process)
-        {
-            // max size of a command line is USHORT/sizeof(WCHAR), so we are going
-            // just allocate max USHORT for sanity's sake.
-            var sb = new StringBuilder(0xFFFF);
-            switch (IntPtr.Size)
-            {
-                case 4:
-                    NativeMethods.GetProcCmdLine32((uint) process.Id, sb, (uint) sb.Capacity);
-                    break;
-                case 8:
-                    NativeMethods.GetProcCmdLine64((uint) process.Id, sb, (uint) sb.Capacity);
-                    break;
-            }
-
-            return sb.ToString();
-        }
-
         public static string GetProcessOwner(IntPtr handle)
         {
             try

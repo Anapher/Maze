@@ -68,6 +68,21 @@ namespace Orcus.Sockets
                     Logger.Trace("Data received with Message Opcode {opcode}", args.Opcode);
         }
 
+        public void Dispose()
+        {
+            _socket?.Dispose();
+
+            _activeRequests.Clear(stream => stream.Dispose());
+            _activeResponses.Clear(stream => stream.Dispose());
+            _waitingRequests.Clear(source => source.TrySetCanceled());
+            _channels.Clear(channel => channel.Dispose());
+            _cancellableRequests.Clear(source =>
+            {
+                source.Cancel();
+                source.Dispose();
+            });
+        }
+
         public event EventHandler<OrcusRequestReceivedEventArgs> RequestReceived;
 
         public void AddChannel(IDataChannel channel, int channelId)
@@ -540,11 +555,6 @@ namespace Orcus.Sockets
         {
             var buffer = _bufferPool.Rent(size + _customOffset);
             return new BufferSegment(buffer, _customOffset, buffer.Length - _customOffset);
-        }
-
-        public void Dispose()
-        {
-            _socket?.Dispose();
         }
     }
 }

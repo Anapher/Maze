@@ -13,7 +13,7 @@ namespace TaskManager.Client.Utilities
                 return null;
 
             using (icon)
-            using (var img = icon.ToBitmap().ResizeImage(20, 20))
+            using (var img = icon.ToBitmap().ResizeImage(16, 16))
             {
                 using (var ms = new MemoryStream())
                 {

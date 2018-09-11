@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using AutoMapper;
@@ -15,8 +17,9 @@ using Prism.Regions;
 using TaskManager.Administration.Rest;
 using TaskManager.Shared.Channels;
 using TaskManager.Shared.Dtos;
+using Unclassified.TxLib;
 
-namespace TaskManager.Administration.ViewModel
+namespace TaskManager.Administration.ViewModels
 {
     public class TaskManagerViewModel : ViewModelBase
     {
@@ -78,51 +81,56 @@ namespace TaskManager.Administration.ViewModel
 
         private async Task LoadProcesses()
         {
-            var processes = await _processProviderChannel.Interface.GetProcesses();
+            var result = await _processProviderChannel.Interface.GetProcesses().DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:LoadProcesses"));
+            if (result.Failed)
+                return;
+
+            var processes = result.Result;
+            var processesToDelete = new HashSet<int>(_processes.Keys);
+            
             foreach (var process in processes)
             {
-                switch (process.Action)
+                processesToDelete.Remove(process.ProcessId);
+
+                if (_processes.TryGetValue(process.ProcessId, out var processViewModel))
                 {
-                    case EntryAction.Add:
-                        var dto = process.Value;
-                        if (_processes.TryGetValue(dto.Id, out var processViewModel))
-                        {
-                            Mapper.Map(dto, processViewModel);
-                        }
-                        else
-                        {
-                            processViewModel = Mapper.Map<ProcessViewModel>(dto);
-                            processViewModel.CollectionView.Filter = Filter;
-                            processViewModel.UpdateIcon(dto.IconData);
+                    processViewModel.Apply(process);
+                }
+                else
+                {
+                    processViewModel = new ProcessViewModel();
+                    processViewModel.CollectionView.Filter = Filter;
+                    processViewModel.CollectionView.SortDescriptions.Add(new SortDescription(nameof(ProcessViewModel.Name),
+                        ListSortDirection.Ascending));
+                    processViewModel.Apply(process);
 
-                            _processes.Add(processViewModel.Id, processViewModel);
-                        }
-                        break;
-                    case EntryAction.Remove:
-                        if (_processes.TryGetValue(process.Value.Id, out var viewModel))
-                        {
-                            _processes.Remove(process.Value.Id);
+                    _processes.Add(processViewModel.Id, processViewModel);
+                    _treeProcessViewModels.Add(processViewModel);
+                }
+            }
 
-                            foreach (var viewModelChild in viewModel.Childs)
-                            {
-                                viewModelChild.ParentViewModel = null;
-                                _treeProcessViewModels.Add(viewModelChild);
-                            }
+            foreach (var processId in processesToDelete)
+            {
+                if (_processes.TryGetValue(processId, out var viewModel))
+                {
+                    _processes.Remove(processId);
 
-                            if (viewModel.ParentViewModel == null)
-                                _treeProcessViewModels.Remove(viewModel);
-                            else viewModel.ParentViewModel.Childs.Remove(viewModel);
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    foreach (var viewModelChild in viewModel.Childs)
+                    {
+                        viewModelChild.ParentViewModel = null;
+                        _treeProcessViewModels.Add(viewModelChild);
+                    }
+
+                    if (viewModel.ParentViewModel == null)
+                        _treeProcessViewModels.Remove(viewModel);
+                    else viewModel.ParentViewModel.Childs.Remove(viewModel);
                 }
             }
             
             foreach (var keyValuePair in _processes)
             {
                 var viewModel = keyValuePair.Value;
-                if (viewModel.ParentProcess != 0 && _processes.TryGetValue(viewModel.ParentProcess, out var parentViewModel))
+                if (viewModel.ParentProcessId != 0 && _processes.TryGetValue(viewModel.ParentProcessId, out var parentViewModel))
                 {
                     if (parentViewModel != viewModel.ParentViewModel)
                     {
@@ -172,6 +180,7 @@ namespace TaskManager.Administration.ViewModel
             _treeProcessViewModels = new ObservableCollection<ProcessViewModel>();
 
             ProcessView = new ListCollectionView(_treeProcessViewModels) {Filter = Filter};
+            ProcessView.SortDescriptions.Add(new SortDescription(nameof(ProcessViewModel.CreationDate), ListSortDirection.Ascending));
 
             await LoadProcesses();
         }

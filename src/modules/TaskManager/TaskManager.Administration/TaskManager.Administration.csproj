@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <Description>Access to the remote system's task manager. Show all running processes in a tree. Provides actions like killing processes, show properties, change priority and bring the window to front.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,40 +16,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
-    <None Remove="Resources\Images\Process.ico" />
-    <None Remove="Resources\TaskManager.Translation.txd" />
-    <None Remove="Resources\VisualStudioIcons.xaml" />
-    <EmbeddedResource Include="Resources\Images\Process.ico" />
-    <EmbeddedResource Include="Resources\TaskManager.Translation.txd" />
-    <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
-    <ProjectReference Include="..\..\..\submodules\MetroTreeListView\TreeListView\TreeListView.csproj" />
 
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
     <!-- Resources -->
+    <Resource Include="Resources\**\*.png" />
 
     <!-- Settings -->
 
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\TaskManagerView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Views\TaskManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <Resource Include="Resources\Images\Process.ico" />
+    <EmbeddedResource Include="Resources\TaskManager.Translation.txd" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +36,12 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\..\..\submodules\MetroTreeListView\TreeListView\TreeListView.csproj" />
   </ItemGroup>
 
   <Import Project="..\TaskManager.Shared\TaskManager.Shared.projitems" Label="Shared" />

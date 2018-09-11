@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
-    <Description>Interact with the user.</Description>
+    <Description>Complete access to the file system. Browser the files, create directories, download and upload files, show file properties and compute hash values.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,41 +26,11 @@
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
     <!-- Resources -->
-
-    <!-- Settings -->
-
+    <Resource Include="Resources\**\*.png" />
   </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
-
-    <Resource Include="Resources\Images\Drives\CD-DVD.png" />
-    <Resource Include="Resources\Images\Drives\Drive.png" />
-    <Resource Include="Resources\Images\Drives\DriveWindows.png" />
-    <Resource Include="Resources\Images\Drives\NetworkDrive.png" />
-    <Resource Include="Resources\Images\Drives\NetworkDriveDC.png" />
-    <Resource Include="Resources\Images\Drives\USB.png" />
-    <Resource Include="Resources\Images\Folders\AdobeCloud.png" />
-    <Resource Include="Resources\Images\Folders\Contacts.png" />
-    <Resource Include="Resources\Images\Folders\DesktopFolder.png" />
-    <Resource Include="Resources\Images\Folders\Documents.png" />
-    <Resource Include="Resources\Images\Folders\Download.png" />
-    <Resource Include="Resources\Images\Folders\Dropbox.png" />
-    <Resource Include="Resources\Images\Folders\Favorite.png" />
-    <Resource Include="Resources\Images\Folders\Folder.png" />
-    <Resource Include="Resources\Images\Folders\Game.png" />
-    <Resource Include="Resources\Images\Folders\GoogleDrive.png" />
-    <Resource Include="Resources\Images\Folders\Links.png" />
-    <Resource Include="Resources\Images\Folders\Music.png" />
-    <Resource Include="Resources\Images\Folders\NetworkFolder.png" />
-    <Resource Include="Resources\Images\Folders\OneDrive.png" />
-    <Resource Include="Resources\Images\Folders\Pictures.png" />
-    <Resource Include="Resources\Images\Folders\RecentPlaces.png" />
-    <Resource Include="Resources\Images\Folders\Search.png" />
-    <Resource Include="Resources\Images\Folders\User.png" />
-    <Resource Include="Resources\Images\Folders\Videos.png" />
-    <Resource Include="Resources\Images\Other\ThisPC.png" />
-    <Resource Include="Resources\Images\Other\TrashFull.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,18 +38,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Resources\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\DirectoryTreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\NavigationBarView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
   
    <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />

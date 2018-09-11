@@ -24,35 +24,46 @@ namespace Orcus.Sockets
             WebSocket.Dispose();
         }
 
-        public WebSocket WebSocket { get; }
+        public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
+        public WebSocket WebSocket { get; }
         public ArrayPool<byte> BufferPool { get; }
         public int? RequiredPreBufferLength { get; } = 1;
-        public event EventHandler<DataReceivedEventArgs> DataReceivedEventArgs;
 
         public async Task ReceiveAsync()
         {
             while (WebSocket.State == WebSocketState.Open)
             {
                 var buffer = BufferPool.Rent(_packageBufferSize);
+                var dataRead = 0;
 
-                var i = 0;
                 while (true)
                 {
-                    var result = await WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer, i, _packageBufferSize - i),
+                    var result = await WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer, dataRead, buffer.Length - dataRead),
                         CancellationToken.None);
 
                     if (result.MessageType == WebSocketMessageType.Close)
                         return;
 
-                    if (!result.EndOfMessage && i != _packageBufferSize)
+                    dataRead += result.Count;
+                    if (!result.EndOfMessage)
                     {
-                        i += result.Count;
+                        if (dataRead == buffer.Length)
+                        {
+                            var newBufferLength = buffer.Length * 2;
+                            var newBuffer = BufferPool.Rent(newBufferLength);
+
+                            Buffer.BlockCopy(buffer, 0, newBuffer, 0, buffer.Length);
+                            BufferPool.Return(buffer);
+
+                            buffer = newBuffer;
+                        }
+
                         continue;
                     }
 
                     var opCode = (OrcusSocket.MessageOpcode) buffer[0];
-                    var payload = new BufferSegment(buffer, 1, result.Count + i - 1, BufferPool);
+                    var payload = new BufferSegment(buffer, 1, dataRead - 1, BufferPool);
 
                     DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(payload, opCode));
                     break;
