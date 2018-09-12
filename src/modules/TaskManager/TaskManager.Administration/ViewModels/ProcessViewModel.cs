@@ -219,5 +219,7 @@ namespace TaskManager.Administration.ViewModels
                 Icon = bitmapImage;
             }
         }
+
+        public void UpdatePriorityClass() => RaisePropertyChanged(nameof(PriorityClass));
     }
 }

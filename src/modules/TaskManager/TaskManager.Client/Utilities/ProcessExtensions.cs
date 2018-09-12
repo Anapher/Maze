@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using TaskManager.Client.Native;
+using ProcessTreeInfo = System.Collections.Generic.Dictionary<int, (System.Diagnostics.Process process, int parentId)>;
 
 namespace TaskManager.Client.Utilities
 {
@@ -18,6 +22,100 @@ namespace TaskManager.Client.Utilities
             catch (Exception)
             {
                 return "Unknown";
+            }
+        }
+
+        public static async Task<bool> KillProcessTree(int processId)
+        {
+            var processes = Process.GetProcesses();
+            try
+            {
+                var processTree = new ProcessTreeInfo();
+
+                foreach (var process in processes)
+                {
+                    try
+                    {
+                        var parentProcessId = GetParentProcess(process.Handle);
+                        processTree.Add(process.Id, (process, parentProcessId));
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
+
+                if (!processTree.TryGetValue(processId, out var processInfo))
+                    return false;
+
+                //this only throws if the root process could not be killed
+                await InternalKillProcessTree(processInfo.process, processTree);
+                return true;
+            }
+            finally
+            {
+                foreach (var process in processes)
+                    process.Dispose();
+            }
+        }
+
+        private static async Task InternalKillProcessTree(Process process, ProcessTreeInfo processTree)
+        {
+            var task = process.KillGracefully();
+
+            foreach (var childProcess in processTree.Where(x => x.Value.parentId == process.Id))
+                try
+                {
+                    await InternalKillProcessTree(childProcess.Value.process, processTree);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+            await task;
+        }
+
+        public static void Suspend(this Process process)
+        {
+            if (process.ProcessName == string.Empty)
+                return;
+
+            foreach (ProcessThread pT in process.Threads)
+            {
+                IntPtr pOpenThread = NativeMethods.OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
+
+                if (pOpenThread == IntPtr.Zero)
+                    continue;
+
+                NativeMethods.SuspendThread(pOpenThread);
+                NativeMethods.CloseHandle(pOpenThread);
+            }
+        }
+
+        public static void Resume(this Process process)
+        {
+            if (process.ProcessName == string.Empty)
+                return;
+
+            foreach (ProcessThread pT in process.Threads)
+            {
+                if (pT.ThreadState != ThreadState.Wait || pT.WaitReason != ThreadWaitReason.Suspended)
+                    continue;
+
+                IntPtr pOpenThread = NativeMethods.OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
+
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                int suspendCount;
+                do
+                {
+                    suspendCount = NativeMethods.ResumeThread(pOpenThread);
+                } while (suspendCount > 0);
+                NativeMethods.CloseHandle(pOpenThread);
             }
         }
 
@@ -44,6 +142,37 @@ namespace TaskManager.Client.Utilities
             {
                 // not found
                 return -1;
+            }
+        }
+
+        public static async Task KillGracefully(this Process process)
+        {
+            process.EnableRaisingEvents = true;
+
+            var succeedCloseMainWindow = false;
+            try
+            {
+                if (process.MainWindowHandle != IntPtr.Zero)
+                    succeedCloseMainWindow = process.CloseMainWindow();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            if (!process.HasExited)
+            {
+                if (succeedCloseMainWindow)
+                {
+                    var completionSource = new TaskCompletionSource<object>();
+                    process.Exited += (sender, args) => completionSource.SetResult(null);
+
+                    var resultedTask = await Task.WhenAny(completionSource.Task, Task.Delay(4000));
+                    if (resultedTask == completionSource.Task)
+                        return;
+                }
+
+                process.Kill();
             }
         }
 

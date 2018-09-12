@@ -2,33 +2,44 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using AutoMapper;
 using Orcus.Administration.ControllerExtensions;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Utilities;
 using Prism.Commands;
 using Prism.Regions;
 using TaskManager.Administration.Rest;
 using TaskManager.Shared.Channels;
-using TaskManager.Shared.Dtos;
 using Unclassified.TxLib;
 
 namespace TaskManager.Administration.ViewModels
 {
     public class TaskManagerViewModel : ViewModelBase
     {
-        private readonly IShellStatusBar _statusBar;
         private readonly IPackageRestClient _restClient;
-        private CallTransmissionChannel<IProcessesProvider> _processProviderChannel;
+        private readonly IShellStatusBar _statusBar;
+
+        private DelegateCommand<ProcessViewModel> _bringToFrontCommand;
+        private DelegateCommand<ProcessViewModel> _closeWindowCommand;
+        private DelegateCommand<ProcessViewModel> _killProcessCommand;
+        private DelegateCommand<ProcessViewModel> _killProcessTreeCommand;
+        private DelegateCommand<ProcessViewModel> _maximizeWindowCommand;
+        private DelegateCommand<ProcessViewModel> _minimizeWindowCommand;
         private Dictionary<int, ProcessViewModel> _processes;
-        private string _searchText;
+        private CallTransmissionChannel<IProcessesProvider> _processProviderChannel;
         private ListCollectionView _processView;
+        private DelegateCommand _refreshCommand;
+        private DelegateCommand<ProcessViewModel> _restoreWindowCommand;
+        private DelegateCommand<ProcessViewModel> _resumeCommand;
+        private string _searchText;
+        private DelegateCommand<ProcessViewModel> _showPropertiesCommand;
+        private DelegateCommand<ProcessViewModel> _suspendCommand;
         private ObservableCollection<ProcessViewModel> _treeProcessViewModels;
 
         public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient)
@@ -53,20 +64,23 @@ namespace TaskManager.Administration.ViewModels
             set => SetProperty(ref _processView, value);
         }
 
-        private DelegateCommand<ProcessViewModel> _killProcessCommand;
+        public DelegateCommand RefreshCommand
+        {
+            get { return _refreshCommand ?? (_refreshCommand = new DelegateCommand(() => { LoadProcesses().Forget(); })); }
+        }
 
         public DelegateCommand<ProcessViewModel> KillProcessCommand
         {
             get
             {
                 return _killProcessCommand ?? (_killProcessCommand = new DelegateCommand<ProcessViewModel>(parameter =>
-                {
-                    
-                }));
+                           {
+                               ProcessesResource.Kill(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                                   Tx.T("TaskManager:StatusBar.KillProcess", "name", parameter.Name), StatusBarAnimation.None, mustShow: true)
+                               .Forget();
+                           }));
             }
         }
-
-        private DelegateCommand<ProcessViewModel> _killProcessTreeCommand;
 
         public DelegateCommand<ProcessViewModel> KillProcessTreeCommand
         {
@@ -74,20 +88,135 @@ namespace TaskManager.Administration.ViewModels
             {
                 return _killProcessTreeCommand ?? (_killProcessTreeCommand = new DelegateCommand<ProcessViewModel>(parameter =>
                 {
-                    
+                    ProcessesResource.KillTree(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.KillProcessTree", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
                 }));
             }
         }
 
+        public DelegateCommand<ProcessViewModel> BringToFrontCommand
+        {
+            get
+            {
+                return _bringToFrontCommand ?? (_bringToFrontCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesWindowResource.BringToFront(parameter.Id, _restClient)
+                        .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:StatusBar.BringToFront", "name", parameter.Name), StatusBarAnimation.None, mustShow: true)
+                        .Forget();
+                }, model => model.MainWindowHandle != null));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> RestoreWindowCommand
+        {
+            get
+            {
+                return _restoreWindowCommand ?? (_restoreWindowCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesWindowResource.Restore(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.RestoreWindow", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }, model => model.MainWindowHandle != null));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> MinimizeWindowCommand
+        {
+            get
+            {
+                return _minimizeWindowCommand ?? (_minimizeWindowCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesWindowResource.Minimize(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.MinimizeWindow", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }, model => model.MainWindowHandle != null));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> MaximizeWindowCommand
+        {
+            get
+            {
+                return _maximizeWindowCommand ?? (_maximizeWindowCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesWindowResource.Maximize(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.MaximizeWindow", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }, model => model.MainWindowHandle != null));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> CloseWindowCommand
+        {
+            get
+            {
+                return _closeWindowCommand ?? (_closeWindowCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesWindowResource.Close(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.CloseWindow", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }, model => model.MainWindowHandle != null));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> SuspendCommand
+        {
+            get
+            {
+                return _suspendCommand ?? (_suspendCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesResource.Suspend(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.Suspend", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> ResumeCommand
+        {
+            get
+            {
+                return _resumeCommand ?? (_resumeCommand = new DelegateCommand<ProcessViewModel>(parameter =>
+                {
+                    ProcessesResource.Resume(parameter.Id, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.Resume", "name", parameter.Name), StatusBarAnimation.None, mustShow: true).Forget();
+                }));
+            }
+        }
+
+        private DelegateCommand<object[]> _setPriorityCommand;
+
+        public DelegateCommand<object[]> SetPriorityCommand
+        {
+            get
+            {
+                return _setPriorityCommand ?? (_setPriorityCommand = new DelegateCommand<object[]>(async parameter =>
+                {
+                    var processViewModel = ((ProcessViewModel) parameter[0]);
+                    var priority = (ProcessPriorityClass) parameter[1];
+
+                    processViewModel.UpdatePriorityClass();
+
+                    if (await ProcessesResource.SetPriority(processViewModel.Id, priority, _restClient).DisplayOnStatusBarCatchErrors(_statusBar,
+                        Tx.T("TaskManager:StatusBar.SetPriority", "name", processViewModel.Name, "priority", priority.ToString()),
+                        StatusBarAnimation.None, mustShow: true))
+                    {
+                        processViewModel.PriorityClass = priority;
+                    }
+                }));
+            }
+        }
+
+        public DelegateCommand<ProcessViewModel> ShowPropertiesCommand
+        {
+            get { return _showPropertiesCommand ?? (_showPropertiesCommand = new DelegateCommand<ProcessViewModel>(parameter => { })); }
+        }
+
         private async Task LoadProcesses()
         {
-            var result = await _processProviderChannel.Interface.GetProcesses().DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:LoadProcesses"));
+            var result = await _processProviderChannel.Interface.GetProcesses()
+                .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:LoadProcesses"));
             if (result.Failed)
                 return;
 
             var processes = result.Result;
             var processesToDelete = new HashSet<int>(_processes.Keys);
-            
+
             foreach (var process in processes)
             {
                 processesToDelete.Remove(process.ProcessId);
@@ -110,7 +239,6 @@ namespace TaskManager.Administration.ViewModels
             }
 
             foreach (var processId in processesToDelete)
-            {
                 if (_processes.TryGetValue(processId, out var viewModel))
                 {
                     _processes.Remove(processId);
@@ -125,13 +253,11 @@ namespace TaskManager.Administration.ViewModels
                         _treeProcessViewModels.Remove(viewModel);
                     else viewModel.ParentViewModel.Childs.Remove(viewModel);
                 }
-            }
-            
+
             foreach (var keyValuePair in _processes)
             {
                 var viewModel = keyValuePair.Value;
                 if (viewModel.ParentProcessId != 0 && _processes.TryGetValue(viewModel.ParentProcessId, out var parentViewModel))
-                {
                     if (parentViewModel != viewModel.ParentViewModel)
                     {
                         if (viewModel.ParentViewModel == null)
@@ -141,7 +267,6 @@ namespace TaskManager.Administration.ViewModels
                         viewModel.ParentViewModel = parentViewModel;
                         parentViewModel.Childs.Add(viewModel);
                     }
-                }
             }
         }
 
@@ -149,10 +274,7 @@ namespace TaskManager.Administration.ViewModels
         {
             ProcessView.Refresh();
 
-            foreach (var processViewModel in _processes.Where(x => x.Value.Childs.Any()))
-            {
-                processViewModel.Value.UpdateView();
-            }
+            foreach (var processViewModel in _processes.Where(x => x.Value.Childs.Any())) processViewModel.Value.UpdateView();
         }
 
         private bool Filter(object obj)

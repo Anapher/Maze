@@ -17,6 +17,7 @@
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Failed">Fehlgeschlagen</text>
+		<text key="Help">Hilfe</text>
 		<text key="ID">ID</text>
 		<text key="Login">Einloggen</text>
 		<text key="LoginView:LoggingIn">Einloggen...</text>
@@ -35,6 +36,7 @@
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Ready">Bereit</text>
+		<text key="Refresh">Aktualisieren</text>
 		<text key="Server">Server</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
@@ -243,6 +245,7 @@
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Failed">Failed</text>
+		<text key="Help">Help</text>
 		<text key="ID">ID</text>
 		<text key="Login">Login</text>
 		<text key="LoginView:LoggingIn">Logging in...</text>
@@ -261,6 +264,7 @@
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
 		<text key="Ready">Ready</text>
+		<text key="Refresh">Refresh</text>
 		<text key="Server">Server</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
