@@ -94,7 +94,7 @@ namespace TaskManager.Shared.Dtos
         }
     }
 
-    public enum ProcessStatus
+    public enum ProcessType
     {
         None,
         UserProcess,

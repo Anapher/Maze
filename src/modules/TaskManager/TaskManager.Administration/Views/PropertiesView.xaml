@@ -1,0 +1,337 @@
+﻿<views:WindowUserControl
+    x:Class="TaskManager.Administration.Views.PropertiesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dtos="clr-namespace:TaskManager.Shared.Dtos"
+    xmlns:extensions="clr-namespace:Anapher.Wpf.Swan.Extensions;assembly=Anapher.Wpf.Swan"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:TaskManager.Administration.ViewModels"
+    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    d:DataContext="{d:DesignInstance viewModels:PropertiesViewModel}"
+    d:DesignHeight="500"
+    d:DesignWidth="400"
+    EscapeClosesWindow="True"
+    ResizeMode="NoResize"
+    WindowHeight="500"
+    WindowWidth="400"
+    mc:Ignorable="d">
+    <TabControl Margin="5,0,5,5" Style="{StaticResource Windows10TabControl}">
+        <TabItem Header="{tx:T TaskManager:Properties.Image}">
+            <StackPanel Margin="10" Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Width="32"
+                        Height="32"
+                        RenderOptions.BitmapScalingMode="HighQuality">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="{Binding Icon}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+                                        <Setter Property="Source" Value="{extensions:WindowsIcons LibraryName=imageres.dll, IconId=11, Size=32}" />
+                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <StackPanel Grid.Column="2" Orientation="Vertical">
+                        <TextBox Style="{StaticResource ValueText}" Text="{Binding Process.Description}" />
+                        <TextBox
+                            Margin="0,4,0,0"
+                            Style="{StaticResource ValueText}"
+                            Text="{Binding Process.CompanyName}" />
+                    </StackPanel>
+                </Grid>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Width="80" Text="{tx:TC TaskManager:Properties.Version, Default=Version:}" />
+                    <TextBox Style="{StaticResource ValueText}" Text="{Binding Process.FileVersion, Mode=OneWay}" />
+                </DockPanel>
+                <StackPanel Margin="0,5,0,0" Orientation="Vertical">
+                    <TextBlock Text="{tx:TC TaskManager:Properties.Path, Default=Path:}" />
+                    <TextBox
+                        Margin="0,2,0,0"
+                        IsReadOnly="True"
+                        Text="{Binding Process.ExecutablePath, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Margin="0,5,0,0" Orientation="Vertical">
+                    <TextBlock Text="{tx:TC TaskManager:Properties.CommandLine, Default='Command line:'}" />
+                    <TextBox
+                        Margin="0,2,0,0"
+                        IsReadOnly="True"
+                        Text="{Binding Process.CommandLine, Mode=OneWay}" />
+                </StackPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Width="80" Text="{tx:TC TaskManager:Properties.Parent, Default=Parent:}" />
+                    <TextBox Style="{StaticResource ValueText}" Text="{Binding ParentProcessString, Mode=OneWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Width="80" Text="{tx:TC TaskManager:Properties.User, Default=User:}" />
+                    <TextBox Style="{StaticResource ValueText}" Text="{Binding Process.ProcessOwner, Mode=OneWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Width="80" Text="{tx:TC TaskManager:Properties.Started, Default=Started:}" />
+                    <TextBox Style="{StaticResource ValueText}" Text="{tx:Time TimeBinding={Binding Process.CreationDate}, Details='YearMonthDay,HourMinuteSecond'}" />
+                    <TextBlock Margin="4,0,0,0" Text="{tx:RelativeTime TimeBinding={Binding Process.CreationDate}, RelativeTimeKind=PointInTime, UpperCase=False}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Text="{tx:TC TaskManager:Properties.Is64BitProcess, Default='Is 64 bit process:'}" />
+                    <TextBox
+                        Margin="5,0,0,0"
+                        Style="{StaticResource ValueText}"
+                        Text="{Binding StaticPropertiesDto.IsWow64Process, Mode=OneWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock Text="{tx:TC TaskManager:Properties.Status, Default='Status:'}" />
+                    <TextBox Margin="5,0,0,0">
+                        <TextBox.Style>
+                            <Style BasedOn="{StaticResource ValueText}" TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static dtos:ProcessStatus.Running}">
+                                        <Setter Property="Foreground" Value="#27ae60" />
+                                        <Setter Property="Text" Value="{tx:T TaskManager:Properties.Status.Running}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static dtos:ProcessStatus.NotResponding}">
+                                        <Setter Property="Foreground" Value="#e67e22" />
+                                        <Setter Property="Text" Value="{tx:T TaskManager:Properties.Status.NotResponding}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static dtos:ProcessStatus.Exited}">
+                                        <Setter Property="Foreground" Value="#c0392b" />
+                                        <Setter Property="Text" Value="{tx:T TaskManager:Properties.Status.Exited}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <DockPanel.Style>
+                        <Style TargetType="DockPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="{x:Static dtos:ProcessStatus.Exited}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                    <TextBlock Text="{tx:TC TaskManager:Properties.ExitCode}" />
+                    <TextBox
+                        Margin="5,0,0,0"
+                        Style="{StaticResource ValueText}"
+                        Text="{Binding ExitCode, Mode=OneWay}" />
+                </DockPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="{tx:T TaskManager:Properties.Performance}">
+            <TabItem.Resources>
+                <Style TargetType="GroupBox" />
+            </TabItem.Resources>
+            <StackPanel Margin="5" Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Width="180" Header="CPU">
+                            <StackPanel Margin="5" Orientation="Vertical">
+                                <DockPanel>
+                                    <TextBlock Text="Priority:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{Binding PropertiesDto.Priority}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Kernel Time:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{Binding PropertiesDto.KernelModeTime, StringFormat=hh\\:mm\\:ss\\.fff}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="User Time:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{Binding PropertiesDto.UserModeTime, StringFormat=hh\\:mm\\:ss\\.fff}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Total Time:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{Binding PropertiesDto.TotalProcessorTime, StringFormat=hh\\:mm\\:ss\\.fff}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Width="180"
+                            Margin="0,10,0,0"
+                            Header="Virtual Memory">
+                            <StackPanel Margin="5" Orientation="Vertical">
+                                <DockPanel>
+                                    <TextBlock Text="Private Bytes:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.PrivateBytes}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Virtual Size:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.VirtualSize}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Peak Virtual Size:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.PeakVirtualSize}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Page Faults:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.PageFaults}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Page File Usage:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.PageFileUsage}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Peak Page File Usage:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.PeakPageFileUsage}}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Vertical">
+                        <GroupBox Width="180" Header="I/O">
+                            <StackPanel Margin="5" Orientation="Vertical">
+                                <DockPanel>
+                                    <TextBlock Text="Reads:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.ReadOperationCount}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Total data read:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.ReadTransferCount}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Writes:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.WriteOperationCount}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Total data written:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.WriteTransferCount}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Other:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.OtherOperationCount}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Other transferred:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.OtherTransferCount}}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Width="180"
+                            Margin="0,10,0,0"
+                            Header="Physical Memory">
+                            <StackPanel Margin="5" Orientation="Vertical">
+                                <DockPanel>
+                                    <TextBlock Text="Working Set:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.WorkingSetSize}}" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5,0,0">
+                                    <TextBlock Text="Peak Working Set:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:DataSize NumberBinding={Binding PropertiesDto.PeakWorkingSetSize}}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Width="180"
+                            Margin="0,10,0,0"
+                            Header="Handles">
+                            <StackPanel Margin="5" Orientation="Vertical">
+                                <DockPanel>
+                                    <TextBlock Text="Handles Count:" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.HandleCount}}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </Grid>
+                <GroupBox
+                    Width="250"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Left"
+                    Header="Quota">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Margin="0,5,0,0">
+                            <TextBlock Text="Quota Non Paged Pool Usage:" />
+                            <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.QuotaNonPagedPoolUsage}}" />
+                        </DockPanel>
+                        <DockPanel Margin="0,5,0,0">
+                            <TextBlock Text="Quota Paged Pool Usage:" />
+                            <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.QuotaPagedPoolUsage}}" />
+                        </DockPanel>
+                        <DockPanel Margin="0,5,0,0">
+                            <TextBlock Text="Quota Peak Non Paged Pool Usage:" />
+                            <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.QuotaPeakNonPagedPoolUsage}}" />
+                        </DockPanel>
+                        <DockPanel Margin="0,5,0,0">
+                            <TextBlock Text="Quota Peak Paged Pool Usage:" />
+                            <TextBlock HorizontalAlignment="Right" Text="{tx:Number NumberBinding={Binding PropertiesDto.QuotaPeakPagedPoolUsage}}" />
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="{tx:T TaskManager:ActiveConnections}">
+            <DataGrid
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                CanUserResizeRows="False"
+                CanUserSortColumns="True"
+                ItemsSource="{Binding ActiveConnections}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="40"
+                        Binding="{Binding ProtocolName}"
+                        Header="{tx:T TaskManager:ActiveConnections.Protocol}"
+                        IsReadOnly="True" />
+                    <DataGridTemplateColumn
+                        Width="*"
+                        Header="{tx:T TaskManager:ActiveConnections.LocalAddress}"
+                        IsReadOnly="True"
+                        SortMemberPath="LocalAddress">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type dtos:ActiveConnectionDto}">
+                                <TextBlock>
+                                    <Run Text="{Binding LocalAddress}" /><Run Text=":" /><Run Text="{Binding LocalPort}" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="*"
+                        Header="{tx:T TaskManager:ActiveConnections.RemoteAddress}"
+                        IsReadOnly="True"
+                        SortMemberPath="RemoteAddress">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type dtos:ActiveConnectionDto}">
+                                <TextBlock>
+                                    <Run Text="{Binding RemoteAddress}" /><Run Text=":" /><Run Text="{Binding RemotePort}" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Width="80"
+                        Header="{tx:T TaskManager:ActiveConnections.State}"
+                        IsReadOnly="True"
+                        SortMemberPath="State">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type dtos:ActiveConnectionDto}">
+                                <TextBlock Text="{Binding State}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </TabItem>
+    </TabControl>
+</views:WindowUserControl>

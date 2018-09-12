@@ -2,6 +2,11 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="TaskManager:ActiveConnections">Aktive Verbindungen</text>
+		<text key="TaskManager:ActiveConnections.LocalAddress">Lokale Adresse</text>
+		<text key="TaskManager:ActiveConnections.Protocol">Protokoll</text>
+		<text key="TaskManager:ActiveConnections.RemoteAddress">Gegenseite Adresse</text>
+		<text key="TaskManager:ActiveConnections.State">Status</text>
 		<text key="TaskManager:CompanyName">Firma</text>
 		<text key="TaskManager:Gestures.Del">Entf</text>
 		<text key="TaskManager:Gestures.ShiftDel">Shift+Entf</text>
@@ -25,8 +30,24 @@
 		<text key="TaskManager:Kill">Beenden</text>
 		<text key="TaskManager:KillProcessTree">Prozessstruktur beenden</text>
 		<text key="TaskManager:LoadProcesses">Prozesse werden geladen...</text>
+		<text key="TaskManager:NotAvailable">Nicht verfügbar</text>
 		<text key="TaskManager:PrivateBytes">Private Bytes</text>
 		<text key="TaskManager:Properties">Eigenschaften</text>
+		<text key="TaskManager:Properties.CommandLine">Kommandozeile</text>
+		<text key="TaskManager:Properties.ExitCode">Exit Code</text>
+		<text key="TaskManager:Properties.Image">Profil</text>
+		<text key="TaskManager:Properties.Is64BitProcess">Ist 64 Bit Prozess</text>
+		<text key="TaskManager:Properties.Parent">Parent</text>
+		<text key="TaskManager:Properties.Path">Pfad</text>
+		<text key="TaskManager:Properties.Performance">Leistung</text>
+		<text key="TaskManager:Properties.Started">Gestartet</text>
+		<text key="TaskManager:Properties.Status">Status</text>
+		<text key="TaskManager:Properties.Status.Exited">Beendet</text>
+		<text key="TaskManager:Properties.Status.NotResponding">Reagiert nicht</text>
+		<text key="TaskManager:Properties.Status.Running">Läuft</text>
+		<text key="TaskManager:Properties.Title">Eigenschaften von {name}:{id}</text>
+		<text key="TaskManager:Properties.User">Benutzer</text>
+		<text key="TaskManager:Properties.Version">Version</text>
 		<text key="TaskManager:Resume">Fortsetzen</text>
 		<text key="TaskManager:SearchProcess">Prozess suchen...</text>
 		<text key="TaskManager:SetPriority">Priorität festlegen</text>
@@ -41,6 +62,7 @@
 		<text key="TaskManager:StatusBar.CloseWindow">Schließe Fenster von '{name}'</text>
 		<text key="TaskManager:StatusBar.KillProcess">Beende Prozess '{name}'</text>
 		<text key="TaskManager:StatusBar.KillProcessTree">Beende Prozessstruktur von '{name}'</text>
+		<text key="TaskManager:StatusBar.LoadProperties">Lade Eigenschaften...</text>
 		<text key="TaskManager:StatusBar.MaximizeWindow">Maximiere Fenster von '{name}'</text>
 		<text key="TaskManager:StatusBar.MinimizeWindow">Minimiere Fenster von '{name}'</text>
 		<text key="TaskManager:StatusBar.RestoreWindow">Stelle Fenster von '{name}' wiederher</text>
@@ -58,6 +80,11 @@
 		<text key="TaskManager:WorkingSet">Working Set</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="TaskManager:ActiveConnections">Active Connections</text>
+		<text key="TaskManager:ActiveConnections.LocalAddress">Local Address</text>
+		<text key="TaskManager:ActiveConnections.Protocol">Protocol</text>
+		<text key="TaskManager:ActiveConnections.RemoteAddress">Remote Address</text>
+		<text key="TaskManager:ActiveConnections.State">State</text>
 		<text key="TaskManager:CompanyName">Company Name</text>
 		<text key="TaskManager:Gestures.Del">Del</text>
 		<text key="TaskManager:Gestures.ShiftDel">Shift+Del</text>
@@ -81,8 +108,24 @@
 		<text key="TaskManager:Kill">Kill</text>
 		<text key="TaskManager:KillProcessTree">Kill Process Tree</text>
 		<text key="TaskManager:LoadProcesses">Load processes...</text>
+		<text key="TaskManager:NotAvailable">Not available</text>
 		<text key="TaskManager:PrivateBytes">Private Bytes</text>
 		<text key="TaskManager:Properties">Properties</text>
+		<text key="TaskManager:Properties.CommandLine">Command line</text>
+		<text key="TaskManager:Properties.ExitCode">Exit code</text>
+		<text key="TaskManager:Properties.Image">Image</text>
+		<text key="TaskManager:Properties.Is64BitProcess">Is 64 bit process</text>
+		<text key="TaskManager:Properties.Parent">Parent</text>
+		<text key="TaskManager:Properties.Path">Path</text>
+		<text key="TaskManager:Properties.Performance">Performance</text>
+		<text key="TaskManager:Properties.Started">Started</text>
+		<text key="TaskManager:Properties.Status">Status</text>
+		<text key="TaskManager:Properties.Status.Exited">Exited</text>
+		<text key="TaskManager:Properties.Status.NotResponding">Not responding</text>
+		<text key="TaskManager:Properties.Status.Running">Running</text>
+		<text key="TaskManager:Properties.Title">{name}:{id} properties</text>
+		<text key="TaskManager:Properties.User">User</text>
+		<text key="TaskManager:Properties.Version">Version</text>
 		<text key="TaskManager:Resume">Resume</text>
 		<text key="TaskManager:SearchProcess">Search Process...</text>
 		<text key="TaskManager:SetPriority">Set Priority</text>
@@ -97,6 +140,7 @@
 		<text key="TaskManager:StatusBar.CloseWindow">Close window of '{name}'</text>
 		<text key="TaskManager:StatusBar.KillProcess">Kill Process '{name}'</text>
 		<text key="TaskManager:StatusBar.KillProcessTree">Kill process tree of '{name}'</text>
+		<text key="TaskManager:StatusBar.LoadProperties">Load properties...</text>
 		<text key="TaskManager:StatusBar.MaximizeWindow">Maixmize window of '{name}'</text>
 		<text key="TaskManager:StatusBar.MinimizeWindow">Minimize window of '{name}'</text>
 		<text key="TaskManager:StatusBar.RestoreWindow">Restore window of '{name}'</text>

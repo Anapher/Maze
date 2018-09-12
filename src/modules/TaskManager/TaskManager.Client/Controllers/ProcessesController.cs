@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Management;
 using System.Threading.Tasks;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Parameters;
 using Orcus.Modules.Api.Routing;
+using TaskManager.Client.Channels;
 using TaskManager.Client.Utilities;
+using TaskManager.Shared.Dtos;
 
 namespace TaskManager.Client.Controllers
 {
@@ -18,9 +22,7 @@ namespace TaskManager.Client.Controllers
                 return errorResult;
 
             using (process)
-            {
                 await process.KillGracefully();
-            }
 
             return Ok();
         }
@@ -40,7 +42,9 @@ namespace TaskManager.Client.Controllers
             if (!GetProcess(processId, out var process, out var errorResult))
                 return errorResult;
 
-            process.Suspend();
+            using (process)
+                process.Suspend();
+
             return Ok();
         }
 
@@ -50,7 +54,9 @@ namespace TaskManager.Client.Controllers
             if (!GetProcess(processId, out var process, out var errorResult))
                 return errorResult;
 
-            process.Resume();
+            using (process)
+                process.Resume();
+
             return Ok();
         }
 
@@ -60,8 +66,58 @@ namespace TaskManager.Client.Controllers
             if (!GetProcess(processId, out var process, out var errorResult))
                 return errorResult;
 
-            process.PriorityClass = priority;
+            using (process)
+                process.PriorityClass = priority;
+
             return Ok();
+        }
+
+        [OrcusGet("connections")]
+        public IActionResult GetConnections(int processId)
+        {
+            return Ok(Connections.GetConnections(processId).ToList());
+        }
+
+        [OrcusGet("properties")]
+        public IActionResult GetProperties(int processId)
+        {
+            if (!GetProcess(processId, out var process, out var errorResult))
+                return errorResult;
+
+            var dto = new ProcessPropertiesDto();
+            using (process)
+            {
+                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT * FROM Win32_Process WHERE ProcessId = {processId}"))
+                using (var results = searcher.Get())
+                {
+                    var wmiProcess = results.Cast<ManagementObject>().SingleOrDefault();
+                    if (wmiProcess == null)
+                        return NotFound();
+
+                    dto.ApplyProperties(process, wmiProcess);
+
+                    if (wmiProcess.TryGetProperty("ExecutablePath", out string executablePath))
+                        try
+                        {
+                            dto.Icon = FileUtilities.GetFileIcon(executablePath, 32);
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                }
+
+                try
+                {
+                    dto.IsWow64Process = ProcessExtensions.Is64BitProcess(process.Handle);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+
+            return Ok(dto);
         }
 
         private bool GetProcess(int processId, out Process process, out IActionResult errorResult)

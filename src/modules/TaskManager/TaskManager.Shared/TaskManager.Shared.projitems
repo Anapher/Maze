@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Channels\IProcessesProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channels\IProcessWatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ActiveConnectionDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\ProcessDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ProcessPropertiesDto.cs" />
   </ItemGroup>
 </Project>

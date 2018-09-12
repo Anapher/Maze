@@ -9,8 +9,10 @@ using System.Windows.Data;
 using Orcus.Administration.ControllerExtensions;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
+using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Administration.Library.Views;
 using Orcus.Utilities;
 using Prism.Commands;
 using Prism.Regions;
@@ -24,6 +26,8 @@ namespace TaskManager.Administration.ViewModels
     {
         private readonly IPackageRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
+        private readonly IDialogWindow _window;
+        private readonly IWindowService _windowService;
 
         private DelegateCommand<ProcessViewModel> _bringToFrontCommand;
         private DelegateCommand<ProcessViewModel> _closeWindowCommand;
@@ -41,10 +45,13 @@ namespace TaskManager.Administration.ViewModels
         private DelegateCommand<ProcessViewModel> _showPropertiesCommand;
         private DelegateCommand<ProcessViewModel> _suspendCommand;
         private ObservableCollection<ProcessViewModel> _treeProcessViewModels;
+        private DelegateCommand<object[]> _setPriorityCommand;
 
-        public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient)
+        public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient, IDialogWindow window, IWindowService windowService)
         {
             _statusBar = statusBar;
+            _window = window;
+            _windowService = windowService;
             _restClient = restClient.CreatePackageSpecific("TaskManager");
         }
 
@@ -179,8 +186,6 @@ namespace TaskManager.Administration.ViewModels
             }
         }
 
-        private DelegateCommand<object[]> _setPriorityCommand;
-
         public DelegateCommand<object[]> SetPriorityCommand
         {
             get
@@ -204,7 +209,20 @@ namespace TaskManager.Administration.ViewModels
 
         public DelegateCommand<ProcessViewModel> ShowPropertiesCommand
         {
-            get { return _showPropertiesCommand ?? (_showPropertiesCommand = new DelegateCommand<ProcessViewModel>(parameter => { })); }
+            get
+            {
+                return _showPropertiesCommand ?? (_showPropertiesCommand = new DelegateCommand<ProcessViewModel>(async parameter =>
+                {
+                    var properties = await ProcessesResource.GetProperties(parameter.Id, _restClient)
+                        .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:StatusBar.LoadProperties"));
+                    if (!properties.Failed)
+                    {
+                        _windowService.Show(new PropertiesViewModel(properties.Result, parameter, _restClient),
+                            Tx.T("TaskManager:Properties.Title", "name", parameter.Name, "id", parameter.Id.ToString()), _window,
+                            window => window.ViewManager.TaskBarIcon = parameter.Icon, null);
+                    }
+                }));
+            }
         }
 
         private async Task LoadProcesses()

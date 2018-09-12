@@ -33,25 +33,25 @@ namespace TaskManager.Client.ProcessInfo
 
                 if (IsImmersiveProcess(handle))
                 {
-                    result.Add(new KeyValuePair<string, object>("Status", ProcessStatus.Immersive));
+                    result.Add(new KeyValuePair<string, object>("Status", ProcessType.Immersive));
                     return result;
                 }
 
                 if (managementObject.TryGetProperty("SessionId", out uint sessionId) && sessionId == 0)
                 {
-                    result.Add(new KeyValuePair<string, object>("Status", ProcessStatus.Service));
+                    result.Add(new KeyValuePair<string, object>("Status", ProcessType.Service));
                     return result;
                 }
 
                 if (IsNetAssembly(managementObject))
                 {
-                    result.Add(new KeyValuePair<string, object>("Status", ProcessStatus.NetAssembly));
+                    result.Add(new KeyValuePair<string, object>("Status", ProcessType.NetAssembly));
                     return result;
                 }
 
                 if (sid != null && string.Equals(User.UserIdentity?.User?.Value, sid, StringComparison.OrdinalIgnoreCase))
                 {
-                    result.Add(new KeyValuePair<string, object>("Status", ProcessStatus.UserProcess));
+                    result.Add(new KeyValuePair<string, object>("Status", ProcessType.UserProcess));
                 }
             }
             catch (Exception)

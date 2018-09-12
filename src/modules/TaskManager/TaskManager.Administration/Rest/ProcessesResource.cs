@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Clients.Helpers;
+using TaskManager.Shared.Dtos;
 
 namespace TaskManager.Administration.Rest
 {
@@ -25,5 +27,11 @@ namespace TaskManager.Administration.Rest
 
         public static Task SetPriority(int processId, ProcessPriorityClass priority, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Get, processId + "/setPriority").AddQueryParam("priority", ((int) priority).ToString()).Execute(restClient);
+
+        public static Task<ProcessPropertiesDto> GetProperties(int processId, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, processId + "/properties").Execute(restClient).Return<ProcessPropertiesDto>();
+
+        public static Task<List<ActiveConnectionDto>> GetConnections(int processId, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, processId + "/connections").Execute(restClient).Return<List<ActiveConnectionDto>>();
     }
 }

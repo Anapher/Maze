@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Prism.Mvvm;
+using TaskManager.Administration.Utilities;
 using TaskManager.Shared.Dtos;
 
 namespace TaskManager.Administration.ViewModels
@@ -25,7 +25,7 @@ namespace TaskManager.Administration.ViewModels
         private string _processOwner;
         private string _productVersion;
         private DateTimeOffset _creationDate;
-        private ProcessStatus _status;
+        private ProcessType _status;
         private long _workingSet;
         private bool _isExpanded = true;
         private bool _isFiltered;
@@ -110,7 +110,7 @@ namespace TaskManager.Administration.ViewModels
             set => SetProperty(ref _processOwner, value);
         }
 
-        public ProcessStatus Status
+        public ProcessType Status
         {
             get => _status;
             set => SetProperty(ref _status, value);
@@ -177,7 +177,7 @@ namespace TaskManager.Administration.ViewModels
             if (processDto.TryGetProperty("ProcessOwner", out string processOwner))
                 ProcessOwner = processOwner;
             if (processDto.TryGetProperty("Status", out int status))
-                Status = (ProcessStatus) status;
+                Status = (ProcessType) status;
 
             if (processDto.TryGetProperty("PrivateBytes", out long privateBytes))
                 PrivateBytes = privateBytes;
@@ -208,16 +208,7 @@ namespace TaskManager.Administration.ViewModels
             if (iconData == null)
                 return;
 
-            using (var memoryStream = new MemoryStream(iconData, false))
-            {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.StreamSource = memoryStream;
-                bitmapImage.EndInit(); ;
-
-                Icon = bitmapImage;
-            }
+            Icon = ImageUtilities.GetBitmapImage(iconData);
         }
 
         public void UpdatePriorityClass() => RaisePropertyChanged(nameof(PriorityClass));

@@ -110,13 +110,28 @@ namespace TaskManager.Client.Utilities
                     continue;
                 }
 
-                int suspendCount;
+                uint suspendCount;
                 do
                 {
                     suspendCount = NativeMethods.ResumeThread(pOpenThread);
                 } while (suspendCount > 0);
                 NativeMethods.CloseHandle(pOpenThread);
             }
+        }
+
+        /// <summary>
+        /// Indicates if the process is 32 or 64 bit.
+        /// </summary>
+        /// <param name="aProcessHandle">process to query</param>
+        /// <returns>true: process is 64 bit; false: process is 32 bit</returns>
+        public static bool Is64BitProcess(System.IntPtr aProcessHandle)
+        {
+            bool lIs64BitProcess = false;
+            if (Environment.Is64BitOperatingSystem)
+            {
+                NativeMethods.IsWow64Process(aProcessHandle, out lIs64BitProcess);
+            }
+            return lIs64BitProcess;
         }
 
         /// <summary>

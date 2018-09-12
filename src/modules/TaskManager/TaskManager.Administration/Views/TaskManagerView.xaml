@@ -456,16 +456,16 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="MinHeight" Value="20" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessStatus.Immersive}">
+                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessType.Immersive}">
                             <Setter Property="Background" Value="{StaticResource ImmersiveProcessColor}" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessStatus.NetAssembly}">
+                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessType.NetAssembly}">
                             <Setter Property="Background" Value="{StaticResource NetAssemblyProcessColor}" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessStatus.Service}">
+                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessType.Service}">
                             <Setter Property="Background" Value="{StaticResource ServiceProcessColor}" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessStatus.UserProcess}">
+                        <DataTrigger Binding="{Binding Status}" Value="{x:Static taskManager:ProcessType.UserProcess}">
                             <Setter Property="Background" Value="{StaticResource UserProcessColor}" />
                         </DataTrigger>
                     </Style.Triggers>

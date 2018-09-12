@@ -90,6 +90,9 @@ namespace Orcus.Administration.Services
             else if (double.IsNaN(window.ViewManager.Width))
                 window.Window.SizeToContent = SizeToContent.Width;
 
+            if (viewModel is IDisposable disposableViewModel)
+                window.ViewManager.Closed += (sender, args) => disposableViewModel.Dispose();
+
             configureWindow?.Invoke(window);
             return window;
         }
