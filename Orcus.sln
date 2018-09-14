@@ -147,13 +147,36 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TaskManager.Shared", "src\m
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TreeListView", "src\submodules\MetroTreeListView\TreeListView\TreeListView.csproj", "{BE9E6BCE-C30F-47EF-AEE9-37F502DE4F5C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_templates", "_templates", "{526EC3BC-A776-43AF-9024-3F3443052681}"
+	ProjectSection(SolutionItems) = preProject
+		src\projectTemplates\module\Administration.MyTemplate.vstemplate = src\projectTemplates\module\Administration.MyTemplate.vstemplate
+		src\projectTemplates\module\Client.MyTemplate.vstemplate = src\projectTemplates\module\Client.MyTemplate.vstemplate
+		src\projectTemplates\module\Root.vstemplate = src\projectTemplates\module\Root.vstemplate
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleTemplate.Administration", "src\projectTemplates\module\ModuleTemplate.Administration\ModuleTemplate.Administration.csproj", "{5AF40800-BD35-4C94-8DA3-612257C18723}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleTemplate.Client", "src\projectTemplates\module\ModuleTemplate.Client\ModuleTemplate.Client.csproj", "{8DC28D77-B855-4B1D-A34A-4F8B5786968E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModuleTemplate.Shared", "src\projectTemplates\module\ModuleTemplate.Shared\ModuleTemplate.Shared.shproj", "{15989B72-7F73-40F5-95D2-8C6EAAD8D5B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{2D48544E-F4DE-498E-B173-D03E51E7BDB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.Administration", "src\modules\Console\Console.Administration\Console.Administration.csproj", "{5CD9E049-3AA4-43B0-B238-54C00747AF56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.Client", "src\modules\Console\Console.Client\Console.Client.csproj", "{D3CC712F-7533-43B8-AB3F-A79603EC1369}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Console.Shared", "src\modules\Console\Console.Shared\Console.Shared.shproj", "{B1070EE4-03C8-4760-86BF-E9341CFAC088}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\projectTemplates\module\ModuleTemplate.Shared\ModuleTemplate.Shared.projitems*{15989b72-7f73-40f5-95d2-8c6eaad8d5b2}*SharedItemsImports = 13
 		src\modules\TaskManager\TaskManager.Shared\TaskManager.Shared.projitems*{2cb8c938-9636-4e78-9ce2-3aaa8fd46813}*SharedItemsImports = 13
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{41d81d49-8c6a-47f0-8f66-b533473bc004}*SharedItemsImports = 13
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{8f8a07c3-7c4e-49d2-9997-0836f51f44ac}*SharedItemsImports = 4
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
+		src\modules\Console\Console.Shared\Console.Shared.projitems*{b1070ee4-03c8-4760-86bf-e9341cfac088}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -348,6 +371,22 @@ Global
 		{BE9E6BCE-C30F-47EF-AEE9-37F502DE4F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE9E6BCE-C30F-47EF-AEE9-37F502DE4F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE9E6BCE-C30F-47EF-AEE9-37F502DE4F5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF40800-BD35-4C94-8DA3-612257C18723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF40800-BD35-4C94-8DA3-612257C18723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF40800-BD35-4C94-8DA3-612257C18723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF40800-BD35-4C94-8DA3-612257C18723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC28D77-B855-4B1D-A34A-4F8B5786968E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC28D77-B855-4B1D-A34A-4F8B5786968E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC28D77-B855-4B1D-A34A-4F8B5786968E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC28D77-B855-4B1D-A34A-4F8B5786968E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -405,6 +444,14 @@ Global
 		{30E6C59F-AB70-4D02-8AEE-F6A10181D5CC} = {7CE46A51-503E-4EB0-935C-3ED2E48F94BF}
 		{2CB8C938-9636-4E78-9CE2-3AAA8FD46813} = {7CE46A51-503E-4EB0-935C-3ED2E48F94BF}
 		{BE9E6BCE-C30F-47EF-AEE9-37F502DE4F5C} = {0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}
+		{526EC3BC-A776-43AF-9024-3F3443052681} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{5AF40800-BD35-4C94-8DA3-612257C18723} = {526EC3BC-A776-43AF-9024-3F3443052681}
+		{8DC28D77-B855-4B1D-A34A-4F8B5786968E} = {526EC3BC-A776-43AF-9024-3F3443052681}
+		{15989B72-7F73-40F5-95D2-8C6EAAD8D5B2} = {526EC3BC-A776-43AF-9024-3F3443052681}
+		{2D48544E-F4DE-498E-B173-D03E51E7BDB3} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56} = {2D48544E-F4DE-498E-B173-D03E51E7BDB3}
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369} = {2D48544E-F4DE-498E-B173-D03E51E7BDB3}
+		{B1070EE4-03C8-4760-86BF-E9341CFAC088} = {2D48544E-F4DE-498E-B173-D03E51E7BDB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

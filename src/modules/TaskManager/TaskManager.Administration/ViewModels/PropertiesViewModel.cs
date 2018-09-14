@@ -26,6 +26,7 @@ namespace TaskManager.Administration.ViewModels
         private readonly DispatcherTimer _refreshTimer;
         private CallTransmissionChannel<IProcessWatcher> _processWatcher;
         private bool _isDisposed;
+        private bool _refreshedActiveConnections;
 
         public PropertiesViewModel(ProcessPropertiesDto properties, ProcessViewModel process, IPackageRestClient restClient)
         {
@@ -122,6 +123,13 @@ namespace TaskManager.Administration.ViewModels
 
         private async void RefreshTimerOnTick(object sender, EventArgs e)
         {
+            if (_refreshedActiveConnections)
+            {
+                UpdateActiveConnections().Forget();
+                _refreshedActiveConnections = true;
+            }
+            else _refreshedActiveConnections = false;
+
             PropertiesDto = await _processWatcher.Interface.GetInfo();
         }
 

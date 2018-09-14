@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Viewbox
+        x:Key="ConsoleIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M0,15L16,15 16,1 0,1z" />
+                                <GeometryDrawing Brush="{DynamicResource LightBrush2}" Geometry="F1M14,4L2,4 2,3 14,3z M5.717,5.979C6.404,5.979,6.779,6.148,6.878,6.2L6.951,6.238 6.748,6.924 6.642,6.873C6.397,6.753 6.076,6.688 5.738,6.688 4.653,6.688 4.006,7.375 4.006,8.524 4.006,9.644 4.643,10.313 5.71,10.313 6.06,10.313 6.422,10.241 6.656,10.127L6.766,10.073 6.942,10.752 6.87,10.788C6.644,10.9 6.187,11.021 5.585,11.021 4.115,11.021 3.165,10.049 3.165,8.545 3.165,7.034 4.214,5.979 5.717,5.979 M8,9L9,9 9,10 8,10z M8,7L9,7 9,8 8,8z M10.933,6L13.019,11 12.095,11 10.008,6z M2,13L14,13 14,5 2,5z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush1}" Geometry="F1M9,10L8,10 8,9 9,9z M9,8L8,8 8,7 9,7z M3.165,8.545C3.165,7.034 4.214,5.979 5.717,5.979 6.404,5.979 6.779,6.148 6.878,6.2L6.951,6.238 6.748,6.924 6.642,6.873C6.397,6.753 6.076,6.688 5.738,6.688 4.653,6.688 4.006,7.375 4.006,8.524 4.006,9.644 4.643,10.313 5.71,10.313 6.06,10.313 6.422,10.241 6.656,10.127L6.766,10.073 6.942,10.752 6.87,10.788C6.644,10.9 6.187,11.021 5.585,11.021 4.115,11.021 3.165,10.049 3.165,8.545 M12.095,11L10.008,6 10.933,6 13.019,11z M14,4L2,4 2,3 14,3z M14,13L2,13 2,5 14,5z M1,14L15,14 15,2 1,2z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="RunIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M2.9997,-0.000199999999999534L2.9997,15.9998 13.6677,7.9998z" />
+                                <GeometryDrawing Brush="#FF388934" Geometry="F1M4,2L4,14 12,8z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+</ResourceDictionary>
