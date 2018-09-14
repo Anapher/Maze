@@ -33,7 +33,9 @@ namespace Orcus.Server.Service
                     if (_connectionManager.AdministrationConnections.TryGetValue(accountId, out var administrationConnection))
                     {
                         var channelId = int.Parse(response.Headers.Location.AbsolutePath.Trim('/'));
-                        new OrcusChannelRedirect(channelId, clientConnection.OrcusServer, administrationConnection.OrcusServer);
+
+                        clientConnection.OrcusServer.AddChannelRedirect(channelId, administrationConnection.OrcusServer.DataSocket);
+                        administrationConnection.OrcusServer.AddChannelRedirect(channelId, clientConnection.OrcusServer.DataSocket);
                     }
                 }
                 return response;

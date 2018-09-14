@@ -5,6 +5,7 @@ using Orcus.Utilities;
 
 namespace Orcus.Server.Service.Channels
 {
+    [SynchronizedChannel]
     public class OrcusChannelRedirect : IDataChannel
     {
         private readonly int _channelId;
@@ -50,6 +51,7 @@ namespace Orcus.Server.Service.Channels
             _channel.Send(buffer, offset, count, true);
         }
 
+        [SynchronizedChannel]
         private class Channel : IDataChannel
         {
             public void Dispose()

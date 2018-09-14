@@ -59,6 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{67CFB4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus", "src\Orcus\Orcus.csproj", "{860BFB06-4FCD-494F-B7C3-1D53683FA988}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D3CC712F-7533-43B8-AB3F-A79603EC1369} = {D3CC712F-7533-43B8-AB3F-A79603EC1369}
 		{C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA} = {C7D0549E-D1B9-4FFA-AAFE-3B75B3419DEA}
 		{30E6C59F-AB70-4D02-8AEE-F6A10181D5CC} = {30E6C59F-AB70-4D02-8AEE-F6A10181D5CC}
 		{D20D50B0-DC99-4A88-95D4-494367737DE7} = {D20D50B0-DC99-4A88-95D4-494367737DE7}
@@ -87,6 +88,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration", "src\Orcus.Administration\Orcus.Administration.csproj", "{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{78079640-832D-4593-B86A-6D2D537C5824} = {78079640-832D-4593-B86A-6D2D537C5824}
+		{5CD9E049-3AA4-43B0-B238-54C00747AF56} = {5CD9E049-3AA4-43B0-B238-54C00747AF56}
 		{8F8A07C3-7C4E-49D2-9997-0836F51F44AC} = {8F8A07C3-7C4E-49D2-9997-0836F51F44AC}
 		{EC7D87C5-1841-4F2A-BC46-0FE869839907} = {EC7D87C5-1841-4F2A-BC46-0FE869839907}
 	EndProjectSection
@@ -162,9 +164,9 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModuleTemplate.Shared", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{2D48544E-F4DE-498E-B173-D03E51E7BDB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.Administration", "src\modules\Console\Console.Administration\Console.Administration.csproj", "{5CD9E049-3AA4-43B0-B238-54C00747AF56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Administration", "src\modules\Console\Console.Administration\Console.Administration.csproj", "{5CD9E049-3AA4-43B0-B238-54C00747AF56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.Client", "src\modules\Console\Console.Client\Console.Client.csproj", "{D3CC712F-7533-43B8-AB3F-A79603EC1369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Client", "src\modules\Console\Console.Client\Console.Client.csproj", "{D3CC712F-7533-43B8-AB3F-A79603EC1369}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Console.Shared", "src\modules\Console\Console.Shared\Console.Shared.shproj", "{B1070EE4-03C8-4760-86BF-E9341CFAC088}"
 EndProject

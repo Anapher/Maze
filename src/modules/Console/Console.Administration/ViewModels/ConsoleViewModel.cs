@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Console.Administration.Controls;
 using Console.Administration.Rest;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
@@ -15,7 +14,7 @@ namespace Console.Administration.ViewModels
         private ProcessInterface _processConsole;
         private DelegateCommand _processExitedCommand;
 
-        public ConsoleViewModel(TargetedRestClient restClient)
+        public ConsoleViewModel(ITargetedRestClient restClient)
         {
             _restClient = restClient.CreatePackageSpecific("Console");
         }
@@ -35,8 +34,8 @@ namespace Console.Administration.ViewModels
         {
             base.OnNavigatedTo(navigationContext);
 
-            var filename = (string) navigationContext.Parameters.FirstOrDefault(x => x.Key == "Filename").Value ?? "cmd.exe";
-            var arguments = (string) navigationContext.Parameters.FirstOrDefault(x => x.Key == "Parameter").Value;
+            var filename = (string) navigationContext?.Parameters.FirstOrDefault(x => x.Key == "Filename").Value ?? "cmd.exe";
+            var arguments = (string) navigationContext?.Parameters.FirstOrDefault(x => x.Key == "Parameter").Value;
 
             var processWatcher = await ConsoleResource.ProcessWatcher(_restClient);
             ProcessConsole = processWatcher;

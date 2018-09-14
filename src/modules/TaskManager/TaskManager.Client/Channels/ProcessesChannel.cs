@@ -44,7 +44,7 @@ namespace TaskManager.Client.Channels
                 using (var processCollection = _searcher.Get())
                 {
                     var dtos = (await TaskCombinators.ThrottledAsync(processCollection.Cast<ManagementObject>(), CreateProcessDto, CancellationToken))
-                        .ToList();
+                        .Where(x => x != null).ToList();
 
                     _latestProcessIds = new HashSet<int>(dtos.Select(x => x.ProcessId));
                     return dtos;
@@ -60,7 +60,14 @@ namespace TaskManager.Client.Channels
         {
             Process process;
             if (managementObject.TryGetProperty("ProcessId", out uint processId))
-                process = Process.GetProcessById((int) processId);
+                try
+                {
+                    process = Process.GetProcessById((int)processId);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             else
                 return null;
 

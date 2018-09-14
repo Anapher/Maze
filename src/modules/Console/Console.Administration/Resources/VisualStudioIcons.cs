@@ -10,6 +10,6 @@ namespace Console.Administration.Resources
         {
         }
 
-        public Viewbox Icon => GetIcon();
+        public Viewbox Console => GetIcon();
     }
 }

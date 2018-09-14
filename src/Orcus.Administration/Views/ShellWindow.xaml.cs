@@ -40,6 +40,10 @@ namespace Orcus.Administration.Views
                 grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(1, GridUnitType.Star)});
                 grid.RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
 
+                var statusBar = new StatusBar { ShellStatusBar = statusBarManager };
+                Grid.SetRow(statusBar, 1);
+                grid.Children.Add(statusBar);
+
                 if (content is UIElement uiElement)
                 {
                     Grid.SetRow(uiElement, 0);
@@ -51,10 +55,6 @@ namespace Orcus.Administration.Views
                     Grid.SetRow(contentControl, 0);
                     grid.Children.Add(contentControl);
                 }
-
-                var statusBar = new StatusBar {ShellStatusBar = statusBarManager};
-                Grid.SetRow(statusBar, 1);
-                grid.Children.Add(statusBar);
 
                 Content = grid;
             }

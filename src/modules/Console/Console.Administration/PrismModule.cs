@@ -23,7 +23,7 @@ namespace Console.Administration
         {
             Tx.LoadFromEmbeddedResource("Console.Administration.Resources.Console.Translation.txd");
 
-            _registrar.Register<ConsoleViewModel>("Console:Name", IconFactory.FromFactory(() => _icons.Icon), CommandCategory.System);
+            _registrar.Register<ConsoleViewModel>("Console:Name", IconFactory.FromFactory(() => _icons.Console), CommandCategory.System);
         }
     }
 }

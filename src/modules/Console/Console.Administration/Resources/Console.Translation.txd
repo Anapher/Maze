@@ -2,9 +2,11 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="Console:ExitLine">{name} wurde beendet.</text>
 		<text key="Console:Name">Konsole</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="Console:ExitLine">{name} exited.</text>
 		<text key="Console:Name">Console</text>
 	</culture>
 </translation>

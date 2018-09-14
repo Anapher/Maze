@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Console.Shared.Channels;
 using Console.Shared.Dtos;
 using Orcus.ControllerExtensions;
+using Orcus.Modules.Api;
 using Orcus.Modules.Api.Routing;
 using Orcus.Utilities;
 
 namespace Console.Client.Channels
 {
-    [Route("processChannel")]
+    [Route("processChannel"), SynchronizedChannel]
     public class ProcessChannel : CallTransmissionChannel<IProcessChannel>, IProcessChannel
     {
         private StreamReader _errorReader;
@@ -69,12 +70,6 @@ namespace Console.Client.Channels
             return Task.CompletedTask;
         }
 
-        public Task ExitProcess()
-        {
-            _process.Kill();
-            return Task.CompletedTask;
-        }
-
         private async Task ReadProcessStream(StreamReader reader, Action<ProcessOutputEventArgs> eventAction)
         {
             var readBuffer = ArrayPool<char>.Shared.Rent(1024);
@@ -84,6 +79,7 @@ namespace Console.Client.Channels
                 {
                     var count = await reader.ReadAsync(readBuffer, 0, readBuffer.Length);
                     eventAction(new ProcessOutputEventArgs(new string(readBuffer, 0, count)));
+                    await Task.Delay(20); //no idea why but that fixes wrong ordered events
                 }
             }
             finally
@@ -100,8 +96,9 @@ namespace Console.Client.Channels
             {
                 _process.Kill();
             }
-  
+
             _process?.Dispose();
+            _process = null;
         }
 
         private void ProcessOnExited(object sender, EventArgs e)
@@ -110,6 +107,7 @@ namespace Console.Client.Channels
 
             _process.Kill();
             _process.Dispose();
+            _process = null;
         }
     }
 }

@@ -24,8 +24,9 @@ namespace Orcus.Sockets
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeRequests;
         private readonly ConcurrentDictionary<int, BufferQueueStream> _activeResponses;
         private readonly ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>> _waitingRequests;
-        private readonly ConcurrentDictionary<int, IDataChannel> _channels;
+        private readonly ConcurrentDictionary<int, DataChannelInfo> _channels;
         private readonly ConcurrentDictionary<int, CancellationTokenSource> _cancellableRequests;
+        private readonly ConcurrentDictionary<int, SynchronizedDataSocket> _channelRedirects;
 
         private readonly IDataSocket _socket;
         private int _requestCounter;
@@ -55,11 +56,12 @@ namespace Orcus.Sockets
             _maxHeaderSize = maxHeaderSize;
             _customOffset = socket.RequiredPreBufferLength ?? 0;
 
-            _channels = new ConcurrentDictionary<int, IDataChannel>();
+            _channels = new ConcurrentDictionary<int, DataChannelInfo>();
             _activeRequests = new ConcurrentDictionary<int, BufferQueueStream>();
             _activeResponses = new ConcurrentDictionary<int, BufferQueueStream>();
             _waitingRequests = new ConcurrentDictionary<int, TaskCompletionSource<HttpResponseMessage>>();
             _cancellableRequests = new ConcurrentDictionary<int, CancellationTokenSource>();
+            _channelRedirects = new ConcurrentDictionary<int, SynchronizedDataSocket>();
 
             socket.DataReceivedEventArgs += SocketOnDataReceivedEventArgs;
 
@@ -83,7 +85,13 @@ namespace Orcus.Sockets
             });
         }
 
+        public IDataSocket DataSocket => _socket;
         public event EventHandler<OrcusRequestReceivedEventArgs> RequestReceived;
+
+        public void AddChannelRedirect(int channelId, IDataSocket targetSocket)
+        {
+            _channelRedirects.TryAdd(channelId, new SynchronizedDataSocket(targetSocket));
+        }
 
         public void AddChannel(IDataChannel channel, int channelId)
         {
@@ -107,7 +115,7 @@ namespace Orcus.Sockets
             return id;
         }
 
-        public IDataChannel GetChannel(int channelId) => _channels[channelId];
+        public IDataChannel GetChannel(int channelId) => _channels[channelId].DataChannel;
 
         public async Task CloseChannel(int channelId)
         {
@@ -316,52 +324,109 @@ namespace Orcus.Sockets
             }
         }
 
-        private async Task ChannelSendData(int channelId, byte[] buffer, int offset, int count, bool hasOffset)
+        private async Task ChannelSendData(DataChannelInfo channel, byte[] buffer, int offset, int count, bool hasOffset)
         {
             if (hasOffset)
             {
-                BinaryUtils.WriteInt32(buffer, offset - 4, channelId);
+                BinaryUtils.WriteInt32(buffer, offset - 5, channel.ChannelId);
+                buffer[offset - 1] = (byte) (channel.IsSynchronized ? 1 : 0);
+
                 await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
-                    new ArraySegment<byte>(buffer, offset - 4, count + 4), true, CancellationToken.None);
+                    new ArraySegment<byte>(buffer, offset - 5, count + 5), true, CancellationToken.None);
                 return;
             }
 
-            using (var newBuffer = AllocateBuffer(count + 4))
+            using (var newBuffer = AllocateBuffer(count + 5))
             {
-                BinaryUtils.WriteInt32(newBuffer.Buffer, newBuffer.Offset, channelId);
-                Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + 4, count);
-                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset, count + 4),
+                BinaryUtils.WriteInt32(newBuffer.Buffer, newBuffer.Offset, channel.ChannelId);
+                newBuffer.Buffer[newBuffer.Offset + 4] = (byte) (channel.IsSynchronized ? 1 : 0);
+
+                Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + 5, count);
+                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset, count + 5),
                     true, CancellationToken.None);
             }
         }
-
+        
         private async void ProcessMessage(BufferSegment buffer)
         {
             using (buffer)
             {
                 var channelId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
+                var isMessageSynchronized = buffer.Buffer[buffer.Offset + 4] == 1;
+
                 if (!_channels.TryGetValue(channelId, out var channel))
                 {
+                    if (_channelRedirects.TryGetValue(channelId, out var synchronizedSocket))
+                    {
+                        if (channel.IsSynchronized || isMessageSynchronized)
+                        {
+                            await synchronizedSocket.FifoAsyncLock.EnterAsync();
+                            try
+                            {
+                                await synchronizedSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, buffer, true,
+                                    CancellationToken.None);
+                            }
+                            finally
+                            {
+                                synchronizedSocket.FifoAsyncLock.Release();
+                            }
+                        }
+                        else
+                        {
+                            await synchronizedSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, buffer, true,
+                                CancellationToken.None);
+                        }
+
+                        return;
+                    }
+
                     Logger.Error("Received message for channel {channelId} which does not exist.", channelId);
-                    throw new InvalidOperationException($"Received message for channel {channelId} which does not exist.");
+                    return;
                 }
 
-                await Task.Run(() => channel.ReceiveData(buffer.Buffer, buffer.Offset + 4, buffer.Length - 4));
+                if (channel.IsSynchronized || isMessageSynchronized)
+                {
+                    //aquire lock in synchronized context
+                    var lockTask = channel.AsyncLock.EnterAsync();
+                    await Task.Run(async () =>
+                    {
+                        await lockTask;
+                        try
+                        {
+                            channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5);
+                        }
+                        finally
+                        {
+                            channel.AsyncLock.Release();
+                        }
+                    });
+                }
+                else
+                    await Task.Run(() => channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5));
             }
         }
 
-        private void CloseChannel(BufferSegment buffer)
+        private async void CloseChannel(BufferSegment buffer)
         {
             using (buffer)
             {
                 var channelId = BitConverter.ToInt32(buffer.Buffer, buffer.Offset);
                 if (!_channels.TryRemove(channelId, out var channel))
                 {
+                    if (_channelRedirects.TryRemove(channelId, out var dataSocket))
+                    {
+                        dataSocket.Dispose();
+                        await dataSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.CloseChannel, buffer, true, CancellationToken.None);
+                        return;
+                    }
+
                     Logger.Error("Received close for channel {channelId} which does not exist.", channelId);
                     return; //already closed so it's not such a huge inconvenience
                 }
 
-                Task.Run(() => channel.Dispose());
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(() => channel.DataChannel.Dispose());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
@@ -542,13 +607,14 @@ namespace Orcus.Sockets
 
         protected void InternalAddChannel(IDataChannel channel, int channelId)
         {
-            if (!_channels.TryAdd(channelId, channel))
+            var channelInfo = new DataChannelInfo(channel, channelId);
+            if (!_channels.TryAdd(channelId, channelInfo))
                 throw new InvalidOperationException("The channel id is already in use");
 
             Logger.Debug("Add channel with id {channelId}", channelId);
 
-            channel.Send = (buffer, offset, count, hasOffset) => ChannelSendData(channelId, buffer, offset, count, hasOffset);
-            channel.RequiredOffset = _customOffset + 4;
+            channel.Send = (buffer, offset, count, hasOffset) => ChannelSendData(channelInfo, buffer, offset, count, hasOffset);
+            channel.RequiredOffset = _customOffset + 5;
         }
 
         protected BufferSegment AllocateBuffer(int size)

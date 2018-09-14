@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Console.Shared.Dtos;
+using Unclassified.TxLib;
 
 namespace Console.Administration.Controls
 {
@@ -228,7 +229,7 @@ namespace Console.Administration.Controls
         {
             //  Are we showing diagnostics?
             if (ShowDiagnostics)
-                WriteOutput(Environment.NewLine + ProcessConsole.Filename + " exited.", Color.FromArgb(255, 0, 255, 0));
+                WriteOutput(Environment.NewLine + Tx.T("Console:ExitLine", "name", ProcessConsole.Filename), Color.FromArgb(255, 0, 255, 0));
 
             if (!IsHandleCreated)
                 return;
@@ -245,7 +246,7 @@ namespace Console.Administration.Controls
         private void richTextBoxConsole_KeyDown(object sender, KeyEventArgs e)
         {
             //  Are we sending keyboard commands to the process?
-            if (SendKeyboardCommandsToProcess && IsProcessRunning)
+            if (IsProcessRunning)
                 if (e.Control && e.KeyCode == Keys.C)
                 {
                     ExitRequested?.Invoke(this, EventArgs.Empty);

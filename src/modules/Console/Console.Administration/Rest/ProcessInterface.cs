@@ -62,7 +62,7 @@ namespace Console.Administration.Rest
         {
             ProcessChannel?.Dispose();
             IsRunning = false;
-            Exited?.Invoke(this, new ProcessExitedEventArgs(-1));
+            Exited?.Invoke(this, new ProcessExitedEventArgs(0));
         }
     }
 }
