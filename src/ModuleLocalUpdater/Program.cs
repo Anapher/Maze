@@ -42,6 +42,9 @@ namespace ModuleLocalUpdater
             if (arg.ModuleName.EndsWith(".Tests"))
                 return 0;
 
+            if (!arg.ModuleName.Contains('.'))
+                return 0;
+
             var solutionDirectory = arg.SolutionDirectory ?? GetSolutionDirectory(arg.ModuleDirectory);
             DirectoryInfo packageDirectory;
 
@@ -84,7 +87,7 @@ namespace ModuleLocalUpdater
                     break;
                 default:
                     Console.WriteLine($"Error: Framework '{framework}' could not be identified.");
-                    return -1;
+                    return 0;
             }
 
             if (packageDirectory?.Exists != true)

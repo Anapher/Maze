@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\libraries\x264net\x264net.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <Import Project="..\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems" Label="Shared" />
+
+</Project>
