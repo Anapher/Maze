@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
 using RemoteDesktop.Client.Encoder;
+using RemoteDesktop.Client.Extensions;
 using RemoteDesktop.Client.Utilities;
+using RemoteDesktop.Shared;
+using RemoteDesktop.Shared.Options;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -54,9 +56,10 @@ namespace RemoteDesktop.Client.Capture.DesktopDuplication
             }
         }
 
-        public ScreenInfo Initialize(Dictionary<string, string> options)
+        public ScreenInfo Initialize(ComponentOptions componentOptions)
         {
-            var monitor = CaptureOptions.Monitor.GetValue(options);
+            var options = componentOptions.To<DesktopDuplicationOptions>();
+            var monitor = options.Monitor.Value;
 
             Adapter1 adapter;
             try

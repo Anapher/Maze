@@ -33,12 +33,30 @@
     <ClInclude Include="stringconvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\openh264\include\codec_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\openh264\include\codec_app_def.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\openh264\include\codec_def.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\openh264\include\codec_ver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenH264.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="x264net.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stringconvert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenH264.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

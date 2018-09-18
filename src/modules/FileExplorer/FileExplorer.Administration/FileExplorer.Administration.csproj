@@ -28,6 +28,10 @@
     <!-- Resources -->
     <Resource Include="Resources\**\*.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\ExecuteFileView.xaml" />
+  </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
@@ -38,6 +42,12 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ExecuteFileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   
    <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />

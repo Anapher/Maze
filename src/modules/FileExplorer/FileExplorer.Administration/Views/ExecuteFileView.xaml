@@ -1,0 +1,65 @@
+﻿<views:WindowUserControl
+    x:Class="FileExplorer.Administration.Views.ExecuteFileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
+    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    d:DataContext="{d:DesignInstance viewModels:ExecuteFileViewModel}"
+    d:DesignWidth="500"
+    DialogResult="{Binding DialogResult}"
+    EscapeClosesWindow="True"
+    ResizeMode="NoResize"
+    WindowWidth="500"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Thickness x:Key="Space" Top="5" />
+    </UserControl.Resources>
+    <StackPanel Margin="10">
+        <DockPanel>
+            <TextBlock
+                Width="140"
+                VerticalAlignment="Center"
+                Text="{tx:TC FileExplorer:ExecuteView.Path}" />
+            <TextBox Text="{Binding Filename}" />
+        </DockPanel>
+        <DockPanel Margin="{StaticResource Space}">
+            <TextBlock
+                Width="140"
+                VerticalAlignment="Center"
+                Text="{tx:TC FileExplorer:ExecuteView.Arguments}" />
+            <TextBox Text="{Binding ExecuteDto.Arguments}" />
+        </DockPanel>
+        <DockPanel Margin="{StaticResource Space}">
+            <TextBlock
+                Width="140"
+                VerticalAlignment="Center"
+                Text="{tx:TC FileExplorer:ExecuteView.WorkingDirectory}" />
+            <TextBox Text="{Binding ExecuteDto.WorkingDirectory}" />
+        </DockPanel>
+        <DockPanel Margin="{StaticResource Space}">
+            <TextBlock
+                Width="140"
+                VerticalAlignment="Center"
+                Text="{tx:TC FileExplorer:ExecuteView.Verb}" />
+            <ComboBox
+                IsEditable="True"
+                ItemsSource="{Binding AvailableVerbs}"
+                Text="{Binding ExecuteDto.Verb}" />
+        </DockPanel>
+        <DockPanel Margin="{StaticResource Space}">
+            <CheckBox Content="{tx:T FileExplorer:ExecuteView.UseShellExecute}" IsChecked="{Binding ExecuteDto.UseShellExecute}" />
+        </DockPanel>
+        <DockPanel Margin="{StaticResource Space}">
+            <CheckBox Content="{tx:T FileExplorer:ExecuteView.CreateNoWindow}" IsChecked="{Binding ExecuteDto.CreateNoWindow}" />
+        </DockPanel>
+        <Button
+            MinWidth="100"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Right"
+            Command="{Binding ExecuteCommand}"
+            Content="{tx:T FileExplorer:Execute}" />
+    </StackPanel>
+</views:WindowUserControl>

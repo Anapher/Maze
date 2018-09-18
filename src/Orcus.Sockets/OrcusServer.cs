@@ -116,6 +116,7 @@ namespace Orcus.Sockets
         }
 
         public IDataChannel GetChannel(int channelId) => _channels[channelId].DataChannel;
+        public int GetChannelId(IDataChannel channel) => _channels.First(x => x.Value.DataChannel == channel).Key;
 
         public async Task CloseChannel(int channelId)
         {

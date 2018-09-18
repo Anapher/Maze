@@ -100,7 +100,10 @@ namespace Orcus.Administration.Services
         private static void SetupLoadUnload(IShellWindow window, object viewModel, ILifetimeScope lifescope)
         {
             if (viewModel is INavigationAware navigationAware)
+            {
                 window.Window.Loaded += (sender, args) => navigationAware.OnNavigatedTo(null);
+                window.Window.Closed += (sender, args) => navigationAware.OnNavigatedFrom(null);
+            }
 
             window.Window.Closed += (sender, args) => lifescope.Dispose();
         }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Threading;
 using Orcus.Administration.ControllerExtensions;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
@@ -46,6 +47,8 @@ namespace TaskManager.Administration.ViewModels
         private DelegateCommand<ProcessViewModel> _suspendCommand;
         private ObservableCollection<ProcessViewModel> _treeProcessViewModels;
         private DelegateCommand<object[]> _setPriorityCommand;
+        private readonly DispatcherTimer _refreshTimer;
+        private bool _autoRefresh;
 
         public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient, IDialogWindow window, IWindowService windowService)
         {
@@ -53,6 +56,8 @@ namespace TaskManager.Administration.ViewModels
             _window = window;
             _windowService = windowService;
             _restClient = restClient.CreatePackageSpecific("TaskManager");
+            _refreshTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(10)};
+            _refreshTimer.Tick += RefreshTimerOnTick;
         }
 
         public string SearchText
@@ -62,6 +67,16 @@ namespace TaskManager.Administration.ViewModels
             {
                 if (SetProperty(ref _searchText, value))
                     UpdateView();
+            }
+        }
+
+        public bool AutoRefresh
+        {
+            get => _autoRefresh;
+            set
+            {
+                if (SetProperty(ref _autoRefresh, value))
+                    _refreshTimer.IsEnabled = value;
             }
         }
 
@@ -313,6 +328,11 @@ namespace TaskManager.Administration.ViewModels
             return processViewModel.Childs.Any(MatchesSearchPattern);
         }
 
+        private void RefreshTimerOnTick(object sender, EventArgs e)
+        {
+            RefreshCommand.Execute();
+        }
+
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             _processProviderChannel = await TaskManagerResource.GetProcessProvider(_restClient);
@@ -323,11 +343,15 @@ namespace TaskManager.Administration.ViewModels
             ProcessView.SortDescriptions.Add(new SortDescription(nameof(ProcessViewModel.CreationDate), ListSortDirection.Ascending));
 
             await LoadProcesses();
+
+            AutoRefresh = true;
         }
 
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             base.OnNavigatedFrom(navigationContext);
+
+            AutoRefresh = false;
             _processProviderChannel?.Dispose();
             _processes = null;
         }

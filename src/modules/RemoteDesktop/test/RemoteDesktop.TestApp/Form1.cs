@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Encoder;
 using RemoteDesktop.Client.Encoder.x264;
+using RemoteDesktop.Shared;
 using x264net;
 
 namespace RemoteDesktop.TestApp
@@ -42,7 +43,7 @@ namespace RemoteDesktop.TestApp
             Task.Run(() =>
             {
                 _service = new DesktopDuplicationCaptureService();
-                var screenInfo = _service.Initialize(0);
+                var screenInfo = _service.Initialize(new ComponentOptions("desktopduplication"));
                 _encoder = new TestEncoder(screenInfo) { SetImage = ImportData };
 
                 while (true)
@@ -119,6 +120,11 @@ namespace RemoteDesktop.TestApp
         }
 
         private readonly object _lock = new object();
+
+        public void Initialize(ScreenInfo screenInfo, IFrameTransmitter transmitter, ComponentOptions componentOptions)
+        {
+            throw new NotImplementedException();
+        }
 
         public unsafe void CodeImage(IntPtr scan0, PixelFormat pixelFormat)
         {
@@ -226,5 +232,8 @@ namespace RemoteDesktop.TestApp
         {
             throw new NotImplementedException();
         }
+
+        public string Id { get; }
+        public bool IsPlatformSupported { get; }
     }
 }

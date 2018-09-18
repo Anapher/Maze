@@ -41,6 +41,12 @@ namespace Orcus.Administration.Library.Clients
             return _targetedRestClient.OpenChannel<TChannel>(message, cancellationToken);
         }
 
+        public Task<HttpResponseMessage> SendChannelMessage(HttpRequestMessage request, IDataChannel channel, CancellationToken cancellationToken)
+        {
+            PatchMessage(request);
+            return _targetedRestClient.SendChannelMessage(request, channel, cancellationToken);
+        }
+
         private void PatchMessage(HttpRequestMessage request)
         {
             request.RequestUri = UriHelper.CombineRelativeUris(_packageUri, request.RequestUri);

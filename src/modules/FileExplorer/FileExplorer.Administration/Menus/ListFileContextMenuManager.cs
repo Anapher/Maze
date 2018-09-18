@@ -135,7 +135,8 @@ namespace FileExplorer.Administration.Menus
 
         private void ExecuteFile(FileViewModel file, FileExplorerViewModel context)
         {
-            throw new System.NotImplementedException();
+            _windowService.ShowDialog(new ExecuteFileViewModel(file, context.RestClient), Tx.T("FileExplorer:Execute"), context.Window,
+                window => window.ViewManager.TitleBarIcon = _icons.StartupProject, null);
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

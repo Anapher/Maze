@@ -13,7 +13,6 @@ namespace RemoteDesktop.Shared
         }
 
         public string ComponentName { get; }
-
         public Dictionary<string, string> Options { get; }
 
         public static ComponentOptions Parse(string s)

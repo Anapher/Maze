@@ -42,5 +42,11 @@ namespace FileExplorer.Administration.Rest
 
         public static Task<FilePropertiesDto> GetFileProperties(string path, IPackageRestClient restClient) =>
             CreateRequest(HttpVerb.Get, "file/properties").AddQueryParam("path", path).Execute(restClient).Return<FilePropertiesDto>();
+
+        public static Task ExecuteFile(ExecuteFileDto dto, bool waitForExit, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "file/execute", dto).AddQueryParam("waitForExit", waitForExit.ToString()).Execute(restClient);
+
+        public static Task<string[]> GetFileVerbs(string path, IPackageRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "file/verbs").AddQueryParam("path", path).Execute(restClient).Return<string[]>();
     }
 }

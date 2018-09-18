@@ -1,1 +1,24 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Viewbox
+        x:Key="MonitorIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M14,2.0005L2,2.0005 2,12.0005 4,12.0005 4,14.0005 12,14.0005 12,12.0005 14,12.0005z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M4,4L12,4 12,10 4,10z M13,11L13,3 3,3 3,11 7,11 7,12 5,12 5,13 11,13 11,12 9,12 9,11z" />
+                                <GeometryDrawing Brush="{DynamicResource LightBrush1}" Geometry="F1M12,4L4,4 4,10 12,10z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+</ResourceDictionary>

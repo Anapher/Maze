@@ -20,6 +20,7 @@ using Orcus.Administration.Core.Extensions;
 using Orcus.Administration.Library.Channels;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Exceptions;
+using Orcus.Modules.Api;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Authentication;
 using Orcus.Server.Connection.Error;
@@ -75,6 +76,16 @@ namespace Orcus.Administration.Core.Clients
             channel.Initialize(response);
 
             return channel;
+        }
+
+        public Task<HttpResponseMessage> SendChannelMessage(HttpRequestMessage request, IDataChannel channel, CancellationToken cancellationToken)
+        {
+            if (_orcusServer == null)
+                throw new InvalidOperationException("The channel is not open");
+
+            var id = _orcusServer.GetChannelId(channel);
+            request.Headers.Add("ChannelId", id.ToString());
+            return SendMessage(request, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)

@@ -88,6 +88,15 @@ namespace Orcus.Administration.Library.Clients
             return channel;
         }
 
+        public Task<HttpResponseMessage> SendChannelMessage(HttpRequestMessage request, IDataChannel channel, CancellationToken cancellationToken)
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(nameof(TargetedRestClient));
+
+            PatchMessage(request);
+            return _orcusRestClient.SendChannelMessage(request, channel, cancellationToken);
+        }
+
         private void ChannelOnCloseChannel(IDataChannel channel)
         {
             lock (_channelsLock)

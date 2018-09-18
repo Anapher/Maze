@@ -10,6 +10,6 @@ namespace RemoteDesktop.Administration.Resources
         {
         }
 
-        public Viewbox Icon => GetIcon();
+        public Viewbox Monitor => GetIcon();
     }
 }

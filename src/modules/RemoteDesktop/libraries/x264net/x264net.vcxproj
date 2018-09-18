@@ -81,6 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -128,7 +129,7 @@ copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Co
     </ClCompile>
     <Link>
       <AdditionalDependencies>libx264.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);$(ProjectDir)lib\openh264\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)lib\msvc\msvcp140.dll" "$(TargetDir)msvcp140.dll"
@@ -158,13 +159,19 @@ copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Co
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clix.h" />
+    <ClInclude Include="lib\openh264\include\codec_api.h" />
+    <ClInclude Include="lib\openh264\include\codec_app_def.h" />
+    <ClInclude Include="lib\openh264\include\codec_def.h" />
+    <ClInclude Include="lib\openh264\include\codec_ver.h" />
     <ClInclude Include="lib\x264\include\x264.h" />
     <ClInclude Include="lib\x264\include\x264_config.h" />
+    <ClInclude Include="OpenH264.h" />
     <ClInclude Include="RGB_To_YUV420.h" />
     <ClInclude Include="stringconvert.h" />
     <ClInclude Include="x264net.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="OpenH264.cpp" />
     <ClCompile Include="stringconvert.cpp" />
     <ClCompile Include="x264net.cpp" />
   </ItemGroup>

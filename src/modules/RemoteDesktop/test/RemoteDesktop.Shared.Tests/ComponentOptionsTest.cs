@@ -7,9 +7,13 @@ namespace RemoteDesktop.Shared.Tests
         public static readonly TheoryData<ComponentOptions, string> TestData = new TheoryData<ComponentOptions, string>
         {
             {new ComponentOptions("x264") {Options = {{"test", "123"}}}, "x264 (test 123)"},
+            {new ComponentOptions("x264"), "x264"},
+            {new ComponentOptions("x264") {Options = {{"test", null}}}, "x264 (test)"},
             {new ComponentOptions("x264") {Options = {{"bitrate", "3000k"}, {"nointerlace", null}, {"xs", "60"}}}, "x264 (bitrate 3000k, nointerlace, xs 60)"},
             {new ComponentOptions("xvid") {Options = {{"bitrate", "0,9"}, {"fps", "60"}}}, "xvid (bitrate \"0,9\", fps 60)"},
             {new ComponentOptions("avhd") {Options = {{"bitrate", "wtf is \"??"}, {"moringfilter", null}}}, "avhd (bitrate \"wtf is \\\"??\", moringfilter)"},
+            {new ComponentOptions("avhd") {Options = {{"bitrate", "this and that"}}}, "avhd (bitrate \"this and that\")"},
+            {new ComponentOptions("avhd") {Options = {{"bitrate", "this,that"}}}, "avhd (bitrate \"this,that\")"},
         };
 
         [Theory]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -109,6 +110,34 @@ namespace FileExplorer.Client.Controllers
 
             result.Properties = properties.ToList();
             return Ok(result);
+        }
+
+        [OrcusPost("file/execute")]
+        public IActionResult ExecuteFile([FromBody] ExecuteFileDto executeDto, [FromQuery] bool waitForExit)
+        {
+            var processStartInfo = new ProcessStartInfo(executeDto.FileName, executeDto.Arguments)
+            {
+                WorkingDirectory = executeDto.WorkingDirectory ?? string.Empty,
+                UseShellExecute = executeDto.UseShellExecute,
+                Verb = executeDto.Verb,
+                CreateNoWindow = executeDto.CreateNoWindow
+            };
+
+            var process = Process.Start(processStartInfo);
+            if (process == null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            if (waitForExit)
+                process.WaitForExit();
+
+            return Ok();
+        }
+
+        [OrcusGet("file/verbs")]
+        public IActionResult GetFileVerbs([FromQuery] string path)
+        {
+            var info = new ProcessStartInfo(path);
+            return Ok(info.Verbs);
         }
     }
 }

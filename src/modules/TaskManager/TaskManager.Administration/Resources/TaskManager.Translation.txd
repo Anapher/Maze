@@ -7,6 +7,7 @@
 		<text key="TaskManager:ActiveConnections.Protocol">Protokoll</text>
 		<text key="TaskManager:ActiveConnections.RemoteAddress">Gegenseite Adresse</text>
 		<text key="TaskManager:ActiveConnections.State">Status</text>
+		<text key="TaskManager:AutoRefreshDescription">Aktualisiere alle Prozesse automatisch alle 10 Sekunden</text>
 		<text key="TaskManager:CompanyName">Firma</text>
 		<text key="TaskManager:Gestures.Del">Entf</text>
 		<text key="TaskManager:Gestures.ShiftDel">Shift+Entf</text>
@@ -85,6 +86,7 @@
 		<text key="TaskManager:ActiveConnections.Protocol">Protocol</text>
 		<text key="TaskManager:ActiveConnections.RemoteAddress">Remote Address</text>
 		<text key="TaskManager:ActiveConnections.State">State</text>
+		<text key="TaskManager:AutoRefreshDescription">Automatically refresh the processes every 10 seconds</text>
 		<text key="TaskManager:CompanyName">Company Name</text>
 		<text key="TaskManager:Gestures.Del">Del</text>
 		<text key="TaskManager:Gestures.ShiftDel">Shift+Del</text>

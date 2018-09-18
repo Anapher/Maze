@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using RemoteDesktop.Client.Encoder;
+using RemoteDesktop.Client.Extensions;
+using RemoteDesktop.Shared;
+using RemoteDesktop.Shared.Options;
 
 namespace RemoteDesktop.Client.Capture.GDI
 {
@@ -16,13 +18,13 @@ namespace RemoteDesktop.Client.Capture.GDI
         private Rectangle _screenBounds;
         private IntPtr _screenDeviceContext;
 
-        public string Id { get; } = "gdi";
+        public string Id { get; } = "gdi+";
         public bool IsPlatformSupported { get; } = true; //GDI is supported everywhere
 
-        public ScreenInfo Initialize(Dictionary<string, string> options)
+        public ScreenInfo Initialize(ComponentOptions componentOptions)
         {
-            var monitor = CaptureOptions.Monitor.GetValue(options);
-            var screen = Screen.AllScreens[monitor];
+            var options = componentOptions.To<GdiOptions>();
+            var screen = Screen.AllScreens[options.Monitor.Value];
 
             _screenBounds = screen.Bounds;
 

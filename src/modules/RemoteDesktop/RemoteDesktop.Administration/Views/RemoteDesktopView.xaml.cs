@@ -3,11 +3,11 @@
 namespace RemoteDesktop.Administration.Views
 {
     /// <summary>
-    ///     Interaction logic for ModuleView.xaml
+    ///     Interaction logic for RemoteDesktopView.xaml
     /// </summary>
-    public partial class ModuleView
+    public partial class RemoteDesktopView
     {
-        public ModuleView(IWindowViewManager viewManager) : base(viewManager)
+        public RemoteDesktopView(IWindowViewManager viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

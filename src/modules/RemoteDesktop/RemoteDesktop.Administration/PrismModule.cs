@@ -1,9 +1,9 @@
-﻿using RemoteDesktop.Administration.Resources;
-using RemoteDesktop.Administration.ViewModels;
-using Orcus.Administration.Library.Menus;
+﻿using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
 using Prism.Modularity;
+using RemoteDesktop.Administration.Resources;
+using RemoteDesktop.Administration.ViewModels;
 using Unclassified.TxLib;
 
 namespace RemoteDesktop.Administration
@@ -23,7 +23,7 @@ namespace RemoteDesktop.Administration
         {
             Tx.LoadFromEmbeddedResource("RemoteDesktop.Administration.Resources.Module.Translation.txd");
 
-            _registrar.Register<ModuleViewModel>("Module:Name", IconFactory.FromFactory(() => _icons.Icon), CommandCategory.System);
+            _registrar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => _icons.Monitor), CommandCategory.System);
         }
     }
 }

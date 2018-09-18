@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\FileExplorerEntryConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\DirectoryEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\DriveDirectoryEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ExecuteFileDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\FileExplorerEntryType.cs" />

@@ -9,9 +9,12 @@
     <Import_RootNamespace>RemoteDesktop.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Dtos\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ComponentOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ParametersDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ScreenDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OptionKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\GdiOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\DesktopDuplicationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\x264Options.cs" />
   </ItemGroup>
 </Project>

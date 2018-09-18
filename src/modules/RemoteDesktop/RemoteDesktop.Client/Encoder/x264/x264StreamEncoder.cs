@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Native;
+using RemoteDesktop.Shared;
 using x264net;
 
 namespace RemoteDesktop.Client.Encoder.x264
@@ -17,7 +17,7 @@ namespace RemoteDesktop.Client.Encoder.x264
         public string Id { get; } = "x264";
         public bool IsPlatformSupported { get; } = true;
 
-        public void Initialize(ScreenInfo screenInfo, IFrameTransmitter transmitter, Dictionary<string, string> options)
+        public void Initialize(ScreenInfo screenInfo, IFrameTransmitter transmitter, ComponentOptions componentOptions)
         {
             if (_x264Net != null)
                 throw new InvalidOperationException("Already initialized.");

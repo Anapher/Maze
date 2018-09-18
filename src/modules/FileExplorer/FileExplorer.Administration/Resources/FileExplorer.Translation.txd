@@ -23,6 +23,12 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Laufwerk</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unbekannt</text>
 		<text key="FileExplorer:Execute">Ausführen</text>
+		<text key="FileExplorer:ExecuteView.Arguments">Argumente</text>
+		<text key="FileExplorer:ExecuteView.CreateNoWindow">Kein Fenster erstellen</text>
+		<text key="FileExplorer:ExecuteView.Path">Pfad</text>
+		<text key="FileExplorer:ExecuteView.UseShellExecute">Über Shell ausführen</text>
+		<text key="FileExplorer:ExecuteView.Verb">Verb</text>
+		<text key="FileExplorer:ExecuteView.WorkingDirectory">Basisverzeichnis</text>
 		<text key="FileExplorer:Extracting">Entpacken</text>
 		<text key="FileExplorer:FileExplorer">Datei Explorer</text>
 		<text key="FileExplorer:FileHashes">Hashwerte</text>
@@ -144,6 +150,12 @@
 		<text key="FileExplorer:DriveTypes.Removable">USB Drive</text>
 		<text key="FileExplorer:DriveTypes.Unknown">Unknown</text>
 		<text key="FileExplorer:Execute">Execute</text>
+		<text key="FileExplorer:ExecuteView.Arguments">Arguments</text>
+		<text key="FileExplorer:ExecuteView.CreateNoWindow">Create no window</text>
+		<text key="FileExplorer:ExecuteView.Path">Path</text>
+		<text key="FileExplorer:ExecuteView.UseShellExecute">Use Shell Execute</text>
+		<text key="FileExplorer:ExecuteView.Verb">Verb</text>
+		<text key="FileExplorer:ExecuteView.WorkingDirectory">Working Directory</text>
 		<text key="FileExplorer:Extracting">Extracting</text>
 		<text key="FileExplorer:FileExplorer">File Explorer</text>
 		<text key="FileExplorer:FileHashes">File Hashes</text>

@@ -50,6 +50,10 @@ namespace TaskManager.Client.Channels
                     return dtos;
                 }
             }
+            catch (Exception e)
+            {
+                throw;
+            }
             finally
             {
                 _getProcessesLock.Release();
