@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -19,7 +17,7 @@ namespace RemoteDesktop.Administration.Channels
     public class RemoteDesktopChannel : ChannelBase, INotifyPropertyChanged
     {
         private readonly IAppDispatcher _dispatcher;
-        private Decoder _decoder;
+        private OpenH264Decoder _decoder;
 
         public RemoteDesktopChannel(IAppDispatcher dispatcher)
         {
@@ -30,7 +28,7 @@ namespace RemoteDesktop.Administration.Channels
 
         public Task StartRecording(IPackageRestClient restClient)
         {
-            _decoder = new Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\test\RemoteDesktop.TestApp\bin\Debug\openh264-1.8.0-win32.dll");
+            _decoder = new OpenH264Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\test\RemoteDesktop.TestApp\bin\Debug\openh264-1.8.0-win32.dll");
             return RemoteDesktopResource.StartScreenChannel(this, restClient);
         }
 
@@ -39,40 +37,35 @@ namespace RemoteDesktop.Administration.Channels
 
         protected override unsafe void ReceiveData(byte[] buffer, int offset, int count)
         {
-            Bitmap bitmap;
+            DecodedFrame decodedFrame;
             fixed (byte* bufferPtr = buffer)
             {
-                bitmap = _decoder.Decode(bufferPtr + offset, count);
+                decodedFrame = (DecodedFrame) _decoder.Decode(bufferPtr + offset, count);
             }
 
             _dispatcher.Current.BeginInvoke(new Action(() =>
             {
-                using (bitmap)
+                var notifyUpdateImage = false;
+                if (Image == null)
                 {
-                    var notifyUpdateImage = false;
-                    if (Image == null)
-                    {
-                        Image = new WriteableBitmap(bitmap.Width, bitmap.Height, 96, 96, PixelFormats.Rgb24, null);
-                        notifyUpdateImage = true;
-                    }
-
-                    Image.Lock();
-                    var lockBits = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-                    try
-                    {
-                        memcpy(Image.BackBuffer, lockBits.Scan0, (UIntPtr) (lockBits.Stride * lockBits.Height));
-
-                        Image.AddDirtyRect(new Int32Rect(0, 0, lockBits.Width, lockBits.Height));
-                    }
-                    finally
-                    {
-                        bitmap.UnlockBits(lockBits);
-                        Image.Unlock();
-                    }
-
-                    if (notifyUpdateImage)
-                        OnPropertyChanged(nameof(Image));
+                    Image = new WriteableBitmap(decodedFrame.Width, decodedFrame.Height, 96, 96, PixelFormats.Rgb24, null);
+                    notifyUpdateImage = true;
                 }
+
+                Image.Lock();
+                try
+                {
+                    memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer), (UIntPtr) (decodedFrame.Stride * decodedFrame.Height));
+                    Image.AddDirtyRect(new Int32Rect(0, 0, decodedFrame.Width, decodedFrame.Height));
+                }
+                finally
+                {
+                    _decoder.ReleaseFrame(decodedFrame);
+                    Image.Unlock();
+                }
+
+                if (notifyUpdateImage)
+                    OnPropertyChanged(nameof(Image));
             }));
         }
 

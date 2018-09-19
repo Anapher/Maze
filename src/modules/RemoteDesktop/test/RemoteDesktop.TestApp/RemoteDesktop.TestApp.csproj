@@ -91,10 +91,6 @@
       <Project>{6a31876c-e155-4fe3-b223-e456cad3125c}</Project>
       <Name>RemoteDesktop.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\anaph\Downloads\OpenH264Lib.NET-master\OpenH264Lib\OpenH264Lib.vcxproj">
-      <Project>{b4fe105e-c607-40dc-a86b-aed03e14d18d}</Project>
-      <Name>OpenH264Lib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Buffers">

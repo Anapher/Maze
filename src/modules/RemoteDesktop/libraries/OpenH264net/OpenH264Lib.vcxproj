@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{26AABCC4-4BE8-4777-89ED-C6132383CD03}</ProjectGuid>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ProjectGuid>{B4FE105E-C607-40DC-A86B-AED03E14D18D}</ProjectGuid>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>x264net</RootNamespace>
+    <RootNamespace>OpenH264Lib</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -74,14 +74,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -91,108 +89,69 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)\lib\openh264\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libx264d.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\msvc\msvcp140.dll" "$(TargetDir)msvcp140.dll"
-copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)\lib\openh264\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libx264d.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\msvc\msvcp140.dll" "$(TargetDir)msvcp140.dll"
-copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)\lib\openh264\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libx264.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);$(ProjectDir)lib\openh264\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\msvc\msvcp140.dll" "$(TargetDir)msvcp140.dll"
-copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)\lib\openh264\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libx264.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\x264\$(Configuration)-$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(ProjectDir)lib\msvc\msvcp140.dll" "$(TargetDir)msvcp140.dll"
-copy "$(ProjectDir)lib\msvc\vcruntime140.dll" "$(TargetDir)vcruntime140.dll"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="clix.h" />
+    <ClInclude Include="OpenH264Decoder.h" />
     <ClInclude Include="lib\openh264\include\codec_api.h" />
     <ClInclude Include="lib\openh264\include\codec_app_def.h" />
     <ClInclude Include="lib\openh264\include\codec_def.h" />
     <ClInclude Include="lib\openh264\include\codec_ver.h" />
-    <ClInclude Include="lib\x264\include\x264.h" />
-    <ClInclude Include="lib\x264\include\x264_config.h" />
-    <ClInclude Include="RGB_To_YUV420.h" />
-    <ClInclude Include="stringconvert.h" />
-    <ClInclude Include="x264net.h" />
+    <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stringconvert.cpp" />
-    <ClCompile Include="x264net.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="lib\x264\licenses\x264.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="lib\x264\debug-x64\libx264d.idb" />
-    <None Include="lib\x264\debug-x64\libx264d.pdb" />
-    <None Include="lib\x264\debug-x64\x264d.dll" />
-    <None Include="lib\x264\debug-x86\libx264d.idb" />
-    <None Include="lib\x264\debug-x86\libx264d.pdb" />
-    <None Include="lib\x264\debug-x86\x264d.dll" />
-    <None Include="lib\x264\release-x64\libx264.pdb" />
-    <None Include="lib\x264\release-x64\x264.dll" />
-    <None Include="lib\x264\release-x86\libx264.pdb" />
-    <None Include="lib\x264\release-x86\x264.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="lib\x264\debug-x64\libx264d.lib" />
-    <Library Include="lib\x264\debug-x86\libx264d.lib" />
-    <Library Include="lib\x264\release-x64\libx264.lib" />
-    <Library Include="lib\x264\release-x86\libx264.lib" />
+    <ClCompile Include="OpenH264Decoder.cpp" />
+    <ClCompile Include="Stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

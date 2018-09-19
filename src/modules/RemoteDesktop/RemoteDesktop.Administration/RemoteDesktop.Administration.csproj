@@ -20,7 +20,7 @@
 
     <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
-    <ProjectReference Include="C:\Users\anaph\Downloads\OpenH264Lib.NET-master\OpenH264Lib\OpenH264Lib.vcxproj" />
+    <ProjectReference Include="..\libraries\OpenH264net\OpenH264Lib.vcxproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
     <!-- Resources -->
