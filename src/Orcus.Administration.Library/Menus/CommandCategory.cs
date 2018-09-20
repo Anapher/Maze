@@ -4,6 +4,7 @@
     {
         Fun,
         Interaction,
-        System
+        System,
+        Surveillance
     }
 }

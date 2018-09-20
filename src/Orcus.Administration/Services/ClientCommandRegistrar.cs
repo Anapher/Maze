@@ -52,6 +52,8 @@ namespace Orcus.Administration.Services
                     return _clientsContextMenu.InteractionCommands;
                 case CommandCategory.System:
                     return _clientsContextMenu.SystemCommands;
+                case CommandCategory.Surveillance:
+                    return _clientsContextMenu.SurveillanceCommands;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(category), category, null);
             }

@@ -23,7 +23,8 @@ namespace RemoteDesktop.Administration
         {
             Tx.LoadFromEmbeddedResource("RemoteDesktop.Administration.Resources.RemoteDesktop.Translation.txd");
 
-            _registrar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => _icons.Monitor), CommandCategory.System);
+            _registrar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => _icons.Monitor),
+                CommandCategory.Surveillance);
         }
     }
 }

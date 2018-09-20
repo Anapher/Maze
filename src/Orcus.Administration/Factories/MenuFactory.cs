@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Orcus.Administration.Extensions;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.Internal;
 using Orcus.Administration.Library.Menu.MenuBase;
@@ -10,12 +11,12 @@ namespace Orcus.Administration.Factories
 {
     public class DefaultMenuFactory : IMenuFactory
     {
-        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : ICommandMenuEntry
-        {
-            return CreateInternal(menuEntries, context);
-        }
+        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context)
+            where TCommand : ICommandMenuEntry =>
+            CreateInternal(menuEntries, context);
 
-        private static IReadOnlyList<UIElement> CreateInternal<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : ICommandMenuEntry
+        private static IReadOnlyList<UIElement> CreateInternal<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context)
+            where TCommand : ICommandMenuEntry
         {
             var result = new List<UIElement>();
 
@@ -57,15 +58,10 @@ namespace Orcus.Administration.Factories
             return result;
         }
 
-        private static Separator CreateSeparator()
-        {
-            return new Separator();
-        }
+        private static Separator CreateSeparator() => new Separator();
 
-        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo)
-        {
-            return new MenuItem {Header = menuItemInfo.Header, Icon = menuItemInfo.Icon};
-        }
+        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo) =>
+            new MenuItem {Header = menuItemInfo.Header, Icon = menuItemInfo.Icon};
 
         private static MenuItem CreateCommandMenuItem(ICommandMenuEntry menuItemInfo, object context)
         {
@@ -81,13 +77,15 @@ namespace Orcus.Administration.Factories
 
     public class ItemMenuFactory : IItemMenuFactory
     {
-        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : IItemCommandMenuEntry
+        public IEnumerable<UIElement> Create<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context)
+            where TCommand : IItemCommandMenuEntry
         {
-            var (result, _, _) = CreateInternal(menuEntries, context);
+            var (result, _, _) = CreateInternal(menuEntries, context, false);
             return result;
         }
 
-        private static (IReadOnlyList<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems)  CreateInternal<TCommand>(IEnumerable<IMenuEntry<TCommand>> menuEntries, object context) where TCommand : IItemCommandMenuEntry
+        private static (IReadOnlyList<UIElement>, bool visibleForSingleItem, bool visibleForMultipleItems) CreateInternal<TCommand>(
+            IEnumerable<IMenuEntry<TCommand>> menuEntries, object context, bool sort) where TCommand : IItemCommandMenuEntry
         {
             var result = new List<UIElement>();
             var forSingleItem = false;
@@ -96,7 +94,7 @@ namespace Orcus.Administration.Factories
             foreach (var menuEntry in menuEntries)
                 if (menuEntry is MenuSection<TCommand> section)
                 {
-                    var (items, singleItem, multipleItems) = CreateInternal(section, context);
+                    var (items, singleItem, multipleItems) = CreateInternal(section, context, section.IsOrdered);
 
                     if (!items.Any())
                         continue;
@@ -114,7 +112,7 @@ namespace Orcus.Administration.Factories
                 }
                 else if (menuEntry is NavigationalEntry<TCommand> navigationalEntry)
                 {
-                    var (items, singleItem, multipleItems) = CreateInternal(navigationalEntry, context);
+                    var (items, singleItem, multipleItems) = CreateInternal(navigationalEntry, context, navigationalEntry.IsOrdered);
 
                     if (!items.Any())
                         continue;
@@ -144,6 +142,24 @@ namespace Orcus.Administration.Factories
             if (result.Any() && result.First() is Separator)
                 result.RemoveAt(0);
 
+            if (sort)
+            {
+                int start = 0;
+                for (int i = 0; i < result.Count; i++)
+                {
+                    if (result[i] is MenuItem)
+                        continue;
+
+                    if (start != i)
+                        result.PartialSort(start, i - start, element => ((MenuItem)element).Header as string);
+
+                    start = i + 1;
+                }
+
+                if (start != result.Count - 1)
+                    result.PartialSort(start, result.Count - start, element => ((MenuItem) element).Header as string);
+            }
+
             return (result, forSingleItem, forMultipleItems);
         }
 
@@ -162,8 +178,7 @@ namespace Orcus.Administration.Factories
             return separator;
         }
 
-        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo, bool visibleForSingle,
-            bool visibleForMultiple)
+        private static MenuItem CreateMenuItem(IVisibleMenuItem menuItemInfo, bool visibleForSingle, bool visibleForMultiple)
         {
             var menuItem = new MenuItem {Header = menuItemInfo.Header, Icon = menuItemInfo.Icon};
 
@@ -180,8 +195,7 @@ namespace Orcus.Administration.Factories
 
         private static MenuItem CreateCommandMenuItem(IItemCommandMenuEntry menuItemInfo, object context)
         {
-            var menuItem = CreateMenuItem(menuItemInfo, menuItemInfo.SingleItemCommand != null,
-                menuItemInfo.MultipleItemsCommand != null);
+            var menuItem = CreateMenuItem(menuItemInfo, menuItemInfo.SingleItemCommand != null, menuItemInfo.MultipleItemsCommand != null);
 
             menuItem.Command = menuItemInfo.Command;
 

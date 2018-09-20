@@ -6,5 +6,7 @@ namespace Orcus.Administration.Library.Resources
     {
         Viewbox UserVoice { get; }
         Viewbox ComputerService { get; }
+        Viewbox ComputerSystem { get; }
+        Viewbox HideTimeline { get; }
     }
 }

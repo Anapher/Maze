@@ -39,7 +39,7 @@ namespace RemoteDesktop.Administration.Channels
                     _diagonstics = value;
 
                     if (value != null && IsRecording)
-                        Diagonstics.StartRecording();
+                        value.StartRecording();
                 }
             }
         }

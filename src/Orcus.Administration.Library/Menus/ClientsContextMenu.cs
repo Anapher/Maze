@@ -9,21 +9,27 @@ namespace Orcus.Administration.Library.Menus
     {
         public ClientsContextMenu(ILibraryIcons icons)
         {
-            Add(SystemCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>
+            Add(SystemCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>(isOrdered: true)
             {
                 Header = Tx.T("Menu.System"),
-                Icon = icons.ComputerService
+                Icon = icons.ComputerSystem
             });
-            Add(InteractionCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>
+            Add(InteractionCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>(isOrdered: true)
             {
                 Header = Tx.T("Menu.UserInteraction"),
                 Icon = icons.UserVoice
+            });
+            Add(SurveillanceCommands = new NavigationalEntry<ItemCommand<ClientViewModel>>(isOrdered: true)
+            {
+                Header = Tx.T("Menu.Surveillance"),
+                Icon = icons.HideTimeline
             });
             Add(ClientCommands = new MenuSection<ItemCommand<ClientViewModel>>());
         }
 
         public NavigationalEntry<ItemCommand<ClientViewModel>> SystemCommands { get; }
         public NavigationalEntry<ItemCommand<ClientViewModel>> InteractionCommands { get; }
+        public NavigationalEntry<ItemCommand<ClientViewModel>> SurveillanceCommands { get; }
         public MenuSection<ItemCommand<ClientViewModel>> ClientCommands { get; }
     }
 }

@@ -13,5 +13,7 @@ namespace Orcus.Administration.Library.Resources
 
         public Viewbox UserVoice => GetIcon();
         public Viewbox ComputerService => GetIcon();
+        public Viewbox ComputerSystem => GetIcon();
+        public Viewbox HideTimeline => GetIcon();
     }
 }
