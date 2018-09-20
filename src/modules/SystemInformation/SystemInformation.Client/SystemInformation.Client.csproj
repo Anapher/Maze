@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
+  <Import Project="..\ModuleTemplate.Shared\ModuleTemplate.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\SystemInformation.Shared\SystemInformation.Shared.projitems" Label="Shared" />
+
+</Project>

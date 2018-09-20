@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Management;
 
-namespace TaskManager.Client.Utilities
+namespace SystemInformation.Client.Utilities
 {
     public static class ManagementExtensions
     {

@@ -192,6 +192,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteDesktop.Shared.Tests"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenH264Lib", "src\modules\RemoteDesktop\libraries\OpenH264net\OpenH264Lib.vcxproj", "{B4FE105E-C607-40DC-A86B-AED03E14D18D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemInformation", "SystemInformation", "{0B49D2B1-2C64-443E-B9E2-9FF8FBEBBE73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInformation.Administration", "src\modules\SystemInformation\SystemInformation.Administration\SystemInformation.Administration.csproj", "{551507AC-E340-4264-9EA4-102A1D32BC58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemInformation.Client", "src\modules\SystemInformation\SystemInformation.Client\SystemInformation.Client.csproj", "{C0A4940E-4E20-4501-8B12-7848D9FEE167}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SystemInformation.Shared", "src\modules\SystemInformation\SystemInformation.Shared\SystemInformation.Shared.shproj", "{A828AC7A-5A93-4977-B167-C8912842D359}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\projectTemplates\module\ModuleTemplate.Shared\ModuleTemplate.Shared.projitems*{15989b72-7f73-40f5-95d2-8c6eaad8d5b2}*SharedItemsImports = 13
@@ -201,6 +209,7 @@ Global
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{8f8a07c3-7c4e-49d2-9997-0836f51f44ac}*SharedItemsImports = 4
 		src\modules\RemoteDesktop\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems*{90e1c3cb-19bf-47f6-b524-d0702f130ffe}*SharedItemsImports = 13
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
+		src\modules\SystemInformation\SystemInformation.Shared\SystemInformation.Shared.projitems*{a828ac7a-5a93-4977-b167-c8912842d359}*SharedItemsImports = 13
 		src\modules\Console\Console.Shared\Console.Shared.projitems*{b1070ee4-03c8-4760-86bf-e9341cfac088}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -892,6 +901,30 @@ Global
 		{B4FE105E-C607-40DC-A86B-AED03E14D18D}.Release|x64.Build.0 = Release|x64
 		{B4FE105E-C607-40DC-A86B-AED03E14D18D}.Release|x86.ActiveCfg = Release|Win32
 		{B4FE105E-C607-40DC-A86B-AED03E14D18D}.Release|x86.Build.0 = Release|Win32
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|x64.Build.0 = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Debug|x86.Build.0 = Debug|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|x64.ActiveCfg = Release|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|x64.Build.0 = Release|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|x86.ActiveCfg = Release|Any CPU
+		{551507AC-E340-4264-9EA4-102A1D32BC58}.Release|x86.Build.0 = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|x64.Build.0 = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Debug|x86.Build.0 = Debug|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|x64.ActiveCfg = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|x64.Build.0 = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|x86.ActiveCfg = Release|Any CPU
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -967,6 +1000,10 @@ Global
 		{26AABCC4-4BE8-4777-89ED-C6132383CD03} = {18667047-9F0A-4F30-B809-EC10D79A801A}
 		{06AC937D-EA81-4624-BD86-BC8FB032D4D4} = {8B97F3A0-0CA3-4A02-8F8E-7C61A189168F}
 		{B4FE105E-C607-40DC-A86B-AED03E14D18D} = {18667047-9F0A-4F30-B809-EC10D79A801A}
+		{0B49D2B1-2C64-443E-B9E2-9FF8FBEBBE73} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{551507AC-E340-4264-9EA4-102A1D32BC58} = {0B49D2B1-2C64-443E-B9E2-9FF8FBEBBE73}
+		{C0A4940E-4E20-4501-8B12-7848D9FEE167} = {0B49D2B1-2C64-443E-B9E2-9FF8FBEBBE73}
+		{A828AC7A-5A93-4977-B167-C8912842D359} = {0B49D2B1-2C64-443E-B9E2-9FF8FBEBBE73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

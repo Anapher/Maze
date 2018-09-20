@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a828ac7a-5a93-4977-b167-c8912842d359</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SystemInformation.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\SystemInfoDtoConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\SystemInfoDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\BoolValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\CultureValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\DataSizeValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\DateTimeValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\HeaderValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\NumberValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\ProgressValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\TextValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\TranslatedTextValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\ValueDtoType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\ValueDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInfoCategories.cs" />
+  </ItemGroup>
+</Project>
