@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenH264Lib;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Encoder;
 using RemoteDesktop.Client.Encoder.x264;
@@ -30,6 +31,7 @@ namespace RemoteDesktop.TestApp
         private DateTimeOffset _offset;
         private DateTimeOffset _dataOffset;
         private int _data;
+        private readonly OpenH264Lib.OpenH264Decoder _decoder = new OpenH264Lib.OpenH264Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\libraries\OpenH264net\lib\openh264\x86\openh264-1.8.0-win32.dll");
 
         public Form1()
         {
@@ -77,15 +79,45 @@ namespace RemoteDesktop.TestApp
             }));
         }
 
-        private OpenH264Lib.Decoder decoder = new OpenH264Lib.Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\test\RemoteDesktop.TestApp\bin\Debug\openh264-1.8.0-win32.dll");
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static extern unsafe IntPtr memcpy(byte* dst, byte* src, UIntPtr count);
 
         private Task ImportData(byte[] data, int length)
         {
             _data += length;
             return Task.Run(() =>
             {
-                var decode = decoder.Decode(data, length);
-                BeginInvoke(new Action(() => pictureBox1.Image = decode));
+                Bitmap bitmap;
+                unsafe
+                {
+                    fixed (byte* dataPtr = data)
+                    {
+                        var decode1 = _decoder.Decode(dataPtr + 6, length);
+                        if (decode1 == null)
+                            return;
+                        var decode = (DecodedFrame) decode1;
+                        try
+                        {
+                            bitmap = new Bitmap(decode.Width, decode.Height, PixelFormat.Format24bppRgb);
+                            var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+                            try
+                            {
+                                memcpy((byte*)lockBits.Scan0.ToPointer(), decode.Pointer, (UIntPtr)(lockBits.Stride * decode.Height));
+                            }
+                            finally
+                            {
+                                bitmap.UnlockBits(lockBits);
+                            }
+                        }
+                        finally
+                        {
+                            _decoder.ReleaseFrame(decode);
+                        }
+                    }
+                }
+                //bitmap = _decoder.Decode(data, length);
+
+                BeginInvoke(new Action(() => pictureBox1.Image = bitmap));
             });
         }
     }
@@ -144,7 +176,7 @@ namespace RemoteDesktop.TestApp
                     var result = _x264Net.EncodeFrame(pointer).Cast<X264Nal>().ToArray();
 
                     var length = result.Sum(x => x.Length);
-                    var data = ArrayPool<byte>.Shared.Rent(length);
+                    var data = ArrayPool<byte>.Shared.Rent(length + 6);
                     try
                     {
                         var position = 0;
@@ -152,7 +184,7 @@ namespace RemoteDesktop.TestApp
                         {
                             foreach (var x264Nal in result)
                             {
-                                memcpy(dataPointer + position, x264Nal.Pointer, (UIntPtr)x264Nal.Length);
+                                memcpy(dataPointer + position + 6, x264Nal.Pointer, (UIntPtr)x264Nal.Length);
                                 position += x264Nal.Length;
                             }
                         }

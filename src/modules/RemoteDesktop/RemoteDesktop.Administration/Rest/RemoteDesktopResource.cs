@@ -15,7 +15,7 @@ namespace RemoteDesktop.Administration.Rest
         {
         }
 
-        public static Task<ParametersDto> GetParameters(IPackageRestClient restClient) => CreateRequest().Execute(restClient).Return<ParametersDto>();
+        public static Task<ParametersDto> GetParameters(IPackageRestClient restClient) => CreateRequest(HttpVerb.Get, "parameters").Execute(restClient).Return<ParametersDto>();
 
         public static Task<RemoteDesktopChannel> CreateScreenChannel(ComponentOptions captureOptions, ComponentOptions encoderOptions,
             IPackageRestClient restClient)
@@ -29,6 +29,6 @@ namespace RemoteDesktop.Administration.Rest
             
 
         public static Task StartScreenChannel(RemoteDesktopChannel channel, IPackageRestClient restClient) =>
-            CreateRequest(HttpVerb.Get, "start", null).ExecuteOnChannel(restClient, channel);
+            CreateRequest(HttpVerb.Get, "screen/start", null).ExecuteOnChannel(restClient, channel);
     }
 }

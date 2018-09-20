@@ -52,12 +52,18 @@ namespace Orcus.Core.Modules
         public async Task<IReadOnlyDictionary<PackageIdentity, List<Type>>> GetControllers()
         {
             var result = new ConcurrentDictionary<PackageIdentity, List<Type>>();
+            var orcusControllerType = typeof(OrcusController);
+
             await TaskCombinators.ThrottledAsync(_catalog.Packages, (carrier, token) => Task.Run(() =>
             {
                 var types = carrier.Assembly.GetExportedTypes();
 
-                var controllers = types.Where(x => x.IsSubclassOf(typeof(OrcusController))).ToList();
-                result.TryAdd(carrier.Context.Package, controllers);
+                var controllers = types.Where(x => orcusControllerType.IsAssignableFrom(x)).ToList();
+                result.AddOrUpdate(carrier.Context.Package, controllers, (identity, list) =>
+                {
+                    list.AddRange(controllers);
+                    return list;
+                });
             }), CancellationToken.None);
 
             return result;

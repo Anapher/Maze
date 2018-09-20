@@ -83,6 +83,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libraries\OpenH264net\OpenH264Lib.vcxproj">
+      <Project>{b4fe105e-c607-40dc-a86b-aed03e14d18d}</Project>
+      <Name>OpenH264Lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\libraries\x264net\x264net.vcxproj">
       <Project>{26aabcc4-4be8-4777-89ed-c6132383cd03}</Project>
       <Name>x264net</Name>

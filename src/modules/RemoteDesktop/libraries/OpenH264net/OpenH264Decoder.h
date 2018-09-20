@@ -9,7 +9,6 @@ namespace OpenH264Lib {
 		byte* Pointer;
 		int Width;
 		int Height;
-		int Stride;
 	};
 
 	public ref class OpenH264Decoder

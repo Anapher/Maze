@@ -13,7 +13,7 @@ namespace OpenH264Lib {
 		HMODULE hDll = LoadLibrary(dllPtr);
 		if (hDll == NULL)
 			throw gcnew System::DllNotFoundException(String::Format("Unable to load '{0}'", dllName));
-		hDll = nullptr;
+		dllPtr = nullptr;
 
 		CreateDecoderFunc = (WelsCreateDecoderFunc)GetProcAddress(hDll, "WelsCreateDecoder");
 		if (CreateDecoderFunc == NULL)
@@ -55,11 +55,10 @@ namespace OpenH264Lib {
 
 	DecodedFrame^ OpenH264Decoder::Decode(unsigned char *frame, int length)
 	{
+		SBufferInfo bufInfo = { 0 };
 		unsigned char* buffer[3];
 
-		SBufferInfo bufInfo;
-		memset(&bufInfo, 0x00, sizeof(bufInfo));
-
+		//int rc = _decoder->DecodeFrameNoDelay(frame, length, buffer, &bufInfo);
 		int rc = _decoder->DecodeFrame2(frame, length, buffer, &bufInfo);
 		if (rc != 0) return nullptr;
 		if (bufInfo.iBufferStatus != 1) return nullptr;
@@ -92,7 +91,6 @@ namespace OpenH264Lib {
 		decodedFrame->Pointer = rgb;
 		decodedFrame->Width = width;
 		decodedFrame->Height = height;
-		decodedFrame->Stride = stride;
 
 		return decodedFrame;
 	}

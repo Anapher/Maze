@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:RemoteDesktop.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:RemoteDesktopViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"

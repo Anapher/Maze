@@ -21,7 +21,7 @@ namespace RemoteDesktop.Administration
 
         public void Initialize()
         {
-            Tx.LoadFromEmbeddedResource("RemoteDesktop.Administration.Resources.Module.Translation.txd");
+            Tx.LoadFromEmbeddedResource("RemoteDesktop.Administration.Resources.RemoteDesktop.Translation.txd");
 
             _registrar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => _icons.Monitor), CommandCategory.System);
         }

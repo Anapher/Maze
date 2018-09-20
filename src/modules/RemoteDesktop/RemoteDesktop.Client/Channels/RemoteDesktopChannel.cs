@@ -13,7 +13,7 @@ using RemoteDesktop.Shared;
 
 namespace RemoteDesktop.Client.Channels
 {
-    [Route("screen")]
+    [Route("screen"), SynchronizedChannel]
     public class RemoteDesktopChannel : OrcusChannel, IFrameTransmitter
     {
         private bool _isDisposed;

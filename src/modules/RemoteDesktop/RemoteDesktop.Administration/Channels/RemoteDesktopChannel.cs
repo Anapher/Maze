@@ -14,10 +14,18 @@ using RemoteDesktop.Administration.Rest;
 
 namespace RemoteDesktop.Administration.Channels
 {
+    public interface IRemoteDesktopDiagonstics
+    {
+        void StartRecording();
+        void ReceivedData(int length);
+        void ProcessedFrame();
+    }
+
     public class RemoteDesktopChannel : ChannelBase, INotifyPropertyChanged
     {
         private readonly IAppDispatcher _dispatcher;
         private OpenH264Decoder _decoder;
+        private IRemoteDesktopDiagonstics _diagonstics;
 
         public RemoteDesktopChannel(IAppDispatcher dispatcher)
         {
@@ -26,8 +34,31 @@ namespace RemoteDesktop.Administration.Channels
 
         public WriteableBitmap Image { get; private set; }
 
+        public IRemoteDesktopDiagonstics Diagonstics
+        {
+            get => _diagonstics;
+            set
+            {
+                if (_diagonstics != value)
+                {
+                    _diagonstics = value;
+
+                    if (value != null && IsRecording)
+                        Diagonstics.StartRecording();
+                }
+            }
+        }
+
+        public bool IsRecording { get; private set; }
+
         public Task StartRecording(IPackageRestClient restClient)
         {
+            if (IsRecording)
+                throw new InvalidOperationException("Channel is already recording");
+
+            Diagonstics?.StartRecording();
+
+            var test = Environment.Is64BitProcess;
             _decoder = new OpenH264Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\test\RemoteDesktop.TestApp\bin\Debug\openh264-1.8.0-win32.dll");
             return RemoteDesktopResource.StartScreenChannel(this, restClient);
         }
@@ -37,10 +68,16 @@ namespace RemoteDesktop.Administration.Channels
 
         protected override unsafe void ReceiveData(byte[] buffer, int offset, int count)
         {
+            Diagonstics?.ReceivedData(count);
+
             DecodedFrame decodedFrame;
             fixed (byte* bufferPtr = buffer)
             {
-                decodedFrame = (DecodedFrame) _decoder.Decode(bufferPtr + offset, count);
+                var frame = _decoder.Decode(bufferPtr + offset, count);
+                if (frame == null)
+                    return;
+
+                decodedFrame = (DecodedFrame) frame;
             }
 
             _dispatcher.Current.BeginInvoke(new Action(() =>
@@ -48,14 +85,14 @@ namespace RemoteDesktop.Administration.Channels
                 var notifyUpdateImage = false;
                 if (Image == null)
                 {
-                    Image = new WriteableBitmap(decodedFrame.Width, decodedFrame.Height, 96, 96, PixelFormats.Rgb24, null);
+                    Image = new WriteableBitmap(decodedFrame.Width, decodedFrame.Height, 96, 96, PixelFormats.Bgr24, null);
                     notifyUpdateImage = true;
                 }
 
                 Image.Lock();
                 try
                 {
-                    memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer), (UIntPtr) (decodedFrame.Stride * decodedFrame.Height));
+                    memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer), (UIntPtr) (Image.BackBufferStride * decodedFrame.Height));
                     Image.AddDirtyRect(new Int32Rect(0, 0, decodedFrame.Width, decodedFrame.Height));
                 }
                 finally
@@ -66,6 +103,8 @@ namespace RemoteDesktop.Administration.Channels
 
                 if (notifyUpdateImage)
                     OnPropertyChanged(nameof(Image));
+
+                Diagonstics?.ProcessedFrame();
             }));
         }
 
