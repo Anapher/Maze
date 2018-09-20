@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -10,17 +9,12 @@ using OpenH264Lib;
 using Orcus.Administration.Library.Channels;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Services;
+using RemoteDesktop.Administration.Native;
 using RemoteDesktop.Administration.Rest;
+using RemoteDesktop.Administration.Utilities;
 
 namespace RemoteDesktop.Administration.Channels
 {
-    public interface IRemoteDesktopDiagonstics
-    {
-        void StartRecording();
-        void ReceivedData(int length);
-        void ProcessedFrame();
-    }
-
     public class RemoteDesktopChannel : ChannelBase, INotifyPropertyChanged
     {
         private readonly IAppDispatcher _dispatcher;
@@ -33,6 +27,7 @@ namespace RemoteDesktop.Administration.Channels
         }
 
         public WriteableBitmap Image { get; private set; }
+        public bool IsRecording { get; private set; }
 
         public IRemoteDesktopDiagonstics Diagonstics
         {
@@ -49,22 +44,20 @@ namespace RemoteDesktop.Administration.Channels
             }
         }
 
-        public bool IsRecording { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Task StartRecording(IPackageRestClient restClient)
         {
             if (IsRecording)
                 throw new InvalidOperationException("Channel is already recording");
 
+            IsRecording = true;
             Diagonstics?.StartRecording();
 
-            var test = Environment.Is64BitProcess;
-            _decoder = new OpenH264Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\test\RemoteDesktop.TestApp\bin\Debug\openh264-1.8.0-win32.dll");
+            var path = OpenH264LibFinder.Locate();
+            _decoder = new OpenH264Decoder(path);
             return RemoteDesktopResource.StartScreenChannel(this, restClient);
         }
-
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
 
         protected override unsafe void ReceiveData(byte[] buffer, int offset, int count)
         {
@@ -92,7 +85,8 @@ namespace RemoteDesktop.Administration.Channels
                 Image.Lock();
                 try
                 {
-                    memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer), (UIntPtr) (Image.BackBufferStride * decodedFrame.Height));
+                    NativeMethods.memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer),
+                        (UIntPtr) (Image.BackBufferStride * decodedFrame.Height));
                     Image.AddDirtyRect(new Int32Rect(0, 0, decodedFrame.Width, decodedFrame.Height));
                 }
                 finally
@@ -113,8 +107,6 @@ namespace RemoteDesktop.Administration.Channels
             base.InternalDispose();
             _decoder?.Dispose();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
