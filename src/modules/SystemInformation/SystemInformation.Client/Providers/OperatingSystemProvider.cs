@@ -19,7 +19,7 @@ namespace SystemInformation.Client.Providers
             using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem"))
             using (var results = searcher.Get())
             {
-                var managementObject = results.Cast<ManagementObject>().Single();
+                var managementObject = results.Cast<ManagementObject>().First();
                 list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "BuildNumber");
                 list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "BuildType");
                 list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "Caption");

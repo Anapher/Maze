@@ -1,4 +1,6 @@
-﻿namespace SystemInformation.Shared.Dtos.Value
+﻿using Newtonsoft.Json;
+
+namespace SystemInformation.Shared.Dtos.Value
 {
     public class TextValueDto : ValueDto
     {
@@ -12,6 +14,7 @@
         }
 
         public string Value { get; set; }
+        
         public override ValueDtoType Type { get; } = ValueDtoType.Text;
     }
 }

@@ -16,7 +16,7 @@ namespace SystemInformation.Client.Providers
             using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS"))
             using (var results = searcher.Get())
             {
-                var managementObject = results.Cast<ManagementObject>().Single();
+                var managementObject = results.Cast<ManagementObject>().First();
                 list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "Name");
                 list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "Version");
                 list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "CurrentLanguage");
@@ -34,8 +34,6 @@ namespace SystemInformation.Client.Providers
                         Value = new TextValueDto($"{majorVersion}.{minorVersion}")
                     });
                 }
-
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "SerialNumber");
             }
 
             return list;

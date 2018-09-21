@@ -2,14 +2,14 @@
 
 namespace SystemInformation.Shared.Dtos.Value
 {
-    public class DateTimeValueDt : ValueDto
+    public class DateTimeValueDto : ValueDto
     {
-        public DateTimeValueDt(DateTimeOffset value)
+        public DateTimeValueDto(DateTimeOffset value)
         {
             Value = value;
         }
 
-        public DateTimeValueDt()
+        public DateTimeValueDto()
         {
         }
 

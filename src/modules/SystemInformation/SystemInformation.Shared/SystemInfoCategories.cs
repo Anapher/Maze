@@ -9,5 +9,6 @@
         public static readonly string Bios = "Bios";
         public static readonly string Mainboard = "Mainboard";
         public static readonly string Processor = "Processor";
+        public static readonly string VideoCard = "VideoCard";
     }
 }

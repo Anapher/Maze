@@ -1,4 +1,9 @@
-﻿using Orcus.Administration.Library.Clients;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using SystemInformation.Shared.Dtos;
+using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Clients.Helpers;
 
 namespace SystemInformation.Administration.Rest
 {
@@ -7,5 +12,13 @@ namespace SystemInformation.Administration.Rest
         public SystemInformationResource() : base(null)
         {
         }
+
+        public static async Task<List<SystemInfoDto>> FetchInformation(IPackageRestClient restClient) =>
+            await CreateRequest(HttpVerb.Get, "").Execute(restClient).Return<List<SystemInfoDto>>();
+        //{
+        //    var response = ;
+        //    var readAsStringAsync = await response.Content.ReadAsStringAsync();
+        //    throw new ArgumentException();
+        //}
     }
 }

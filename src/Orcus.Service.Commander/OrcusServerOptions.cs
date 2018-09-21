@@ -77,8 +77,7 @@ namespace Orcus.Service.Commander
         public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore
         };
     }
 }

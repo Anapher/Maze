@@ -9,7 +9,7 @@
     <Import_RootNamespace>SystemInformation.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Converters\SystemInfoDtoConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ValueDtoConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\SystemInfoDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\BoolValueDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\CultureValueDto.cs" />

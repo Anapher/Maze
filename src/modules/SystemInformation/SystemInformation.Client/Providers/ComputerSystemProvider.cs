@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Management;
 using SystemInformation.Client.Utilities;
@@ -16,7 +17,7 @@ namespace SystemInformation.Client.Providers
             using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_ComputerSystem"))
             using (var results = searcher.Get())
             {
-                var managementObject = results.Cast<ManagementObject>().Single();
+                var managementObject = results.Cast<ManagementObject>().First();
 
                 list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "AdminPasswordStatus",
                     arg => new TextValueDto(((AdminPasswordStatus) arg).GetDescription()));
@@ -34,10 +35,13 @@ namespace SystemInformation.Client.Providers
                 list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "PowerSupplyState",
                     arg => new TextValueDto(((PowerSupplyState) arg).GetDescription()));
                 list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "PrimaryOwnerName");
-                list.TryAdd<ulong>(SystemInfoCategories.ComputerSystem, managementObject, "TotalPhysicalMemory");
+                list.TryAdd<ulong>(SystemInfoCategories.ComputerSystem, managementObject, "TotalPhysicalMemory",
+                    arg => new DataSizeValueDto((long) arg));
                 list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "UserName");
                 list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "Workgroup");
                 list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "SystemType");
+                list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "WakeUpType",
+                    arg => new TextValueDto(((WakeUpType) arg).GetDescription()));
             }
 
             return list;
@@ -72,6 +76,20 @@ namespace SystemInformation.Client.Providers
             Warning = 4,
             Critical = 5,
             NonRecoverable = 6
+        }
+
+        private enum WakeUpType
+        {
+            Reserved = 0,
+            Other = 1,
+            Unknown = 2,
+            APMTimer = 3,
+            ModemRing = 4,
+            LANRemote = 5,
+            PowerSwitch = 6,
+            [Description("PCI PME#")]
+            PCIPME = 7,
+            ACPowerRestored = 8
         }
     }
 }

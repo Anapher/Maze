@@ -10,6 +10,6 @@ namespace SystemInformation.Administration.Resources
         {
         }
 
-        public Viewbox Icon => GetIcon();
+        public Viewbox SystemInfo => GetIcon();
     }
 }

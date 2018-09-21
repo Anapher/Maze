@@ -33,11 +33,7 @@ namespace SystemInformation.Client.Providers
             var result = new List<SystemInfoDto>();
 
             result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "AdapterType");
-            result.TryAdd<uint>(SystemInfoCategories.Network, managementObject, "Availability", u =>
-            {
-                var availability = (AdapterAvailability) u;
-                return new TranslatedTextValueDto($"@Network.Availability.{availability}");
-            });
+            result.TryAdd<uint>(SystemInfoCategories.Network, managementObject, "Availability", u => new TextValueDto(((AdapterAvailability)u).GetDescription()));
             result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "Description");
             result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "MACAddress");
             result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "Manufacturer");

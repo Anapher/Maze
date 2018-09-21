@@ -22,7 +22,7 @@ namespace SystemInformation.Client.Utilities
         {
             if (managementObject.TryGetDateTime(name, out DateTimeOffset value))
             {
-                var dto = new SystemInfoDto {Name = $"@{category}.{name}", Category = category, Value = new DateTimeValueDt(value)};
+                var dto = new SystemInfoDto {Name = $"@{category}.{name}", Category = category, Value = new DateTimeValueDto(value)};
                 dtos.Add(dto);
             }
         }
@@ -46,6 +46,15 @@ namespace SystemInformation.Client.Utilities
                         break;
                     case var val when val is bool boolValue:
                         dto.Value = new BoolValueDto(boolValue);
+                        break;
+                    case var val when val is short number:
+                        dto.Value = new NumberValueDto(number);
+                        break;
+                    case var val when val is byte number:
+                        dto.Value = new NumberValueDto(number);
+                        break;
+                    case var val when val is ushort number:
+                        dto.Value = new NumberValueDto(number);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

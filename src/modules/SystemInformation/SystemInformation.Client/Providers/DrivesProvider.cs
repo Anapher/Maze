@@ -101,11 +101,10 @@ namespace SystemInformation.Client.Providers
             var result = new List<SystemInfoDto>();
 
             result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Description");
-
             result.TryAdd<uint>(SystemInfoCategories.Drives, managementObject, "DriveType", u =>
             {
                 var driveType = (DriveType) u;
-                return new TranslatedTextValueDto($"@Drives.DriveType.{driveType}");
+                return new TranslatedTextValueDto($"Drives.DriveType.{driveType}");
             });
 
             result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "FileSystem");

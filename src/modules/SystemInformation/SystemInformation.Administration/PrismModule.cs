@@ -21,9 +21,9 @@ namespace SystemInformation.Administration
 
         public void Initialize()
         {
-            Tx.LoadFromEmbeddedResource("SystemInformation.Administration.Resources.Module.Translation.txd");
+            Tx.LoadFromEmbeddedResource("SystemInformation.Administration.Resources.SystemInformation.Translation.txd");
 
-            _registrar.Register<SystemInformationViewModel>("Module:Name", IconFactory.FromFactory(() => _icons.Icon), CommandCategory.System);
+            _registrar.Register<SystemInformationViewModel>(Tx.T("SystemInformation:Name"), IconFactory.FromFactory(() => _icons.SystemInfo), CommandCategory.System);
         }
     }
 }

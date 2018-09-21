@@ -15,7 +15,7 @@ namespace SystemInformation.Client.Providers
             using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard"))
             using (var results = searcher.Get())
             {
-                var managementObject = results.Cast<ManagementObject>().Single();
+                var managementObject = results.Cast<ManagementObject>().First();
 
                 list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "HostingBoard");
                 list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "HotSwappable");
