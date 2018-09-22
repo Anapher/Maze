@@ -10,7 +10,7 @@ namespace SystemInformation.Administration.ViewModels
         public SystemInfoGroupViewModel(string name, IEnumerable<SystemInfoDto> systemInfos)
         {
             Name = Tx.T($"SystemInformation:Category.{name}");
-            Childs = systemInfos.Select(x => new SystemInfoViewModel(x)).ToList();
+            Childs = systemInfos.Select(x => new SystemInfoViewModel(x)).OrderBy(x => x.Childs.Any()).ThenBy(x => x.Name).ToList();
         }
 
         public string Name { get; }

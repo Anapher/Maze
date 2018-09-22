@@ -21,7 +21,7 @@ namespace SystemInformation.Client.Providers
                 foreach (var managementObject in results.Cast<ManagementObject>())
                     if (managementObject.TryGetProperty("Caption", out string caption))
                     {
-                        var driveRoot = new SystemInfoDto {Category = SystemInfoCategories.Drives, Name = caption, Value = HeaderValueDto.Instance};
+                        var driveRoot = new SystemInfoDto {Category = SystemInfoCategory.Drives, Name = caption, Value = HeaderValueDto.Instance};
                         driveRoot.Childs.AddRange(GetDiskDriveProperties(managementObject));
 
                         var deviceId = (string) managementObject.Properties["DeviceID"].Value;
@@ -53,7 +53,7 @@ namespace SystemInformation.Client.Providers
 
                     if (managementObject.TryGetProperty("Caption", out string caption))
                     {
-                        var driveRoot = new SystemInfoDto {Name = caption, Value = HeaderValueDto.Instance};
+                        var driveRoot = new SystemInfoDto {Name = caption, Value = HeaderValueDto.Instance, Category = SystemInfoCategory.Drives};
                         driveRoot.Childs.AddRange(GetLogicalDriveProperties(managementObject));
 
                         yield return driveRoot;
@@ -100,21 +100,21 @@ namespace SystemInformation.Client.Providers
         {
             var result = new List<SystemInfoDto>();
 
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Description");
-            result.TryAdd<uint>(SystemInfoCategories.Drives, managementObject, "DriveType", u =>
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Description");
+            result.TryAdd<uint>(SystemInfoCategory.Drives, managementObject, "DriveType", u =>
             {
                 var driveType = (DriveType) u;
                 return new TranslatedTextValueDto($"Drives.DriveType.{driveType}");
             });
 
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "FileSystem");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "FreeSpace", i => new DataSizeValueDto((long) i));
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "Size", i => new DataSizeValueDto((long) i));
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "VolumeName");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "VolumeSerialNumber");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "FileSystem");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "FreeSpace", i => new DataSizeValueDto((long) i));
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "Size", i => new DataSizeValueDto((long) i));
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "VolumeName");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "VolumeSerialNumber");
 
             if (managementObject.TryGetProperty("Size", out ulong size) && managementObject.TryGetProperty("FreeSpace", out ulong freeSpace))
-                result.Add(new SystemInfoDto {Name = "Drives.Capacity", Value = new ProgressValueDto(size - freeSpace, size)});
+                result.Add(new SystemInfoDto {Name = "@Drives.Capacity", Value = new ProgressValueDto(size - freeSpace, size)});
 
             return result;
         }
@@ -123,18 +123,18 @@ namespace SystemInformation.Client.Providers
         {
             var result = new List<SystemInfoDto>();
 
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "DeviceID");
-            result.TryAdd<bool>(SystemInfoCategories.Drives, managementObject, "Bootable");
-            result.TryAdd<bool>(SystemInfoCategories.Drives, managementObject, "BootPartition");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Description");
-            result.TryAdd<uint>(SystemInfoCategories.Drives, managementObject, "HiddenSectors");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "BlockSize");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "NumberOfBlocks");
-            result.TryAdd<bool>(SystemInfoCategories.Drives, managementObject, "PrimaryPartition");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Purpose");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "Size", size => new DataSizeValueDto((long) size));
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "StartingOffset", size => new DataSizeValueDto((long) size));
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Type");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "DeviceID");
+            result.TryAdd<bool>(SystemInfoCategory.Drives, managementObject, "Bootable");
+            result.TryAdd<bool>(SystemInfoCategory.Drives, managementObject, "BootPartition");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Description");
+            result.TryAdd<uint>(SystemInfoCategory.Drives, managementObject, "HiddenSectors");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "BlockSize");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "NumberOfBlocks");
+            result.TryAdd<bool>(SystemInfoCategory.Drives, managementObject, "PrimaryPartition");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Purpose");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "Size", size => new DataSizeValueDto((long) size));
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "StartingOffset", size => new DataSizeValueDto((long) size));
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Type");
 
             return result;
         }
@@ -143,21 +143,21 @@ namespace SystemInformation.Client.Providers
         {
             var result = new List<SystemInfoDto>();
 
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "FirmwareRevision");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "InterfaceType");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Manufacturer");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "MediaType");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "PNPDeviceID");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "SerialNumber");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Signature");
-            result.TryAdd<string>(SystemInfoCategories.Drives, managementObject, "Status");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "TotalCylinders");
-            result.TryAdd<uint>(SystemInfoCategories.Drives, managementObject, "TotalHeads");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "TotalSectors");
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "TotalTracks");
-            result.TryAdd<uint>(SystemInfoCategories.Drives, managementObject, "TracksPerCylinder");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "FirmwareRevision");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "InterfaceType");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Manufacturer");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "MediaType");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "PNPDeviceID");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "SerialNumber");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Signature");
+            result.TryAdd<string>(SystemInfoCategory.Drives, managementObject, "Status");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "TotalCylinders");
+            result.TryAdd<uint>(SystemInfoCategory.Drives, managementObject, "TotalHeads");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "TotalSectors");
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "TotalTracks");
+            result.TryAdd<uint>(SystemInfoCategory.Drives, managementObject, "TracksPerCylinder");
 
-            result.TryAdd<ulong>(SystemInfoCategories.Drives, managementObject, "Size", size => new DataSizeValueDto((long) size));
+            result.TryAdd<ulong>(SystemInfoCategory.Drives, managementObject, "Size", size => new DataSizeValueDto((long) size));
 
             return result;
         }

@@ -1,6 +1,6 @@
 ﻿namespace SystemInformation.Shared
 {
-    public static class SystemInfoCategories
+    public static class SystemInfoCategory
     {
         public static readonly string Drives = "Drives";
         public static readonly string Network = "Network";
@@ -10,5 +10,6 @@
         public static readonly string Mainboard = "Mainboard";
         public static readonly string Processor = "Processor";
         public static readonly string VideoCard = "VideoCard";
+        public static readonly string Memory = "Memory";
     }
 }

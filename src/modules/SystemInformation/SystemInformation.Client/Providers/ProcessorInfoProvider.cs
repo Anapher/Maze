@@ -18,7 +18,7 @@ namespace SystemInformation.Client.Providers
                 foreach (var managementObject in results.Cast<ManagementObject>())
                     if (managementObject.TryGetProperty("Name", out string name))
                     {
-                        var info = new SystemInfoDto {Category = SystemInfoCategories.Processor, Name = name, Value = HeaderValueDto.Instance};
+                        var info = new SystemInfoDto {Category = SystemInfoCategory.Processor, Name = name, Value = HeaderValueDto.Instance};
                         AddProcessorProperties(managementObject, info.Childs);
                         yield return info;
                     }
@@ -27,25 +27,25 @@ namespace SystemInformation.Client.Providers
 
         private void AddProcessorProperties(ManagementObject managementObject, IList<SystemInfoDto> result)
         {
-            result.TryAdd<ushort>(SystemInfoCategories.Processor, managementObject, "AddressWidth");
-            result.TryAdd<ushort>(SystemInfoCategories.Processor, managementObject, "Architecture",
+            result.TryAdd<ushort>(SystemInfoCategory.Processor, managementObject, "AddressWidth");
+            result.TryAdd<ushort>(SystemInfoCategory.Processor, managementObject, "Architecture",
                 arg => new TextValueDto(((ProcessorArchitecture) arg).GetDescription()));
 
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "Description");
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "MaxClockSpeed", i => new TextValueDto($"{i} MHz"));
-            result.TryAdd<ushort>(SystemInfoCategories.Processor, managementObject, "CurrentVoltage", i => new TextValueDto($"{(i & 254) / 10d} V"));
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "ExtClock", i => new TextValueDto($"{i} MHz"));
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "L2CacheSize", i => new DataSizeValueDto(i * 1024));
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "L3CacheSize", i => new DataSizeValueDto(i * 1024));
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "Manufacturer");
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "NumberOfCores");
-            result.TryAdd<uint>(SystemInfoCategories.Processor, managementObject, "NumberOfLogicalProcessors");
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "ProcessorId");
-            result.TryAdd<ushort>(SystemInfoCategories.Processor, managementObject, "ProcessorType",
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "Description");
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "MaxClockSpeed", i => new TextValueDto($"{i} MHz"));
+            result.TryAdd<ushort>(SystemInfoCategory.Processor, managementObject, "CurrentVoltage", i => new TextValueDto($"{(i & 254) / 10d} V"));
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "ExtClock", i => new TextValueDto($"{i} MHz"));
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "L2CacheSize", i => new DataSizeValueDto(i * 1024));
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "L3CacheSize", i => new DataSizeValueDto(i * 1024));
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "Manufacturer");
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "NumberOfCores");
+            result.TryAdd<uint>(SystemInfoCategory.Processor, managementObject, "NumberOfLogicalProcessors");
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "ProcessorId");
+            result.TryAdd<ushort>(SystemInfoCategory.Processor, managementObject, "ProcessorType",
                 arg => new TextValueDto(((ProcessorType) arg).GetDescription()));
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "SerialNumber");
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "SocketDesignation");
-            result.TryAdd<string>(SystemInfoCategories.Processor, managementObject, "Version");
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "SerialNumber");
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "SocketDesignation");
+            result.TryAdd<string>(SystemInfoCategory.Processor, managementObject, "Version");
         }
 
         private enum ProcessorArchitecture

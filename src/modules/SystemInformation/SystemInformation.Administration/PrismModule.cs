@@ -23,7 +23,8 @@ namespace SystemInformation.Administration
         {
             Tx.LoadFromEmbeddedResource("SystemInformation.Administration.Resources.SystemInformation.Translation.txd");
 
-            _registrar.Register<SystemInformationViewModel>(Tx.T("SystemInformation:Name"), IconFactory.FromFactory(() => _icons.SystemInfo), CommandCategory.System);
+            _registrar.Register<SystemInformationViewModel>("SystemInformation:SystemInformation", IconFactory.FromFactory(() => _icons.SystemInfo),
+                CommandCategory.System);
         }
     }
 }

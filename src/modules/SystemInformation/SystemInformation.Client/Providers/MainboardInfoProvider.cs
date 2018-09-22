@@ -17,13 +17,13 @@ namespace SystemInformation.Client.Providers
             {
                 var managementObject = results.Cast<ManagementObject>().First();
 
-                list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "HostingBoard");
-                list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "HotSwappable");
-                list.TryAdd<string>(SystemInfoCategories.Mainboard, managementObject, "Manufacturer");
-                list.TryAdd<string>(SystemInfoCategories.Mainboard, managementObject, "Product");
-                list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "Removable");
-                list.TryAdd<bool>(SystemInfoCategories.Mainboard, managementObject, "Replacable");
-                list.TryAdd<string>(SystemInfoCategories.Mainboard, managementObject, "SerialNumber");
+                list.TryAdd<bool>(SystemInfoCategory.Mainboard, managementObject, "HostingBoard");
+                list.TryAdd<bool>(SystemInfoCategory.Mainboard, managementObject, "HotSwappable");
+                list.TryAdd<string>(SystemInfoCategory.Mainboard, managementObject, "Manufacturer");
+                list.TryAdd<string>(SystemInfoCategory.Mainboard, managementObject, "Product");
+                list.TryAdd<bool>(SystemInfoCategory.Mainboard, managementObject, "Removable");
+                list.TryAdd<bool>(SystemInfoCategory.Mainboard, managementObject, "Replacable");
+                list.TryAdd<string>(SystemInfoCategory.Mainboard, managementObject, "SerialNumber");
             }
 
             return list;

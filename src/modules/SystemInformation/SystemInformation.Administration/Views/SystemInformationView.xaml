@@ -26,6 +26,17 @@
 
             <converters:TranslateTextConverter x:Key="TranslateTextConverter" />
             <converters:CultureKeyToStringConverter x:Key="CultureKeyToStringConverter" />
+
+            <ContextMenu x:Key="ItemContextMenu">
+                <MenuItem
+                    Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.CopyNameAndValueCommand}"
+                    CommandParameter="{Binding}"
+                    Header="{tx:T SystemInformation:CopyNameAndValue}" />
+                <MenuItem
+                    Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.CopyValueCommand}"
+                    CommandParameter="{Binding}"
+                    Header="{tx:T SystemInformation:CopyValue}" />
+            </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
     <TabControl ItemsSource="{Binding Groups}">
@@ -38,11 +49,24 @@
                             <treeListView:TreeListView ChildrenPropertyName="Childs" ItemsSource="{Binding Childs}">
                                 <treeListView:TreeListView.View>
                                     <GridView>
-                                        <GridViewColumn
-                                            Width="300"
-                                            DisplayMemberBinding="{Binding Name}"
-                                            Header="Name" />
-                                        <GridViewColumn Width="300" Header="Value">
+                                        <GridViewColumn Width="300" Header="{tx:T Name}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate DataType="{x:Type viewModels:SystemInfoViewModel}">
+                                                    <TextBlock Text="{Binding Name}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HasChilds}" Value="true">
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="600" Header="{tx:T Value}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate DataType="{x:Type viewModels:SystemInfoViewModel}">
                                                     <ContentControl Content="{Binding Value}">
@@ -70,6 +94,8 @@
                                                                 <mah:MetroProgressBar
                                                                     Width="200"
                                                                     HorizontalAlignment="Left"
+                                                                    VerticalAlignment="Center"
+                                                                    Background="{StaticResource GrayBrush7}"
                                                                     Maximum="{Binding Maximum}"
                                                                     Value="{Binding Value}" />
                                                             </DataTemplate>
@@ -83,6 +109,12 @@
                                         </GridViewColumn>
                                     </GridView>
                                 </treeListView:TreeListView.View>
+                                <treeListView:TreeListView.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource MetroTreeListViewItem}" TargetType="treeListView:TreeListViewItem">
+                                        <Setter Property="IsExpanded" Value="True" />
+                                        <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                                    </Style>
+                                </treeListView:TreeListView.ItemContainerStyle>
                             </treeListView:TreeListView>
                         </DataTemplate>
                     </Setter.Value>

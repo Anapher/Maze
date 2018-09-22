@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using SystemInformation.Administration.Rest;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
+using Prism.Commands;
 using Prism.Regions;
 using Unclassified.TxLib;
 
@@ -14,6 +16,9 @@ namespace SystemInformation.Administration.ViewModels
     {
         private readonly IPackageRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
+
+        private DelegateCommand<SystemInfoViewModel> _copyNameAndValueCommand;
+        private DelegateCommand<SystemInfoViewModel> _copyValueCommand;
 
         private List<SystemInfoGroupViewModel> _groups;
 
@@ -29,6 +34,33 @@ namespace SystemInformation.Administration.ViewModels
             private set => SetProperty(ref _groups, value);
         }
 
+        public DelegateCommand<SystemInfoViewModel> CopyNameAndValueCommand
+        {
+            get
+            {
+                return _copyNameAndValueCommand ?? (_copyNameAndValueCommand = new DelegateCommand<SystemInfoViewModel>(parameter =>
+                {
+                    var valueString = parameter.GetValueString();
+                    if (string.IsNullOrEmpty(valueString))
+                        Clipboard.SetText(parameter.Name);
+                    else
+                        Clipboard.SetText($"{parameter.Name} = {valueString}");
+                }));
+            }
+        }
+
+        public DelegateCommand<SystemInfoViewModel> CopyValueCommand
+        {
+            get
+            {
+                return _copyValueCommand ?? (_copyValueCommand = new DelegateCommand<SystemInfoViewModel>(parameter =>
+                {
+                    var valueString = parameter.GetValueString();
+                    Clipboard.SetText(string.IsNullOrEmpty(valueString) ? parameter.Name : valueString);
+                }));
+            }
+        }
+
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
@@ -38,7 +70,7 @@ namespace SystemInformation.Administration.ViewModels
             if (!info.Failed)
             {
                 var groups = info.Result.GroupBy(x => x.Category);
-                Groups = groups.Select(x => new SystemInfoGroupViewModel(x.Key, x)).ToList();
+                Groups = groups.Select(x => new SystemInfoGroupViewModel(x.Key, x)).OrderBy(x => x.Childs.Any()).ThenBy(x => x.Name).ToList();
             }
         }
     }

@@ -20,44 +20,44 @@ namespace SystemInformation.Client.Providers
             using (var results = searcher.Get())
             {
                 var managementObject = results.Cast<ManagementObject>().First();
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "BuildNumber");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "BuildType");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "Caption");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "BuildNumber");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "BuildType");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "Caption");
                 list.Add(new SystemInfoDto
                 {
-                    Category = SystemInfoCategories.OperatingSystem,
+                    Category = SystemInfoCategory.OperatingSystem,
                     Name = "@OperatingSystem.SystemLanguage",
                     Value = new CultureValueDto(CultureInfo.InstalledUICulture)
                 });
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "CSName");
-                list.TryAdd<bool>(SystemInfoCategories.OperatingSystem, managementObject, "Debug");
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "Encryption");
-                list.TryAdd<ulong>(SystemInfoCategories.OperatingSystem, managementObject, "FreeSpaceInPagingFiles",
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "CSName");
+                list.TryAdd<bool>(SystemInfoCategory.OperatingSystem, managementObject, "Debug");
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "Encryption");
+                list.TryAdd<ulong>(SystemInfoCategory.OperatingSystem, managementObject, "FreeSpaceInPagingFiles",
                     arg => new DataSizeValueDto((long) arg * 1000));
-                list.TryAddDateTime(SystemInfoCategories.OperatingSystem, managementObject, "InstallDate");
-                list.TryAddDateTime(SystemInfoCategories.OperatingSystem, managementObject, "LastBootUpTime");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "Manufacturer");
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "MaxNumberOfProcesses");
-                list.TryAdd<ulong>(SystemInfoCategories.OperatingSystem, managementObject, "MaxProcessMemorySize",
+                list.TryAddDateTime(SystemInfoCategory.OperatingSystem, managementObject, "InstallDate");
+                list.TryAddDateTime(SystemInfoCategory.OperatingSystem, managementObject, "LastBootUpTime");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "Manufacturer");
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "MaxNumberOfProcesses");
+                list.TryAdd<ulong>(SystemInfoCategory.OperatingSystem, managementObject, "MaxProcessMemorySize",
                     arg => new DataSizeValueDto((long) arg * 1000));
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "NumberOfLicensedUsers");
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "NumberOfProcesses");
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "NumberOfUsers");
-                list.TryAdd<uint>(SystemInfoCategories.OperatingSystem, managementObject, "OperatingSystemSKU", u =>
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "NumberOfLicensedUsers");
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "NumberOfProcesses");
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "NumberOfUsers");
+                list.TryAdd<uint>(SystemInfoCategory.OperatingSystem, managementObject, "OperatingSystemSKU", u =>
                 {
                     var sku = (OperatingSystemSku) u;
                     var attribute = sku.GetAttribute<OperatingSystemSku, DescriptionAttribute>();
                     return new TextValueDto(attribute.Description);
                 });
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "OSArchitecture");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "SerialNumber");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "SystemDirectory");
-                list.TryAdd<string>(SystemInfoCategories.OperatingSystem, managementObject, "WindowsDirectory");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "OSArchitecture");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "SerialNumber");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "SystemDirectory");
+                list.TryAdd<string>(SystemInfoCategory.OperatingSystem, managementObject, "WindowsDirectory");
             }
 
             list.Add(new SystemInfoDto
             {
-                Category = SystemInfoCategories.OperatingSystem,
+                Category = SystemInfoCategory.OperatingSystem,
                 Name = "@OperatingSystem.Version",
                 Value = new TextValueDto(Environment.OSVersion.ToString())
             });

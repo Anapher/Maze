@@ -19,28 +19,28 @@ namespace SystemInformation.Client.Providers
             {
                 var managementObject = results.Cast<ManagementObject>().First();
 
-                list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "AdminPasswordStatus",
+                list.TryAdd<ushort>(SystemInfoCategory.ComputerSystem, managementObject, "AdminPasswordStatus",
                     arg => new TextValueDto(((AdminPasswordStatus) arg).GetDescription()));
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "BootupState");
-                list.TryAdd<short>(SystemInfoCategories.ComputerSystem, managementObject, "CurrentTimeZone");
-                list.TryAdd<bool>(SystemInfoCategories.ComputerSystem, managementObject, "DaylightInEffect");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "DNSHostName");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "Domain");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "Manufacturer");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "Model");
-                list.TryAdd<uint>(SystemInfoCategories.ComputerSystem, managementObject, "NumberOfLogicalProcessors");
-                list.TryAdd<uint>(SystemInfoCategories.ComputerSystem, managementObject, "NumberOfProcessors");
-                list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "PCSystemType",
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "BootupState");
+                list.TryAdd<short>(SystemInfoCategory.ComputerSystem, managementObject, "CurrentTimeZone");
+                list.TryAdd<bool>(SystemInfoCategory.ComputerSystem, managementObject, "DaylightInEffect");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "DNSHostName");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "Domain");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "Manufacturer");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "Model");
+                list.TryAdd<uint>(SystemInfoCategory.ComputerSystem, managementObject, "NumberOfLogicalProcessors");
+                list.TryAdd<uint>(SystemInfoCategory.ComputerSystem, managementObject, "NumberOfProcessors");
+                list.TryAdd<ushort>(SystemInfoCategory.ComputerSystem, managementObject, "PCSystemType",
                     arg => new TextValueDto(((PcSystemType) arg).GetDescription()));
-                list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "PowerSupplyState",
+                list.TryAdd<ushort>(SystemInfoCategory.ComputerSystem, managementObject, "PowerSupplyState",
                     arg => new TextValueDto(((PowerSupplyState) arg).GetDescription()));
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "PrimaryOwnerName");
-                list.TryAdd<ulong>(SystemInfoCategories.ComputerSystem, managementObject, "TotalPhysicalMemory",
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "PrimaryOwnerName");
+                list.TryAdd<ulong>(SystemInfoCategory.ComputerSystem, managementObject, "TotalPhysicalMemory",
                     arg => new DataSizeValueDto((long) arg));
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "UserName");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "Workgroup");
-                list.TryAdd<string>(SystemInfoCategories.ComputerSystem, managementObject, "SystemType");
-                list.TryAdd<ushort>(SystemInfoCategories.ComputerSystem, managementObject, "WakeUpType",
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "UserName");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "Workgroup");
+                list.TryAdd<string>(SystemInfoCategory.ComputerSystem, managementObject, "SystemType");
+                list.TryAdd<ushort>(SystemInfoCategory.ComputerSystem, managementObject, "WakeUpType",
                     arg => new TextValueDto(((WakeUpType) arg).GetDescription()));
             }
 

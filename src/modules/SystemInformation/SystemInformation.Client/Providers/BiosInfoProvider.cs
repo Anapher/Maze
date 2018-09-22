@@ -17,19 +17,19 @@ namespace SystemInformation.Client.Providers
             using (var results = searcher.Get())
             {
                 var managementObject = results.Cast<ManagementObject>().First();
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "Name");
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "Version");
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "CurrentLanguage");
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "InstallableLanguages");
-                list.TryAddDateTime(SystemInfoCategories.Bios, managementObject, "ReleaseDate");
-                list.TryAdd<string>(SystemInfoCategories.Bios, managementObject, "SerialNumber");
+                list.TryAdd<string>(SystemInfoCategory.Bios, managementObject, "Name");
+                list.TryAdd<string>(SystemInfoCategory.Bios, managementObject, "Version");
+                list.TryAdd<string>(SystemInfoCategory.Bios, managementObject, "CurrentLanguage");
+                list.TryAdd<string>(SystemInfoCategory.Bios, managementObject, "InstallableLanguages");
+                list.TryAddDateTime(SystemInfoCategory.Bios, managementObject, "ReleaseDate");
+                list.TryAdd<string>(SystemInfoCategory.Bios, managementObject, "SerialNumber");
 
                 if (managementObject.TryGetProperty("SystemBiosMajorVersion", out byte majorVersion))
                 {
                     managementObject.TryGetProperty("SystemBiosMinorVersion", out byte minorVersion);
                     list.Add(new SystemInfoDto
                     {
-                        Category = SystemInfoCategories.Bios,
+                        Category = SystemInfoCategory.Bios,
                         Name = "@Bios.SystemBiosVersion",
                         Value = new TextValueDto($"{majorVersion}.{minorVersion}")
                     });

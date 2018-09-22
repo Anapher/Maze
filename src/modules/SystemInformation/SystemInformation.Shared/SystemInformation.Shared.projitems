@@ -22,6 +22,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\TranslatedTextValueDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\ValueDtoType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dtos\Value\ValueDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SystemInfoCategories.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemInfoCategory.cs" />
   </ItemGroup>
 </Project>

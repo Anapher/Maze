@@ -20,7 +20,7 @@ namespace SystemInformation.Client.Providers
                     {
                         var networkAdapter = new SystemInfoDto
                         {
-                            Name = caption, Category = SystemInfoCategories.Network, Value = HeaderValueDto.Instance
+                            Name = caption, Category = SystemInfoCategory.Network, Value = HeaderValueDto.Instance
                         };
                         networkAdapter.Childs.AddRange(GetNetworkAdapterProperties(managementObject));
                         yield return networkAdapter;
@@ -32,18 +32,18 @@ namespace SystemInformation.Client.Providers
         {
             var result = new List<SystemInfoDto>();
 
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "AdapterType");
-            result.TryAdd<uint>(SystemInfoCategories.Network, managementObject, "Availability", u => new TextValueDto(((AdapterAvailability)u).GetDescription()));
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "Description");
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "MACAddress");
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "Manufacturer");
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "Name");
-            result.TryAdd<bool>(SystemInfoCategories.Network, managementObject, "NetEnabled");
-            result.TryAdd<bool>(SystemInfoCategories.Network, managementObject, "PhyscialAdapter");
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "PNPDeviceID");
-            result.TryAdd<string>(SystemInfoCategories.Network, managementObject, "ServiceName");
-            result.TryAdd<ulong>(SystemInfoCategories.Network, managementObject, "Speed", i => new DataSizeValueDto((long) (i / 8)));
-            result.TryAddDateTime(SystemInfoCategories.Network, managementObject, "TimeOfLastReset");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "AdapterType");
+            result.TryAdd<uint>(SystemInfoCategory.Network, managementObject, "Availability", u => new TextValueDto(((AdapterAvailability)u).GetDescription()));
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "Description");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "MACAddress");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "Manufacturer");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "Name");
+            result.TryAdd<bool>(SystemInfoCategory.Network, managementObject, "NetEnabled");
+            result.TryAdd<bool>(SystemInfoCategory.Network, managementObject, "PhyscialAdapter");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "PNPDeviceID");
+            result.TryAdd<string>(SystemInfoCategory.Network, managementObject, "ServiceName");
+            result.TryAdd<ulong>(SystemInfoCategory.Network, managementObject, "Speed", i => new DataSizeValueDto((long) (i / 8)));
+            result.TryAddDateTime(SystemInfoCategory.Network, managementObject, "TimeOfLastReset");
 
             return result;
         }

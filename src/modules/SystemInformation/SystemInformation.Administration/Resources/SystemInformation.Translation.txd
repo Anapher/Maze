@@ -6,10 +6,13 @@
 		<text key="SystemInformation:Category.ComputerSystem">Computersystem</text>
 		<text key="SystemInformation:Category.Drives">Laufwerke</text>
 		<text key="SystemInformation:Category.Mainboard">Mainboard</text>
+		<text key="SystemInformation:Category.Memory">Arbeitsspeicher</text>
 		<text key="SystemInformation:Category.Network">Netzwerk</text>
 		<text key="SystemInformation:Category.OperatingSystem">Betriebssystem</text>
 		<text key="SystemInformation:Category.Processor">Prozessor</text>
 		<text key="SystemInformation:Category.VideoCard">Grafikkarte</text>
+		<text key="SystemInformation:CopyNameAndValue">Name und Wert kopieren</text>
+		<text key="SystemInformation:CopyValue">Wert kopieren</text>
 		<text key="SystemInformation:Labels.Bios.CurrentLanguage">Aktuelle Sprache</text>
 		<text key="SystemInformation:Labels.Bios.InstallableLanguages">Installierbare Sprachen</text>
 		<text key="SystemInformation:Labels.Bios.Name">{=Name}</text>
@@ -80,6 +83,17 @@
 		<text key="SystemInformation:Labels.Mainboard.Removable">Entfernbar</text>
 		<text key="SystemInformation:Labels.Mainboard.Replacable">Ersetzbar</text>
 		<text key="SystemInformation:Labels.Mainboard.SerialNumber">Seriennummer</text>
+		<text key="SystemInformation:Labels.Memory.BankLabel">Bank-Label</text>
+		<text key="SystemInformation:Labels.Memory.Capacity">Kapazität</text>
+		<text key="SystemInformation:Labels.Memory.ConfiguredClockSpeed">Konfigurierte Taktfrequenz</text>
+		<text key="SystemInformation:Labels.Memory.ConfiguredVoltage">Konfigurierte Spannung</text>
+		<text key="SystemInformation:Labels.Memory.FormFactor">Formfaktor</text>
+		<text key="SystemInformation:Labels.Memory.HotSwappable">Im laufenden Betrieb austauschbar</text>
+		<text key="SystemInformation:Labels.Memory.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.Memory.Model">Modell</text>
+		<text key="SystemInformation:Labels.Memory.PartNumber">Teilenummer</text>
+		<text key="SystemInformation:Labels.Memory.SerialNumber">Seriennummer</text>
+		<text key="SystemInformation:Labels.Memory.Speed">Geschwindigkeit</text>
 		<text key="SystemInformation:Labels.Network.AdapterType">Adaptyer-Typ</text>
 		<text key="SystemInformation:Labels.Network.Availability">Verfügbarkeit</text>
 		<text key="SystemInformation:Labels.Network.Description">Beschreibung</text>
@@ -92,19 +106,72 @@
 		<text key="SystemInformation:Labels.Network.ServiceName">Dienstname</text>
 		<text key="SystemInformation:Labels.Network.Speed">Geschwindigkeit</text>
 		<text key="SystemInformation:Labels.Network.TimeOfLastReset">Zeitpunkt des letzten Zurücksetzens</text>
+		<text key="SystemInformation:Labels.OperatingSystem.BuildNumber">Build-Nummer</text>
+		<text key="SystemInformation:Labels.OperatingSystem.BuildType">Build-Typ</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Caption">Name</text>
+		<text key="SystemInformation:Labels.OperatingSystem.CSName">Computersystem Name</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Debug">Debug</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Encryption">Verschlüsselung</text>
+		<text key="SystemInformation:Labels.OperatingSystem.FreeSpaceInPagingFiles">Freier Speicherplatz in Paging Dateien</text>
+		<text key="SystemInformation:Labels.OperatingSystem.InstallDate">Installationsdatum</text>
+		<text key="SystemInformation:Labels.OperatingSystem.LastBootUpTime">Letzte Boot-Up-Zeit</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.OperatingSystem.MaxNumberOfProcesses">Maximale Anzahl an Prozessen</text>
+		<text key="SystemInformation:Labels.OperatingSystem.MaxProcessMemorySize">Maximale Prozess-Speichergröße</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfLicensedUsers">Anzahl der lizensierten Benutzer</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfProcesses">Anzahl der Prozesse</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfUsers">Anzahl der Benutzer</text>
+		<text key="SystemInformation:Labels.OperatingSystem.OperatingSystemSKU">SKU</text>
+		<text key="SystemInformation:Labels.OperatingSystem.OSArchitecture">Architektur</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SerialNumber">Seriennummer</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SystemDirectory">Systempfad</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SystemLanguage">Systemsprache</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Version">Version</text>
+		<text key="SystemInformation:Labels.OperatingSystem.WindowsDirectory">Windowspfad</text>
+		<text key="SystemInformation:Labels.Processor.AddressWidth">Adressenbreite (Bits)</text>
+		<text key="SystemInformation:Labels.Processor.Architecture">Architektur</text>
+		<text key="SystemInformation:Labels.Processor.CurrentVoltage">Aktuelle Spannung</text>
+		<text key="SystemInformation:Labels.Processor.Description">Beschreibung</text>
+		<text key="SystemInformation:Labels.Processor.ExtClock">Externe Taktfrequenz</text>
+		<text key="SystemInformation:Labels.Processor.L2CacheSize">L2 Cache Größe</text>
+		<text key="SystemInformation:Labels.Processor.L3CacheSize">L3 Cache Größe</text>
+		<text key="SystemInformation:Labels.Processor.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.Processor.MaxClockSpeed">Maximale Taktfrequenz</text>
+		<text key="SystemInformation:Labels.Processor.NumberOfCores">Anzahl der Kerne</text>
+		<text key="SystemInformation:Labels.Processor.NumberOfLogicalProcessors">{=SystemInformation:Labels.ComputerSystem.NumberOfLogicalProcessors}</text>
+		<text key="SystemInformation:Labels.Processor.ProcessorId">Prozessor-ID</text>
+		<text key="SystemInformation:Labels.Processor.ProcessorType">Prozessor-Typ</text>
+		<text key="SystemInformation:Labels.Processor.SerialNumber">Seriennummer</text>
+		<text key="SystemInformation:Labels.Processor.SocketDesignation">Sockel Bezeichnung</text>
+		<text key="SystemInformation:Labels.Processor.Version">Version</text>
+		<text key="SystemInformation:Labels.VideoCard.AdapterCompatibility">Adapter-Kompatibilität</text>
+		<text key="SystemInformation:Labels.VideoCard.AdapterDACType">Digital-Analog-Wandler (DAC) Chip</text>
+		<text key="SystemInformation:Labels.VideoCard.CurrentRefreshRate">Bildwiederholungsrate</text>
+		<text key="SystemInformation:Labels.VideoCard.DriverDate">Treiberdatum</text>
+		<text key="SystemInformation:Labels.VideoCard.DriverVersion">Treiberversion</text>
+		<text key="SystemInformation:Labels.VideoCard.MaxRefreshRate">Maximale Bildwiederholungsrate</text>
+		<text key="SystemInformation:Labels.VideoCard.MinRefreshRate">Minimale Bildwiederholungsrate</text>
+		<text key="SystemInformation:Labels.VideoCard.Monochrome">Monochrome</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoArchitecture">Video-Architektur</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoMemoryType">Videospeichertyp</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoModeDescription">Beschreibung des Videomodus</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoProcessor">Videoprozessor</text>
 		<text key="SystemInformation:Manufacturer">Hersteller</text>
-		<text key="SystemInformation:Name">Systeminformationen</text>
 		<text key="SystemInformation:StatusBar.LoadInformation">Lade Informationen...</text>
+		<text key="SystemInformation:SystemInformation">Systeminformationen</text>
 	</culture>
 	<culture name="en" primary="true">
 		<text key="SystemInformation:Category.Bios">BIOS</text>
 		<text key="SystemInformation:Category.ComputerSystem">Computer System</text>
 		<text key="SystemInformation:Category.Drives">Drives</text>
 		<text key="SystemInformation:Category.Mainboard">Mainboard</text>
+		<text key="SystemInformation:Category.Memory">Memory</text>
 		<text key="SystemInformation:Category.Network">Network</text>
 		<text key="SystemInformation:Category.OperatingSystem">Operating System</text>
 		<text key="SystemInformation:Category.Processor">Processor</text>
 		<text key="SystemInformation:Category.VideoCard">Video Card</text>
+		<text key="SystemInformation:CopyNameAndValue">Copy Name and Value</text>
+		<text key="SystemInformation:CopyValue">Copy Value</text>
 		<text key="SystemInformation:Labels.Bios.CurrentLanguage">Current Language</text>
 		<text key="SystemInformation:Labels.Bios.InstallableLanguages">Installable Languages</text>
 		<text key="SystemInformation:Labels.Bios.Name">{=Name}</text>
@@ -175,6 +242,17 @@
 		<text key="SystemInformation:Labels.Mainboard.Removable">Removable</text>
 		<text key="SystemInformation:Labels.Mainboard.Replacable">Replacable</text>
 		<text key="SystemInformation:Labels.Mainboard.SerialNumber">Serial Number</text>
+		<text key="SystemInformation:Labels.Memory.BankLabel">Bank Label</text>
+		<text key="SystemInformation:Labels.Memory.Capacity">Capacity</text>
+		<text key="SystemInformation:Labels.Memory.ConfiguredClockSpeed">Configured Clock Speed</text>
+		<text key="SystemInformation:Labels.Memory.ConfiguredVoltage">Configured Voltage</text>
+		<text key="SystemInformation:Labels.Memory.FormFactor">Form Factor</text>
+		<text key="SystemInformation:Labels.Memory.HotSwappable">Hot Swappable</text>
+		<text key="SystemInformation:Labels.Memory.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.Memory.Model">Model</text>
+		<text key="SystemInformation:Labels.Memory.PartNumber">Part Number</text>
+		<text key="SystemInformation:Labels.Memory.SerialNumber">Serial Number</text>
+		<text key="SystemInformation:Labels.Memory.Speed">Speed</text>
 		<text key="SystemInformation:Labels.Network.AdapterType">Adapter Type</text>
 		<text key="SystemInformation:Labels.Network.Availability">Availability</text>
 		<text key="SystemInformation:Labels.Network.Description">Description</text>
@@ -187,8 +265,58 @@
 		<text key="SystemInformation:Labels.Network.ServiceName">Service Name</text>
 		<text key="SystemInformation:Labels.Network.Speed">Speed</text>
 		<text key="SystemInformation:Labels.Network.TimeOfLastReset">Time of Last Reset</text>
+		<text key="SystemInformation:Labels.OperatingSystem.BuildNumber">Build Number</text>
+		<text key="SystemInformation:Labels.OperatingSystem.BuildType">Build Type</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Caption">Caption</text>
+		<text key="SystemInformation:Labels.OperatingSystem.CSName">Computer System Name</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Debug">Debug</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Encryption">Encryption</text>
+		<text key="SystemInformation:Labels.OperatingSystem.FreeSpaceInPagingFiles">Free Space in Paging Files</text>
+		<text key="SystemInformation:Labels.OperatingSystem.InstallDate">Install Date</text>
+		<text key="SystemInformation:Labels.OperatingSystem.LastBootUpTime">Last Boot Up Time</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.OperatingSystem.MaxNumberOfProcesses">Max Number of Processes</text>
+		<text key="SystemInformation:Labels.OperatingSystem.MaxProcessMemorySize">Maximum Process Memory Size</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfLicensedUsers">Number of Licenses Users</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfProcesses">Number of Processes</text>
+		<text key="SystemInformation:Labels.OperatingSystem.NumberOfUsers">Number of Users</text>
+		<text key="SystemInformation:Labels.OperatingSystem.OperatingSystemSKU">SKU</text>
+		<text key="SystemInformation:Labels.OperatingSystem.OSArchitecture">Architecture</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SerialNumber">Serial Number</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SystemDirectory">System Directory</text>
+		<text key="SystemInformation:Labels.OperatingSystem.SystemLanguage">System Language</text>
+		<text key="SystemInformation:Labels.OperatingSystem.Version">Version</text>
+		<text key="SystemInformation:Labels.OperatingSystem.WindowsDirectory">Windows Directory</text>
+		<text key="SystemInformation:Labels.Processor.AddressWidth">Address Width (Bits)</text>
+		<text key="SystemInformation:Labels.Processor.Architecture">Architecture</text>
+		<text key="SystemInformation:Labels.Processor.CurrentVoltage">Current Voltage</text>
+		<text key="SystemInformation:Labels.Processor.Description">Description</text>
+		<text key="SystemInformation:Labels.Processor.ExtClock">External Clock Frequency</text>
+		<text key="SystemInformation:Labels.Processor.L2CacheSize">L2 Cache Size</text>
+		<text key="SystemInformation:Labels.Processor.L3CacheSize">L3 Cache Size</text>
+		<text key="SystemInformation:Labels.Processor.Manufacturer">{=SystemInformation:Manufacturer}</text>
+		<text key="SystemInformation:Labels.Processor.MaxClockSpeed">Maximum Clock Speed</text>
+		<text key="SystemInformation:Labels.Processor.NumberOfCores">Number of Cores</text>
+		<text key="SystemInformation:Labels.Processor.NumberOfLogicalProcessors">{=SystemInformation:Labels.ComputerSystem.NumberOfLogicalProcessors}</text>
+		<text key="SystemInformation:Labels.Processor.ProcessorId">Processor ID</text>
+		<text key="SystemInformation:Labels.Processor.ProcessorType">Processor Type</text>
+		<text key="SystemInformation:Labels.Processor.SerialNumber">Serial Number</text>
+		<text key="SystemInformation:Labels.Processor.SocketDesignation">Socket Designation</text>
+		<text key="SystemInformation:Labels.Processor.Version">Version</text>
+		<text key="SystemInformation:Labels.VideoCard.AdapterCompatibility">Adapter Compatibility</text>
+		<text key="SystemInformation:Labels.VideoCard.AdapterDACType">Digital-to-analog converter (DAC) chip</text>
+		<text key="SystemInformation:Labels.VideoCard.CurrentRefreshRate">Refresh Frequency</text>
+		<text key="SystemInformation:Labels.VideoCard.DriverDate">Driver Date</text>
+		<text key="SystemInformation:Labels.VideoCard.DriverVersion">Driver Version</text>
+		<text key="SystemInformation:Labels.VideoCard.MaxRefreshRate">Maximum Refresh Rate</text>
+		<text key="SystemInformation:Labels.VideoCard.MinRefreshRate">Minimum Refresh Rate</text>
+		<text key="SystemInformation:Labels.VideoCard.Monochrome">Monochrome</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoArchitecture">Video Architecture</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoMemoryType">Video Memory Type</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoModeDescription">Video Mode Description</text>
+		<text key="SystemInformation:Labels.VideoCard.VideoProcessor">Video Processor</text>
 		<text key="SystemInformation:Manufacturer">Manufacturer</text>
-		<text key="SystemInformation:Name">System Information</text>
 		<text key="SystemInformation:StatusBar.LoadInformation">Load information...</text>
+		<text key="SystemInformation:SystemInformation">System Information</text>
 	</culture>
 </translation>

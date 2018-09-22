@@ -21,7 +21,7 @@ namespace SystemInformation.Client.Providers
                 {
                     if (managementObject.TryGetProperty("Caption", out string caption))
                     {
-                        var info = new SystemInfoDto {Category = SystemInfoCategories.VideoCard, Name = caption, Value = HeaderValueDto.Instance};
+                        var info = new SystemInfoDto {Category = SystemInfoCategory.VideoCard, Name = caption, Value = HeaderValueDto.Instance};
                         AddVideoCardProperties(managementObject, info.Childs);
                         yield return info;
                     }
@@ -31,20 +31,20 @@ namespace SystemInformation.Client.Providers
 
         private void AddVideoCardProperties(ManagementObject managementObject, IList<SystemInfoDto> result)
         {
-            result.TryAdd<string>(SystemInfoCategories.VideoCard, managementObject, "AdapterCompatibility");
-            result.TryAdd<string>(SystemInfoCategories.VideoCard, managementObject, "AdapterDACType");
-            result.TryAdd<uint>(SystemInfoCategories.VideoCard, managementObject, "CurrentRefreshRate");
-            result.TryAddDateTime(SystemInfoCategories.VideoCard, managementObject, "DriverDate");
-            result.TryAdd<string>(SystemInfoCategories.VideoCard, managementObject, "DriverVersion");
-            result.TryAdd<uint>(SystemInfoCategories.VideoCard, managementObject, "MaxRefreshRate");
-            result.TryAdd<uint>(SystemInfoCategories.VideoCard, managementObject, "MinRefreshRate");
-            result.TryAdd<bool>(SystemInfoCategories.VideoCard, managementObject, "Monochrome");
-            result.TryAdd<ushort>(SystemInfoCategories.VideoCard, managementObject, "VideoArchitecture",
+            result.TryAdd<string>(SystemInfoCategory.VideoCard, managementObject, "AdapterCompatibility");
+            result.TryAdd<string>(SystemInfoCategory.VideoCard, managementObject, "AdapterDACType");
+            result.TryAdd<uint>(SystemInfoCategory.VideoCard, managementObject, "CurrentRefreshRate");
+            result.TryAddDateTime(SystemInfoCategory.VideoCard, managementObject, "DriverDate");
+            result.TryAdd<string>(SystemInfoCategory.VideoCard, managementObject, "DriverVersion");
+            result.TryAdd<uint>(SystemInfoCategory.VideoCard, managementObject, "MaxRefreshRate");
+            result.TryAdd<uint>(SystemInfoCategory.VideoCard, managementObject, "MinRefreshRate");
+            result.TryAdd<bool>(SystemInfoCategory.VideoCard, managementObject, "Monochrome");
+            result.TryAdd<ushort>(SystemInfoCategory.VideoCard, managementObject, "VideoArchitecture",
                 arg => new TextValueDto(((VideoArchitecture) arg).GetDescription()));
-            result.TryAdd<ushort>(SystemInfoCategories.VideoCard, managementObject, "VideoMemoryType",
+            result.TryAdd<ushort>(SystemInfoCategory.VideoCard, managementObject, "VideoMemoryType",
                 arg => new TextValueDto(((VideoMemoryType) arg).GetDescription()));
-            result.TryAdd<string>(SystemInfoCategories.VideoCard, managementObject, "VideoModeDescription");
-            result.TryAdd<string>(SystemInfoCategories.VideoCard, managementObject, "VideoProcessor");
+            result.TryAdd<string>(SystemInfoCategory.VideoCard, managementObject, "VideoModeDescription");
+            result.TryAdd<string>(SystemInfoCategory.VideoCard, managementObject, "VideoProcessor");
         }
 
         private enum VideoArchitecture
