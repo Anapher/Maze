@@ -2,10 +2,11 @@
     x:Class="FileExplorer.Administration.Views.DirectoryTreeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
+    xmlns:controls="clr-namespace:TreeViewEx.Controls;assembly=Anapher.TreeViewEx"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:explorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
+    xmlns:extensions1="clr-namespace:TreeViewEx.Extensions;assembly=Anapher.TreeViewEx"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:DirectoryTreeViewModel}"
@@ -13,7 +14,7 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
     <controls:TreeViewEx
-        extensions:TreeViewExtensions.SelectOnRightClick="True"
+        extensions1:TreeViewExtensions.SelectOnRightClick="True"
         BorderThickness="0"
         ItemsSource="{Binding Entries.All}"
         ScrollViewer.CanContentScroll="False">
@@ -48,7 +49,7 @@
         <TreeView.ItemsPanel>
             <ItemsPanelTemplate>
                 <VirtualizingStackPanel
-                    extensions:FrameworkElementExtensions.SupressBringIntoView="True"
+                    extensions1:FrameworkElementExtensions.SupressBringIntoView="True"
                     IsVirtualizing="True"
                     VirtualizationMode="Recycling" />
             </ItemsPanelTemplate>

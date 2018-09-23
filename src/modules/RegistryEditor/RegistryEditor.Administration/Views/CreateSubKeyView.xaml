@@ -1,0 +1,47 @@
+﻿<views:WindowUserControl
+    x:Class="RegistryEditor.Administration.Views.CreateSubKeyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:RegistryEditor.Administration.ViewModels"
+    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    Title="{tx:T RegistryEditor:CreateSubKey}"
+    Width="480"
+    d:DataContext="{d:DesignInstance viewModels:CreateSubKeyViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="480"
+    DialogResult="{Binding DialogResult}"
+    EscapeClosesWindow="True"
+    FocusManager.FocusedElement="{Binding ElementName=NameTextBox}"
+    ResizeMode="NoResize"
+    ShowInTaskBar="False"
+    mc:Ignorable="d">
+    <StackPanel Margin="10" Orientation="Vertical">
+        <TextBlock Text="{tx:T RegistryEditor:Location}" />
+        <TextBox
+            Margin="0,2,0,0"
+            IsReadOnly="True"
+            Opacity=".6"
+            Text="{Binding SubKeyLocation, Mode=OneTime}" />
+        <TextBlock Margin="0,10,0,0" Text="{tx:T Name}" />
+        <TextBox Margin="0,2,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel
+            Margin="0,15,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="100"
+                Margin="0,0,10,0"
+                Command="{Binding CancelCommand}"
+                Content="{tx:T Cancel}"
+                IsCancel="True" />
+            <Button
+                Width="100"
+                Command="{Binding CreateCommand}"
+                Content="{tx:T Create}"
+                IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</views:WindowUserControl>

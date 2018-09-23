@@ -10,7 +10,7 @@
     d:DataContext="{d:DesignInstance viewModels:RemoteDesktopViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    TaskBarIcon="pack://application:,,,/RemoteDesktop.Administration;component/Resources/Images/Monitor_16x.png"
+    TaskBarIcon="../Resources/Images/Monitor_16x.png"
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">

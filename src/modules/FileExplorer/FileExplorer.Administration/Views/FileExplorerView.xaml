@@ -13,14 +13,15 @@
     d:DataContext="{d:DesignInstance viewModels:FileExplorerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    TaskBarIcon="pack://application:,,,/FileExplorer.Administration;component/Resources/Images/ListFolder_16x.png"
+    TaskBarIcon="../Resources/Images/ListFolder_16x.png"
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer.Administration;component/Resources/Generic.xaml" />
+                <ResourceDictionary Source="/Anapher.TreeViewEx;component/Resources/Generic.xaml" />
+                <ResourceDictionary Source="../Resources/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

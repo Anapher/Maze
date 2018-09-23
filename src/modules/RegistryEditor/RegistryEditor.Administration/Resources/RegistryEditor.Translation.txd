@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="RegistryEditor:CopyKeyName">Schlüsselnamen kopieren</text>
+		<text key="RegistryEditor:CreateSubKey">Unterschlüssel erstellen</text>
+		<text key="RegistryEditor:Expand">Erweitern</text>
+		<text key="RegistryEditor:Key">Schlüssel</text>
+		<text key="RegistryEditor:Location">Ort</text>
+		<text key="RegistryEditor:MessageBox.SureDeleteSubKey">Sind Sie sicher, dass Sie den Registrierungsschlüssel '{name}' entfernen möchten?</text>
+		<text key="RegistryEditor:Name">Registry Editor</text>
+		<text key="RegistryEditor:Reduce">Reduzieren</text>
+		<text key="RegistryEditor:StatusBar.CreateSubKey">Erstelle Unterschlüssel '{path}'</text>
+		<text key="RegistryEditor:StatusBar.DeleteRegistryKey">Entferne Registrierungsschlüssel '{name}'</text>
+		<text key="RegistryEditor:StatusBar.LoadSubKeys">Lade Unterschlüssel von '{path}'</text>
+		<text key="RegistryEditor:StatusBar.PathCopiedToClipboard">Pfad wurde in die Zwischenablage kopiert</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="RegistryEditor:CopyKeyName">Copy Key Name</text>
+		<text key="RegistryEditor:CreateSubKey">Create sub key</text>
+		<text key="RegistryEditor:Expand">Expand</text>
+		<text key="RegistryEditor:Key">Key</text>
+		<text key="RegistryEditor:Location">Location</text>
+		<text key="RegistryEditor:MessageBox.SureDeleteSubKey">Are you sure that you want to delete the registry key '{name}'?</text>
+		<text key="RegistryEditor:Name">Registry Explorer</text>
+		<text key="RegistryEditor:Reduce">Reduce</text>
+		<text key="RegistryEditor:StatusBar.CreateSubKey">Create sub key '{path}'</text>
+		<text key="RegistryEditor:StatusBar.DeleteRegistryKey">Delete registry key '{name}'</text>
+		<text key="RegistryEditor:StatusBar.LoadSubKeys">Load sub keys of '{path}'</text>
+		<text key="RegistryEditor:StatusBar.PathCopiedToClipboard">Path copied to clipboard</text>
+	</culture>
+</translation>

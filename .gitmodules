@@ -16,3 +16,6 @@
 [submodule "src/submodules/MetroTreeListView"]
 	path = src/submodules/MetroTreeListView
 	url = https://github.com/Anapher/MetroTreeListView.git
+[submodule "src/submodules/TreeViewEx"]
+	path = src/submodules/TreeViewEx
+	url = https://github.com/Anapher/TreeViewEx.git

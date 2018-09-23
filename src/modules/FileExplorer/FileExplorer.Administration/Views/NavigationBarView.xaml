@@ -2,12 +2,13 @@
     x:Class="FileExplorer.Administration.Views.NavigationBarView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:FileExplorer.Administration.Controls"
+    xmlns:controls="clr-namespace:TreeViewEx.Controls;assembly=Anapher.TreeViewEx"
+    xmlns:controls1="clr-namespace:FileExplorer.Administration.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fileExplorer="clr-namespace:FileExplorer.Administration.ViewModels.Explorer"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:FileExplorer.Administration.Controls.Models"
+    xmlns:models="clr-namespace:TreeViewEx.Controls.Models;assembly=Anapher.TreeViewEx"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:NavigationBarViewModel}"
@@ -17,7 +18,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer.Administration;component/Resources/Generic.xaml" />
+                <ResourceDictionary Source="/Anapher.TreeViewEx;component/Resources/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -29,11 +30,11 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" MaxWidth="210" />
         </Grid.ColumnDefinitions>
-        <controls:IconButton
+        <controls1:IconButton
             Margin="5,0"
             Command="{Binding GoBackCommand}"
             IconKind="ArrowLeft" />
-        <controls:IconButton
+        <controls1:IconButton
             Grid.Column="1"
             Margin="5,0"
             Command="{Binding GoForwardCommand}"

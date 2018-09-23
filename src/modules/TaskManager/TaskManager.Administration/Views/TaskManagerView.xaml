@@ -17,15 +17,15 @@
     d:DataContext="{d:DesignInstance viewModels:TaskManagerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    TaskBarIcon="pack://application:,,,/TaskManager.Administration;component/Resources/Images/Process.ico"
+    TaskBarIcon="../Resources/Images/Process.ico"
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/TreeListView;component/Resources/TreeListView.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/TaskManager.Administration;component/Resources/VisualStudioIcons.xaml" />
+                <ResourceDictionary Source="/TreeListView;component/Resources/TreeListView.xaml" />
+                <ResourceDictionary Source="../Resources/VisualStudioIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="TextButton" TargetType="Button">

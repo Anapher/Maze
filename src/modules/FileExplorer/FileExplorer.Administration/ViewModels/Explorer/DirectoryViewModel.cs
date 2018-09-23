@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using FileExplorer.Administration.Controls;
-using FileExplorer.Administration.Controls.Models;
-using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Models.Args;
 using FileExplorer.Administration.Utilities;
@@ -19,6 +17,10 @@ using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.Utilities;
 using Orcus.Utilities;
 using Prism.Commands;
+using TreeViewEx.Controls;
+using TreeViewEx.Controls.Models;
+using TreeViewEx.Helpers;
+using TreeViewEx.Helpers.Selectors;
 using Unclassified.TxLib;
 
 namespace FileExplorer.Administration.ViewModels.Explorer
@@ -60,7 +62,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
                 parentViewModel?.Selection ?? rootViewModel.Selection, Entries);
 
             if (!directoryEntry.HasSubFolder)
-                Entries.SetEntries(UpdateMode.Update);
+                Entries.SetEntries(ImmutableList<DirectoryViewModel>.Empty);
         }
 
         public DirectoryViewModel(DirectoryEntry directoryEntry, IFileSystem fileSystem, IUiTools uiTools, bool isNode)
@@ -157,7 +159,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
             BringIntoViewToken++;
         }
 
-        public async ValueTask<IEnumerable> GetAutoCompleteEntries()
+        public async Task<IEnumerable> GetAutoCompleteEntries()
         {
             if (!Entries.IsLoaded)
             {
@@ -300,7 +302,7 @@ namespace FileExplorer.Administration.ViewModels.Explorer
 
             _uiTools.Dispatcher.Current.InvokeIfRequired(() =>
             {
-                Entries.SetEntries(UpdateMode.Update, viewModels.ToArray());
+                Entries.UpdateEntries(viewModels);
                 Entries.IsLoaded = true;
             });
         }

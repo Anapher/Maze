@@ -6,9 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using FileExplorer.Administration.Controls;
-using FileExplorer.Administration.Controls.Models;
-using FileExplorer.Administration.Helpers;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
@@ -16,6 +13,13 @@ using FileExplorer.Administration.ViewModels.Explorer.Helpers;
 using FileExplorer.Shared.Dtos;
 using Orcus.Utilities;
 using Prism.Mvvm;
+using TreeViewEx.Controls;
+using TreeViewEx.Controls.Models;
+using TreeViewEx.Extensions;
+using TreeViewEx.Helpers;
+using TreeViewEx.Helpers.Selectors;
+using TreeViewEx.Helpers.Selectors.Lookup;
+using TreeViewEx.Helpers.Selectors.Processors;
 
 namespace FileExplorer.Administration.ViewModels
 {
@@ -66,9 +70,9 @@ namespace FileExplorer.Administration.ViewModels
         public IEntriesHelper<DirectoryViewModel> Entries { get; set; }
         public ITreeSelector<DirectoryViewModel, FileExplorerEntry> Selection { get; set; }
 
-        public ValueTask<IEnumerable> GetAutoCompleteEntries()
+        public Task<IEnumerable> GetAutoCompleteEntries()
         {
-            return new ValueTask<IEnumerable>(AutoCompleteEntries);
+            return Task.FromResult<IEnumerable>(AutoCompleteEntries);
         }
 
         public async Task SelectAsync(FileExplorerEntry value)
@@ -87,7 +91,7 @@ namespace FileExplorer.Administration.ViewModels
             RootViewModels = rootElements.Select(x =>
                     new DirectoryViewModel(this, null, x, _fileExplorerViewModel.FileSystem, _fileExplorerViewModel))
                 .ToList();
-            Entries.SetEntries(UpdateMode.Update, RootViewModels.ToArray());
+            Entries.UpdateEntries(RootViewModels);
 
             InitializeRoots(dto.ComputerDirectory.Yield()).Forget(); //will execute synchronously
 

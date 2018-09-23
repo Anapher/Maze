@@ -9,7 +9,7 @@ namespace Orcus.ModuleManagement.Loader
 {
     public class LoadResolver
     {
-        public static (DirectoryInfo, NuGetFramework) ResolveNuGetFolder(string packageDirectory, NuGetFramework framework, Runtime runtime, Architecture architecture)
+        public static ResolvedLibraryDirectory ResolveNuGetFolder(string packageDirectory, NuGetFramework framework, Runtime runtime, Architecture architecture)
         {
             var libFolder = new DirectoryInfo(Path.Combine(packageDirectory, "lib"));
             if (libFolder.Exists)
@@ -18,13 +18,13 @@ namespace Orcus.ModuleManagement.Loader
                     .ToDictionary(x => NuGetFramework.ParseFolder(x.Name), x => x, NuGetFramework.Comparer);
 
                 if (!frameworkFolders.Any() && libFolder.GetFiles("*.dll").Any())
-                    return (libFolder, framework);
+                    return new ResolvedLibraryDirectory(libFolder, framework);
 
                 var bestFramework =
                     NuGetFrameworkUtility.GetNearest(frameworkFolders.Select(x => x.Key), framework, x => x);
 
                 if (bestFramework != null)
-                    return (frameworkFolders[bestFramework], bestFramework);
+                    return new ResolvedLibraryDirectory(frameworkFolders[bestFramework], bestFramework);
             }
 
             var runtimesFolder = new DirectoryInfo(Path.Combine(packageDirectory, "runtimes"));
@@ -40,7 +40,7 @@ namespace Orcus.ModuleManagement.Loader
                 }
             }
 
-            throw new InvalidOperationException($"The libraries were not found in directory {packageDirectory}");
+            return null;
         }
 
         private static ISet<string> GetExpectedRuntimeFolders(Runtime runtime, Architecture architecture)
@@ -74,6 +74,18 @@ namespace Orcus.ModuleManagement.Loader
 
             return result;
         }
+    }
+
+    public class ResolvedLibraryDirectory
+    {
+        public ResolvedLibraryDirectory(DirectoryInfo directory, NuGetFramework framework)
+        {
+            Directory = directory;
+            Framework = framework;
+        }
+
+        public DirectoryInfo Directory { get; }
+        public NuGetFramework Framework { get; }
     }
 
     public enum Runtime

@@ -33,11 +33,13 @@
 		<text key="ModulesView:Source">Modul-Quelle</text>
 		<text key="ModulesView:Source.All">Alle</text>
 		<text key="Name">Name</text>
+		<text key="New">Neu</text>
 		<text key="NotFound">Nicht gefunden</text>
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Ready">Bereit</text>
 		<text key="Refresh">Aktualisieren</text>
+		<text key="Remove">Entfernen</text>
 		<text key="Server">Server</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
@@ -262,11 +264,13 @@
 		<text key="ModulesView:Source">Module source</text>
 		<text key="ModulesView:Source.All">All</text>
 		<text key="Name">Name</text>
+		<text key="New">New</text>
 		<text key="NotFound">Not found</text>
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
 		<text key="Ready">Ready</text>
 		<text key="Refresh">Refresh</text>
+		<text key="Remove">Remove</text>
 		<text key="Server">Server</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />

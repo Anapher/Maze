@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
-    <Description>Complete access to the file system. Browser the files, create directories, download and upload files, show file properties and compute hash values.</Description>
+    <Description>Module Description</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,10 +17,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
 
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
-
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-
     <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <ProjectReference Include="..\..\..\submodules\TreeViewEx\src\TreeViewEx.csproj" />
@@ -31,7 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
+    <EmbeddedResource Include="Resources\*.txd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\CreateSubKeyView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,5 +41,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-   <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <Page Update="Views\CreateSubKeyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <Import Project="..\RegistryEditor.Shared\RegistryEditor.Shared.projitems" Label="Shared" />
 </Project>

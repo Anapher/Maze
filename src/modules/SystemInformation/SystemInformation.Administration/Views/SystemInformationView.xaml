@@ -14,14 +14,14 @@
     d:DataContext="{d:DesignInstance viewModels:SystemInformationViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    TaskBarIcon="pack://application:,,,/SystemInformation.Administration;component/Resources/Images/SystemInfo_16x.png"
+    TaskBarIcon="../Resources/Images/SystemInfo_16x.png"
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/TreeListView;component/Resources/TreeListView.xaml" />
+                <ResourceDictionary Source="/TreeListView;component/Resources/TreeListView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:TranslateTextConverter x:Key="TranslateTextConverter" />
