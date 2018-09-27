@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
-using Orcus.Administration.Core.Clients;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Rest.Clients.V1;
@@ -17,9 +16,9 @@ namespace Orcus.Administration.ViewModels.Overview.Clients
 {
     public class ClientManager : IClientManager
     {
-        private readonly IOrcusRestClient _restClient;
         private readonly IAppDispatcher _appDispatcher;
         private readonly SemaphoreSlim _initalizationLock = new SemaphoreSlim(1, 1);
+        private readonly IOrcusRestClient _restClient;
         private bool _isInitialized;
 
         public ClientManager(IOrcusRestClient restClient, IAppDispatcher appDispatcher)
@@ -35,7 +34,7 @@ namespace Orcus.Administration.ViewModels.Overview.Clients
         {
             if (_isInitialized)
                 return;
-            
+
             await _initalizationLock.WaitAsync();
             try
             {
@@ -76,10 +75,7 @@ namespace Orcus.Administration.ViewModels.Overview.Clients
             {
                 clientViewModel = new ClientViewModel(clientDto);
                 if (Clients.TryAdd(clientDto.ClientId, clientViewModel))
-                {
-                    _appDispatcher.Current.BeginInvoke(DispatcherPriority.Background,
-                        (Action) (() => ClientViewModels.Add(clientViewModel)));
-                }
+                    _appDispatcher.Current.BeginInvoke(DispatcherPriority.Background, (Action) (() => ClientViewModels.Add(clientViewModel)));
             }
         }
     }

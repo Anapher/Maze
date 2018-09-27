@@ -53,6 +53,7 @@ namespace Orcus.Server.AppStart
             _serviceCollection.AddSingleton<IModuleProject>(orcusProject);
             _serviceCollection.AddSingleton<PackageLockRequestManager>();
             _serviceCollection.AddSingleton<IModulePackageManager, ModulePackageManager>();
+            _serviceCollection.AddSingleton<IVirtualModuleManager, VirtualModuleManager>();
 
             var provider = _serviceCollection.BuildServiceProvider();
             var logger = provider.GetService<ILogger<PackageInitialization>>();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
 using NuGet.Packaging;
@@ -42,7 +43,7 @@ namespace Orcus.Server.Service.Modules
 
             Architecture = Environment.Is64BitProcess ? Architecture.x64 : Architecture.x86;
             Runtime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Runtime.Windows : Runtime.Linux;
-            PrimaryPackages = modulesConfig.Modules.ToImmutableList(); //copy, very important because the file may change while the packages must consist
+            PrimaryPackages = modulesConfig.Modules; //very important because the file may change while the packages must consist
         }
 
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;

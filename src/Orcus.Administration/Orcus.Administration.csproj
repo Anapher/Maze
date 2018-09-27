@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\FrameAnimationControl.cs" />
     <Compile Include="Controls\StatusBar.cs" />
+    <Compile Include="Controls\TextBlockExtensions.cs" />
     <Compile Include="Converter\NoNewLinesConverter.cs" />
     <Compile Include="Converter\SelectedItemsCountFromChildConverter.cs" />
     <Compile Include="Converter\SelectedItemsFromChildConverter.cs" />

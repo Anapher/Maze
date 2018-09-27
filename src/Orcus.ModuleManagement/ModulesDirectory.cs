@@ -10,7 +10,7 @@ namespace Orcus.ModuleManagement
     {
         public ModulesDirectory(VersionFolderPathResolver versionFolderPathResolver)
         {
-            PackageSource = new PackageSource(versionFolderPathResolver.RootPath);
+            PackageSource = new PackageSource(Path.GetFullPath(versionFolderPathResolver.RootPath));
             VersionFolderPathResolver = versionFolderPathResolver;
         }
 

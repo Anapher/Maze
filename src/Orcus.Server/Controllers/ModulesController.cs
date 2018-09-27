@@ -1,14 +1,27 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using NuGet.Common;
+using NuGet.Configuration;
 using NuGet.Frameworks;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
-using NuGet.Versioning;
+using NuGet.Protocol;
+using NuGet.Protocol.Core.Types;
+using Orcus.Server.Connection.JsonConverters;
+using Orcus.Server.Connection.Modules;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Hubs;
 using Orcus.Server.Service.Modules;
+using Orcus.Utilities;
 
 namespace Orcus.Server.Controllers
 {
@@ -28,23 +41,43 @@ namespace Orcus.Server.Controllers
         public async Task<IActionResult> GetAll([FromQuery] string framework,
             [FromServices] IModulePackageManager modulePackageManager)
         {
+            if (string.IsNullOrWhiteSpace(framework))
+                return BadRequest("Framework cannot be empty");
+
             var nugetFramework = NuGetFramework.Parse(framework);
             var modules = await modulePackageManager.GetPackagesLock(nugetFramework);
             return Ok(modules);
         }
 
-        [HttpPost("install")]
-        public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
-            [FromServices] IModulePackageManager moduleManager)
+        [HttpGet("installed")]
+        public IActionResult GetInstalledModules([FromServices] IVirtualModuleManager moduleManager)
         {
-            if (string.IsNullOrWhiteSpace(packageIdentity.Id))
-                return BadRequest();
+            return Ok(moduleManager.GetModules());
+        }
 
-            await moduleManager.InstallPackageAsync(packageIdentity, moduleManager.GetDefaultResolutionContext(),
-                moduleManager.GetDefaultDownloadContext(), CancellationToken.None);
+        [HttpPost]
+        public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
+            [FromServices] IVirtualModuleManager moduleManager)
+        {
+            if (string.IsNullOrWhiteSpace(packageIdentity?.Id))
+                return BadRequest("Package cannot be empty");
+
+            moduleManager.InstallPackage(packageIdentity);
 
             await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
+            return Ok();
+        }
 
+        [HttpDelete]
+        public async Task<IActionResult> RemoveModule([FromQuery] PackageIdentity packageIdentity,
+            [FromServices] IVirtualModuleManager moduleManager)
+        {
+            if (string.IsNullOrWhiteSpace(packageIdentity?.Id))
+                return BadRequest();
+
+            moduleManager.UninstallPackage(packageIdentity);
+
+            await _hubContext.Clients.All.SendAsync("ModuleUninstalled", packageIdentity);
             return Ok();
         }
 
@@ -54,14 +87,16 @@ namespace Orcus.Server.Controllers
             return Ok(project.PrimarySources.Select(x => x.PackageSource.SourceUri).ToList());
         }
 
-        [HttpGet("inst")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Install([FromServices] IModulePackageManager packageManager)
+        [HttpPost("package")]
+        public async Task<IActionResult> GetPackageInfo([FromBody] List<PackageIdentity> packages, [FromServices] IModuleProject moduleProject)
         {
-            await packageManager.InstallPackageAsync(new PackageIdentity("UserInteraction", NuGetVersion.Parse("1.0")),
-                packageManager.GetDefaultResolutionContext(), packageManager.GetDefaultDownloadContext(),
-                CancellationToken.None);
-            return Ok();
+            var resourceAsync = await moduleProject.LocalSourceRepository.GetResourceAsync<PackageMetadataResource>();
+            var context = new SourceCacheContext();
+
+            var metadata = await TaskCombinators.ThrottledAsync(packages,
+                (identity, token) => resourceAsync.GetMetadataAsync(identity, context, NullLogger.Instance, token), HttpContext.RequestAborted);
+
+            return Ok(metadata.Select(Mapper.Map<PackageSearchMetadata>).ToList());
         }
     }
 }

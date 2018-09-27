@@ -12,6 +12,7 @@ namespace Orcus.Server.Extensions
             settings.Converters.Add(new SemanticVersionConverter());
             settings.Converters.Add(new VersionRangeConverter());
             settings.Converters.Add(new NuGetFrameworkConverter());
+            settings.Converters.Add(new PackageIdentityConverter());
         }
     }
 }

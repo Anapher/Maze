@@ -77,7 +77,11 @@ namespace Orcus.Server
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSignalR();
 
-            Mapper.Initialize(options => options.AddProfile<AutoMapperProfile>());
+            Mapper.Initialize(options =>
+            {
+                options.AddProfile<AutoMapperProfile>();
+                options.AddProfile<ServerAutoMapperProfile>();
+            });
             
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
