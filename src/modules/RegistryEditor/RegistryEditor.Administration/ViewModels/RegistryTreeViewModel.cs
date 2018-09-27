@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using Orcus.Administration.Library.Clients;
@@ -6,6 +7,7 @@ using Orcus.Administration.Library.StatusBar;
 using RegistryEditor.Administration.Extensions;
 using RegistryEditor.Administration.Model;
 using RegistryEditor.Administration.ViewModels.Helpers;
+using TreeViewEx.Controls;
 using TreeViewEx.Helpers;
 using TreeViewEx.Helpers.Selectors;
 using TreeViewEx.Helpers.Selectors.Lookup;
@@ -13,7 +15,7 @@ using TreeViewEx.Helpers.Selectors.Processors;
 
 namespace RegistryEditor.Administration.ViewModels
 {
-    public class RegistryTreeViewModel : ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>
+    public class RegistryTreeViewModel : ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>, IAsyncAutoComplete
     {
         private readonly IPackageRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
@@ -48,5 +50,7 @@ namespace RegistryEditor.Administration.ViewModels
             var registryKey = new IntegratedRegistryKey {HasSubKeys = true, Name = path, Path = path};
             return new RegistryKeyViewModel(this, registryKey, _restClient, _statusBar, parentViewModel: null);
         }
+
+        public Task<IEnumerable> GetAutoCompleteEntries() => Task.FromResult<IEnumerable>(Entries.All);
     }
 }

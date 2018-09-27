@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -8,7 +6,7 @@ using RegistryEditor.Shared.Dtos;
 
 namespace RegistryEditor.Shared.Converters
 {
-    internal class RegistryValueConverter : CustomCreationConverter<RegistryValue>
+    internal class RegistryValueConverter : CustomCreationConverter<RegistryValueDto>
     {
         private RegistryValueType _type;
 
@@ -20,22 +18,22 @@ namespace RegistryEditor.Shared.Converters
             return base.ReadJson(jobj.CreateReader(), objectType, existingValue, serializer);
         }
 
-        public override RegistryValue Create(Type objectType)
+        public override RegistryValueDto Create(Type objectType)
         {
             switch (_type)
             {
                 case RegistryValueType.String:
-                    return new StringRegistryValue();
+                    return new StringRegistryValueDto();
                 case RegistryValueType.Binary:
-                    return new BinaryRegistryValue();
+                    return new BinaryRegistryValueDto();
                 case RegistryValueType.DWord:
-                    return new DWordRegistryValue();
+                    return new DWordRegistryValueDto();
                 case RegistryValueType.QWord:
-                    return new QWordRegistryValue();
+                    return new QWordRegistryValueDto();
                 case RegistryValueType.MultiString:
-                    return new MultiStringRegistryValue();
+                    return new MultiStringRegistryValueDto();
                 case RegistryValueType.ExpandableString:
-                    return new ExpandableStringRegistryValue();
+                    return new ExpandableStringRegistryValueDto();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

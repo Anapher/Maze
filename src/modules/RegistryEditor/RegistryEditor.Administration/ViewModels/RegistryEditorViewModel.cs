@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
 using Orcus.Administration.Library.Clients;
@@ -7,9 +11,12 @@ using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Administration.Library.Views;
+using Orcus.Utilities;
 using Prism.Commands;
 using Prism.Regions;
+using RegistryEditor.Administration.Model;
 using RegistryEditor.Administration.Rest;
+using RegistryEditor.Shared.Dtos;
 using TreeViewEx.Extensions;
 using Unclassified.TxLib;
 
@@ -21,10 +28,15 @@ namespace RegistryEditor.Administration.ViewModels
         private readonly IShellStatusBar _statusBar;
         private readonly IDialogWindow _window;
         private readonly IWindowService _windowService;
-        private string _currentPath;
-
         private DelegateCommand<RegistryKeyViewModel> _createNewSubKeyCommand;
+        private DelegateCommand<RegistryValueType?> _createRegistryValueCommand;
+        private string _currentPath;
+        private DelegateCommand<RegistryValueViewModel> _editRegistryValueCommand;
+        private DelegateCommand<string> _navigateToPathCommand;
+        private CancellationTokenSource _openCancellationTokenSource;
+        private ObservableCollection<RegistryValueViewModel> _registryValues;
         private DelegateCommand<RegistryKeyViewModel> _removeRegistryKeyCommand;
+        private DelegateCommand<RegistryValueViewModel> _removeRegistryValueCommand;
         private RegistryTreeViewModel _treeViewModel;
 
         public RegistryEditorViewModel(IDialogWindow window, IWindowService windowService, IShellStatusBar statusBar, ITargetedRestClient restClient)
@@ -45,6 +57,12 @@ namespace RegistryEditor.Administration.ViewModels
         {
             get => _currentPath;
             set => SetProperty(ref _currentPath, value);
+        }
+
+        public ObservableCollection<RegistryValueViewModel> RegistryValues
+        {
+            get => _registryValues;
+            set => SetProperty(ref _registryValues, value);
         }
 
         public DelegateCommand<RegistryKeyViewModel> CreateNewSubKeyCommand
@@ -85,6 +103,77 @@ namespace RegistryEditor.Administration.ViewModels
             }
         }
 
+        public DelegateCommand<RegistryValueType?> CreateRegistryValueCommand
+        {
+            get
+            {
+                return _createRegistryValueCommand ?? (_createRegistryValueCommand = new DelegateCommand<RegistryValueType?>(async parameter =>
+                {
+                    var viewModel = new CreateEditValueViewModel(parameter.Value);
+                    if (_windowService.ShowDialog(viewModel, null, _window) == true)
+                    {
+                        var root = TreeViewModel.Selection.AsRoot();
+
+                        if (await RegistryEditorResource.SetRegistryValue(root.SelectedViewModel.RegistryKey.Path, viewModel.Value, _restClient)
+                            .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("RegistryEditor:StatusBar.CreateValue")))
+                            await OpenPath(_currentPath);
+                    }
+                }));
+            }
+        }
+
+        public DelegateCommand<RegistryValueViewModel> EditRegistryValueCommand
+        {
+            get
+            {
+                return _editRegistryValueCommand ?? (_editRegistryValueCommand = new DelegateCommand<RegistryValueViewModel>(async parameter =>
+                {
+                    var viewModel = new CreateEditValueViewModel(parameter.Dto);
+                    if (_windowService.ShowDialog(viewModel, null, _window) == true)
+                    {
+                        var root = TreeViewModel.Selection.AsRoot();
+
+                        if (await RegistryEditorResource.SetRegistryValue(root.SelectedViewModel.RegistryKey.Path, viewModel.Value, _restClient)
+                            .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("RegistryEditor:StatusBar.EditValue")))
+                            await OpenPath(_currentPath);
+                    }
+                }));
+            }
+        }
+
+        public DelegateCommand<RegistryValueViewModel> RemoveRegistryValueCommand
+        {
+            get
+            {
+                return _removeRegistryValueCommand ?? (_removeRegistryValueCommand = new DelegateCommand<RegistryValueViewModel>(async parameter =>
+                {
+                    if (_window.ShowMessage(Tx.T("RegistryEditor:MessageBox.SureRemoveRegistryValue", "name", parameter.Dto.Name), Tx.T("Warning"),
+                            MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel) != MessageBoxResult.OK)
+                        return;
+
+                    var root = TreeViewModel.Selection.AsRoot();
+
+                    if (await RegistryEditorResource.DeleteRegistryValue(root.SelectedViewModel.RegistryKey.Path, parameter.Dto.Name, _restClient)
+                        .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("RegistryEditor:StatusBar.DeleteRegistryValue", "name", parameter.Dto.Name)))
+                    {
+                        RegistryValues.Remove(parameter);
+                        await OpenPath(_currentPath);
+                    }
+                }));
+            }
+        }
+
+        public DelegateCommand<string> NavigateToPathCommand
+        {
+            get
+            {
+                return _navigateToPathCommand ?? (_navigateToPathCommand = new DelegateCommand<string>(parameter =>
+                {
+                    TreeViewModel.SelectAsync(new IntegratedRegistryKey {Path = parameter}).Forget();
+                }));
+            }
+        }
+
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
@@ -102,13 +191,26 @@ namespace RegistryEditor.Administration.ViewModels
             if (currentItem.Parent != null)
                 currentItem.Parent.Entries.IsExpanded = true;
 
-            CurrentPath = root.SelectedValue.Path;
-            OpenPath(CurrentPath);
+            OpenPath(currentItem.RegistryKey.Path).Forget();
         }
 
-        private void OpenPath(string path)
+        private async Task OpenPath(string path)
         {
+            _openCancellationTokenSource?.Cancel();
+            _openCancellationTokenSource = new CancellationTokenSource();
 
+            var token = _openCancellationTokenSource.Token;
+
+            var successOrError = await RegistryEditorResource.GetValues(path, _restClient)
+                .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("RegistryEditor:StatusBar.LoadValues"));
+            if (successOrError.Failed)
+                return;
+
+            if (token.IsCancellationRequested)
+                return;
+
+            RegistryValues = new ObservableCollection<RegistryValueViewModel>(successOrError.Result.Select(x => new RegistryValueViewModel(x)));
+            CurrentPath = path;
         }
     }
 }

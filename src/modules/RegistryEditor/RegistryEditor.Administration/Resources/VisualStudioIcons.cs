@@ -12,5 +12,6 @@ namespace RegistryEditor.Administration.Resources
 
         public Viewbox Registry => GetIcon();
         public Viewbox NewSolutionFolder => GetIcon();
+        public Viewbox Edit => GetIcon();
     }
 }

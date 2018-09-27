@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 
-namespace FileExplorer.Administration.Extensions
+namespace RegistryEditor.Administration.Extensions
 {
     public static class UiTools
     {

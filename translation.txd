@@ -14,6 +14,7 @@
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
 		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
+		<text key="Edit">Bearbeiten</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Failed">Fehlgeschlagen</text>
@@ -35,6 +36,7 @@
 		<text key="Name">Name</text>
 		<text key="New">Neu</text>
 		<text key="NotFound">Nicht gefunden</text>
+		<text key="Ok">Ok</text>
 		<text key="OperatingSystem">Betriebssystem</text>
 		<text key="Password" acceptmissing="true">Passwort</text>
 		<text key="Ready">Bereit</text>
@@ -245,6 +247,7 @@
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
 		<text key="Description">Description</text>
 		<text key="Done">Done</text>
+		<text key="Edit">Edit</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Failed">Failed</text>
@@ -266,6 +269,7 @@
 		<text key="Name">Name</text>
 		<text key="New">New</text>
 		<text key="NotFound">Not found</text>
+		<text key="Ok">Ok</text>
 		<text key="OperatingSystem">Operating System</text>
 		<text key="Password">Password</text>
 		<text key="Ready">Ready</text>

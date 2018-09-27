@@ -8,7 +8,6 @@
     xmlns:viewModels="clr-namespace:RegistryEditor.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     Title="{tx:T RegistryEditor:CreateSubKey}"
-    Width="480"
     d:DataContext="{d:DesignInstance viewModels:CreateSubKeyViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="480"
@@ -17,6 +16,7 @@
     FocusManager.FocusedElement="{Binding ElementName=NameTextBox}"
     ResizeMode="NoResize"
     ShowInTaskBar="False"
+    WindowWidth="480"
     mc:Ignorable="d">
     <StackPanel Margin="10" Orientation="Vertical">
         <TextBlock Text="{tx:T RegistryEditor:Location}" />

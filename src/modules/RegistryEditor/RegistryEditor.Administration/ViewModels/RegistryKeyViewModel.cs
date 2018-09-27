@@ -1,20 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.StatusBar;
 using Prism.Commands;
 using Prism.Mvvm;
 using RegistryEditor.Administration.Model;
 using RegistryEditor.Administration.Rest;
+using TreeViewEx.Controls;
+using TreeViewEx.Controls.Models;
 using TreeViewEx.Helpers;
 using TreeViewEx.Helpers.Selectors;
 using Unclassified.TxLib;
 
 namespace RegistryEditor.Administration.ViewModels
 {
-    public class RegistryKeyViewModel : BindableBase, ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>
+    public class RegistryKeyViewModel : BindableBase, ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>, IAsyncAutoComplete
     {
         private readonly IPackageRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
@@ -112,5 +116,13 @@ namespace RegistryEditor.Administration.ViewModels
         }
 
         public override int GetHashCode() => RegistryKey.GetHashCode();
+
+        public async Task<IEnumerable> GetAutoCompleteEntries()
+        {
+            if (!Entries.IsLoaded)
+                return await Entries.LoadAsync(UpdateMode.Replace, false, null, await Application.Current.Dispatcher.ToTaskSchedulerAsync());
+
+            return Entries.All;
+        }
     }
 }
