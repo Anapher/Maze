@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Orcus.Server.Connection.Modules;
 using Prism.Mvvm;
 
 namespace Orcus.Administration.ViewModels.Overview.Modules
@@ -17,7 +17,6 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
         private string _authors;
         private List<PackageDependencyGroup> _dependencySets;
         private string _description;
-
         private ImageSource _image;
         private Uri _imageUri;
         private bool _isLoaded;
@@ -28,6 +27,10 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
         private string _summary;
         private string _title;
         private NuGetVersion _version;
+        private List<NuGetVersion> _versions;
+        private IPackageSearchMetadata _searchMetadata;
+        private NuGetVersion _newestVersion;
+        private bool _includePrerelease;
 
         public ModuleViewModel(PackageIdentity packageIdentity, ModuleStatus status)
         {
@@ -40,8 +43,14 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
         public ModuleStatus Status
         {
             get => _status;
-            set => SetProperty(ref _status, value);
+            set
+            {
+                if (SetProperty(ref _status, value))
+                    RaisePropertyChanged(nameof(IsUpdateAvailable));
+            }
         }
+
+        public bool IsUpdateAvailable => Status != ModuleStatus.None && Version != null && NewestVersion > Version;
 
         public bool IsLoaded
         {
@@ -64,7 +73,11 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
         public NuGetVersion Version
         {
             get => _version;
-            private set => SetProperty(ref _version, value);
+            private set
+            {
+                if (SetProperty(ref _version, value))
+                    RaisePropertyChanged(nameof(IsUpdateAvailable));
+            }
         }
 
         public Uri ImageUri
@@ -118,23 +131,105 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
             set => SetProperty(ref _dependencySets, value);
         }
 
-        public void Initialize(IPackageSearchMetadata dto)
+        public List<NuGetVersion> Versions
         {
-            Title = dto.Title;
-            Authors = dto.Authors;
-            Version = dto.Identity.Version;
-            ImageUri = dto.IconUrl;
-            Summary = dto.Summary;
-            Description = dto.Description;
-            LicenseUri = dto.LicenseUrl;
-            ProjectUri = dto.ProjectUrl;
-            Published = dto.Published;
+            get => _versions;
+            private set => SetProperty(ref _versions, value);
+        }
 
-            DependencySets = dto.DependencySets.Select(x =>
+        public NuGetVersion NewestVersion
+        {
+            get => _newestVersion;
+            private set
+            {
+                if (SetProperty(ref _newestVersion, value))
+                    RaisePropertyChanged(nameof(IsUpdateAvailable));
+            }
+        }
+
+        public void Initialize(IPackageSearchMetadata metadata)
+        {
+            Title = metadata.Title;
+            Authors = metadata.Authors;
+            Version = metadata.Identity.Version;
+            ImageUri = metadata.IconUrl;
+            Summary = metadata.Summary;
+            Description = metadata.Description;
+            LicenseUri = metadata.LicenseUrl;
+            ProjectUri = metadata.ProjectUrl;
+            Published = metadata.Published;
+
+            DependencySets = metadata.DependencySets.Select(x =>
                 new PackageDependencyGroup(x.TargetFramework,
                     x.Packages.Select(y => new PackageDependency(y.Id, y.VersionRange, y.Include, y.Exclude)))).ToList();
 
             IsLoaded = true;
+            _searchMetadata = metadata;
+        }
+
+        public async Task<bool> LoadVersionsAsync()
+        {
+            if (Versions?.Count > 0)
+                return true;
+
+            if (_searchMetadata == null)
+                return false;
+
+            try
+            {
+                var versions = await _searchMetadata.GetVersionsAsync();
+                OnUpdateVersions(versions?.Select(x => x.Version).ToList());
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (Versions == null)
+                return false;
+
+            return true;
+        }
+
+        public void OnUpdateVersion(NuGetVersion version)
+        {
+            Version = version;
+            OnUpdateVersions(Versions);
+            Status = ModuleStatus.ToBeInstalled;
+        }
+
+        public void OnUninstall()
+        {
+            Version = NewestVersion;
+        }
+
+        public void OnUpdateVersions(List<NuGetVersion> versions)
+        {
+            Versions = versions;
+            if (versions != null && Status != ModuleStatus.None)
+            {
+                IEnumerable<NuGetVersion> actualVersions = versions;
+                if (!IncludePrerelease)
+                    actualVersions = actualVersions.Where(x => !x.IsPrerelease);
+                if (!actualVersions.Any())
+                    actualVersions = versions;
+
+                var newestVersion = actualVersions.Max(x => x);
+                NewestVersion = newestVersion;
+            }
+        }
+
+        public bool IncludePrerelease
+        {
+            get => _includePrerelease;
+            set
+            {
+                if (_includePrerelease != value)
+                {
+                    _includePrerelease = value;
+                    OnUpdateVersions(Versions);
+                }
+            }
         }
     }
 
@@ -142,7 +237,6 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
     {
         None,
         Installed,
-        ToBeInstalled,
-        UpdateAvailable
+        ToBeInstalled
     }
 }

@@ -25,9 +25,9 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageReference Include="Ookii.Dialogs" Version="1.0.0" />
-    <PackageReference Include="Orcus.NuGet.Resolver" Version="1.0.0" />
+    <PackageReference Include="Orcus.NuGet.Protocol" Version="1.0.0" />
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.3" />
     <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 

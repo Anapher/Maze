@@ -65,6 +65,8 @@
     <Compile Include="Converter\NoNewLinesConverter.cs" />
     <Compile Include="Converter\SelectedItemsCountFromChildConverter.cs" />
     <Compile Include="Converter\SelectedItemsFromChildConverter.cs" />
+    <Compile Include="Converter\VersionRangeFormatterConverter.cs" />
+    <Compile Include="Extensions\HyperlinkExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Factories\MenuFactory.cs" />
     <Compile Include="Prism\ViewModelResolver.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -9,6 +11,7 @@ using System.Windows.Input;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using Orcus.Utilities;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace Orcus.Administration.ViewModels.Overview.Modules
@@ -19,17 +22,22 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
         private AggregateListResource _listResource;
         private IModuleService _service;
         private CancellationTokenSource _initializationCancellation;
-
         private ICollectionView _modules;
+        private string _searchText;
+        private bool _includePrerelease;
+
+        public BrowseTabViewModel()
+        {
+            RefreshCommand = new DelegateCommand(() => InitializePackages(SearchText).Forget());
+        }
 
         public ICollectionView Modules
         {
             get => _modules;
             set => SetProperty(ref _modules, value);
         }
-        public ICommand RefreshCommand { get; }
 
-        private string _searchText;
+        public ICommand RefreshCommand { get; }
 
         public string SearchText
         {
@@ -38,12 +46,23 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
             {
                 if (SetProperty(ref _searchText, value))
                 {
-                    InitializePackages(value);
+                    InitializePackages(value).Forget();
                 }
             }
         }
 
-        public bool IncludePrerelease { get; set; }
+        public bool IncludePrerelease
+        {
+            get => _includePrerelease;
+            set
+            {
+                if (_includePrerelease != value)
+                {
+                    _includePrerelease = value;
+                    InitializePackages(SearchText).Forget();
+                }
+            }
+        }
 
         private async Task InitializePackages(string searchText)
         {
@@ -60,7 +79,7 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
                     if (token.IsCancellationRequested)
                         return;
 
-                    Modules = new ListCollectionView(packages.Select(CreateModuleViewModel).ToList());
+                    Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
                 }
                 else
                 {
@@ -68,7 +87,7 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
                     if (token.IsCancellationRequested)
                         return;
 
-                    Modules = new ListCollectionView(packages.Select(CreateModuleViewModel).ToList());
+                    Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
                 }
             }
             catch (Exception e)
@@ -90,10 +109,10 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
             viewModel.Initialize(metadata);
             return viewModel;
         }
-
         public async void Initialize(IModuleService service)
         {
             _service = service;
+            _service.InstalledModules.CollectionChanged += InstalledModulesOnCollectionChanged;
 
             var searchResources = await TaskCombinators.ThrottledAsync(service.Repositories,
                 (repository, token) => repository.GetResourceAsync<PackageSearchResource>(token), CancellationToken.None);
@@ -104,6 +123,33 @@ namespace Orcus.Administration.ViewModels.Overview.Modules
             _listResource = new AggregateListResource(listResources.ToList());
 
             await InitializePackages(null);
+            service.BrowseLoaded.Publish();
+        }
+
+        private void InstalledModulesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var source = (ObservableCollection<ModuleViewModel>) Modules?.SourceCollection;
+            if (source == null)
+                return;
+            
+            var newItems = e.NewItems?.Cast<ModuleViewModel>().ToList();
+            if (newItems?.Count > 0)
+            {
+                for (var i = 0; i < source.Count; i++)
+                {
+                    var moduleViewModel = source[i];
+                    var newModule = newItems.FirstOrDefault(x =>
+                        string.Equals(x.PackageIdentity.Id, moduleViewModel.PackageIdentity.Id, StringComparison.OrdinalIgnoreCase));
+                    if (newModule != null)
+                    {
+                        source[i] = newModule;
+                        newItems.Remove(newModule);
+
+                        if (!newItems.Any())
+                            break;
+                    }
+                }
+            }
         }
     }
 

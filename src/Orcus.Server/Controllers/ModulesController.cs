@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using NuGet.Common;
-using NuGet.Configuration;
 using NuGet.Frameworks;
-using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Connection.JsonConverters;
-using Orcus.Server.Connection.Modules;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Hubs;
 using Orcus.Server.Service.Modules;
@@ -38,8 +30,7 @@ namespace Orcus.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string framework,
-            [FromServices] IModulePackageManager modulePackageManager)
+        public async Task<IActionResult> GetAll([FromQuery] string framework, [FromServices] IModulePackageManager modulePackageManager)
         {
             if (string.IsNullOrWhiteSpace(framework))
                 return BadRequest("Framework cannot be empty");
@@ -50,34 +41,30 @@ namespace Orcus.Server.Controllers
         }
 
         [HttpGet("installed")]
-        public IActionResult GetInstalledModules([FromServices] IVirtualModuleManager moduleManager)
-        {
-            return Ok(moduleManager.GetModules());
-        }
+        public IActionResult GetInstalledModules([FromServices] IVirtualModuleManager moduleManager) => Ok(moduleManager.GetModules());
 
         [HttpPost]
-        public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity,
-            [FromServices] IVirtualModuleManager moduleManager)
+        public async Task<IActionResult> InstallModule([FromBody] PackageIdentity packageIdentity, [FromServices] IVirtualModuleManager moduleManager)
         {
             if (string.IsNullOrWhiteSpace(packageIdentity?.Id))
                 return BadRequest("Package cannot be empty");
 
             moduleManager.InstallPackage(packageIdentity);
 
-            await _hubContext.Clients.All.SendAsync("ModuleInstalled", packageIdentity);
+            await _hubContext.Clients.All.SendAsync("ModuleInstalled", PackageIdentityConvert.ToString(packageIdentity));
             return Ok();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> RemoveModule([FromQuery] PackageIdentity packageIdentity,
-            [FromServices] IVirtualModuleManager moduleManager)
+        public async Task<IActionResult> RemoveModule([FromQuery] string package, [FromServices] IVirtualModuleManager moduleManager)
         {
+            var packageIdentity = PackageIdentityConvert.ToPackageIdentity(package);
             if (string.IsNullOrWhiteSpace(packageIdentity?.Id))
                 return BadRequest();
 
             moduleManager.UninstallPackage(packageIdentity);
 
-            await _hubContext.Clients.All.SendAsync("ModuleUninstalled", packageIdentity);
+            await _hubContext.Clients.All.SendAsync("ModuleUninstalled", package);
             return Ok();
         }
 

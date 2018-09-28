@@ -1,14 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using Anapher.Wpf.Swan.Extensions;
+using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.IconPacks;
+using Microsoft.AspNetCore.SignalR.Client;
+using NuGet.Common;
 using NuGet.Configuration;
+using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Rest.Modules.V1;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Administration.ViewModels.Overview.Modules;
+using Orcus.Server.Connection.Utilities;
+using Orcus.Utilities;
+using Prism.Commands;
+using Prism.Events;
 using Unclassified.TxLib;
 
 namespace Orcus.Administration.ViewModels.Overview
@@ -17,22 +32,56 @@ namespace Orcus.Administration.ViewModels.Overview
     {
         private readonly IOrcusRestClient _restClient;
         private readonly List<IModuleTabViewModel> _tabViewModels;
+        private readonly IWindow _window;
+
+        private DelegateCommand _displayRepositorySourcesInfoCommand;
+        private List<FindPackageByIdResource> _findPackageByIdResources;
         private bool _includePrerelease;
         private int _index;
+        private DelegateCommand<ModuleViewModel> _installModuleCommand;
+        private DelegateCommand<NuGetVersion> _installVersionCommand;
+        private List<PackageMetadataResource> _packageMetadataResources;
+        private string _repositoryUris;
         private string _searchText;
+        private ModuleViewModel _selectedModule;
+        private NuGetVersion _selectedVersion;
         private IModuleTabViewModel _tabViewModel;
+        private DelegateCommand<ModuleViewModel> _uninstallModuleCommand;
+        private DelegateCommand<ModuleViewModel> _updateModuleCommand;
 
-        public ModulesViewModel(IOrcusRestClient restClient) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
+        public ModulesViewModel(IOrcusRestClient restClient, IWindow window) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
         {
             _restClient = restClient;
+            _window = window;
 
             _tabViewModels = new List<IModuleTabViewModel> {new BrowseTabViewModel(), new InstalledTabViewModel(), new UpdatesTabViewModel()};
+            BrowseLoaded = new PubSubEvent();
         }
 
         public IModuleTabViewModel TabViewModel
         {
             get => _tabViewModel;
             set => SetProperty(ref _tabViewModel, value);
+        }
+
+        public ModuleViewModel SelectedModule
+        {
+            get => _selectedModule;
+            set
+            {
+                if (SetProperty(ref _selectedModule, value) && value != null)
+                    LoadVersions(value, new SourceCacheContext(), CancellationToken.None).ContinueWith(x =>
+                    {
+                        if (_selectedModule == value)
+                            SelectedVersion = value.Version;
+                    });
+            }
+        }
+
+        public NuGetVersion SelectedVersion
+        {
+            get => _selectedVersion;
+            set => SetProperty(ref _selectedVersion, value);
         }
 
         public int Index
@@ -63,19 +112,109 @@ namespace Orcus.Administration.ViewModels.Overview
             get => _includePrerelease;
             set
             {
-                if (SetProperty(ref _includePrerelease, value)) TabViewModel.IncludePrerelease = value;
+                if (SetProperty(ref _includePrerelease, value))
+                {
+                    TabViewModel.IncludePrerelease = value;
+                    foreach (var installedModule in InstalledModules)
+                        installedModule.IncludePrerelease = value;
+                }
             }
         }
 
-        public IReadOnlyList<SourceRepository> Repositories { get; private set; }
+        public string RepositoryUris
+        {
+            get => _repositoryUris;
+            set => SetProperty(ref _repositoryUris, value);
+        }
 
+        public DelegateCommand<NuGetVersion> InstallVersionCommand
+        {
+            get
+            {
+                return _installVersionCommand ?? (_installVersionCommand =
+                           new DelegateCommand<NuGetVersion>(
+                               parameter => { InstallModule(new PackageIdentity(SelectedModule.PackageIdentity.Id, parameter)).Forget(); },
+                               version => version != null && version != SelectedModule.Version)).ObservesProperty(() => SelectedVersion);
+            }
+        }
+
+        public DelegateCommand<ModuleViewModel> InstallModuleCommand
+        {
+            get
+            {
+                return _installModuleCommand ?? (_installModuleCommand = new DelegateCommand<ModuleViewModel>(parameter =>
+                {
+                    InstallModule(parameter.PackageIdentity).Forget();
+                }));
+            }
+        }
+
+        public DelegateCommand<ModuleViewModel> UpdateModuleCommand
+        {
+            get
+            {
+                return _updateModuleCommand ?? (_updateModuleCommand = new DelegateCommand<ModuleViewModel>(parameter =>
+                {
+                    InstallModule(new PackageIdentity(parameter.PackageIdentity.Id, parameter.NewestVersion)).Forget();
+                }));
+            }
+        }
+
+        public DelegateCommand<ModuleViewModel> UninstallModuleCommand
+        {
+            get
+            {
+                return _uninstallModuleCommand ?? (_uninstallModuleCommand = new DelegateCommand<ModuleViewModel>(parameter =>
+                {
+                    UninstallModule(parameter.PackageIdentity).Forget();
+                }));
+            }
+        }
+
+        public DelegateCommand DisplayRepositorySourcesInfoCommand
+        {
+            get
+            {
+                return _displayRepositorySourcesInfoCommand ?? (_displayRepositorySourcesInfoCommand = new DelegateCommand(() =>
+                {
+                    _window.ShowMessage(Tx.T("ModulesView:SourcesInfo"), Tx.T("Information"), MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }));
+            }
+        }
+
+        public PubSubEvent BrowseLoaded { get; }
+        public IReadOnlyList<SourceRepository> Repositories { get; private set; }
         public ObservableCollection<ModuleViewModel> InstalledModules { get; private set; }
+
+        public async Task LoadVersions(ModuleViewModel moduleViewModel, SourceCacheContext context, CancellationToken cancellationToken)
+        {
+            if (!await moduleViewModel.LoadVersionsAsync())
+                foreach (var findPackageByIdResource in _findPackageByIdResources)
+                    try
+                    {
+                        var versions = (await findPackageByIdResource.GetAllVersionsAsync(moduleViewModel.PackageIdentity.Id, context,
+                            NullLogger.Instance, cancellationToken))?.ToList();
+                        if (versions?.Any() == true)
+                        {
+                            moduleViewModel.OnUpdateVersions(versions);
+                            return;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+        }
 
         public override async void OnInitialize()
         {
             base.OnInitialize();
 
             var modules = await ModulesResource.GetInstalledModules(_restClient);
+            _restClient.HubConnection.On<string>("ModuleInstalled", OnModuleInstalled);
+            _restClient.HubConnection.On<string>("ModuleUninstalled", OnModuleUninstalled);
+
             var sources = ModulesResource.FetchRepositorySources(_restClient);
 
             InstalledModules = new ObservableCollection<ModuleViewModel>(modules.Installed.Select(x => new ModuleViewModel(x, ModuleStatus.Installed))
@@ -83,6 +222,13 @@ namespace Orcus.Administration.ViewModels.Overview
 
             var providers = Repository.Provider.GetCoreV3();
             Repositories = (await sources).Select(x => new SourceRepository(new PackageSource(x.AbsoluteUri), providers)).ToList();
+            RepositoryUris = string.Join(", ", sources.Result.Select(x => x.Host));
+
+            _packageMetadataResources = (await TaskCombinators.ThrottledAsync(Repositories,
+                (repository, token) => repository.GetResourceAsync<PackageMetadataResource>(token), CancellationToken.None)).ToList();
+
+            _findPackageByIdResources = (await TaskCombinators.ThrottledAsync(Repositories,
+                (repository, token) => repository.GetResourceAsync<FindPackageByIdResource>(token), CancellationToken.None)).ToList();
 
             foreach (var moduleTabViewModel in _tabViewModels) moduleTabViewModel.Initialize(this);
 
@@ -92,12 +238,98 @@ namespace Orcus.Administration.ViewModels.Overview
                 var viewModel = InstalledModules.FirstOrDefault(x => x.PackageIdentity.Equals(packageMetadata.Identity));
                 viewModel?.Initialize(packageMetadata);
             }
+
+            await TaskCombinators.ThrottledAsync(InstalledModules.Where(x => !x.IsLoaded), (model, token) => LoadModuleMetadata(model),
+                CancellationToken.None);
+
+            TabViewModel = _tabViewModels.First();
+        }
+
+        private async Task InstallModule(PackageIdentity packageIdentity)
+        {
+            try
+            {
+                await ModulesResource.InstallModule(packageIdentity, _restClient);
+            }
+            catch (Exception e)
+            {
+                e.ShowMessage(_window);
+            }
+        }
+
+        private async Task UninstallModule(PackageIdentity packageIdentity)
+        {
+            try
+            {
+                await ModulesResource.UninstallModule(packageIdentity, _restClient);
+            }
+            catch (Exception e)
+            {
+                e.ShowMessage(_window);
+            }
+        }
+
+        private void OnModuleInstalled(string identity)
+        {
+            var packageIdentity = PackageIdentityConvert.ToPackageIdentity(identity);
+            Application.Current.Dispatcher.BeginInvoke((Action) (() =>
+            {
+                var viewModel = InstalledModules.FirstOrDefault(x => x.PackageIdentity.Id == packageIdentity.Id);
+                if (viewModel != null)
+                {
+                    viewModel.OnUpdateVersion(packageIdentity.Version);
+                }
+                else
+                {
+                    viewModel = new ModuleViewModel(packageIdentity, ModuleStatus.ToBeInstalled);
+                    LoadModuleMetadata(viewModel).Forget();
+                    InstalledModules.Add(viewModel);
+                }
+            }));
+        }
+
+        private void OnModuleUninstalled(string identity)
+        {
+            var packageIdentity = PackageIdentityConvert.ToPackageIdentity(identity);
+
+            Application.Current.Dispatcher.BeginInvoke((Action) (() =>
+            {
+                var viewModel = InstalledModules.FirstOrDefault(x => x.PackageIdentity.Id == packageIdentity.Id);
+                if (viewModel != null)
+                {
+                    viewModel.OnUninstall();
+                    InstalledModules.Remove(viewModel);
+                }
+            }));
+        }
+
+        private async Task LoadModuleMetadata(ModuleViewModel moduleViewModel)
+        {
+            foreach (var packageMetadataResource in _packageMetadataResources)
+                try
+                {
+                    var metadata = await packageMetadataResource.GetMetadataAsync(moduleViewModel.PackageIdentity, new SourceCacheContext(),
+                        NullLogger.Instance, CancellationToken.None);
+                    if (metadata != null)
+                    {
+                        moduleViewModel.Initialize(metadata);
+                        break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
         }
     }
 
     public interface IModuleService
     {
+        PubSubEvent BrowseLoaded { get; }
+
         IReadOnlyList<SourceRepository> Repositories { get; }
         ObservableCollection<ModuleViewModel> InstalledModules { get; }
+
+        Task LoadVersions(ModuleViewModel moduleViewModel, SourceCacheContext context, CancellationToken cancellationToken);
     }
 }

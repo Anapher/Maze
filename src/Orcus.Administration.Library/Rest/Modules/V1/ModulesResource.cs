@@ -38,7 +38,7 @@ namespace Orcus.Administration.Library.Rest.Modules.V1
 
         public static Task InstallModule(PackageIdentity package, IOrcusRestClient client)
         {
-            return CreateRequest(HttpVerb.Post).WithBody(package).Execute(client);
+            return CreateRequest(HttpVerb.Post).WithBody(new JsonContent(package, settings => settings.Converters.Add(new PackageIdentityConverter()))).Execute(client);
         }
 
         public static Task UninstallModule(PackageIdentity package, IOrcusRestClient client)
@@ -49,16 +49,6 @@ namespace Orcus.Administration.Library.Rest.Modules.V1
         public static Task<List<Uri>> FetchRepositorySources(IOrcusRestClient client)
         {
             return CreateRequest(HttpVerb.Get, "sources").Execute(client).Return<List<Uri>>();
-        }
-
-        public static Task AddRepositorySource(Uri uri, IOrcusRestClient client)
-        {
-            return CreateRequest(HttpVerb.Post, "sources", uri).Execute(client);
-        }
-
-        public static Task DeleteRepositorySource(Uri uri, IOrcusRestClient client)
-        {
-            return CreateRequest(HttpVerb.Delete, "sources", uri).Execute(client);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using Anapher.Wpf.Swan;
 using Autofac;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,6 +13,7 @@ using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Resources;
 using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
 using Orcus.Administration.Services;
 using Orcus.Administration.ViewModels;
@@ -75,6 +77,7 @@ namespace Orcus.Administration
             builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
             builder.RegisterType<VisualStudioIcons>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<WindowService>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterInstance(new WpfWindow(Application.Current.MainWindow)).AsImplementedInterfaces();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);
