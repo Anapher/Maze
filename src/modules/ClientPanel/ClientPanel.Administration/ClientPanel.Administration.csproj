@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
+    <TargetFramework>net47</TargetFramework>
+    <Description>Module Description</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- XAML elements -->
+    <Page Include="**\*.xaml" Exclude="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+
+    <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\..\Console\Console.Administration\Console.Administration.csproj" />
+    <ProjectReference Include="..\..\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj" />
+    <ProjectReference Include="..\..\RegistryEditor\RegistryEditor.Administration\RegistryEditor.Administration.csproj" />
+    <ProjectReference Include="..\..\RemoteDesktop\RemoteDesktop.Administration\RemoteDesktop.Administration.csproj" />
+    <ProjectReference Include="..\..\SystemInformation\SystemInformation.Administration\SystemInformation.Administration.csproj" />
+    <ProjectReference Include="..\..\TaskManager\TaskManager.Administration\TaskManager.Administration.csproj" />
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+
+    <!-- Resources -->
+    <Resource Include="Resources\**\*.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.txd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\ClientPanelView.xaml.cs">
+      <DependentUpon>ClientPanelView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <Import Project="..\ClientPanel.Shared\ClientPanel.Shared.projitems" Label="Shared" />
+</Project>

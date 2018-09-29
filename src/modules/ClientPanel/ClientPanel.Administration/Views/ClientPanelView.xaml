@@ -1,0 +1,166 @@
+﻿<views:WindowUserControl
+    x:Class="ClientPanel.Administration.Views.ClientPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:viewModels="clr-namespace:ClientPanel.Administration.ViewModels"
+    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    Title="{Binding Title}"
+    d:DataContext="{d:DesignInstance viewModels:ClientPanelViewModel}"
+    d:DesignHeight="485"
+    d:DesignWidth="800"
+    WindowHeight="485"
+    WindowWidth="800"
+    mc:Ignorable="d">
+    <views:WindowUserControl.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button Command="{Binding OpenFileExplorerCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Folder" />
+                    <TextBlock Margin="5,0,0,0" Text="{tx:T FileExplorer:FileExplorer}" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding OpenTaskManagerCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Monitor" />
+                    <TextBlock Margin="5,0,0,0" Text="{tx:T TaskManager:TaskManager}" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding OpenSystemInfoCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Information" />
+                    <TextBlock Margin="5,0,0,0" Text="{tx:T ClientPanel:SystemInfo}" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding OpenToolsCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome Kind="ToolboxSolid" />
+                    <TextBlock Margin="5,0,0,0" Text="{tx:T ClientPanel:Tools}" />
+                </StackPanel>
+            </Button>
+            <ToggleButton>
+                <iconPacks:PackIconMaterial>
+                    <iconPacks:PackIconMaterial.Style>
+                        <Style TargetType="iconPacks:PackIconMaterial">
+                            <Setter Property="Kind" Value="KeyboardOff" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=IsChecked}" Value="true">
+                                    <Setter Property="Kind" Value="Keyboard" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </iconPacks:PackIconMaterial.Style>
+                </iconPacks:PackIconMaterial>
+            </ToggleButton>
+            <ToggleButton>
+                <iconPacks:PackIconMaterial>
+                    <iconPacks:PackIconMaterial.Style>
+                        <Style TargetType="iconPacks:PackIconMaterial">
+                            <Setter Property="Kind" Value="MouseOff" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=IsChecked}" Value="true">
+                                    <Setter Property="Kind" Value="Mouse" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </iconPacks:PackIconMaterial.Style>
+                </iconPacks:PackIconMaterial>
+            </ToggleButton>
+        </mah:WindowCommands>
+    </views:WindowUserControl.RightWindowCommands>
+    <views:WindowUserControl.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout
+                Width="360"
+                AnimateOpacity="True"
+                Header="Tools"
+                IsOpen="{Binding IsToolsOpen}"
+                IsPinned="False"
+                Position="Right"
+                Theme="Light">
+                <StackPanel Orientation="Vertical">
+                    <WrapPanel HorizontalAlignment="Center">
+                        <WrapPanel.Resources>
+                            <Style TargetType="mah:Tile">
+                                <Setter Property="Width" Value="110" />
+                                <Setter Property="Height" Value="80" />
+                                <Setter Property="TitleFontSize" Value="12" />
+                                <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+                            </Style>
+                        </WrapPanel.Resources>
+                        <mah:Tile
+                            Title="{tx:T Console:Name}"
+                            Background="#2c3e50"
+                            Command="{Binding OpenConsoleCommandCommand}">
+                            <Viewbox Width="20" Height="20">
+                                <iconPacks:PackIconMaterial
+                                    Width="20"
+                                    Height="20"
+                                    Kind="Console" />
+                            </Viewbox>
+                        </mah:Tile>
+                        <mah:Tile
+                            Title="{tx:T RegistryEditor:Name}"
+                            Background="#27ae60"
+                            Command="{Binding OpenRegistryEditorCommand}">
+                            <Viewbox Width="20" Height="20">
+                                <Path Data="F1 M 412.107,45.185 L 331.439,94.841 L 381.091,175.507 L 461.759,125.857 L 412.107,45.185 Z M 219.337,200.951 L 290.382,263.614 L 353.042,192.575 L 281.998,129.906 L 219.337,200.951 Z M 325.476,79.437 L 273.873,0.000 L 194.432,51.601 L 246.036,131.038 L 325.476,79.437 Z M 2.802,244.565 L 150.718,244.565 L 150.718,96.652 L 2.802,96.652 L 2.802,244.565 Z M 194.432,436.195 L 342.350,436.195 L 342.350,288.276 L 194.432,288.276 L 194.432,436.195 Z M 0.000,288.276 L 147.916,288.276 L 147.916,436.195 L 0.000,436.195 L 0.000,288.276 Z" Fill="{StaticResource WhiteBrush}" />
+                            </Viewbox>
+                        </mah:Tile>
+                        <mah:Tile Title="Geräte-Manager" Background="#3498db">
+                            <Viewbox Width="20" Height="20">
+                                <iconPacks:PackIconMaterial
+                                    Width="20"
+                                    Height="20"
+                                    Kind="PrinterSettings" />
+                            </Viewbox>
+                        </mah:Tile>
+                    </WrapPanel>
+                    <mah:ToggleSwitch
+                        Margin="10"
+                        Header="Shared Clipboard"
+                        Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                    <TextBlock
+                        Margin="10,10,10,0"
+                        FontSize="16"
+                        Text="Remote Actions" />
+                    <mah:DropDownButton
+                        Width="200"
+                        Margin="10,5"
+                        Padding="5,0"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Left"
+                        Content="Shutdown"
+                        DisplayMemberPath="Header"
+                        ItemsSource="{Binding ComputerPowerCommands}">
+                        <mah:DropDownButton.Icon>
+                            <iconPacks:PackIconMaterial Margin="10,0,0,0" Kind="Power" />
+                        </mah:DropDownButton.Icon>
+                    </mah:DropDownButton>
+                    <mah:DropDownButton
+                        Width="200"
+                        Margin="10,5"
+                        HorizontalAlignment="Left"
+                        Content="Open Remote Program" />
+                    <TextBlock
+                        Margin="10,10,10,0"
+                        FontSize="16"
+                        Text="Interaction" />
+                    <Button
+                        MinWidth="150"
+                        Margin="10,5,10,10"
+                        HorizontalAlignment="Left"
+                        Content="Leave Note" />
+                </StackPanel>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </views:WindowUserControl.Flyouts>
+    <Grid Background="Black">
+        <Image Source="{Binding RemoteImage}" />
+    </Grid>
+</views:WindowUserControl>

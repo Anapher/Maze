@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="ClientPanel:Power.Restart">Neustarten</text>
+		<text key="ClientPanel:Power.Shutdown">Herunterfahren</text>
+		<text key="ClientPanel:Power.Sleep">Energiesparen</text>
+		<text key="ClientPanel:SystemInfo">Systeminfo</text>
+		<text key="ClientPanel:Tools">Tools</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="ClientPanel:Power.Restart">Restart</text>
+		<text key="ClientPanel:Power.Shutdown">Shut down</text>
+		<text key="ClientPanel:Power.Sleep">Sleep</text>
+		<text key="ClientPanel:SystemInfo">System Info</text>
+		<text key="ClientPanel:Tools">Tools</text>
+	</culture>
+</translation>

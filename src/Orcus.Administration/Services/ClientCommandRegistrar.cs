@@ -1,4 +1,5 @@
 ﻿using System;
+using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
