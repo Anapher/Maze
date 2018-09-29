@@ -19,13 +19,6 @@
 
     <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
-    <ProjectReference Include="..\..\Console\Console.Administration\Console.Administration.csproj" />
-    <ProjectReference Include="..\..\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj" />
-    <ProjectReference Include="..\..\RegistryEditor\RegistryEditor.Administration\RegistryEditor.Administration.csproj" />
-    <ProjectReference Include="..\..\RemoteDesktop\RemoteDesktop.Administration\RemoteDesktop.Administration.csproj" />
-    <ProjectReference Include="..\..\SystemInformation\SystemInformation.Administration\SystemInformation.Administration.csproj" />
-    <ProjectReference Include="..\..\SystemUtilities\SystemUtilities.Administration\SystemUtilities.Administration.csproj" />
-    <ProjectReference Include="..\..\TaskManager\TaskManager.Administration\TaskManager.Administration.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
     <!-- Resources -->
@@ -37,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
@@ -48,10 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ClientPanelView.xaml.cs">
-      <DependentUpon>ClientPanelView.xaml</DependentUpon>
+    <Compile Update="Views\ClipboardManagerView.xaml.cs">
+      <DependentUpon>ClipboardManagerView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
-  <Import Project="..\ClientPanel.Shared\ClientPanel.Shared.projitems" Label="Shared" />
+  <Import Project="..\ClipboardManager.Shared\ClipboardManager.Shared.projitems" Label="Shared" />
 </Project>

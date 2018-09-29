@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>5e5eb0c8-f6ac-4b95-8e00-7ca0e27de731</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ClipboardManager.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Channels\IChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ClipboardData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\ClipboardDataFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ClipboardDataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Native\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Native\WindowMessages.cs" />
+  </ItemGroup>
+</Project>
