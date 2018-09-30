@@ -77,10 +77,10 @@ namespace ModulePacker
                     writer.WriteStartElement("group");
                     writer.WriteAttributeString("targetFramework", packageDependency.Key.ToNuGetFramework().ToString());
 
-                    foreach (var dependency in packageDependency.Value)
+                    foreach (var dependency in GetDependencies(packageDependency.Key, Dependencies))
                     {
                         writer.WriteStartElement("dependency");
-                        writer.WriteAttributeString("id", dependency.Id);
+                        writer.WriteAttributeString("id", GetDependencyId(dependency));
                         writer.WriteAttributeString("version", dependency.VersionRange.OriginalString);
 
                         if (dependency.Include.Any())
@@ -99,6 +99,53 @@ namespace ModulePacker
                 writer.WriteEndElement(); //metadata
                 writer.WriteEndElement(); //package
             }
+        }
+
+        private IEnumerable<PackageDependency> GetDependencies(OrcusFramework framework, Dictionary<OrcusFramework, List<PackageDependency>> dependencies)
+        {
+            if (framework == OrcusFramework.Administration)
+                return dependencies[framework];
+
+            if (framework == OrcusFramework.Server)
+            {
+                var allDependencies = dependencies[framework].ToList();
+                if (dependencies.TryGetValue(OrcusFramework.Administration, out var administrationDependencies))
+                {
+                    allDependencies.AddRange(administrationDependencies.Where(IsModuleDependency));
+                }
+
+                return allDependencies;
+            }
+
+            if (framework == OrcusFramework.Client)
+            {
+                var allDependencies = dependencies[framework].ToList();
+
+                if (dependencies.TryGetValue(OrcusFramework.Administration, out var administrationDependencies))
+                    allDependencies.AddRange(administrationDependencies.Where(IsModuleDependency));
+
+                if (dependencies.TryGetValue(OrcusFramework.Server, out var serverDependencies))
+                    allDependencies.AddRange(serverDependencies.Where(IsModuleDependency));
+
+                return allDependencies;
+            }
+
+            throw new ArgumentOutOfRangeException();
+        }
+
+        private static bool IsModuleDependency(PackageDependency dependency)
+        {
+            return dependency.Id.EndsWith(".Administration") || dependency.Id.EndsWith(".Client") || dependency.Id.EndsWith(".Server");
+        }
+
+        private static string GetDependencyId(PackageDependency dependency)
+        {
+            if (IsModuleDependency(dependency))
+            {
+                return dependency.Id.Substring(0, dependency.Id.LastIndexOf('.'));
+            }
+
+            return dependency.Id;
         }
 
         private void ApplyValue(KeyValuePair<string, string> pair)

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using ClipboardManager.Client.Utilities;
 using ClipboardManager.Shared.Dtos;
 using ClipboardManager.Shared.Extensions;
 using Orcus.Client.Library.Services;
@@ -29,7 +30,7 @@ namespace ClipboardManager.Client.Controllers
         [OrcusPost]
         public IActionResult SetClipboardData([FromBody] ClipboardData clipboardData)
         {
-            _synchronizationContext.Current.Send(state => ClipboardDataExtensions.SetClipboardData(clipboardData), null);
+            _synchronizationContext.Current.Send(state => ClipboardManagerExtensions.SetClipboardData(clipboardData), null);
             return Ok();
         }
     }

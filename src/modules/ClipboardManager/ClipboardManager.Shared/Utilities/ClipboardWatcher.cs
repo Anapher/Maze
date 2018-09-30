@@ -1,11 +1,17 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using ClipboardManager.Shared.Native;
-using Orcus.Client.Library.Services;
+using System.Windows.Forms;
 
-namespace ClipboardManager.Client.Utilities
+#if WPF
+using Orcus.Administration.Library.Services;
+using IDataObject = System.Windows.IDataObject;
+using Clipboard = System.Windows.Clipboard;
+#else
+using Orcus.Client.Library.Services;
+#endif
+
+namespace ClipboardManager.Shared.Utilities
 {
     /// <summary>
     ///     Provides notifications when the contents of the clipboard is updated. This class is thread safe.
@@ -13,14 +19,24 @@ namespace ClipboardManager.Client.Utilities
     public class ClipboardWatcher
     {
         private static readonly object EventLock = new object();
-        private readonly IStaSynchronizationContext _synchronizationContext;
         private EventHandler<IDataObject> _clipboardChangeEventHandler;
-        private NotificationForm _form;
+        private NotificationWindow _form;
+
+#if WPF
+        private readonly IAppDispatcher _dispatcher;
+
+        public ClipboardWatcher(IAppDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+#else
+        private readonly IStaSynchronizationContext _synchronizationContext;
 
         public ClipboardWatcher(IStaSynchronizationContext synchronizationContext)
         {
             _synchronizationContext = synchronizationContext;
         }
+#endif
 
         /// <summary>
         ///     Occurs when the contents of the clipboard is updated.
@@ -33,13 +49,14 @@ namespace ClipboardManager.Client.Utilities
                 {
                     if (_clipboardChangeEventHandler == null)
                     {
+#if WPF
+                        _dispatcher.Current.Invoke(new Action(() => _form = new NotificationWindow()));
+#else
                         _synchronizationContext.Current.Send(state =>
                         {
-                            var form = new NotificationForm();
-                            form.Show();
-
-                            _form = form;
+                            _form = new NotificationWindow();
                         }, null);
+#endif
 
                         _form.ClipboardUpdated += FormOnClipboardUpdated;
                     }
@@ -54,8 +71,7 @@ namespace ClipboardManager.Client.Utilities
                     _clipboardChangeEventHandler -= value;
                     if (_clipboardChangeEventHandler == null)
                     {
-                        _form.Invoke(new Action(() => _form.Close()));
-                        _form.Dispose();
+                        _form?.DestroyHandle();
                         _form = null;
                     }
                 }
@@ -73,22 +89,19 @@ namespace ClipboardManager.Client.Utilities
         /// <summary>
         ///     Hidden form to receive the WM_CLIPBOARDUPDATE message.
         /// </summary>
-        private class NotificationForm : Form
+        private class NotificationWindow : NativeWindow
         {
             private static readonly IntPtr HWND_MESSAGE = new IntPtr(-3);
 
-            public NotificationForm()
+            public NotificationWindow()
             {
+                CreateHandle(new CreateParams());
+
                 NativeMethods.SetParent(Handle, HWND_MESSAGE);
                 NativeMethods.AddClipboardFormatListener(Handle);
             }
 
             public event EventHandler ClipboardUpdated;
-
-            protected override void SetVisibleCore(bool value)
-            {
-                base.SetVisibleCore(false);
-            }
 
             protected override void WndProc(ref Message m)
             {
@@ -98,10 +111,10 @@ namespace ClipboardManager.Client.Utilities
                 base.WndProc(ref m);
             }
 
-            protected override void OnClosing(CancelEventArgs e)
+            public override void DestroyHandle()
             {
-                base.OnClosing(e);
                 NativeMethods.RemoveClipboardFormatListener(Handle);
+                base.DestroyHandle();
             }
         }
     }

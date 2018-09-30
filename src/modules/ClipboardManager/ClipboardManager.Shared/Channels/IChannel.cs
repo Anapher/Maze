@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ClipboardManager.Shared.Dtos;
 
 namespace ClipboardManager.Shared.Channels
@@ -7,6 +8,7 @@ namespace ClipboardManager.Shared.Channels
     {
         event EventHandler<ClipboardData> ClipboardUpdated;
 
-        void Listen();
+        Task Listen();
+        Task SetData(ClipboardData clipboardData);
     }
 }

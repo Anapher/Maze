@@ -4,9 +4,9 @@ using Orcus.Administration.Library.Clients.Helpers;
 
 namespace SystemUtilities.Administration.Rest
 {
-    public class PowerResource : ResourceBase<PowerResource>
+    public class SystemPowerResource : ResourceBase<SystemPowerResource>
     {
-        public PowerResource() : base($"{PrismModule.ModuleName}/Power")
+        public SystemPowerResource() : base($"{PrismModule.ModuleName}/Power")
         {
         }
 

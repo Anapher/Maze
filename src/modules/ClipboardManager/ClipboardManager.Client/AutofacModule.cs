@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using ClipboardManager.Client.Utilities;
+using ClipboardManager.Shared.Utilities;
 
 namespace ClipboardManager.Client
 {

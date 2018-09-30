@@ -361,7 +361,15 @@ namespace Orcus.Sockets
                     {
                         if (channel.IsSynchronized || isMessageSynchronized)
                         {
-                            await synchronizedSocket.FifoAsyncLock.EnterAsync();
+                            try
+                            {
+                                await synchronizedSocket.AsyncLock.EnterAsync(synchronizedSocket.CancellationToken);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                return;
+                            }
+
                             try
                             {
                                 await synchronizedSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, buffer, true,
@@ -369,7 +377,7 @@ namespace Orcus.Sockets
                             }
                             finally
                             {
-                                synchronizedSocket.FifoAsyncLock.Release();
+                                synchronizedSocket.AsyncLock.Release();
                             }
                         }
                         else
@@ -385,25 +393,40 @@ namespace Orcus.Sockets
                     return;
                 }
 
-                if (channel.IsSynchronized || isMessageSynchronized)
+                try
                 {
-                    //aquire lock in synchronized context
-                    var lockTask = channel.AsyncLock.EnterAsync();
-                    await Task.Run(async () =>
+                    if (channel.IsSynchronized || isMessageSynchronized)
                     {
-                        await lockTask;
-                        try
+                        //aquire lock in synchronized context
+                        var lockTask = channel.AsyncLock.EnterAsync(channel.CancellationToken);
+                        await Task.Run(async () =>
                         {
-                            channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5);
-                        }
-                        finally
-                        {
-                            channel.AsyncLock.Release();
-                        }
-                    });
+                            try
+                            {
+                                await lockTask;
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                return;
+                            }
+
+                            try
+                            {
+                                channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5);
+                            }
+                            finally
+                            {
+                                channel.AsyncLock.Release();
+                            }
+                        });
+                    }
+                    else
+                        await Task.Run(() => channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5));
                 }
-                else
-                    await Task.Run(() => channel.DataChannel.ReceiveData(buffer.Buffer, buffer.Offset + 5, buffer.Length - 5));
+                catch (Exception e)
+                {
+                    Logger.Error(e, "An unhandled exception occurred when processing response message in channel {channel}", channel.DataChannel.GetType().FullName);
+                }
             }
         }
 
@@ -424,10 +447,8 @@ namespace Orcus.Sockets
                     Logger.Error("Received close for channel {channelId} which does not exist.", channelId);
                     return; //already closed so it's not such a huge inconvenience
                 }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(() => channel.DataChannel.Dispose());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                
+                LogTaskError(Task.Run(() => channel.DataChannel.Dispose()));
             }
         }
 
@@ -507,7 +528,7 @@ namespace Orcus.Sockets
             response.HttpResponseStream = rawStream;
             response.Body = new BufferingWriteStream(rawStream, _packageBufferSize, _bufferPool);
 
-            Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token)));
+            LogTaskError(Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token))));
         }
 
         private void ProcessResponse(BufferSegment buffer, bool isCompleted)
@@ -622,6 +643,15 @@ namespace Orcus.Sockets
         {
             var buffer = _bufferPool.Rent(size + _customOffset);
             return new BufferSegment(buffer, _customOffset, buffer.Length - _customOffset);
+        }
+
+        private void LogTaskError(Task task)
+        {
+            task.ContinueWith(_ =>
+            {
+                if (task.IsFaulted)
+                    Logger.Error(task.Exception, "An unhandled exception occurred when executing a task");
+            });
         }
     }
 }

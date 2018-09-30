@@ -323,7 +323,7 @@ namespace Orcus.Server.Service.Modules.Resolution
                             request.Framework,
                             request.IgnoreExceptions,
                             linkedTokenSource.Token);
-
+                        
                         // add packages to the cache
                         if (_cache != null)
                         {
@@ -344,7 +344,6 @@ namespace Orcus.Server.Service.Modules.Resolution
                                     packages);
                             }
                         }
-
                     }
                 }
                 catch (TaskCanceledException ex)

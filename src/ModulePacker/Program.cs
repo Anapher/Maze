@@ -99,7 +99,6 @@ namespace ModulePacker
                     var reader = new NuspecCoreReader(stream);
 
                     var id = reader.GetId();
-
                     if (framework == null)
                     {
                         if (Enum.TryParse<OrcusFramework>(id.Split('.').Last(), out var fw))

@@ -21,16 +21,38 @@ namespace Orcus.Sockets.Internal
             _lockSemaphore?.Dispose();
         }
 
-        public async Task EnterAsync()
+        public async Task EnterAsync(CancellationToken cancellationToken)
         {
             var ticket = Interlocked.Increment(ref _ticketsCount);
             while (true)
             {
-                await _lockSemaphore.WaitAsync();
+                await _lockSemaphore.WaitAsync(cancellationToken);
 
                 if (ticket == _ticketToRide)
                     return;
             }
+        }
+
+        public Task EnterAsync()
+        {
+            return EnterAsync(CancellationToken.None);
+        }
+
+        public void Enter(CancellationToken cancellationToken)
+        {
+            var ticket = Interlocked.Increment(ref _ticketsCount);
+            while (true)
+            {
+                _lockSemaphore.Wait(cancellationToken);
+
+                if (ticket == _ticketToRide)
+                    return;
+            }
+        }
+
+        public void Enter()
+        {
+            Enter(CancellationToken.None);
         }
 
         public void Release()

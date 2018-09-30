@@ -17,7 +17,7 @@ namespace ClipboardManager.Administration.Rest
             CreateRequest().Execute(restClient).Return<ClipboardData>();
 
         public static Task SetClipboardData(ClipboardData clipboardData, ITargetedRestClient restClient) =>
-            CreateRequest(HttpVerb.Post, clipboardData).Execute(restClient);
+            CreateRequest(HttpVerb.Post).WithBody(clipboardData).Execute(restClient);
 
         public static Task<CallTransmissionChannel<IClipboardNotificationChannel>> GetClipboardNotificationChannel(ITargetedRestClient restClient) =>
             restClient.CreateChannel<ClipboardManagerResource, IClipboardNotificationChannel>("notificationChannel");

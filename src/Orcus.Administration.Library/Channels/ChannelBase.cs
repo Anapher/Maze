@@ -63,6 +63,9 @@ namespace Orcus.Administration.Library.Channels
 
         void IDataChannel.ReceiveData(byte[] buffer, int offset, int count)
         {
+            if (IsDisposed)
+                return;
+
             ReceiveData(buffer, offset, count);
         }
 

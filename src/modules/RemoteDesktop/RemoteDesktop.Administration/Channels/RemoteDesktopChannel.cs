@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -20,10 +21,13 @@ namespace RemoteDesktop.Administration.Channels
         private readonly IAppDispatcher _dispatcher;
         private OpenH264Decoder _decoder;
         private IRemoteDesktopDiagonstics _diagonstics;
+        private readonly SemaphoreSlim _decoderLock = new SemaphoreSlim(1, 1);
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public RemoteDesktopChannel(IAppDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public WriteableBitmap Image { get; private set; }
@@ -61,51 +65,93 @@ namespace RemoteDesktop.Administration.Channels
 
         protected override unsafe void ReceiveData(byte[] buffer, int offset, int count)
         {
-            Diagonstics?.ReceivedData(count);
+            if (IsDisposed)
+                return;
 
-            DecodedFrame decodedFrame;
-            fixed (byte* bufferPtr = buffer)
+            try
             {
-                var frame = _decoder.Decode(bufferPtr + offset, count);
-                if (frame == null)
-                    return;
-
-                decodedFrame = (DecodedFrame) frame;
+                _decoderLock.Wait(_cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
             }
 
-            _dispatcher.Current.BeginInvoke(new Action(() =>
+            var releaseLock = true;
+
+            try
             {
-                var notifyUpdateImage = false;
-                if (Image == null)
+                if (IsDisposed)
+                    return;
+
+                Diagonstics?.ReceivedData(count);
+
+                DecodedFrame decodedFrame;
+                fixed (byte* bufferPtr = buffer)
                 {
-                    Image = new WriteableBitmap(decodedFrame.Width, decodedFrame.Height, 96, 96, PixelFormats.Bgr24, null);
-                    notifyUpdateImage = true;
+                    var frame = _decoder.Decode(bufferPtr + offset, count);
+                    if (frame == null)
+                        return;
+
+                    decodedFrame = (DecodedFrame) frame;
                 }
 
-                Image.Lock();
-                try
+                releaseLock = false;
+                _dispatcher.Current.BeginInvoke(new Action(() =>
                 {
-                    NativeMethods.memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer),
-                        (UIntPtr) (Image.BackBufferStride * decodedFrame.Height));
-                    Image.AddDirtyRect(new Int32Rect(0, 0, decodedFrame.Width, decodedFrame.Height));
-                }
-                finally
-                {
-                    _decoder.ReleaseFrame(decodedFrame);
-                    Image.Unlock();
-                }
+                    var notifyUpdateImage = false;
 
-                if (notifyUpdateImage)
-                    OnPropertyChanged(nameof(Image));
+                    try
+                    {
+                        if (Image == null)
+                        {
+                            Image = new WriteableBitmap(decodedFrame.Width, decodedFrame.Height, 96, 96, PixelFormats.Bgr24, null);
+                            notifyUpdateImage = true;
+                        }
 
-                Diagonstics?.ProcessedFrame();
-            }));
+                        Image.Lock();
+                        try
+                        {
+                            NativeMethods.memcpy(Image.BackBuffer, new IntPtr(decodedFrame.Pointer),
+                                (UIntPtr)(Image.BackBufferStride * decodedFrame.Height));
+                            Image.AddDirtyRect(new Int32Rect(0, 0, decodedFrame.Width, decodedFrame.Height));
+                        }
+                        finally
+                        {
+                            _decoder.ReleaseFrame(decodedFrame);
+                            Image.Unlock();
+                        }
+                    }
+                    finally
+                    {
+                        _decoderLock.Release();
+                    }
+                    
+                    if (notifyUpdateImage)
+                        OnPropertyChanged(nameof(Image));
+
+                    Diagonstics?.ProcessedFrame();
+                }));
+            }
+            finally
+            {
+                if (releaseLock)
+                    _decoderLock.Release();
+            }
         }
 
-        protected override void InternalDispose()
+        protected override async void InternalDispose()
         {
             base.InternalDispose();
+
+            _cancellationTokenSource.Cancel();
+
+            await _decoderLock.WaitAsync();
             _decoder?.Dispose();
+            _decoder = null;
+
+            _decoderLock.Dispose();
+            _cancellationTokenSource.Dispose();
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

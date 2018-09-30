@@ -16,5 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Native\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Native\WindowMessages.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ClipboardWatcher.cs" />
   </ItemGroup>
 </Project>

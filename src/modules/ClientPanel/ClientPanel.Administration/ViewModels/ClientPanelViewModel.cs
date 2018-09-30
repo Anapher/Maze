@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using SystemInformation.Administration.ViewModels;
+using SystemUtilities.Administration.Rest;
 using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
+using ClipboardManager.Administration.Utilities;
 using Console.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels;
 using Orcus.Administration.Library.Clients;
@@ -14,6 +15,7 @@ using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Utilities;
 using Prism.Commands;
 using Prism.Regions;
 using RegistryEditor.Administration.ViewModels;
@@ -25,26 +27,17 @@ using Unclassified.TxLib;
 
 namespace ClientPanel.Administration.ViewModels
 {
-    public class ButtonCommandViewModel
-    {
-        public ButtonCommandViewModel(string header, ICommand command)
-        {
-            Header = header;
-            Command = command;
-        }
-
-        public string Header { get; set; }
-        public ICommand Command { get; set; }
-    }
-
     public class ClientPanelViewModel : ViewModelBase
     {
         private readonly ClientViewModel _clientViewModel;
         private readonly IOrcusRestClient _orcusRestClient;
-        private readonly IPackageRestClient _restClient;
         private readonly IPackageRestClient _remoteDesktopRestClient;
+        private readonly IPackageRestClient _restClient;
         private readonly IWindow _window;
         private readonly IWindowService _windowService;
+        private readonly ClipboardSynchronizer _clipboardSynchronizer;
+        private DelegateCommand<ButtonAction> _executeButtonActionCommand;
+        private bool _isClipboardSynchronizationEnabled;
         private bool _isToolsOpen;
         private DelegateCommand _openConsoleCommandCommand;
         private DelegateCommand _openFileExplorerCommand;
@@ -52,14 +45,15 @@ namespace ClientPanel.Administration.ViewModels
         private DelegateCommand _openSystemInfoCommand;
         private DelegateCommand _openTaskManagerCommand;
         private DelegateCommand _openToolsCommand;
-        private string _title;
         private WriteableBitmap _remoteImage;
+        private string _title;
 
         public ClientPanelViewModel(ITargetedRestClient restClient, IOrcusRestClient orcusRestClient, ClientViewModel clientViewModel, IWindow window,
-            IWindowService windowService)
+            IWindowService windowService, ClipboardSynchronizer clipboardSynchronizer)
         {
             _orcusRestClient = orcusRestClient;
             _windowService = windowService;
+            _clipboardSynchronizer = clipboardSynchronizer;
             _clientViewModel = clientViewModel;
             _window = window;
 
@@ -67,11 +61,11 @@ namespace ClientPanel.Administration.ViewModels
             _restClient = restClient.CreatePackageSpecific("ClientPanel");
 
             Title = $"{clientViewModel.Username} - [{clientViewModel.LatestSession.IpAddress}]";
-            ComputerPowerCommands = new List<ButtonCommandViewModel>
+            ComputerPowerCommands = new List<ButtonAction>
             {
-                new ButtonCommandViewModel(Tx.T("ClientPanel:Power.Sleep"), null),
-                new ButtonCommandViewModel(Tx.T("ClientPanel:Power.Shutdown"), null),
-                new ButtonCommandViewModel(Tx.T("ClientPanel:Power.Restart"), null)
+                new ButtonAction(Tx.T("ClientPanel:Power.LogOff"), () => SystemPowerResource.LogOff(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:Power.Shutdown"), () => SystemPowerResource.Shutdown(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:Power.Restart"), () => SystemPowerResource.Restart(restClient))
             };
         }
 
@@ -87,13 +81,26 @@ namespace ClientPanel.Administration.ViewModels
             set => SetProperty(ref _isToolsOpen, value);
         }
 
+        public bool IsClipboardSynchronizationEnabled
+        {
+            get => _isClipboardSynchronizationEnabled;
+            set
+            {
+                if (SetProperty(ref _isClipboardSynchronizationEnabled, value))
+                {
+                    if (value) _clipboardSynchronizer.Enable().Forget();
+                    else _clipboardSynchronizer.Disable();
+                }
+            }
+        }
+
         public WriteableBitmap RemoteImage
         {
             get => _remoteImage;
             set => SetProperty(ref _remoteImage, value);
         }
 
-        public List<ButtonCommandViewModel> ComputerPowerCommands { get; }
+        public List<ButtonAction> ComputerPowerCommands { get; }
 
         public DelegateCommand OpenToolsCommand
         {
@@ -155,6 +162,24 @@ namespace ClientPanel.Administration.ViewModels
             }
         }
 
+        public DelegateCommand<ButtonAction> ExecuteButtonActionCommand
+        {
+            get
+            {
+                return _executeButtonActionCommand ?? (_executeButtonActionCommand = new DelegateCommand<ButtonAction>(async parameter =>
+                {
+                    try
+                    {
+                        await parameter.Action();
+                    }
+                    catch (Exception e)
+                    {
+                        e.ShowMessage(_window);
+                    }
+                }));
+            }
+        }
+
         private void OpenCommandWindow(Type viewModelType, string title)
         {
             _windowService.Show(viewModelType, title, _window, null, builder =>
@@ -170,16 +195,17 @@ namespace ClientPanel.Administration.ViewModels
 
             var parameters = await RemoteDesktopResource.GetParameters(_remoteDesktopRestClient);
             var monitor = parameters.Screens.FirstOrDefault(x => x.IsPrimary) ?? parameters.Screens.First();
-            
+
             var remoteDesktop = await RemoteDesktopResource.CreateScreenChannel(
-                new DesktopDuplicationOptions { Monitor = { Value = Array.IndexOf(parameters.Screens, monitor) } }, new x264Options(), _remoteDesktopRestClient);
+                new DesktopDuplicationOptions {Monitor = {Value = Array.IndexOf(parameters.Screens, monitor)}}, new x264Options(),
+                _remoteDesktopRestClient);
             remoteDesktop.PropertyChanged += RemoteDesktopOnPropertyChanged;
             await remoteDesktop.StartRecording(_remoteDesktopRestClient);
         }
 
         private void RemoteDesktopOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var remoteDesktop = (RemoteDesktopChannel)sender;
+            var remoteDesktop = (RemoteDesktopChannel) sender;
             switch (e.PropertyName)
             {
                 case nameof(RemoteDesktopChannel.Image):

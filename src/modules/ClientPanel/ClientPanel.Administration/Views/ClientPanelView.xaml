@@ -123,19 +123,20 @@
                     </WrapPanel>
                     <mah:ToggleSwitch
                         Margin="10"
-                        Header="Shared Clipboard"
+                        Header="{tx:T ClientPanel:SharedClipboard}"
+                        IsChecked="{Binding IsClipboardSynchronizationEnabled}"
                         Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
                     <TextBlock
                         Margin="10,10,10,0"
                         FontSize="16"
-                        Text="Remote Actions" />
+                        Text="{tx:T ClientPanel:RemoteActions}" />
                     <mah:DropDownButton
                         Width="200"
                         Margin="10,5"
                         Padding="5,0"
                         HorizontalAlignment="Left"
                         HorizontalContentAlignment="Left"
-                        Content="Shutdown"
+                        Content="{tx:T ClientPanel:Shutdown}"
                         DisplayMemberPath="Header"
                         ItemsSource="{Binding ComputerPowerCommands}">
                         <mah:DropDownButton.Icon>
@@ -150,12 +151,12 @@
                     <TextBlock
                         Margin="10,10,10,0"
                         FontSize="16"
-                        Text="Interaction" />
+                        Text="{tx:T ClientPanel:Interaction}" />
                     <Button
                         MinWidth="150"
                         Margin="10,5,10,10"
                         HorizontalAlignment="Left"
-                        Content="Leave Note" />
+                        Content="{tx:T ClientPanel:LeaveNote}" />
                 </StackPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>
