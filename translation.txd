@@ -15,6 +15,7 @@
 		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
 		<text key="Edit">Bearbeiten</text>
+		<text key="Error">Fehler</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Failed">Fehlgeschlagen</text>
@@ -57,6 +58,7 @@
 		<text key="Refresh">Aktualisieren</text>
 		<text key="Remove">Entfernen</text>
 		<text key="Server">Server</text>
+		<text key="TasksView:Tasks">Aufgaben</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
 		<text key="Tx:date.month.abbr">MMM.</text>
@@ -262,6 +264,7 @@
 		<text key="Description">Description</text>
 		<text key="Done">Done</text>
 		<text key="Edit">Edit</text>
+		<text key="Error">Error</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Failed">Failed</text>
@@ -304,6 +307,7 @@
 		<text key="Refresh">Refresh</text>
 		<text key="Remove">Remove</text>
 		<text key="Server">Server</text>
+		<text key="TasksView:Tasks">Tasks</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
 		<text key="Tx:date.day" comment="Default: %d" />

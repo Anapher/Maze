@@ -10,6 +10,6 @@ namespace ClientPanel.Administration.Resources
         {
         }
 
-        public Viewbox Icon => GetIcon();
+        public Viewbox CodeDefinitionWindow => GetIcon();
     }
 }

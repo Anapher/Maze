@@ -7,6 +7,7 @@ using SystemInformation.Administration.ViewModels;
 using SystemUtilities.Administration.Rest;
 using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
+using ClientPanel.Administration.Rest;
 using ClipboardManager.Administration.Utilities;
 using Console.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels;
@@ -60,12 +61,22 @@ namespace ClientPanel.Administration.ViewModels
             _remoteDesktopRestClient = restClient.CreatePackageSpecific("RemoteDesktop");
             _restClient = restClient.CreatePackageSpecific("ClientPanel");
 
-            Title = $"{clientViewModel.Username} - [{clientViewModel.LatestSession.IpAddress}]";
+            Title = $"{clientViewModel.Username} [{clientViewModel.LatestSession.IpAddress}]";
             ComputerPowerCommands = new List<ButtonAction>
             {
                 new ButtonAction(Tx.T("ClientPanel:Power.LogOff"), () => SystemPowerResource.LogOff(restClient)),
                 new ButtonAction(Tx.T("ClientPanel:Power.Shutdown"), () => SystemPowerResource.Shutdown(restClient)),
                 new ButtonAction(Tx.T("ClientPanel:Power.Restart"), () => SystemPowerResource.Restart(restClient))
+            };
+            SystemProgramsCommands = new List<ButtonAction>
+            {
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.TaskManager"), () => ProgramsResource.StartTaskManager(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.RegEdit"), () => ProgramsResource.StartRegEdit(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.DeviceManager"), () => ProgramsResource.StartDeviceManager(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.ControlPanel"), () => ProgramsResource.StartControlPanel(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.ComputerManagement"), () => ProgramsResource.StartComputerManagement(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.EventLog"), () => ProgramsResource.StartEventLog(restClient)),
+                new ButtonAction(Tx.T("ClientPanel:RemotePrograms.Services"), () => ProgramsResource.StartServices(restClient))
             };
         }
 
@@ -101,6 +112,7 @@ namespace ClientPanel.Administration.ViewModels
         }
 
         public List<ButtonAction> ComputerPowerCommands { get; }
+        public List<ButtonAction> SystemProgramsCommands { get; }
 
         public DelegateCommand OpenToolsCommand
         {
@@ -168,6 +180,9 @@ namespace ClientPanel.Administration.ViewModels
             {
                 return _executeButtonActionCommand ?? (_executeButtonActionCommand = new DelegateCommand<ButtonAction>(async parameter =>
                 {
+                    if (parameter == null)
+                        return;
+
                     try
                     {
                         await parameter.Action();

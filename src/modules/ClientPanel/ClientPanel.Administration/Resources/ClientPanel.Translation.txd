@@ -2,24 +2,42 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="ClientPanel:ClientPanel">Client Panel</text>
 		<text key="ClientPanel:Interaction">Interaktion</text>
 		<text key="ClientPanel:LeaveNote">Nachricht hinterlassen</text>
 		<text key="ClientPanel:Power.LogOff">Abmelden</text>
 		<text key="ClientPanel:Power.Restart">Neustarten</text>
 		<text key="ClientPanel:Power.Shutdown">Herunterfahren</text>
 		<text key="ClientPanel:RemoteActions">Remote-Aktionen</text>
+		<text key="ClientPanel:RemotePrograms">Programme</text>
+		<text key="ClientPanel:RemotePrograms.ComputerManagement">Computerverwaltung</text>
+		<text key="ClientPanel:RemotePrograms.ControlPanel">Systemsteuerung</text>
+		<text key="ClientPanel:RemotePrograms.DeviceManager">Geräte-Manager</text>
+		<text key="ClientPanel:RemotePrograms.EventLog">Ereignisanzeige</text>
+		<text key="ClientPanel:RemotePrograms.RegEdit">Registrierungseditor</text>
+		<text key="ClientPanel:RemotePrograms.Services">Dienste</text>
+		<text key="ClientPanel:RemotePrograms.TaskManager">Task-Manager</text>
 		<text key="ClientPanel:SharedClipboard">Gemeinsame Zwischenablage</text>
 		<text key="ClientPanel:Shutdown">Abschalten</text>
 		<text key="ClientPanel:SystemInfo">Systeminfo</text>
 		<text key="ClientPanel:Tools">Tools</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="ClientPanel:ClientPanel">Client Panel</text>
 		<text key="ClientPanel:Interaction">Interaction</text>
 		<text key="ClientPanel:LeaveNote">Leave Note</text>
 		<text key="ClientPanel:Power.LogOff">Log Off</text>
 		<text key="ClientPanel:Power.Restart">Restart</text>
 		<text key="ClientPanel:Power.Shutdown">Shut down</text>
 		<text key="ClientPanel:RemoteActions">Remote Actions</text>
+		<text key="ClientPanel:RemotePrograms">Remote Programs</text>
+		<text key="ClientPanel:RemotePrograms.ComputerManagement">Computer Management</text>
+		<text key="ClientPanel:RemotePrograms.ControlPanel">Control Panel</text>
+		<text key="ClientPanel:RemotePrograms.DeviceManager">Device Manager</text>
+		<text key="ClientPanel:RemotePrograms.EventLog">Event Log</text>
+		<text key="ClientPanel:RemotePrograms.RegEdit">Registry Editor</text>
+		<text key="ClientPanel:RemotePrograms.Services">Services</text>
+		<text key="ClientPanel:RemotePrograms.TaskManager">Task Manager</text>
 		<text key="ClientPanel:SharedClipboard">Shared Clipboard</text>
 		<text key="ClientPanel:Shutdown">Shut down</text>
 		<text key="ClientPanel:SystemInfo">System Info</text>

@@ -34,11 +34,11 @@ namespace ClientPanel.Administration
 
             _clientsContextMenu.AddAtBeginning(new ItemCommand<ClientViewModel>
             {
-                Header = "ClientPanel",
-                Icon = _icons.Icon,
+                Header = Tx.T("ClientPanel:ClientPanel"),
+                Icon = _icons.CodeDefinitionWindow,
                 Command = new DelegateCommand<ClientViewModel>(clientViewModel =>
                 {
-                    _windowService.Show(typeof(ClientPanelViewModel), "title", null, window => window.ViewManager.TitleBarIcon = _icons.Icon,
+                    _windowService.Show(typeof(ClientPanelViewModel), Tx.T("ClientPanel:ClientPanel"), null, window => window.ViewManager.TitleBarIcon = _icons.CodeDefinitionWindow,
                         builder =>
                         {
                             builder.RegisterInstance(clientViewModel);

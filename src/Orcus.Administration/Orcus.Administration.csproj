@@ -76,6 +76,9 @@
     <Compile Include="Services\WindowInstance.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModule.cs" />
+    <Compile Include="Views\Main\Overview\TasksView.xaml.cs">
+      <DependentUpon>TasksView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellWindow.xaml.cs">
       <DependentUpon>ShellWindow.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,10 @@
     <Page Include="Resources\VisualStudioIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\Overview\TasksView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellWindow.xaml">
       <SubType>Designer</SubType>

@@ -19,9 +19,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="asd" />
-        </Menu>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -71,6 +68,7 @@
             Grid.Row="2"
             Padding="0"
             prism:RegionManager.RegionName="{x:Static library:RegionNames.ClientListTabs}"
+            BorderThickness="0"
             SelectedIndex="0">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">

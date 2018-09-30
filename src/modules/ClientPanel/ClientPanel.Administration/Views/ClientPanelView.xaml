@@ -11,10 +11,10 @@
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:ClientPanelViewModel}"
-    d:DesignHeight="485"
-    d:DesignWidth="800"
-    WindowHeight="485"
-    WindowWidth="800"
+    d:DesignHeight="675"
+    d:DesignWidth="1200"
+    WindowHeight="710"
+    WindowWidth="1200"
     mc:Ignorable="d">
     <views:WindowUserControl.RightWindowCommands>
         <mah:WindowCommands>
@@ -136,6 +136,7 @@
                         Padding="5,0"
                         HorizontalAlignment="Left"
                         HorizontalContentAlignment="Left"
+                        Command="{Binding ExecuteButtonActionCommand}"
                         Content="{tx:T ClientPanel:Shutdown}"
                         DisplayMemberPath="Header"
                         ItemsSource="{Binding ComputerPowerCommands}">
@@ -147,7 +148,16 @@
                         Width="200"
                         Margin="10,5"
                         HorizontalAlignment="Left"
-                        Content="Open Remote Program" />
+                        Content="{tx:T ClientPanel:RemotePrograms}"
+                        DisplayMemberPath="Header"
+                        ItemsSource="{Binding SystemProgramsCommands}">
+                        <mah:DropDownButton.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="MenuItem">
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=mah:DropDownButton}, Path=DataContext.ExecuteButtonActionCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </mah:DropDownButton.ItemContainerStyle>
+                    </mah:DropDownButton>
                     <TextBlock
                         Margin="10,10,10,0"
                         FontSize="16"
@@ -162,6 +172,12 @@
         </mah:FlyoutsControl>
     </views:WindowUserControl.Flyouts>
     <Grid Background="Black">
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="White"
+            Text="Loading..." />
         <Image Source="{Binding RemoteImage}" />
     </Grid>
 </views:WindowUserControl>
