@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<task>
+    <metadata>
+        <name>Hello World</name>
+        <id>0d852117-6adf-4af7-8c8b-f52300ccae15</id>
+        <!-- <isActive>true</isActive> that must be defined in the server and should not be part of the task -->
+    </metadata>
+    <audience>
+        <All />
+        <Clients id="1" />
+        <Server />
+    </audience>
+    <conditions>
+        <OperatingSystem min="WinVista" />
+    </conditions>
+    <transmission>
+        <DateTime date="" />
+    </transmission>
+    <execution>
+        <IdleExecutionEvent idleTime="120" />
+    </execution>
+    <stop>
+        <Duration time="00:01:00" />
+        <DateTime date="" />
+    </stop>
+    <commands>
+        <Command name="Maze.WakeOnLan" modules="SystemUtilties;TaskManager">
+            asdasdadsdas
+        </Command>
+    </commands>
+</task>
