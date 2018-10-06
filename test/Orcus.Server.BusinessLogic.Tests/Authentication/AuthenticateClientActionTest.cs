@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using NuGet.Frameworks;
 using NuGet.Versioning;
 using Orcus.Server.BusinessDataAccess.Clients;
 using Orcus.Server.BusinessLogic.Authentication;
@@ -39,7 +40,8 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
                 ClientPath = "C:\\hello.world",
                 HardwareId = new Hash(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes("N.O.R.A"))).ToString(),
                 MacAddress = new byte[] {10, 11, 12, 13, 14, 67},
-                ClientVersion = new NuGetVersion(1, 2, 3)
+                ClientVersion = new NuGetVersion(1, 2, 3),
+                Framework = FrameworkConstants.CommonFrameworks.OrcusClient10
             },
             IpAddress = IPAddress.Parse("192.168.178.89")
         };

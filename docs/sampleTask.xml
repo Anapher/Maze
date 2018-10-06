@@ -6,7 +6,7 @@
         <!-- <isActive>true</isActive> that must be defined in the server and should not be part of the task -->
     </metadata>
     <audience>
-        <All />
+        <AllClients />
         <Clients id="1" />
         <Server />
     </audience>

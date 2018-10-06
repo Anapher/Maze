@@ -13,9 +13,6 @@ namespace Orcus.Server.Connection.Tasks
     /// </summary>
     public abstract class OrcusTaskReaderBase
     {
-        protected const string Metadata = "metadata";
-        protected const string Name = "name";
-        protected const string Id = "id";
         private XElement _metadataNode;
         private Dictionary<string, string> _metadataValues;
 
@@ -84,7 +81,7 @@ namespace Orcus.Server.Connection.Tasks
                 if (_metadataNode == null)
                 {
                     // find the metadata node regardless of the NS
-                    _metadataNode = Xml.Root.Elements().FirstOrDefault(e => StringComparer.Ordinal.Equals(e.Name.LocalName, Metadata));
+                    _metadataNode = Xml.Root.Elements().FirstOrDefault(e => StringComparer.Ordinal.Equals(e.Name.LocalName, XmlNames.Metadata));
 
                     if (_metadataNode == null)
                         throw new TaskParsingException("The metadata note is missing for the task.");
@@ -104,7 +101,7 @@ namespace Orcus.Server.Connection.Tasks
         /// </summary>
         public virtual string GetName()
         {
-            var node = MetadataNode.Elements(XName.Get(Name, MetadataNode.GetDefaultNamespace().NamespaceName)).FirstOrDefault();
+            var node = MetadataNode.Elements(XName.Get(XmlNames.Name, MetadataNode.GetDefaultNamespace().NamespaceName)).FirstOrDefault();
             return node?.Value;
         }
 
@@ -113,7 +110,7 @@ namespace Orcus.Server.Connection.Tasks
         /// </summary>
         public virtual Guid GetId()
         {
-            var node = MetadataNode.Elements(XName.Get(Id, MetadataNode.GetDefaultNamespace().NamespaceName)).FirstOrDefault();
+            var node = MetadataNode.Elements(XName.Get(XmlNames.Id, MetadataNode.GetDefaultNamespace().NamespaceName)).FirstOrDefault();
             return node == null ? Guid.Empty : Guid.Parse(node.Value);
         }
 

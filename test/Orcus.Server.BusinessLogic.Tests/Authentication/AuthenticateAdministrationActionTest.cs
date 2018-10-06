@@ -31,7 +31,7 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
                     mock.Setup(x => x.FindAccountByUsername("Nora")).ReturnsAsync(new Account
                     {
                         IsEnabled = true,
-                        Password = BCrypt.Net.BCrypt.HashString("2018")
+                        Password = BCrypt.Net.BCrypt.HashPassword("2018")
                     }));
 
             var result = await action.BizActionAsync(new LoginInfo {Username = "Nora", Password = "2018"});
@@ -47,7 +47,7 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
                     mock.Setup(x => x.FindAccountByUsername("Nora")).ReturnsAsync(new Account
                     {
                         IsEnabled = true,
-                        Password = BCrypt.Net.BCrypt.HashString("2018")
+                        Password = BCrypt.Net.BCrypt.HashPassword("2018")
                     }));
 
             var result = await action.BizActionAsync(new LoginInfo {Username = "Nora", Password = "test"});

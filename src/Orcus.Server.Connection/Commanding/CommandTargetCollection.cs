@@ -15,7 +15,11 @@ namespace Orcus.Server.Connection.Commanding
             TargetsServer = targetsServer;
         }
 
-        public CommandTargetCollection() : this(false)
+        public CommandTargetCollection()
+        {
+        }
+
+        public CommandTargetCollection(IList<CommandTarget> targets) : base(targets)
         {
         }
 
