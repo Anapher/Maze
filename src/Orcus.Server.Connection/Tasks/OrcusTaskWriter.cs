@@ -33,15 +33,24 @@ namespace Orcus.Server.Connection.Tasks
         {
         }
 
-        public void Write(OrcusTask orcusTask)
+        public void Write(OrcusTask orcusTask, TaskDetails details)
         {
             _xmlWriter.WriteStartElement(XmlNames.Root);
 
             WriteMetadata(orcusTask);
-            WriteAudience(orcusTask.Audience);
-            WriteElements(orcusTask.Conditions, XmlNames.Conditions);
-            WriteElements(orcusTask.Transmission, XmlNames.Transmission);
-            WriteElements(orcusTask.Execution, XmlNames.Execution);
+
+            if (details == TaskDetails.Server)
+            {
+                WriteAudience(orcusTask.Audience);
+                WriteElements(orcusTask.Conditions, XmlNames.Conditions);
+                WriteElements(orcusTask.Transmission, XmlNames.Transmission);
+            }
+
+            if (details >= TaskDetails.Client)
+            {
+                WriteElements(orcusTask.Execution, XmlNames.Execution);
+            }
+
             WriteElements(orcusTask.StopEvents, XmlNames.Stop);
             WriteCommands(orcusTask.Commands);
 

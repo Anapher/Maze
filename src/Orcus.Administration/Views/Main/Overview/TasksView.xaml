@@ -6,10 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"
     xmlns:overview="clr-namespace:Orcus.Administration.ViewModels.Overview;assembly=Orcus.Administration.ViewModels"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     d:DataContext="{d:DesignInstance overview:TasksViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="{tx:T TasksView:CreateNewTask}" />
+        </Menu>
+        <DataGrid Grid.Row="1" />
+    </Grid>
 </UserControl>
