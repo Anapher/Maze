@@ -15,6 +15,8 @@ using Orcus.Server.AppStart;
 using Orcus.Server.Authentication;
 using Orcus.Server.Autofac;
 using Orcus.Server.BusinessDataAccess;
+using Orcus.Server.Connection.Tasks;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
 using Orcus.Server.Hubs;
@@ -25,6 +27,7 @@ using Orcus.Server.Options;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.Tasks;
 using Orcus.Sockets;
 using Serilog;
 
@@ -87,6 +90,8 @@ namespace Orcus.Server
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>().SingleInstance();
             containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>().SingleInstance();
+            containerBuilder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
+            containerBuilder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()

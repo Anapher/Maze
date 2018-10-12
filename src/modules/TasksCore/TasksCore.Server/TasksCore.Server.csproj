@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
+  </ItemGroup>
+  <Import Project="..\TasksCore.Shared\TasksCore.Shared.projitems" Label="Shared" />
+</Project>

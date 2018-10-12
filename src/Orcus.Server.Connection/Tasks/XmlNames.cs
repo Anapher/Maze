@@ -7,7 +7,7 @@
         public const string Name = "name";
         public const string Id = "id";
         public const string Audience = "audience";
-        public const string Conditions = "conditions";
+        public const string Filters = "filters";
         public const string Transmission = "transmission";
         public const string Execution = "execution";
         public const string Stop = "stop";

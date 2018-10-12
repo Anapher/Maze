@@ -18,5 +18,7 @@ namespace Orcus.Server.Connection.Error
         Commander_RouteNotFound,
         Commander_ActionError,
         Commander_ResultError,
+
+        Tasks_NotFound = 3000
     }
 }

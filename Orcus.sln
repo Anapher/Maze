@@ -234,19 +234,25 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClientPanel.Shared", "src\m
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemUtilities", "SystemUtilities", "{BF2DB4FB-100B-459B-BD6E-5919CFFB91E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemUtilities.Administration", "src\modules\SystemUtilities\SystemUtilities.Administration\SystemUtilities.Administration.csproj", "{C0356729-0B69-4B8F-BFDE-9B94BE154D82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemUtilities.Administration", "src\modules\SystemUtilities\SystemUtilities.Administration\SystemUtilities.Administration.csproj", "{C0356729-0B69-4B8F-BFDE-9B94BE154D82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemUtilities.Client", "src\modules\SystemUtilities\SystemUtilities.Client\SystemUtilities.Client.csproj", "{C4E58463-68E2-4FC3-9A2A-2EB2AD2E74B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemUtilities.Client", "src\modules\SystemUtilities\SystemUtilities.Client\SystemUtilities.Client.csproj", "{C4E58463-68E2-4FC3-9A2A-2EB2AD2E74B6}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SystemUtilities.Shared", "src\modules\SystemUtilities\SystemUtilities.Shared\SystemUtilities.Shared.shproj", "{625E431D-165C-4D68-8D59-E9A4874BBBB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClipboardManager", "ClipboardManager", "{2D34DB40-42E1-480D-AAC1-94B6A633CB3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardManager.Administration", "src\modules\ClipboardManager\ClipboardManager.Administration\ClipboardManager.Administration.csproj", "{B2A77EFD-2ABC-4F4D-9F59-8032F240D07E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClipboardManager.Administration", "src\modules\ClipboardManager\ClipboardManager.Administration\ClipboardManager.Administration.csproj", "{B2A77EFD-2ABC-4F4D-9F59-8032F240D07E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardManager.Client", "src\modules\ClipboardManager\ClipboardManager.Client\ClipboardManager.Client.csproj", "{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClipboardManager.Client", "src\modules\ClipboardManager\ClipboardManager.Client\ClipboardManager.Client.csproj", "{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClipboardManager.Shared", "src\modules\ClipboardManager\ClipboardManager.Shared\ClipboardManager.Shared.shproj", "{5E5EB0C8-F6AC-4B95-8E00-7CA0E27DE731}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksCore", "TasksCore", "{EEEB92F4-85EE-4E59-9765-3BEB2A0729EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksCore.Server", "src\modules\TasksCore\TasksCore.Server\TasksCore.Server.csproj", "{701FD910-B874-459F-A486-8C29D27FABC7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TasksCore.Shared", "src\modules\TasksCore\TasksCore.Shared\TasksCore.Shared.shproj", "{FD55C753-4F2E-4309-B96A-D5FFAB28C03D}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -263,6 +269,7 @@ Global
 		src\modules\SystemInformation\SystemInformation.Shared\SystemInformation.Shared.projitems*{a828ac7a-5a93-4977-b167-c8912842d359}*SharedItemsImports = 13
 		src\modules\Console\Console.Shared\Console.Shared.projitems*{b1070ee4-03c8-4760-86bf-e9341cfac088}*SharedItemsImports = 13
 		src\modules\ClientPanel\ClientPanel.Shared\ClientPanel.Shared.projitems*{b644f9a2-c0a6-4803-aa6a-487b03b64c4b}*SharedItemsImports = 13
+		src\modules\TasksCore\TasksCore.Shared\TasksCore.Shared.projitems*{fd55c753-4f2e-4309-b96a-d5ffab28c03d}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1097,6 +1104,18 @@ Global
 		{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}.Release|x64.Build.0 = Release|Any CPU
 		{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}.Release|x86.ActiveCfg = Release|Any CPU
 		{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}.Release|x86.Build.0 = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|x64.Build.0 = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Debug|x86.Build.0 = Debug|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|x64.ActiveCfg = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|x64.Build.0 = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|x86.ActiveCfg = Release|Any CPU
+		{701FD910-B874-459F-A486-8C29D27FABC7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1195,6 +1214,9 @@ Global
 		{B2A77EFD-2ABC-4F4D-9F59-8032F240D07E} = {2D34DB40-42E1-480D-AAC1-94B6A633CB3F}
 		{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72} = {2D34DB40-42E1-480D-AAC1-94B6A633CB3F}
 		{5E5EB0C8-F6AC-4B95-8E00-7CA0E27DE731} = {2D34DB40-42E1-480D-AAC1-94B6A633CB3F}
+		{EEEB92F4-85EE-4E59-9765-3BEB2A0729EE} = {505B289B-B216-44A4-8234-12E31B16C230}
+		{701FD910-B874-459F-A486-8C29D27FABC7} = {EEEB92F4-85EE-4E59-9765-3BEB2A0729EE}
+		{FD55C753-4F2E-4309-B96A-D5FFAB28C03D} = {EEEB92F4-85EE-4E59-9765-3BEB2A0729EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

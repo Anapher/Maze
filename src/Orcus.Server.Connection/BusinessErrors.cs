@@ -9,7 +9,7 @@ namespace Orcus.Server.Connection
                 (int) ErrorCode.FieldNullOrEmpty);
 
         public static RestError InvalidSha256Hash => CreateValidationError(
-            "The value must be a valid SHA256 hash. A SHA256 hash consists of 64 hexadecimal characeters.",
+            "The value must be a valid SHA256 hash. A SHA256 hash consists of 64 hexadecimal characters.",
             ErrorCode.InvalidSha256Hash);
 
         public static RestError InvalidMacAddress => CreateValidationError(
@@ -65,6 +65,11 @@ namespace Orcus.Server.Connection
             public static RestError ResultExecutionError(string exception, string name, string message) =>
                 CreateNotFoundError($"An {exception} occurred on executing result {name}: {message}",
                     ErrorCode.Commander_ResultError);
+        }
+
+        public static class Tasks
+        {
+            public static RestError TaskNotFound => CreateNotFoundError("The task was not found.", ErrorCode.Tasks_NotFound);
         }
 
         private static RestError CreateValidationError(string message, ErrorCode code) =>

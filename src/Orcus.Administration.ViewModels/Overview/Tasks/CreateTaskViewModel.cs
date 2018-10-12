@@ -7,9 +7,10 @@ namespace Orcus.Administration.ViewModels.Overview.Tasks
 {
     public class CreateTaskViewModel : BindableBase
     {
-        public CreateTaskViewModel(IContainer container)
+        public CreateTaskViewModel(IComponentContext container)
         {
-            var taskCreators = container.Resolve<IEnumerable<ITaskCreatorViewModel>>();
+            var taskCreators = container.Resolve<IEnumerable<ITaskDescriber>>();
+            var transmissionServices = container.Resolve<IEnumerable<ITransmissionServiceDescriber>>();
 
         }
     }

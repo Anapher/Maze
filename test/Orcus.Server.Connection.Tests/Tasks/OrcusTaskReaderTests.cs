@@ -223,11 +223,11 @@ namespace Orcus.Server.Connection.Tests.Tasks
 </task>";
 
             var resolverMock = new Mock<ITaskComponentResolver>();
-            resolverMock.Setup(x => x.ResolveCondition("OperatingSystem")).Returns(typeof(OperatingSystemCondition));
+            resolverMock.Setup(x => x.ResolveFilter("OperatingSystem")).Returns(typeof(OperatingSystemFilter));
 
             var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
-            var elements = reader.GetConditions().ToList();
-            Assert.Collection(elements, info => Assert.Equal("Windows7", Assert.IsType<OperatingSystemCondition>(info).Min));
+            var elements = reader.GetFilters().ToList();
+            Assert.Collection(elements, info => Assert.Equal("Windows7", Assert.IsType<OperatingSystemFilter>(info).Min));
         }
 
         [Fact]

@@ -4,14 +4,14 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Conditions;
 using Orcus.Server.Connection.Tasks.Execution;
+using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
 using Orcus.Server.Connection.Tasks.Transmission;
 
 namespace Orcus.Server.Connection.Tests.Tasks
 {
-    public class OperatingSystemCondition : ConditionInfo, IXmlSerializable
+    public class OperatingSystemFilter : FilterInfo, IXmlSerializable
     {
         public string Min { get; set; }
 

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Connection.Tasks.Audience;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Conditions;
 using Orcus.Server.Connection.Tasks.Execution;
+using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
 using Orcus.Server.Connection.Tasks.Transmission;
 using Orcus.Server.Connection.Utilities;
@@ -74,7 +73,7 @@ namespace Orcus.Server.Connection.Tasks
                 Name = GetName(),
                 Id = GetId(),
                 Audience = GetAudience(),
-                Conditions = GetConditions().ToList(),
+                Filters = GetFilters().ToList(),
                 Transmission = GetTransmissionEvents().ToList(),
                 Execution = GetExecutionEvents().ToList(),
                 StopEvents = GetStopEvents().ToList(),
@@ -115,15 +114,15 @@ namespace Orcus.Server.Connection.Tasks
             return result;
         }
 
-        public IEnumerable<ConditionInfo> GetConditions()
+        public IEnumerable<FilterInfo> GetFilters()
         {
             var ns = Xml.Root.GetDefaultNamespace().NamespaceName;
-            var conditionsNode = Xml.Root.Elements(XName.Get(XmlNames.Conditions, ns));
+            var conditionsNode = Xml.Root.Elements(XName.Get(XmlNames.Filters, ns));
 
             foreach (var conditionElement in conditionsNode.Elements())
             {
-                var conditionType = _componentResolver.ResolveCondition(conditionElement.Name.LocalName);
-                yield return InternalDeserialize<ConditionInfo>(conditionType, conditionElement);
+                var conditionType = _componentResolver.ResolveFilter(conditionElement.Name.LocalName);
+                yield return InternalDeserialize<FilterInfo>(conditionType, conditionElement);
             }
         }
 

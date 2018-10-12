@@ -7,8 +7,8 @@ using Moq;
 using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Tasks.Audience;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Conditions;
 using Orcus.Server.Connection.Tasks.Execution;
+using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
 using Orcus.Server.Connection.Tasks.Transmission;
 using Orcus.Server.Connection.Utilities;
@@ -27,7 +27,7 @@ namespace Orcus.Server.Connection.Tests.Tasks
                 Name = "TestCommand",
                 Id = Guid.Parse("53221F85-23DC-4C4C-BD27-A26A5F85BCA0"),
                 Audience = new AudienceCollection {IsAll = true, IncludesServer = true},
-                Conditions = new List<ConditionInfo> {new OperatingSystemCondition {Min = "Windows10"}},
+                Filters = new List<FilterInfo> {new OperatingSystemFilter {Min = "Windows10"}},
                 Transmission =
                     new List<TransmissionInfo> {new DateTimeTransmission {Date = new DateTimeOffset(2017, 8, 10, 1, 0, 0, TimeSpan.Zero)}},
                 Execution = new List<ExecutionInfo> {new IdleExecution {Idle = 101}},
@@ -135,7 +135,7 @@ namespace Orcus.Server.Connection.Tests.Tasks
             {
                 case var type when typeof(ExecutionInfo).IsAssignableFrom(type):
                     return arg.Name.Replace("Execution", null);
-                case var type when typeof(ConditionInfo).IsAssignableFrom(type):
+                case var type when typeof(FilterInfo).IsAssignableFrom(type):
                     return arg.Name.Replace("Condition", null);
                 case var type when typeof(TransmissionInfo).IsAssignableFrom(type):
                     return arg.Name.Replace("Transmission", null);

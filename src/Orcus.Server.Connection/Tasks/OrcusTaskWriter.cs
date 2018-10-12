@@ -42,7 +42,7 @@ namespace Orcus.Server.Connection.Tasks
             if (details == TaskDetails.Server)
             {
                 WriteAudience(orcusTask.Audience);
-                WriteElements(orcusTask.Conditions, XmlNames.Conditions);
+                WriteElements(orcusTask.Filters, XmlNames.Filters);
                 WriteElements(orcusTask.Transmission, XmlNames.Transmission);
             }
 
