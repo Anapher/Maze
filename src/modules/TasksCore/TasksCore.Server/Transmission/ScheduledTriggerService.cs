@@ -8,9 +8,9 @@ using TasksCore.Shared.Transmission;
 
 namespace TasksCore.Server.Transmission
 {
-    public class ScheduledTransmissionService : ITransmissionService<ScheduledTransmissionInfo>
+    public class ScheduledTriggerService : ITriggerService<ScheduledTransmissionInfo>
     {
-        public async Task InvokeAsync(ScheduledTransmissionInfo transmissionInfo, TransmissionContext context, CancellationToken cancellationToken)
+        public async Task InvokeAsync(ScheduledTransmissionInfo transmissionInfo, TriggerContext context, CancellationToken cancellationToken)
         {
             while (await InternalInvokeAsync(transmissionInfo, context, cancellationToken))
             {
@@ -19,7 +19,7 @@ namespace TasksCore.Server.Transmission
             }
         }
 
-        public async Task<bool> InternalInvokeAsync(ScheduledTransmissionInfo transmissionInfo, TransmissionContext context,
+        public async Task<bool> InternalInvokeAsync(ScheduledTransmissionInfo transmissionInfo, TriggerContext context,
             CancellationToken cancellationToken)
         {
             var diff = transmissionInfo.StartTime - DateTimeOffset.UtcNow;

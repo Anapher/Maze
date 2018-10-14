@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Orcus.Server.Data.EfClasses.Tasks
 {
-    public class CapturedTask
+    public class TaskReference
     {
-        public int CapturedTaskId { get; set; }
+        public int TaskReferenceId { get; set; }
 
         public Guid TaskId { get; set; }
         public string Filename { get; set; }

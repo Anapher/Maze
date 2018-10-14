@@ -8,7 +8,7 @@ namespace Orcus.Server.Data.EfCode.Configurations
     {
         public void Configure(EntityTypeBuilder<TaskSession> builder)
         {
-            builder.HasIndex(x => new {x.CapturedTaskId, x.Name}).IsUnique();
+            builder.Property(x => x.CreatedOn).IsCurrentTime();
         }
     }
 }

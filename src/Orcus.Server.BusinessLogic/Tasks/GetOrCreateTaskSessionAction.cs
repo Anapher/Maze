@@ -25,15 +25,15 @@ namespace Orcus.Server.BusinessLogic.Tasks
 
         public async Task<TaskSession> BizActionAsync((Guid taskId, string sessionName, string sourceTrigger) inputData)
         {
-            var taskSession = await _context.Set<TaskSession>().Where(x => x.CapturedTask.TaskId == inputData.taskId && x.Name == inputData.sessionName)
+            var taskSession = await _context.Set<TaskSession>().Where(x => x.TaskReference.TaskId == inputData.taskId && x.Name == inputData.sessionName)
                 .FirstOrDefaultAsync();
             if (taskSession == null)
             {
-                var task = await _context.Set<CapturedTask>().FirstOrDefaultAsync(x => x.TaskId == inputData.taskId);
+                var task = await _context.Set<TaskReference>().FirstOrDefaultAsync(x => x.TaskId == inputData.taskId);
                 if (task == null)
                     return ReturnError<TaskSession>(BusinessErrors.Tasks.TaskNotFound);
 
-                taskSession = new TaskSession {CapturedTask = task, Name = inputData.sessionName, SourceTrigger = inputData.sourceTrigger};
+                taskSession = new TaskSession {TaskReference = task, Name = inputData.sessionName, SourceTrigger = inputData.sourceTrigger};
                 _context.Add(taskSession);
             }
 

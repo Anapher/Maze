@@ -13,7 +13,7 @@ namespace Orcus.Server.Connection.Tasks
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
-        public bool OneExecutionPerTarget { get; set; }
+        public bool ExecuteOnce { get; set; }
         public TimeSpan? RestartOnFailInterval { get; set; }
         public int? MaximumRestarts { get; set; }
 

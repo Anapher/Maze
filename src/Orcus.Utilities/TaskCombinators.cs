@@ -38,6 +38,32 @@ namespace Orcus.Utilities
             return values;
         }
 
+        public static async Task<IEnumerable<TItem>> ThrottledApproveItems<TItem>(IEnumerable<TItem> sources,
+            Func<TItem, CancellationToken, Task<bool>> valueSelector, CancellationToken cancellationToken)
+        {
+            var values = new ConcurrentQueue<TItem>();
+
+            async Task TaskBody(IEnumerator<TItem> enumerator)
+            {
+                using (enumerator)
+                    while (enumerator.MoveNext())
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        var result = await valueSelector(enumerator.Current, cancellationToken);
+
+                        if (result)
+                            values.Enqueue(enumerator.Current);
+                    }
+            }
+
+            var tasks = Partitioner.Create(sources).GetPartitions(MaxDegreeOfParallelism)
+                .Select(enumerator => Task.Run(() => TaskBody(enumerator)));
+            await Task.WhenAll(tasks);
+
+            return values;
+        }
+
         public static async Task ThrottledAsync<TSource>(IEnumerable<TSource> sources,
             Func<TSource, CancellationToken, Task> valueSelector, CancellationToken cancellationToken)
         {
