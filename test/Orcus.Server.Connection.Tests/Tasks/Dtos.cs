@@ -4,10 +4,9 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Execution;
 using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 
 namespace Orcus.Server.Connection.Tests.Tasks
 {
@@ -28,7 +27,7 @@ namespace Orcus.Server.Connection.Tests.Tasks
         }
     }
 
-    public class DateTimeTransmission : TransmissionInfo, IXmlSerializable
+    public class DateTimeTrigger : TriggerInfo, IXmlSerializable
     {
         public DateTimeOffset Date { get; set; }
 
@@ -43,12 +42,6 @@ namespace Orcus.Server.Connection.Tests.Tasks
         {
             writer.WriteAttributeString("date", Date.ToString("O"));
         }
-    }
-
-    public class IdleExecution : ExecutionInfo
-    {
-        [XmlAttribute("time")]
-        public int Idle { get; set; }
     }
 
     public class DurationStopEvent : StopEventInfo

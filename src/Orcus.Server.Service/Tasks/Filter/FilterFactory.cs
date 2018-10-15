@@ -3,8 +3,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orcus.Server.Connection.Tasks.Filter;
+using Orcus.Server.Library.Tasks;
 
-namespace Orcus.Server.Service.Tasks
+namespace Orcus.Server.Service.Tasks.Filter
 {
     public class FilterFactory
     {
@@ -16,9 +17,13 @@ namespace Orcus.Server.Service.Tasks
             FilterType = filterType;
             FilterInfo = filterInfo;
             _logger = logger;
+
+            var costAttribute = filterType.GetCustomAttribute<FilterPerformanceCostAttribute>();
+            Cost = costAttribute?.Value;
         }
 
         public Type FilterType { get; }
+        public int? Cost { get; }
         public FilterInfo FilterInfo { get; }
 
         public Task<bool> Invoke(int clientId, IServiceProvider serviceProvider)

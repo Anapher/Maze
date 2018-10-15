@@ -29,7 +29,7 @@ namespace Orcus.Server.Connection.Tasks
         }
 
         public OrcusTaskWriter(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache serializerCache) : this(
-            XmlWriter.Create(stream, new XmlWriterSettings { OmitXmlDeclaration = false, Indent = false}), componentResolver, serializerCache)
+            XmlWriter.Create(stream, new XmlWriterSettings {OmitXmlDeclaration = false, Indent = false}), componentResolver, serializerCache)
         {
         }
 
@@ -43,12 +43,11 @@ namespace Orcus.Server.Connection.Tasks
             {
                 WriteAudience(orcusTask.Audience);
                 WriteElements(orcusTask.Filters, XmlNames.Filters);
-                WriteElements(orcusTask.Transmission, XmlNames.Transmission);
             }
 
             if (details >= TaskDetails.Client)
             {
-                WriteElements(orcusTask.Execution, XmlNames.Execution);
+                WriteElements(orcusTask.Triggers, XmlNames.Triggers);
             }
 
             WriteElements(orcusTask.StopEvents, XmlNames.Stop);

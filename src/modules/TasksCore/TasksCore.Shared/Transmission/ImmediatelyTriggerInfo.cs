@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 
 namespace TasksCore.Shared.Transmission
 {
-    public class ImmediatelyTransmissionInfo : TransmissionInfo
+    public class ImmediatelyTriggerInfo : TriggerInfo
     {
     }
 }

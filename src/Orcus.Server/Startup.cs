@@ -27,6 +27,7 @@ using Orcus.Server.Options;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
+using Orcus.Server.Service.Options;
 using Orcus.Server.Service.Tasks;
 using Orcus.Sockets;
 using Serilog;
@@ -54,6 +55,7 @@ namespace Orcus.Server
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
             services.Configure<ModulePackageManagerOptions>(Configuration.GetSection("Modules.PackageManager"));
+            services.Configure<TasksOptions>(Configuration.GetSection("Tasks"));
 
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
             services.AddMemoryCache();
@@ -92,6 +94,7 @@ namespace Orcus.Server
             containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>().SingleInstance();
             containerBuilder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
             containerBuilder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
+            containerBuilder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()

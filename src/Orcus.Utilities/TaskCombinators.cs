@@ -38,7 +38,7 @@ namespace Orcus.Utilities
             return values;
         }
 
-        public static async Task<IEnumerable<TItem>> ThrottledApproveItems<TItem>(IEnumerable<TItem> sources,
+        public static async Task<IEnumerable<TItem>> ThrottledFilterItems<TItem>(IEnumerable<TItem> sources,
             Func<TItem, CancellationToken, Task<bool>> valueSelector, CancellationToken cancellationToken)
         {
             var values = new ConcurrentQueue<TItem>();

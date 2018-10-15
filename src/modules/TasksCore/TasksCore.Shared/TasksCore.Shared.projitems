@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Filters\OperatingSystemFilterInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Transmission\ImmediatelyTransmissionInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Transmission\ScheduledTransmissionInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transmission\ImmediatelyTriggerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transmission\ScheduledTriggerInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Transmission\" />

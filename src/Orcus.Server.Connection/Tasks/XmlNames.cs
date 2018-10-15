@@ -8,8 +8,7 @@
         public const string Id = "id";
         public const string Audience = "audience";
         public const string Filters = "filters";
-        public const string Transmission = "transmission";
-        public const string Execution = "execution";
+        public const string Triggers = "triggers";
         public const string Stop = "stop";
         public const string Commands = "commands";
         public const string Command = "Command";

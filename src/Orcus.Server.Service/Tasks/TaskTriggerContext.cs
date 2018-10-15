@@ -6,6 +6,7 @@ using Orcus.Server.BusinessLogic.Tasks;
 using Orcus.Server.Data.EfClasses.Tasks;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Library.Tasks;
+using Orcus.Server.Service.Tasks.Filter;
 
 namespace Orcus.Server.Service.Tasks
 {
@@ -22,7 +23,12 @@ namespace Orcus.Server.Service.Tasks
             _aggregatedClientFilter = aggregatedClientFilter;
         }
 
-        public override async Task<TaskSessionTrigger> GetSession(string name)
+        public override Task<TaskSessionTrigger> CreateSession(SessionKey sessionKey)
+        {
+            return CreateSession(sessionKey, _sourceTrigger);
+        }
+
+        public override async Task<TaskSessionTrigger> CreateSession(SessionKey sessionKey, string description)
         {
             TaskSession taskSession;
             using (var scope = _taskService.Services.CreateScope())
@@ -30,7 +36,7 @@ namespace Orcus.Server.Service.Tasks
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
                 var action = _taskService.Services.GetRequiredService<IGetOrCreateTaskSessionAction>();
-                taskSession = await action.BizActionAsync((_taskService.OrcusTask.Id, name, _sourceTrigger));
+                taskSession = await action.BizActionAsync((_taskService.OrcusTask.Id, sessionKey.Hash, description));
                 if (action.HasErrors)
                     throw new InvalidOperationException(action.Errors.First().ErrorMessage);
 
@@ -40,14 +46,22 @@ namespace Orcus.Server.Service.Tasks
             return new TaskSessionTriggerService(_taskService, taskSession);
         }
 
-        public override Task<bool> IsClientIncluded(int clientId)
+        public override async Task<bool> IsClientIncluded(int clientId)
         {
-            return _aggregatedClientFilter.IsClientIncluded(clientId);
+            using (var scope = _taskService.Services.CreateScope())
+            {
+                return await _aggregatedClientFilter.IsClientIncluded(clientId, scope.ServiceProvider);
+            }
         }
 
         public override bool IsServerIncluded()
         {
             return _taskService.OrcusTask.Audience.IncludesServer;
+        }
+
+        public override void TellNextTrigger(DateTimeOffset dateTimeOffset)
+        {
+            throw new NotImplementedException();
         }
     }
 }

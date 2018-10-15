@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Utilities;
+using Orcus.Server.Service.Tasks;
 
 namespace Orcus.Server.Controllers
 {
@@ -13,11 +14,12 @@ namespace Orcus.Server.Controllers
     {
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromServices] ITaskComponentResolver taskComponentResolver,
-            [FromServices] IXmlSerializerCache serializerCache)
+            [FromServices] IXmlSerializerCache serializerCache, [FromServices] OrcusTaskManager taskManager)
         {
             var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
-            orcusTask.ReadTask();
+            var task = orcusTask.ReadTask();
 
+            await taskManager.AddTask(task);
 
             return Ok();
         }

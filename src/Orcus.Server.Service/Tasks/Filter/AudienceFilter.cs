@@ -3,7 +3,7 @@ using System.Linq;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Connection.Tasks.Audience;
 
-namespace Orcus.Server.Service.Tasks
+namespace Orcus.Server.Service.Tasks.Filter
 {
     public class AudienceFilter
     {

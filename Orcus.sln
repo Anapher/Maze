@@ -250,7 +250,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClipboardManager.Shared", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksCore", "TasksCore", "{EEEB92F4-85EE-4E59-9765-3BEB2A0729EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksCore.Server", "src\modules\TasksCore\TasksCore.Server\TasksCore.Server.csproj", "{701FD910-B874-459F-A486-8C29D27FABC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasksCore.Server", "src\modules\TasksCore\TasksCore.Server\TasksCore.Server.csproj", "{701FD910-B874-459F-A486-8C29D27FABC7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TasksCore.Shared", "src\modules\TasksCore\TasksCore.Shared\TasksCore.Shared.shproj", "{FD55C753-4F2E-4309-B96A-D5FFAB28C03D}"
 EndProject

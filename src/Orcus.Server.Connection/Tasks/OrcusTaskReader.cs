@@ -6,10 +6,9 @@ using System.Xml.Linq;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Connection.Tasks.Audience;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Execution;
 using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 using Orcus.Server.Connection.Utilities;
 
 namespace Orcus.Server.Connection.Tasks
@@ -74,8 +73,7 @@ namespace Orcus.Server.Connection.Tasks
                 Id = GetId(),
                 Audience = GetAudience(),
                 Filters = GetFilters().ToList(),
-                Transmission = GetTransmissionEvents().ToList(),
-                Execution = GetExecutionEvents().ToList(),
+                Triggers = GetTriggers().ToList(),
                 StopEvents = GetStopEvents().ToList(),
                 Commands = GetCommands().ToList()
             };
@@ -126,30 +124,18 @@ namespace Orcus.Server.Connection.Tasks
             }
         }
 
-        public IEnumerable<TransmissionInfo> GetTransmissionEvents()
+        public IEnumerable<TriggerInfo> GetTriggers()
         {
             var ns = Xml.Root.GetDefaultNamespace().NamespaceName;
-            var transmissionNode = Xml.Root.Elements(XName.Get(XmlNames.Transmission, ns));
+            var transmissionNode = Xml.Root.Elements(XName.Get(XmlNames.Triggers, ns));
 
             foreach (var transmissionElement in transmissionNode.Elements())
             {
-                var transmissionType = _componentResolver.ResolveTransmissionInfo(transmissionElement.Name.LocalName);
-                yield return InternalDeserialize<TransmissionInfo>(transmissionType, transmissionElement);
+                var transmissionType = _componentResolver.ResolveTrigger(transmissionElement.Name.LocalName);
+                yield return InternalDeserialize<TriggerInfo>(transmissionType, transmissionElement);
             }
         }
-
-        public IEnumerable<ExecutionInfo> GetExecutionEvents()
-        {
-            var ns = Xml.Root.GetDefaultNamespace().NamespaceName;
-            var executionNode = Xml.Root.Elements(XName.Get(XmlNames.Execution, ns));
-
-            foreach (var executionElement in executionNode.Elements())
-            {
-                var executionType = _componentResolver.ResolveExecutionInfo(executionElement.Name.LocalName);
-                yield return InternalDeserialize<ExecutionInfo>(executionType, executionElement);
-            }
-        }
-
+        
         public IEnumerable<StopEventInfo> GetStopEvents()
         {
             var ns = Xml.Root.GetDefaultNamespace().NamespaceName;

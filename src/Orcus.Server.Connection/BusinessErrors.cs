@@ -70,6 +70,12 @@ namespace Orcus.Server.Connection
         public static class Tasks
         {
             public static RestError TaskNotFound => CreateNotFoundError("The task was not found.", ErrorCode.Tasks_NotFound);
+            public static RestError TaskGuidEmpty => CreateValidationError("The guid of the task may not be null.", ErrorCode.Tasks_TaskIdNull);
+            public static RestError RestartOnFailIntervalMustBePositive => CreateValidationError("The restart on fail interval must be a positive timespan.", ErrorCode.Tasks_RestartOnFailIntervalMustBePositive);
+            public static RestError MaximumRestartsMustBeGreaterThanZero => CreateValidationError("The maximum amount of restarts must be greater than zero.", ErrorCode.Tasks_MaximumRestartsMustBeGreaterThanZero);
+            public static RestError NoAudienceGiven => CreateValidationError("No audience was given.", ErrorCode.Tasks_NoAudienceGiven);
+            public static RestError NoTriggersGiven => CreateValidationError("No triggers were given.", ErrorCode.Tasks_NoTriggersGiven);
+            public static RestError NoCommandsGiven => CreateValidationError("No commands were given.", ErrorCode.Tasks_NoCommandsGiven);
         }
 
         private static RestError CreateValidationError(string message, ErrorCode code) =>

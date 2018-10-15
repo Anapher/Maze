@@ -8,46 +8,46 @@ using TasksCore.Shared.Transmission;
 
 namespace TasksCore.Server.Transmission
 {
-    public class ScheduledTriggerService : ITriggerService<ScheduledTransmissionInfo>
+    public class ScheduledTriggerService : ITriggerService<ScheduledTriggerInfo>
     {
-        public async Task InvokeAsync(ScheduledTransmissionInfo transmissionInfo, TriggerContext context, CancellationToken cancellationToken)
+        public async Task InvokeAsync(ScheduledTriggerInfo triggerInfo, TriggerContext context, CancellationToken cancellationToken)
         {
-            while (await InternalInvokeAsync(transmissionInfo, context, cancellationToken))
+            while (await InternalInvokeAsync(triggerInfo, context, cancellationToken))
             {
-                var session = await context.GetSession("Scheduled Transmission");
+                var session = await context.GetSession("Scheduled Triggers");
                 await session.InvokeAll();
             }
         }
 
-        public async Task<bool> InternalInvokeAsync(ScheduledTransmissionInfo transmissionInfo, TriggerContext context,
+        public async Task<bool> InternalInvokeAsync(ScheduledTriggerInfo triggerInfo, TriggerContext context,
             CancellationToken cancellationToken)
         {
-            var diff = transmissionInfo.StartTime - DateTimeOffset.UtcNow;
+            var diff = triggerInfo.StartTime - DateTimeOffset.UtcNow;
             if (diff > TimeSpan.Zero)
             {
                 await Task.Delay(diff, cancellationToken);
                 return true;
             }
             
-            switch (transmissionInfo.ScheduleMode)
+            switch (triggerInfo.ScheduleMode)
             {
                 case ScheduleMode.Once:
                     return false;
                 case ScheduleMode.Daily:
-                    var days = (DateTimeOffset.UtcNow - transmissionInfo.StartTime).TotalDays;
-                    diff = TimeSpan.FromDays(transmissionInfo.RepetitionInterval - (days % (transmissionInfo.RepetitionInterval)));
+                    var days = (DateTimeOffset.UtcNow - triggerInfo.StartTime).TotalDays;
+                    diff = TimeSpan.FromDays(triggerInfo.RepetitionInterval - (days % (triggerInfo.RepetitionInterval)));
                     await Task.Delay(diff, cancellationToken);
                     return true;
                 case ScheduleMode.Weekly:
                     var now = DateTimeOffset.UtcNow;
-                    var weekTimeSpan = TimeSpan.FromDays(transmissionInfo.RepetitionInterval * 7);
-                    var daysSinceStart = (now - transmissionInfo.StartTime).TotalDays;
+                    var weekTimeSpan = TimeSpan.FromDays(triggerInfo.RepetitionInterval * 7);
+                    var daysSinceStart = (now - triggerInfo.StartTime).TotalDays;
                     var currentWeekOffset = Math.Floor(daysSinceStart / weekTimeSpan.TotalDays);
-                    var currentWeek = transmissionInfo.StartTime.AddDays(weekTimeSpan.TotalDays * currentWeekOffset);
+                    var currentWeek = triggerInfo.StartTime.AddDays(weekTimeSpan.TotalDays * currentWeekOffset);
 
-                    var timeOfTheDay = (transmissionInfo.StartTime - transmissionInfo.StartTime.Date).TotalHours;
+                    var timeOfTheDay = (triggerInfo.StartTime - triggerInfo.StartTime.Date).TotalHours;
                     var weekdayQueue =
-                        new Queue<DateTime>(transmissionInfo.Days.Select(x => GetNextWeekday(currentWeek.DateTime, x).AddHours(timeOfTheDay))
+                        new Queue<DateTime>(triggerInfo.Days.Select(x => GetNextWeekday(currentWeek.DateTime, x).AddHours(timeOfTheDay))
                             .OrderBy(x => x));
                     var nextTime = weekdayQueue.Dequeue();
 

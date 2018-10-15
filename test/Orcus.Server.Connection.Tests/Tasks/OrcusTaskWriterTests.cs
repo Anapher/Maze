@@ -7,10 +7,9 @@ using Moq;
 using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Tasks.Audience;
 using Orcus.Server.Connection.Tasks.Commands;
-using Orcus.Server.Connection.Tasks.Execution;
 using Orcus.Server.Connection.Tasks.Filter;
 using Orcus.Server.Connection.Tasks.StopEvents;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 using Orcus.Server.Connection.Utilities;
 using Xunit;
 
@@ -28,9 +27,8 @@ namespace Orcus.Server.Connection.Tests.Tasks
                 Id = Guid.Parse("53221F85-23DC-4C4C-BD27-A26A5F85BCA0"),
                 Audience = new AudienceCollection {IsAll = true, IncludesServer = true},
                 Filters = new List<FilterInfo> {new OperatingSystemFilter {Min = "Windows10"}},
-                Transmission =
-                    new List<TransmissionInfo> {new DateTimeTransmission {Date = new DateTimeOffset(2017, 8, 10, 1, 0, 0, TimeSpan.Zero)}},
-                Execution = new List<ExecutionInfo> {new IdleExecution {Idle = 101}},
+                Triggers =
+                    new List<TriggerInfo> {new DateTimeTrigger {Date = new DateTimeOffset(2017, 8, 10, 1, 0, 0, TimeSpan.Zero)}},
                 StopEvents = new List<StopEventInfo> {new DurationStopEvent {Duration = TimeSpan.FromMinutes(1.36)}},
                 Commands = new List<CommandInfo> {new WakeOnLanCommand {Content = "Hello World!!!", Hash = 2845}}
             };
@@ -49,15 +47,12 @@ namespace Orcus.Server.Connection.Tests.Tasks
         <AllClients />
         <Server />
     </audience>
-    <conditions>
+    <filters>
         <OperatingSystem min=""Windows10"" />
-    </conditions>
-    <transmission>
+    </filters>
+    <triggers>
         <DateTime date=""2017-08-10T01:00:00.0000000+00:00"" />
-    </transmission>
-    <execution>
-        <Idle time=""101"" />
-    </execution>
+    </triggers>
     <stop>
         <Duration duration=""PT1M21.6S"" />
     </stop>
@@ -78,9 +73,9 @@ namespace Orcus.Server.Connection.Tests.Tasks
         <name>TestCommand</name>
         <id>53221f85-23dc-4c4c-bd27-a26a5f85bca0</id>
     </metadata>
-    <execution>
+    <triggers>
         <Idle time=""101"" />
-    </execution>
+    </triggers>
     <stop>
         <Duration duration=""PT1M21.6S"" />
     </stop>
@@ -133,12 +128,10 @@ namespace Orcus.Server.Connection.Tests.Tasks
         {
             switch (arg)
             {
-                case var type when typeof(ExecutionInfo).IsAssignableFrom(type):
-                    return arg.Name.Replace("Execution", null);
                 case var type when typeof(FilterInfo).IsAssignableFrom(type):
-                    return arg.Name.Replace("Condition", null);
-                case var type when typeof(TransmissionInfo).IsAssignableFrom(type):
-                    return arg.Name.Replace("Transmission", null);
+                    return arg.Name.Replace("FilterInfo", null);
+                case var type when typeof(TriggerInfo).IsAssignableFrom(type):
+                    return arg.Name.Replace("TriggerInfo", null);
                 case var type when typeof(StopEventInfo).IsAssignableFrom(type):
                     return arg.Name.Replace("StopEvent", null);
             }

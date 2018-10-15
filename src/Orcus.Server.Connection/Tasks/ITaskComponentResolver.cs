@@ -5,8 +5,7 @@ namespace Orcus.Server.Connection.Tasks
     public interface ITaskComponentResolver
     {
         Type ResolveFilter(string name);
-        Type ResolveTransmissionInfo(string name);
-        Type ResolveExecutionInfo(string name);
+        Type ResolveTrigger(string name);
         Type ResolveStopEvent(string name);
         Type ResolveCommand(string name);
 

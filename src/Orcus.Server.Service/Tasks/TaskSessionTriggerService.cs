@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,18 +30,18 @@ namespace Orcus.Server.Service.Tasks
                 var clients = await dbContext.Clients.Select(x => x.ClientId).ToListAsync();
 
                 //the filter is applied on execute so we just feed it with everything we have
-                await _taskService.Execute(clients.Select(x => new TargetId(x)).Concat(TargetId.ServerId.Yield()));
+                await _taskService.Execute(clients.Select(x => new TargetId(x)).Concat(TargetId.ServerId.Yield()), Info, CancellationToken.None);
             }
         }
 
         public override Task InvokeClient(int clientId)
         {
-            return _taskService.Execute(new TargetId(clientId).Yield());
+            return _taskService.Execute(new TargetId(clientId).Yield(), Info, CancellationToken.None);
         }
 
         public override Task InvokeServer()
         {
-            return _taskService.Execute(TargetId.ServerId.Yield());
+            return _taskService.Execute(TargetId.ServerId.Yield(), Info, CancellationToken.None);
         }
     }
 }

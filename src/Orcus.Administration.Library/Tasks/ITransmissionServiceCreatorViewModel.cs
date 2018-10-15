@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 
 namespace Orcus.Administration.Library.Tasks
 {
@@ -12,10 +12,10 @@ namespace Orcus.Administration.Library.Tasks
         string Name { get; }
         string Summary { get; }
 
-        string DescribeDto(TransmissionInfo transmissionInfo);
+        string DescribeDto(TriggerInfo triggerInfo);
     }
 
-    public interface ITransmissionServiceCreatorViewModel<TTransmissionInfo> where TTransmissionInfo : TransmissionInfo
+    public interface ITransmissionServiceCreatorViewModel<TTransmissionInfo> where TTransmissionInfo : TriggerInfo
     {
         void Initialize(TTransmissionInfo model);
         ValidationResult Validate();

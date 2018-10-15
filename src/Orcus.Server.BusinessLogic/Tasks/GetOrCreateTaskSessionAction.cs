@@ -10,7 +10,7 @@ using Orcus.Server.Data.EfCode;
 
 namespace Orcus.Server.BusinessLogic.Tasks
 {
-    public interface IGetOrCreateTaskSessionAction : IGenericActionWriteDbAsync<(Guid taskId, string sessionName, string sourceTrigger), TaskSession>
+    public interface IGetOrCreateTaskSessionAction : IGenericActionWriteDbAsync<(Guid taskId, string sessionKey, string description), TaskSession>
     {
     }
 
@@ -23,9 +23,10 @@ namespace Orcus.Server.BusinessLogic.Tasks
             _context = context;
         }
 
-        public async Task<TaskSession> BizActionAsync((Guid taskId, string sessionName, string sourceTrigger) inputData)
+        public async Task<TaskSession> BizActionAsync((Guid taskId, string sessionKey, string description) inputData)
         {
-            var taskSession = await _context.Set<TaskSession>().Where(x => x.TaskReference.TaskId == inputData.taskId && x.Name == inputData.sessionName)
+            var taskSession = await _context.Set<TaskSession>()
+                .Where(x => x.TaskReference.TaskId == inputData.taskId && x.TaskSessionHash == inputData.sessionKey)
                 .FirstOrDefaultAsync();
             if (taskSession == null)
             {
@@ -33,9 +34,12 @@ namespace Orcus.Server.BusinessLogic.Tasks
                 if (task == null)
                     return ReturnError<TaskSession>(BusinessErrors.Tasks.TaskNotFound);
 
-                taskSession = new TaskSession {TaskReference = task, Name = inputData.sessionName, SourceTrigger = inputData.sourceTrigger};
+                taskSession = new TaskSession {TaskReference = task, TaskSessionHash = inputData.sessionKey};
                 _context.Add(taskSession);
             }
+
+            if (!string.IsNullOrWhiteSpace(inputData.description))
+                taskSession.Description = inputData.description;
 
             return taskSession;
         }

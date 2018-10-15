@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orcus.Server.Connection.Tasks.Transmission;
+using Orcus.Server.Connection.Tasks.Triggers;
 
 namespace TasksCore.Shared.Transmission
 {
-    public class ScheduledTransmissionInfo : TransmissionInfo
+    public class ScheduledTriggerInfo : TriggerInfo
     {
         public DateTimeOffset StartTime { get; set; }
         public ScheduleMode ScheduleMode { get; set; }

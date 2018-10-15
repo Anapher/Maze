@@ -185,29 +185,7 @@ namespace Orcus.Server.Connection.Tests.Tasks
             Assert.False(audienceCollection.IncludesServer);
             Assert.Empty(audienceCollection);
         }
-
-        [Fact]
-        public void TestExecutionEvents()
-        {
-            var test = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<task>
-    <metadata>
-        <name>Hello World</name>
-        <id>0d852117-6adf-4af7-8c8b-f52300ccae15</id>
-    </metadata>
-     <execution>
-        <Idle time=""120"" />
-    </execution>
-</task>";
-
-            var resolverMock = new Mock<ITaskComponentResolver>();
-            resolverMock.Setup(x => x.ResolveExecutionInfo("Idle")).Returns(typeof(IdleExecution));
-
-            var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
-            var elements = reader.GetExecutionEvents().ToList();
-            Assert.Collection(elements, info => Assert.Equal(120, Assert.IsType<IdleExecution>(info).Idle));
-        }
-
+        
         [Fact]
         public void TestParseConditions()
         {
@@ -245,12 +223,12 @@ namespace Orcus.Server.Connection.Tests.Tasks
 </task>";
 
             var resolverMock = new Mock<ITaskComponentResolver>();
-            resolverMock.Setup(x => x.ResolveTransmissionInfo("DateTime")).Returns(typeof(DateTimeTransmission));
+            resolverMock.Setup(x => x.ResolveTrigger("DateTime")).Returns(typeof(DateTimeTrigger));
 
             var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
-            var elements = reader.GetTransmissionEvents().ToList();
+            var elements = reader.GetTriggers().ToList();
             Assert.Collection(elements,
-                info => Assert.Equal(DateTimeOffset.Parse("2018-10-05T18:21:07.8601530Z"), Assert.IsType<DateTimeTransmission>(info).Date));
+                info => Assert.Equal(DateTimeOffset.Parse("2018-10-05T18:21:07.8601530Z"), Assert.IsType<DateTimeTrigger>(info).Date));
         }
 
         [Fact]

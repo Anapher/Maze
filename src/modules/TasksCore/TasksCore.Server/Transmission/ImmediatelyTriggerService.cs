@@ -6,9 +6,9 @@ using TasksCore.Shared.Transmission;
 
 namespace TasksCore.Server.Transmission
 {
-    public class ImmediatelyTriggerService : ITriggerService<ImmediatelyTransmissionInfo>
+    public class ImmediatelyTriggerService : ITriggerService<ImmediatelyTriggerInfo>
     {
-        public async Task InvokeAsync(ImmediatelyTransmissionInfo transmissionInfo, TriggerContext context, CancellationToken cancellationToken)
+        public async Task InvokeAsync(ImmediatelyTriggerInfo triggerInfo, TriggerContext context, CancellationToken cancellationToken)
         {
             var session = await context.GetSession(DateTimeOffset.UtcNow.ToString("G"));
             await session.InvokeAll();
