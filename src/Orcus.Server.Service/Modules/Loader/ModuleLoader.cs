@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using NuGet.Packaging.Core;
 using Orcus.ModuleManagement.Loader;
 using Orcus.Server.Connection.Modules;
@@ -18,13 +19,13 @@ namespace Orcus.Server.Service.Modules.Loader
         private readonly AssemblyLoadContext _assemblyLoadContext;
         private IReadOnlyDictionary<AssemblyName, AssemblyInfo> _dependencyAssemblies;
 
-        public ModuleLoader(IModuleProject project, AssemblyLoadContext assemblyLoadContext)
+        public ModuleLoader(IModuleProject project, IConfiguration configuration, AssemblyLoadContext assemblyLoadContext)
         {
             _project = project;
             _assemblyLoadContext = assemblyLoadContext;
             _assemblyLoadContext.Resolving += DefaultOnResolving;
 
-            ModuleTypeMap = new ModuleTypeMap();
+            ModuleTypeMap = new ModuleTypeMap(configuration);
         }
 
         public ModuleTypeMap ModuleTypeMap { get; }

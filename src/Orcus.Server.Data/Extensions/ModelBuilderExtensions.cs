@@ -9,7 +9,7 @@ namespace Orcus.Server.Data.Extensions
     {
         public static void ApplyAllConfigurations(this ModelBuilder modelBuilder)
         {
-            var implementedConfigTypes = Assembly.GetExecutingAssembly()
+            var implementedConfigTypes = Assembly.GetCallingAssembly()
                 .GetTypes()
                 .Where(t => !t.IsAbstract
                             && !t.IsGenericTypeDefinition

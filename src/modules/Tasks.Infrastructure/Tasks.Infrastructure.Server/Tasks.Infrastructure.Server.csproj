@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
+    <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+</Project>

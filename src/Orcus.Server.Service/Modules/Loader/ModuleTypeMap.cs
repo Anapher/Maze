@@ -5,14 +5,18 @@ using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
+using Microsoft.Extensions.Configuration;
 using NuGet.Packaging.Core;
 
 namespace Orcus.Server.Service.Modules.Loader
 {
     public class ModuleTypeMap
     {
-        public ModuleTypeMap()
+        private readonly IConfiguration _configuration;
+
+        public ModuleTypeMap(IConfiguration configuration)
         {
+            _configuration = configuration;
             Controllers = new ConcurrentDictionary<PackageIdentity, List<Type>>();
             Assemblies = new ConcurrentBag<Assembly>();
         }
@@ -25,6 +29,7 @@ namespace Orcus.Server.Service.Modules.Loader
             //https://github.com/autofac/Autofac/blob/41044d7d1a4fa277c628021537d5a12016137c3b/src/Autofac/ModuleRegistrationExtensions.cs#L156
             var moduleFinder = new ContainerBuilder();
 
+            moduleFinder.RegisterInstance(_configuration);
             moduleFinder.RegisterAssemblyTypes(Assemblies.ToArray())
                 .Where(t => typeof(IModule).IsAssignableFrom(t))
                 .As<IModule>();

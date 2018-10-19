@@ -142,5 +142,6 @@ public DelegateCommand $name$Command&#xD;
 		}));&#xD;
 	}&#xD;
 }</s:String>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Autofac/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Orcus/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>

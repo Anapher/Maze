@@ -15,7 +15,6 @@ using Orcus.Server.AppStart;
 using Orcus.Server.Authentication;
 using Orcus.Server.Autofac;
 using Orcus.Server.BusinessDataAccess;
-using Orcus.Server.Connection.Tasks;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
@@ -27,8 +26,6 @@ using Orcus.Server.Options;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Connection;
 using Orcus.Server.Service.Modules;
-using Orcus.Server.Service.Options;
-using Orcus.Server.Service.Tasks;
 using Orcus.Sockets;
 using Serilog;
 
@@ -55,7 +52,6 @@ namespace Orcus.Server
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
             services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
             services.Configure<ModulePackageManagerOptions>(Configuration.GetSection("Modules.PackageManager"));
-            services.Configure<TasksOptions>(Configuration.GetSection("Tasks"));
 
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
             services.AddMemoryCache();
@@ -91,17 +87,15 @@ namespace Orcus.Server
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>().SingleInstance();
-            containerBuilder.RegisterType<CommandDistributer>().As<ICommandDistributer>().SingleInstance();
+            containerBuilder.RegisterType<CommandDistributor>().As<ICommandDistributer>().SingleInstance();
             containerBuilder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
-            containerBuilder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
-            containerBuilder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()
                 .RegisterModule<BusinessLogicModule>()
                 .RegisterModule<ModuleManagementModule>();
 
-            new PackageInitialization(provider.GetService<IOptions<ModulesOptions>>().Value, services)
+            new PackageInitialization(provider.GetService<IOptions<ModulesOptions>>().Value, services, Configuration)
                 .LoadModules(containerBuilder).Wait();
 
             containerBuilder.Populate(services);

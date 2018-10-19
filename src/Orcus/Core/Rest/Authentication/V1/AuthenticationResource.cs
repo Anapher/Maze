@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NuGet.Protocol;
-using Orcus.Clients;
-using Orcus.Clients.Helpers;
+using Orcus.Client.Library.Clients;
+using Orcus.Client.Library.Clients.Helpers;
 using Orcus.Server.Connection.Authentication.Client;
 using Orcus.Server.Connection.JsonConverters;
 

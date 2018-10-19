@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageReference Include="BCrypt.Net-Next" Version="3.1.0" />
@@ -15,6 +15,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
+    <ProjectReference Include="..\Orcus.Server.BusinessDataAccess\Orcus.Server.BusinessDataAccess.csproj" />
+    <ProjectReference Include="..\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj" />
     <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
     <ProjectReference Include="..\Orcus.Server.Data\Orcus.Server.Data.csproj" />
     <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj" />

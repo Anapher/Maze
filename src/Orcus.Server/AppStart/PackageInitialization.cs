@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orcus.Server.ControllersBase;
@@ -18,11 +19,13 @@ namespace Orcus.Server.AppStart
     {
         private readonly ModulesOptions _options;
         private readonly IServiceCollection _serviceCollection;
+        private readonly IConfiguration _configuration;
 
-        public PackageInitialization(ModulesOptions options, IServiceCollection serviceCollection)
+        public PackageInitialization(ModulesOptions options, IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _options = options;
             _serviceCollection = serviceCollection;
+            _configuration = configuration;
         }
 
         private void InvalidateModulesLock()
@@ -77,7 +80,7 @@ namespace Orcus.Server.AppStart
             {
                 logger.LogDebug("{count} modules found", modulesConfig.Modules.Count);
 
-                var loader = new ModuleLoader(orcusProject, AssemblyLoadContext.Default);
+                var loader = new ModuleLoader(orcusProject, _configuration, AssemblyLoadContext.Default);
                 await loader.Load(modulesConfig.Modules, packageLock);
 
                 loader.ModuleTypeMap.Configure(builder);

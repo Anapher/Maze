@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Server\Tasks.Infrastructure.Server.csproj" />
+  </ItemGroup>
+
+</Project>

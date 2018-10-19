@@ -1,15 +1,11 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Orcus.Client.Library.Clients;
+using System;
 
 namespace Orcus.Client.Library.Services
 {
-    public interface IOrcusRestClient
+    public interface IOrcusRestClient : IRestClient
     {
         Uri BaseUri { get; }
         string Jwt { get; }
-
-        Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken);
     }
 }

@@ -73,12 +73,16 @@ namespace Orcus.Core.Connection
                             
                             builder.RegisterOrcusServices(cache => cache.BuildCache(controllers));
                             builder.RegisterType<AutofacServiceProvider>().AsImplementedInterfaces();
+                            builder.RegisterInstance(connection.RestClient).AsImplementedInterfaces();
                         });
 
                         CurrentConnection = connection;
 
-                        await CurrentConnectionScope.Execute<IConnectedAction>();
-                        await CurrentConnection.InitializeWebSocket(CurrentConnectionScope);
+                        using (CurrentConnectionScope)
+                        {
+                            await CurrentConnectionScope.Execute<IConnectedAction>();
+                            await CurrentConnection.InitializeWebSocket(CurrentConnectionScope);
+                        }
 
                         break;
                     }
@@ -87,10 +91,7 @@ namespace Orcus.Core.Connection
                         Logger.Warn(e, "Error occurred when trying to connect to {uri}", serverUri);
                     }
                 }
-
-                if (CurrentConnection != null)
-                    break;
-
+                
                 await Task.Delay(_options.ReconnectDelay);
             }
         }
