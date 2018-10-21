@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Orcus.Client.Library.Clients;
 using Orcus.Client.Library.Clients.Helpers;
+using Tasks.Infrastructure.Core.Dtos;
 
 namespace Tasks.Infrastructure.Client.Rest
 {
@@ -14,6 +12,7 @@ namespace Tasks.Infrastructure.Client.Rest
         {
         }
 
-        public static Task<List<string>> GetTasks(IRestClient restClient) => CreateRequest().Execute(restClient).Return<List<string>>();
+        public static Task<List<TaskSyncDto>> GetSyncInfo(IRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, "sync").Execute(restClient).Return<List<TaskSyncDto>>();
     }
 }

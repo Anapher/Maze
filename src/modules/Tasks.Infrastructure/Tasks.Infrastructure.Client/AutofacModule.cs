@@ -1,14 +1,11 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
+﻿using System.IO.Abstractions;
+using Autofac;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Orcus.Server.Library.Extensions;
+using Orcus.Client.Library.Extensions;
+using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Core;
-using Tasks.Infrastructure.Server.Data;
-using Tasks.Infrastructure.Server.Options;
 
-namespace Tasks.Infrastructure.Server
+namespace Tasks.Infrastructure.Client
 {
     public class AutofacModule : Module
     {
@@ -22,15 +19,12 @@ namespace Tasks.Infrastructure.Server
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-
+            
             builder.Configure<TasksOptions>(_configuration.GetSection("Tasks"));
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
             builder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
-            builder.RegisterType<OrcusTaskManager>().SingleInstance();
-
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddDbContext<TasksDbContext>(build => build.UseSqlite(_configuration["Tasks.DatabaseConnectionString"]));
-            builder.Populate(serviceCollection);
+            builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
+            builder.RegisterType<TaskSessionManager>().As<ITaskSessionManager>().SingleInstance();
         }
     }
 }

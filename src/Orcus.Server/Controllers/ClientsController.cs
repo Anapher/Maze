@@ -8,8 +8,8 @@ using Orcus.Server.Authentication;
 using Orcus.Server.BusinessLogic.Authentication;
 using Orcus.Server.Connection.Authentication.Client;
 using Orcus.Server.Connection.Clients;
-using Orcus.Server.ControllersBase;
 using Orcus.Server.Data.EfCode;
+using Orcus.Server.Library.Controllers;
 using Orcus.Server.Library.Services;
 using Orcus.Server.Service.Modules;
 

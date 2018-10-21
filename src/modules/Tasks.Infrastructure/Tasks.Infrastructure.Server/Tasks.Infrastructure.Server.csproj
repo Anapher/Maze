@@ -9,4 +9,6 @@
     <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Tasks.Infrastructure.Management\Tasks.Infrastructure.Management.projitems" Label="Shared" />
+
 </Project>

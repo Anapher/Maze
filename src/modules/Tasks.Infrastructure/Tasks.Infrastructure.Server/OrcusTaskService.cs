@@ -25,10 +25,11 @@ namespace Tasks.Infrastructure.Server
         {
             OrcusTask = orcusTask;
             Services = services;
+            Logger = services.GetRequiredService<ILogger<OrcusTaskService>>();
         }
 
         public OrcusTask OrcusTask { get; }
-        public ILogger Logger { get; set; }
+        public ILogger Logger { get; }
         public IServiceProvider Services { get; }
 
         public async Task Run(CancellationToken cancellationToken)
@@ -56,7 +57,7 @@ namespace Tasks.Infrastructure.Server
                     var service = triggerScope.ServiceProvider.GetService(serviceType);
                     if (service == null)
                     {
-                        Logger.LogError("The transmission service for type {transmissionInfo} ({resolvedType}) could not be resolved. Skipped.",
+                        Logger.LogWarning("The trigger service for type {triggerInfo} ({resolvedType}) could not be resolved. Skipped.",
                             triggerInfo.GetType(), serviceType);
                         continue;
                     }
@@ -71,7 +72,7 @@ namespace Tasks.Infrastructure.Server
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError(e, "Error occurred when invoking transmission service {transmissionServiceType}", serviceType);
+                        Logger.LogError(e, "Error occurred when invoking trigger service {triggerServiceType}", serviceType);
                     }
                 }
 

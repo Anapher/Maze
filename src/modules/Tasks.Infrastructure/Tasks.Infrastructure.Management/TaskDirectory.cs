@@ -6,19 +6,28 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Nito.AsyncEx;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core;
+
+#if NETCOREAPP2_1
 using Tasks.Infrastructure.Server.Options;
 
-namespace Tasks.Infrastructure.Server
+#else
+using Tasks.Infrastructure.Client.Options;
+
+#endif
+
+namespace Tasks.Infrastructure
 {
     public interface ITaskDirectory
     {
-        Task<IEnumerable<OrcusTask>> GetTasks();
+        Task<IEnumerable<OrcusTask>> LoadTasks();
         Task<string> WriteTask(OrcusTask orcusTask);
+        Task RemoveTask(OrcusTask orcusTask);
         Hash ComputeTaskHash(OrcusTask orcusTask);
     }
 
@@ -26,44 +35,32 @@ namespace Tasks.Infrastructure.Server
     {
         private readonly ITaskComponentResolver _taskComponentResolver;
         private readonly IXmlSerializerCache _xmlSerializerCache;
+        private readonly ILogger<TaskDirectory> _logger;
         private readonly TasksOptions _options;
         private readonly AsyncReaderWriterLock _tasksLock;
         private IImmutableDictionary<Guid, string> _taskFileNames;
         private readonly XmlWriterSettings _xmlWriterSettings;
 
-        public TaskDirectory(IOptions<TasksOptions> options, ITaskComponentResolver taskComponentResolver, IXmlSerializerCache xmlSerializerCache)
+        public TaskDirectory(IOptions<TasksOptions> options, ITaskComponentResolver taskComponentResolver, IXmlSerializerCache xmlSerializerCache,
+            ILogger<TaskDirectory> logger)
         {
             _taskComponentResolver = taskComponentResolver;
             _xmlSerializerCache = xmlSerializerCache;
+            _logger = logger;
             _options = options.Value;
             _tasksLock = new AsyncReaderWriterLock();
             _xmlWriterSettings = new XmlWriterSettings {OmitXmlDeclaration = false, Indent = true};
         }
 
-        public Hash ComputeTaskHash(OrcusTask orcusTask)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var xmlWriter = XmlWriter.Create(memoryStream, _xmlWriterSettings))
-                {
-                    var writer = new OrcusTaskWriter(xmlWriter, _taskComponentResolver, _xmlSerializerCache);
-                    writer.Write(orcusTask, TaskDetails.Server);
-                }
-
-                using (var sha256 = SHA256.Create())
-                    return new Hash(sha256.ComputeHash(memoryStream));
-            }
-        }
-
-        public async Task<IEnumerable<OrcusTask>> GetTasks()
+        public async Task<IEnumerable<OrcusTask>> LoadTasks()
         {
             using (await _tasksLock.ReaderLockAsync())
             {
-                return GetTasksLockAcquired();
+                return LoadTasksLockAquired();
             }
         }
 
-        private IEnumerable<OrcusTask> GetTasksLockAcquired()
+        private IEnumerable<OrcusTask> LoadTasksLockAquired()
         {
             var directoryInfo = new DirectoryInfo(_options.Directory);
             if (!directoryInfo.Exists)
@@ -72,12 +69,34 @@ namespace Tasks.Infrastructure.Server
                 return Enumerable.Empty<OrcusTask>();
             }
 
+            var filenames = new Dictionary<Guid, string>();
             var list = new List<OrcusTask>();
             foreach (var fileInfo in directoryInfo.GetFiles($"*.{_options.FileExtension}", SearchOption.AllDirectories))
             {
                 var reader = new OrcusTaskReader(fileInfo.FullName, _taskComponentResolver, _xmlSerializerCache);
-                list.Add(reader.ReadTask());
+                OrcusTask task;
+
+                try
+                {
+                    task = reader.ReadTask();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e, "The file {filename} could not be read.", fileInfo.FullName);
+                    continue;
+                }
+
+                if (filenames.ContainsKey(task.Id))
+                {
+                    _logger.LogWarning("The task of the file {file1} has the same id like the task of {file2}. {file1} is skipped.",
+                        fileInfo.FullName, filenames[task.Id]);
+                    continue;
+                }
+
+                list.Add(task);
+                filenames.Add(task.Id, fileInfo.FullName);
             }
+            _taskFileNames = filenames.ToImmutableDictionary();
 
             return list;
         }
@@ -87,9 +106,9 @@ namespace Tasks.Infrastructure.Server
             using (await _tasksLock.WriterLockAsync())
             {
                 if (_taskFileNames == null)
-                    GetTasksLockAcquired();
+                    LoadTasksLockAquired();
 
-                if (!_taskFileNames.TryGetValue(orcusTask.Id, out string filename))
+                if (!_taskFileNames.TryGetValue(orcusTask.Id, out var filename))
                 {
                     //new task
                     var name = NameGeneratorUtilities.ToFilename(orcusTask.Name, includeSpace: false) + "." + _options.FileExtension;
@@ -106,6 +125,36 @@ namespace Tasks.Infrastructure.Server
                 }
 
                 return filename;
+            }
+        }
+
+        public async Task RemoveTask(OrcusTask orcusTask)
+        {
+            using (await _tasksLock.WriterLockAsync())
+            {
+                if (_taskFileNames == null)
+                    LoadTasksLockAquired();
+
+                if (!_taskFileNames.TryGetValue(orcusTask.Id, out var filename))
+                    throw new ArgumentException("The task was not found");
+
+                _taskFileNames = _taskFileNames.Remove(orcusTask.Id);
+                File.Delete(filename);
+            }
+        }
+
+        public Hash ComputeTaskHash(OrcusTask orcusTask)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var xmlWriter = XmlWriter.Create(memoryStream, _xmlWriterSettings))
+                {
+                    var writer = new OrcusTaskWriter(xmlWriter, _taskComponentResolver, _xmlSerializerCache);
+                    writer.Write(orcusTask, TaskDetails.Server);
+                }
+
+                using (var sha256 = SHA256.Create())
+                    return new Hash(sha256.ComputeHash(memoryStream));
             }
         }
     }

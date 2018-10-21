@@ -1,14 +1,17 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection.Utilities;
+using Orcus.Server.Library.Controllers;
 using Tasks.Infrastructure.Core;
+using Tasks.Infrastructure.Server.Business;
 
 namespace Tasks.Infrastructure.Server.Controllers
 {
     [Route("v1/[controller]")]
-    public class TasksController : Controller
+    public class TasksController : BusinessController
     {
-        [HttpPost]
+        [HttpPost, Authorize("admin")]
         public async Task<IActionResult> CreateTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache, [FromServices] OrcusTaskManager taskManager)
         {
@@ -21,9 +24,10 @@ namespace Tasks.Infrastructure.Server.Controllers
         }
 
         [HttpGet("sync")]
-        public async Task GetSync()
+        public async Task<IActionResult> GetSyncInfo([FromServices] IGetTaskSyncInfo getTaskSyncInfo)
         {
-
+            var tasks = await getTaskSyncInfo.BizActionAsync();
+            return BizActionStatus(getTaskSyncInfo, () => Ok(tasks));
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Authentication;
 using Orcus.Server.BusinessLogic.Authentication;
 using Orcus.Server.Connection.Authentication;
-using Orcus.Server.ControllersBase;
+using Orcus.Server.Library.Controllers;
 
 namespace Orcus.Server.Controllers
 {

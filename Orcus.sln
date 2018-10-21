@@ -252,15 +252,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks.Infrastructure", "Tas
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks.Common", "Tasks.Common", "{D62BDE9B-2915-4AC6-9386-464B59D429B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Infrastructure.Server", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Server\Tasks.Infrastructure.Server.csproj", "{04A14402-20E5-4EA0-8118-635C6865E64F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Server", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Server\Tasks.Infrastructure.Server.csproj", "{04A14402-20E5-4EA0-8118-635C6865E64F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Infrastructure.Core", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj", "{7DC1AE26-64C7-4E23-A6DE-9ADE5052B934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Core", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj", "{7DC1AE26-64C7-4E23-A6DE-9ADE5052B934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Common.Server", "src\modules\Tasks.Common\Tasks.Common.Server\Tasks.Common.Server.csproj", "{3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Common.Server", "src\modules\Tasks.Common\Tasks.Common.Server\Tasks.Common.Server.csproj", "{3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tasks.Common.Shared", "src\modules\Tasks.Common\Tasks.Common.Shared\Tasks.Common.Shared.shproj", "{72DC8C93-056D-401C-B5A8-FD9B7016CF99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Infrastructure.Client", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Client\Tasks.Infrastructure.Client.csproj", "{623147BC-B788-45B2-8E6B-6998EF8E1A65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Client", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Client\Tasks.Infrastructure.Client.csproj", "{623147BC-B788-45B2-8E6B-6998EF8E1A65}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tasks.Infrastructure.Management", "src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Management\Tasks.Infrastructure.Management.shproj", "{9872F1CC-2226-487D-A438-ACF69826E8FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CC318C26-9963-443C-8AC7-479553FF8FCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Infrastructure.Client.Tests", "src\modules\Tasks.Infrastructure\tests\Tasks.Infrastructure.Client.Tests\Tasks.Infrastructure.Client.Tests.csproj", "{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -274,6 +280,7 @@ Global
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{8f8a07c3-7c4e-49d2-9997-0836f51f44ac}*SharedItemsImports = 4
 		src\modules\RemoteDesktop\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems*{90e1c3cb-19bf-47f6-b524-d0702f130ffe}*SharedItemsImports = 13
+		src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Management\Tasks.Infrastructure.Management.projitems*{9872f1cc-2226-487d-a438-acf69826e8fa}*SharedItemsImports = 13
 		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
 		src\modules\SystemInformation\SystemInformation.Shared\SystemInformation.Shared.projitems*{a828ac7a-5a93-4977-b167-c8912842d359}*SharedItemsImports = 13
 		src\modules\Console\Console.Shared\Console.Shared.projitems*{b1070ee4-03c8-4760-86bf-e9341cfac088}*SharedItemsImports = 13
@@ -1160,6 +1167,18 @@ Global
 		{623147BC-B788-45B2-8E6B-6998EF8E1A65}.Release|x64.Build.0 = Release|Any CPU
 		{623147BC-B788-45B2-8E6B-6998EF8E1A65}.Release|x86.ActiveCfg = Release|Any CPU
 		{623147BC-B788-45B2-8E6B-6998EF8E1A65}.Release|x86.Build.0 = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|x64.Build.0 = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|x64.ActiveCfg = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|x64.Build.0 = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1265,6 +1284,9 @@ Global
 		{3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76} = {D62BDE9B-2915-4AC6-9386-464B59D429B6}
 		{72DC8C93-056D-401C-B5A8-FD9B7016CF99} = {D62BDE9B-2915-4AC6-9386-464B59D429B6}
 		{623147BC-B788-45B2-8E6B-6998EF8E1A65} = {4661B427-AB6D-4D32-9C24-997000CE74D7}
+		{9872F1CC-2226-487D-A438-ACF69826E8FA} = {4661B427-AB6D-4D32-9C24-997000CE74D7}
+		{CC318C26-9963-443C-8AC7-479553FF8FCF} = {4661B427-AB6D-4D32-9C24-997000CE74D7}
+		{824C5D05-7EBB-46F4-AAFA-E09BEA1D73D0} = {CC318C26-9963-443C-8AC7-479553FF8FCF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

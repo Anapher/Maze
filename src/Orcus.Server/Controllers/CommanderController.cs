@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Authentication;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Commanding;
-using Orcus.Server.ControllersBase;
+using Orcus.Server.Library.Controllers;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Commander;
 using Orcus.Server.Service.Extensions;
