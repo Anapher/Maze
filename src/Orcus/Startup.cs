@@ -39,7 +39,7 @@ namespace Orcus
             builder.RegisterType<OrcusRestClientFactory>().As<IOrcusRestClientFactory>();
             builder.RegisterType<ServerConnector>().As<IServerConnector>();
             builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
-            builder.RegisterType<CoreConnector>().As<ICoreConnector>().SingleInstance();
+            builder.RegisterType<CoreConnector>().As<ICoreConnector>().As<IManagementCoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
 
             builder.RegisterInstance(new SerilogLoggerFactory()).As<ILoggerFactory>().SingleInstance();

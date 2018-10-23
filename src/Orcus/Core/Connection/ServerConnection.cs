@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Autofac;
+using Orcus.Client.Library.Services;
 using Orcus.Core.Commanding;
 using Orcus.Server.Connection.Modules;
 using Orcus.Sockets;
@@ -11,7 +12,7 @@ using Orcus.Sockets.Client;
 
 namespace Orcus.Core.Connection
 {
-    public class ServerConnection
+    public class ServerConnection : IServerConnection
     {
         private readonly OrcusSocketOptions _options;
 
@@ -22,7 +23,7 @@ namespace Orcus.Core.Connection
             PackagesLock = packagesLock;
         }
 
-        public OrcusRestClient RestClient { get; }
+        public IOrcusRestClient RestClient { get; }
         public PackagesLock PackagesLock { get; }
         public ServerCommandListener Listener { get; private set; }
 

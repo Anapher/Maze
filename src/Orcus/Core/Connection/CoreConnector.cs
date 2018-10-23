@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Orcus.Client.Library.Interfaces;
+using Orcus.Client.Library.Services;
 using Orcus.Core.Modules;
 using Orcus.Logging;
 using Orcus.ModuleManagement;
@@ -14,13 +15,12 @@ using Orcus.Service.Commander;
 
 namespace Orcus.Core.Connection
 {
-    public interface ICoreConnector
+    public interface IManagementCoreConnector : ICoreConnector
     {
-        ServerConnection CurrentConnection { get; }
         Task StartConnecting(ILifetimeScope lifetimeScope);
     }
 
-    public class CoreConnector : ICoreConnector
+    public class CoreConnector : IManagementCoreConnector
     {
         private static readonly ILog Logger = LogProvider.For<CoreConnector>();
 
@@ -38,7 +38,7 @@ namespace Orcus.Core.Connection
             _options = options.Value;
         }
 
-        public ServerConnection CurrentConnection { get; private set; }
+        public IServerConnection CurrentConnection { get; private set; }
         public ILifetimeScope CurrentConnectionScope { get; private set; }
 
         public async Task StartConnecting(ILifetimeScope lifetimeScope)
@@ -81,8 +81,10 @@ namespace Orcus.Core.Connection
                         using (CurrentConnectionScope)
                         {
                             await CurrentConnectionScope.Execute<IConnectedAction>();
-                            await CurrentConnection.InitializeWebSocket(CurrentConnectionScope);
+                            await connection.InitializeWebSocket(CurrentConnectionScope);
                         }
+
+                        CurrentConnection = null;
 
                         break;
                     }

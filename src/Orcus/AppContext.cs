@@ -68,7 +68,7 @@ namespace Orcus
 
         private void StartConnecting()
         {
-            Container.Resolve<ICoreConnector>().StartConnecting(Container);
+            Container.Resolve<IManagementCoreConnector>().StartConnecting(Container);
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)

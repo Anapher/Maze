@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orcus.Client.Library.Clients;
 using Orcus.Server.Connection;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
+using Tasks.Infrastructure.Client.Rest;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 
 namespace Tasks.Infrastructure.Client
@@ -17,35 +21,31 @@ namespace Tasks.Infrastructure.Client
         private readonly IServiceProvider _serviceProvider;
         private readonly ITaskDirectory _taskDirectory;
         private readonly ILogger<ClientTaskManager> _logger;
+        private readonly object _taskUpdateLock = new object();
 
         public ClientTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider, ILogger<ClientTaskManager> logger)
         {
             _taskDirectory = taskDirectory;
             _serviceProvider = serviceProvider;
             _logger = logger;
+
+            Tasks = new ConcurrentDictionary<Guid, (TaskRunner, CancellationTokenSource)>();
         }
 
-        public IImmutableDictionary<Guid, (TaskRunner, CancellationTokenSource)> Tasks { get; private set; }
+        public ConcurrentDictionary<Guid, (TaskRunner, CancellationTokenSource)> Tasks { get; }
 
         public async Task Initialize()
         {
             _logger.LogDebug("Initialize tasks");
 
             var tasks = await _taskDirectory.LoadTasks();
-            var tasksList = new Dictionary<Guid, (TaskRunner, CancellationTokenSource)>();
 
             foreach (var orcusTask in tasks)
             {
                 var taskRunner = new TaskRunner(orcusTask, _serviceProvider);
                 var cancellationTokenSource = new CancellationTokenSource();
 
-                tasksList.Add(orcusTask.Id, (taskRunner, cancellationTokenSource));
-            }
-
-            Tasks = tasksList.ToImmutableDictionary();
-
-            foreach (var (taskRunner, cancellationTokenSource) in tasksList.Values)
-            {
+                Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
                 RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
             }
         }
@@ -72,7 +72,55 @@ namespace Tasks.Infrastructure.Client
                 tasksToUpdate.Add(taskSyncDto);
             }
 
+            if (tasksToDelete.Any())
+            {
+                foreach (var (taskRunner, cancellationTokenSource) in tasksToDelete.Values)
+                {
+                    _logger.LogDebug("Remove task {taskId}", taskRunner.OrcusTask.Id);
 
+                    //that will remove the task from the dictionary
+                    cancellationTokenSource.Cancel();
+                    await _taskDirectory.RemoveTask(taskRunner.OrcusTask);
+                }
+            }
+
+            if (tasksToUpdate.Any())
+            {
+                var taskComponentResolver = _serviceProvider.GetRequiredService<ITaskComponentResolver>();
+                var xmlSerializerCache = _serviceProvider.GetRequiredService<IXmlSerializerCache>();
+
+                await TaskCombinators.ThrottledAsync(tasksToUpdate, async (dto, token) =>
+                {
+                    _logger.LogDebug("Update task {taskId}", dto.TaskId);
+                    try
+                    {
+                        var taskInfo = await TasksResource.FetchTaskAsync(dto.TaskId, taskComponentResolver, xmlSerializerCache, restClient);
+                        await _taskDirectory.WriteTask(taskInfo);
+
+                        if (Tasks.TryGetValue(taskInfo.Id, out var existingTaskInfo))
+                        {
+                            _logger.LogDebug("Cancel runner for task {taskId}", dto.TaskId);
+                            existingTaskInfo.Item2.Cancel();
+                            Tasks.TryRemove(taskInfo.Id, out _);
+                        }
+
+                        var taskRunner = new TaskRunner(taskInfo, _serviceProvider);
+                        var cancellationTokenSource = new CancellationTokenSource();
+
+                        lock (_taskUpdateLock)
+                        {
+                            Tasks.TryRemove(taskInfo.Id, out _);
+                            Tasks.TryAdd(taskInfo.Id, (taskRunner, cancellationTokenSource));
+                        }
+
+                        RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogWarning(e, "An error occurred when trying to run task {taskId}", dto.TaskId);
+                    }
+                }, CancellationToken.None);
+            }
         }
 
         private async Task RunTask(TaskRunner taskRunner, CancellationToken cancellationToken)
@@ -83,14 +131,22 @@ namespace Tasks.Infrastructure.Client
             }
             catch (OperationCanceledException)
             {
+                //when the app is shutting down or when the task should be removed
                 return;
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "An error occurred when starting task runner for task {taskId}", taskRunner.OrcusTask.Id);
             }
-
-            Tasks = Tasks.Remove(taskRunner.OrcusTask.Id);
+            finally
+            {
+                lock (_taskUpdateLock)
+                {
+                    if (Tasks.TryRemove(taskRunner.OrcusTask.Id, out var taskInfo) && taskInfo.Item1 != taskRunner)
+                        Tasks.TryAdd(taskRunner.OrcusTask.Id, taskInfo);
+                }
+            }
+            
             await _taskDirectory.RemoveTask(taskRunner.OrcusTask);
         }
     }

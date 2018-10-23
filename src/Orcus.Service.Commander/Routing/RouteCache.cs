@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using NuGet.Packaging.Core;
 using Orcus.Modules.Api;
 using Orcus.Modules.Api.Routing;
-using Orcus.Service.Commander.Extensions;
+using Orcus.Server.Connection.Extensions;
 
 namespace Orcus.Service.Commander.Routing
 {

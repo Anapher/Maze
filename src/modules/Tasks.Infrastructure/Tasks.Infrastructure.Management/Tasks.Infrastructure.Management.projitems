@@ -9,6 +9,7 @@
     <Import_RootNamespace>Tasks.Infrastructure.Management</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)HttpSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Library\SessionKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskComponentResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskDirectory.cs" />

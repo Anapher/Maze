@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace Tasks.Infrastructure.Core.Data
+namespace Tasks.Infrastructure.Core.Dtos
 {
-    public class TaskExecution
+   public class TaskExecutionResponseDto
     {
-        public int TaskExecutionId { get; set; }
-        public int TaskSessionId { get; set; }
-
-        public int? TargetId { get; set; }
+        public Guid TaskId { get; set; }
+        public string SessionKey { get; set; }
         public string CommandName { get; set; }
         public string Result { get; set; }
         public int? Status { get; set; }
