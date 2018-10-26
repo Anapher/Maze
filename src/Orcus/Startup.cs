@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.IO.Abstractions;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,8 @@ namespace Orcus
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
             builder.RegisterInstance(ArrayPool<char>.Create());
             builder.RegisterInstance(ArrayPool<byte>.Create());
+
+            builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
             
             builder.RegisterModule<ModuleManagementModule>();
         }
