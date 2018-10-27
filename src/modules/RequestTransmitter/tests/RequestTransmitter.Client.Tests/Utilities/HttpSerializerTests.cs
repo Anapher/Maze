@@ -20,7 +20,7 @@ namespace RequestTransmitter.Client.Tests.Utilities
 
             using (var memoryStream = new MemoryStream())
             {
-                await HttpSerializer.Format(request, memoryStream);
+                await HttpRequestSerializer.Format(request, memoryStream);
 
                 memoryStream.Position = 0;
 
@@ -28,6 +28,7 @@ namespace RequestTransmitter.Client.Tests.Utilities
                 {
                     var s = streamReader.ReadToEnd();
                     const string expected = @"POST /test/help?asd=asd
+Content-Type: text/plain; charset=utf-8
 
 Test";
 
@@ -49,7 +50,7 @@ Test";
 
             using (var memoryStream = new MemoryStream())
             {
-                await HttpSerializer.Format(request, memoryStream);
+                await HttpRequestSerializer.Format(request, memoryStream);
 
                 memoryStream.Position = 0;
 
@@ -76,7 +77,7 @@ Content-Encoding: ascii
 
 Test";
 
-            using (var request = await HttpSerializer.Decode(new MemoryStream(Encoding.UTF8.GetBytes(requestString))))
+            using (var request = await HttpRequestSerializer.Decode(new MemoryStream(Encoding.UTF8.GetBytes(requestString))))
             {
                 Assert.Equal(HttpMethod.Post.Method, request.Method.Method);
                 Assert.Equal(new Uri("/test/help?asd=asd", UriKind.Relative), request.RequestUri);
@@ -97,7 +98,7 @@ Content-Encoding: ascii
 
 ,6""";
 
-            using (var request = await HttpSerializer.Decode(new MemoryStream(Encoding.UTF8.GetBytes(requestString))))
+            using (var request = await HttpRequestSerializer.Decode(new MemoryStream(Encoding.UTF8.GetBytes(requestString))))
             {
                 Assert.Equal(HttpMethod.Get.Method, request.Method.Method);
                 Assert.Equal(new Uri("https://www.google.de/test/help?asd=asd", UriKind.Absolute), request.RequestUri);

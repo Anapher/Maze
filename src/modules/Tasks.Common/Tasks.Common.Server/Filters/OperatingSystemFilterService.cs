@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Orcus.Server.Data.EfClasses;
 using Orcus.Server.Data.EfCode;
-using System.Threading.Tasks;
 using Tasks.Infrastructure.Server.Library;
-using TasksCore.Services.Shared.Filters;
 
-namespace TasksCore.Services.Server.Filters
+namespace Tasks.Common.Server.Filters
 {
     public class OperatingSystemFilterService : IFilterService<OperatingSystemFilterInfo>
     {

@@ -12,14 +12,6 @@ using RequestTransmitter.Client.Utilities;
 
 namespace RequestTransmitter.Client.Storage
 {
-    public interface IRequestStorage
-    {
-        bool HasEntries { get; }
-        Task<HttpRequestMessage> Peek();
-        Task Pop();
-        Task Push(HttpRequestMessage requestMessage);
-    }
-
     public class RequestStorage : IRequestStorage
     {
         private readonly IFileSystem _fileSystem;
@@ -58,7 +50,7 @@ namespace RequestTransmitter.Client.Storage
                 if (file == null)
                     return null;
 
-                return await HttpSerializer.Decode(_fileSystem.File.OpenRead(file));
+                return await HttpRequestSerializer.Decode(_fileSystem.File.OpenRead(file));
             }
         }
 
@@ -85,7 +77,7 @@ namespace RequestTransmitter.Client.Storage
             using (await _readerWriterLock.WriterLockAsync())
             using (var fileStream = _fileSystem.File.Create(_fileSystem.Path.Combine(_options.RequestDirectory, number.ToString())))
             {
-                await HttpSerializer.Format(requestMessage, fileStream);
+                await HttpRequestSerializer.Format(requestMessage, fileStream);
             }
         }
     }

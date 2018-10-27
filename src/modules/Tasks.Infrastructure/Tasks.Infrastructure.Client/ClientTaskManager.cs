@@ -39,7 +39,6 @@ namespace Tasks.Infrastructure.Client
             _logger.LogDebug("Initialize tasks");
 
             var tasks = await _taskDirectory.LoadTasks();
-
             foreach (var orcusTask in tasks)
             {
                 var taskRunner = new TaskRunner(orcusTask, _serviceProvider);

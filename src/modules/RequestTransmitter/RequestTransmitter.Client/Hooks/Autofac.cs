@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Interfaces;
@@ -29,6 +24,7 @@ namespace RequestTransmitter.Client.Hooks
             builder.RegisterType<RequestStorage>().As<IRequestStorage>().SingleInstance();
             builder.RegisterType<RequestTransmitter>().As<IRequestTransmitter>().SingleInstance();
             builder.RegisterType<OnConnectedAction>().As<IConnectedAction>();
+            builder.RegisterType<StorageTransmissionLock>().SingleInstance();
         }
     }
 }

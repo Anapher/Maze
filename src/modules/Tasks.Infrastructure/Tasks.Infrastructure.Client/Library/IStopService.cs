@@ -11,6 +11,5 @@ namespace Tasks.Infrastructure.Client.Library
 
     public abstract class StopContext
     {
-        public abstract void Stop();
     }
 }

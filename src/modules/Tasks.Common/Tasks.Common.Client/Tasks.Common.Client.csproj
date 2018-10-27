@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <DefineConstants>TRACE;LIBRARY_CLIENT</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="..\Tasks.Common.ServerClientShared\Tasks.Common.ServerClientShared.projitems" Label="Shared" />
+
+  <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Client\Tasks.Infrastructure.Client.csproj" />
+  </ItemGroup>
+
+</Project>

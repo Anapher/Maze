@@ -9,21 +9,17 @@ namespace Tasks.Infrastructure.Client.Hooks
     {
         private readonly IOrcusRestClient _restClient;
         private readonly ClientTaskManager _taskManager;
-        private readonly ITaskSessionManager _sessionManager;
 
-        public OnConnectedAction(IOrcusRestClient restClient, ClientTaskManager taskManager, ITaskSessionManager sessionManager)
+        public OnConnectedAction(IOrcusRestClient restClient, ClientTaskManager taskManager)
         {
             _restClient = restClient;
             _taskManager = taskManager;
-            _sessionManager = sessionManager;
         }
 
         public async Task Execute()
         {
             var tasks = await TasksResource.GetSyncInfo(_restClient);
             await _taskManager.Synchronize(tasks, _restClient);
-
-            _sessionManager.FetchOutstandingTaskExecutions()
         }
     }
 }

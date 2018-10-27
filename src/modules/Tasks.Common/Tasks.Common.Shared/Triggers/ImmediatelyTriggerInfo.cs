@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Orcus.Server.Connection.Tasks.Triggers;
+﻿using Tasks.Infrastructure.Core.Triggers;
 
-namespace TasksCore.Services.Shared.Transmission
+namespace Tasks.Common.Triggers
 {
     public class ImmediatelyTriggerInfo : TriggerInfo
     {

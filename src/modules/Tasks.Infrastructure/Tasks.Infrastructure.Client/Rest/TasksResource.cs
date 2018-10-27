@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Orcus.Client.Library.Clients;
 using Orcus.Client.Library.Clients.Helpers;
@@ -28,5 +29,8 @@ namespace Tasks.Infrastructure.Client.Rest
                 return taskReader.ReadTask();
             }
         }
+
+        public static HttpRequestMessage CreateExecutionUploadRequest(byte[] data) =>
+            CreateRequest(HttpVerb.Post, "executions", data).Build();
     }
 }

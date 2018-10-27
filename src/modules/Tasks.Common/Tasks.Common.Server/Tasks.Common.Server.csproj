@@ -6,6 +6,8 @@
 
   <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />
 
+  <Import Project="..\Tasks.Common.ServerClientShared\Tasks.Common.ServerClientShared.projitems" Label="Shared" />
+
   <ItemGroup>
     <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Server\Tasks.Infrastructure.Server.csproj" />
   </ItemGroup>

@@ -21,7 +21,6 @@ namespace Orcus.Administration
             _regionManager.RegisterViewWithRegion("MainContent", typeof(OverviewView));
 
             _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ClientsView));
-            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(TasksView));
             _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ModulesView));
 
             _regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));

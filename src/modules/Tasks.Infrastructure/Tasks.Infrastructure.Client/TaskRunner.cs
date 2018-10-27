@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Library;
+using Tasks.Infrastructure.Client.StopEvents;
+using Tasks.Infrastructure.Client.Trigger;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Data;
 using Tasks.Infrastructure.Management;
@@ -31,10 +33,57 @@ namespace Tasks.Infrastructure.Client
 
         public async Task Run(CancellationToken cancellationToken)
         {
+            using (var localCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             using (var scope = Services.CreateScope())
             {
-                var tasks = new Dictionary<Task, Type>();
+                //create stop services and add to dictionary
+                var stopTasks = new Dictionary<Task, Type>();
+                foreach (var stopEvent in OrcusTask.StopEvents)
+                {
+                    var serviceType = typeof(IStopService<>).MakeGenericType(stopEvent.GetType());
 
+                    var service = scope.ServiceProvider.GetService(serviceType);
+                    if (service == null)
+                    {
+                        Logger.LogWarning("The stop service for type {stopEvent} ({resolvedType}) could not be resolved. Skipped.",
+                            stopEvent.GetType(), serviceType);
+                        continue;
+                    }
+
+                    var stopContext = new DefaultStopContext();
+                    var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
+
+                    try
+                    {
+                        var task = (Task) methodInfo.Invoke(service, new object[] {stopEvent, stopContext, localCancellationTokenSource.Token});
+                        stopTasks.Add(task, serviceType);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogError(e, "Error occurred when invoking stop service {stopServiceType}", serviceType);
+                    }
+                }
+
+                if (stopTasks.Any())
+                {
+                    //if we have any stop events, we await until one completes.
+                    Task.WhenAny(stopTasks.Keys).ContinueWith(task =>
+                    {
+                        if (task.IsCanceled)
+                            return;
+
+                        var type = stopTasks[task.Result];
+
+                        if (task.IsFaulted) //stop the execution even if it fails, because else the task might run endless
+                            Logger.LogError(task.Exception, "An error occurred on execution {stopService} on task {task}", type, OrcusTask.Id);
+
+                        Logger.LogDebug("Stop service {stopService} stopped the execution of task {task}", type, OrcusTask.Id);
+                        localCancellationTokenSource.Cancel();
+                    }).Forget();
+                }
+
+                //create triggers and add to dictionary
+                var triggerTasks = new Dictionary<Task, Type>();
                 foreach (var triggerInfo in OrcusTask.Triggers)
                 {
                     var serviceType = typeof(ITriggerService<>).MakeGenericType(triggerInfo.GetType());
@@ -52,29 +101,33 @@ namespace Tasks.Infrastructure.Client
 
                     try
                     {
-                        var task = (Task) methodInfo.Invoke(service, new object[] {triggerInfo, triggerContext, cancellationToken});
-                        tasks.Add(task, serviceType);
+                        var task = (Task) methodInfo.Invoke(service, new object[] {triggerInfo, triggerContext, localCancellationTokenSource.Token});
+                        triggerTasks.Add(task, serviceType);
                     }
                     catch (Exception e)
                     {
                         Logger.LogError(e, "Error occurred when invoking trigger service {triggerServiceType}", serviceType);
                     }
-
-                    while (tasks.Any())
-                    {
-                        var task = await Task.WhenAny(tasks.Keys);
-                        if (cancellationToken.IsCancellationRequested)
-                            throw new TaskCanceledException();
-
-                        if (task.IsFaulted)
-                        {
-                            var type = tasks[task];
-                            Logger.LogError(task.Exception, "An error occurred when awaiting the trigger {trigger}", type);
-                        }
-
-                        tasks.Remove(task);
-                    }
                 }
+
+                //wait until all triggers have finished
+                while (triggerTasks.Any())
+                {
+                    var task = await Task.WhenAny(triggerTasks.Keys);
+                    if (localCancellationTokenSource.IsCancellationRequested)
+                        throw new TaskCanceledException();
+
+                    if (task.IsFaulted)
+                    {
+                        var type = triggerTasks[task];
+                        Logger.LogError(task.Exception, "An error occurred when awaiting the trigger {trigger}", type);
+                    }
+
+                    triggerTasks.Remove(task);
+                }
+
+                //also cancel on end of execution so the stop services can finish (e. g. on natual completion)
+                localCancellationTokenSource.Cancel();
             }
         }
 
@@ -98,7 +151,6 @@ namespace Tasks.Infrastructure.Client
                         {
                             TaskSessionId = taskSession.TaskSessionId, Timestamp = DateTimeOffset.UtcNow, CommandName = commandName
                         };
-                        Stream bodyStream = null;
 
                         try
                         {
@@ -106,21 +158,21 @@ namespace Tasks.Infrastructure.Client
                                 new object[] {commandInfo, context, cancellationToken});
                             var response = await task;
 
-                            var header = HttpSerializer.FormatHeaders(response);
-                            execution.Result = header.ToString();
-                            bodyStream = await response.Content.ReadAsStreamAsync();
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await HttpResponseSerializer.Format(response, memoryStream);
+
+                                execution.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+                            }
                         }
                         catch (Exception e)
                         {
                             Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
-                            execution.ExecutionError = e.ToString();
+                            execution.Result = e.ToString();
                         }
 
-                        using (bodyStream)
-                        {
-                            var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
-                            await sessionManager.CreateExecution(OrcusTask, taskSession, execution, bodyStream);
-                        }
+                        var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
+                        await sessionManager.CreateExecution(OrcusTask, taskSession, execution);
                     }
                 }, cancellationToken);
             }

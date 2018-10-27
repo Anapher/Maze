@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -12,6 +13,7 @@ using Orcus.Server.Data.EfCode;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 
@@ -151,12 +153,20 @@ namespace Tasks.Infrastructure.Server
                                     var task = (Task<HttpResponseMessage>) executionMethod.Invoke(service,
                                         new object[] {orcusTaskCommand, id, context, cancellationToken});
                                     var response = await task;
-                                    //todo serialize http
+
+                                    execution.Status = (int) response.StatusCode;
+
+                                    using (var memoryStream = new MemoryStream())
+                                    {
+                                        await HttpResponseSerializer.Format(response, memoryStream);
+
+                                        execution.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+                                    }
                                 }
                                 catch (Exception e)
                                 {
                                     Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
-                                    execution.ExecutionError = e.ToString();
+                                    execution.Result = e.ToString();
                                 }
 
                                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

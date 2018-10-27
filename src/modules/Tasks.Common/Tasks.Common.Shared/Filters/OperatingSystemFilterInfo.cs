@@ -1,6 +1,6 @@
 ﻿using Tasks.Infrastructure.Core.Filter;
 
-namespace TasksCore.Services.Shared.Filters
+namespace Tasks.Common.Server.Filters
 {
     public class OperatingSystemFilterInfo : FilterInfo
     {
