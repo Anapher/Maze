@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using Prism.Mvvm;
-using Tasks.Infrastructure.Administration.Library;
+using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
@@ -9,9 +9,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     {
         public CreateTaskViewModel(IComponentContext container)
         {
-            var taskCreators = container.Resolve<IEnumerable<ITaskDescriber>>();
-            var transmissionServices = container.Resolve<IEnumerable<ITransmissionServiceDescriber>>();
+            TreeViewModels = new List<object>
+            {
+                new CreateCommandViewModel(container)
+            };
 
         }
+
+        public List<object> TreeViewModels { get; }
     }
 }

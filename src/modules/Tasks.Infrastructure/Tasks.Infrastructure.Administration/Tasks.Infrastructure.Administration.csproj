@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Views\CreateTaskView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
     <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
   </ItemGroup>
@@ -35,6 +39,16 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\CreateTaskView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\CreateTask\" />
   </ItemGroup>
 
 </Project>
