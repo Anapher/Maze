@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Remove="Views\CreateTaskView.xaml" />
+    <None Remove="Views\CreateTask\CreateCommandView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,10 +46,9 @@
     <Page Update="Views\CreateTaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\CreateTask\" />
+    <Page Update="Views\CreateTask\CreateCommandView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
 </Project>
