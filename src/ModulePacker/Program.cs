@@ -74,6 +74,40 @@ namespace ModulePacker
                 CopyNupkgToOutput(outputDirectory, obj.ModuleName, fileInfo.FullName, builder);
             }
 
+            foreach (var includedReference in builder.IncludedReferences)
+            {
+                foreach (var dependency in builder.Dependencies)
+                {
+                    var referenceDependency =
+                        dependency.Value.FirstOrDefault(x => x.Id.Equals(includedReference.Id, StringComparison.OrdinalIgnoreCase));
+                    if (referenceDependency != null)
+                    {
+                        dependency.Value.Remove(referenceDependency);
+
+                        foreach (var includedReferenceDependency in includedReference.Dependencies)
+                        {
+                            if (dependency.Value.Any(x => x.Id.Equals(includedReferenceDependency.Id, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            dependency.Value.Add(includedReferenceDependency);
+                        }
+
+                        var targetFolder = Path.Combine(outputDirectory.FullName, "lib", dependency.Key.ToNuGetFramework().GetShortFolderName());
+                        foreach (var fileName in Directory.EnumerateFiles(includedReference.ContentPath))
+                        {
+                            var relativePath = fileName.Remove(0, includedReference.ContentPath.Length + 1);
+
+                            var targetFileInfo = new FileInfo(Path.Combine(targetFolder, relativePath));
+                            targetFileInfo.Directory.Create();
+
+                            File.Copy(fileName, targetFileInfo.FullName);
+                        }
+                    }
+                }
+
+                Directory.Delete(includedReference.ContentPath, true);
+            }
+
             using (var outputStream = File.Create(Path.Combine(outputDirectory.FullName, $"{obj.ModuleName}.nuspec")))
                 builder.Write(outputStream, obj.ModuleName);
 
@@ -103,23 +137,40 @@ namespace ModulePacker
                     {
                         if (Enum.TryParse<OrcusFramework>(id.Split('.').Last(), out var fw))
                             framework = fw;
+                        else
+                        {
+                            Console.WriteLine($"Package {id} could not be associated to an Orcus framework. It will be included as a reference.");
+
+                            var tempFolder = Path.Combine(directory.FullName, reader.GetId());
+                            ExtractPackage(tempFolder, sourceFile);
+
+                            builder.IncludedReferences.Add(new IncludedReference
+                            {
+                                Dependencies = reader.GetDependencies().ToList(), ContentPath = tempFolder, Id = reader.GetId()
+                            });
+                            return;
+                        }
                     }
 
                     builder.Import(reader, framework.Value);
                 }
                 
                 var nuGetFramework = framework.Value.ToNuGetFramework();
+                ExtractPackage(Path.Combine(directory.FullName, "lib", nuGetFramework.GetShortFolderName()), sourceFile);
+            }
+        }
 
-                var targetDirectory = new DirectoryInfo(Path.Combine(directory.FullName, "lib", nuGetFramework.GetShortFolderName()));
-                targetDirectory.Create();
+        private static void ExtractPackage(string targetDirectoryName, ZipArchive archive)
+        {
+            var targetDirectory = new DirectoryInfo(targetDirectoryName);
+            targetDirectory.Create();
 
-                foreach (var zipArchiveEntry in sourceFile.Entries.Where(x => x.FullName.StartsWith("lib/")))
-                {
-                    using (var targetFileStream =
-                        File.Create(Path.Combine(targetDirectory.FullName, zipArchiveEntry.Name)))
-                    using (var sourceStream = zipArchiveEntry.Open())
-                        sourceStream.CopyTo(targetFileStream);
-                }
+            foreach (var zipArchiveEntry in archive.Entries.Where(x => x.FullName.StartsWith("lib/")))
+            {
+                using (var targetFileStream =
+                    File.Create(Path.Combine(targetDirectory.FullName, zipArchiveEntry.Name)))
+                using (var sourceStream = zipArchiveEntry.Open())
+                    sourceStream.CopyTo(targetFileStream);
             }
         }
 
@@ -128,14 +179,11 @@ namespace ModulePacker
             var match = Regex.Match(name, $"{moduleName}.(?<framework>(.*?))\\.nuspec");
             if (match.Success)
             {
-#if NETFRAMEWORK
-                orcusFramework =
-                    (OrcusFramework) Enum.Parse(typeof(OrcusFramework), match.Groups["framework"].Value, true);
-#else
-                orcusFramework = Enum.Parse<OrcusFramework>(match.Groups["framework"].Value, true);
-#endif
-
-                return true;
+                if (Enum.TryParse(match.Groups["framework"].Value, true, out OrcusFramework result))
+                {
+                    orcusFramework = result;
+                    return true;
+                }
             }
 
             orcusFramework = null;

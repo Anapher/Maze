@@ -2,8 +2,7 @@
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
-    <Description>Module Description</Description>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>Provides core services for the tasks infrastructure (triggers, commands, stop events, filters, etc.). Commonly used types: Immediately Trigger, ...</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,15 +27,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
-    <ProjectReference Include="..\libraries\OpenH264net\OpenH264Lib.vcxproj" />
+    <None Remove="Resources\VisualStudioIcons.xaml" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Administration\Tasks.Infrastructure.Administration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewProviders\" />
+    <Folder Include="Views\" />
+    <Folder Include="Triggers\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <Import Project="..\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems" Label="Shared" />
+  <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />
+
 </Project>

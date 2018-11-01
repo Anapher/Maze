@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <Description>The task infrastructure provides the system used to create, deliver and execute tasks. This package as it is can not be used in a useful way. Other packages like Tasks.Common are required to actually create tasks with content.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,8 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Views\CreateTaskView.xaml" />
-    <None Remove="Views\CreateTask\CreateCommandView.xaml" />
+    <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,10 +43,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\CreateTaskView.xaml">
+    <None Update="Views\CreateTaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateTask\CreateCommandView.xaml">
+    </None>
+    <None Update="Views\CreateTask\TaskServicesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\CreateTask\TaskSingleServiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\CreateTask\TaskCreateServiceView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

@@ -9,6 +9,8 @@
     <Import_RootNamespace>Tasks.Common.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShutdownCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\WakeOnLanCommandInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Filters\OperatingSystemFilterInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ImmediatelyTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ScheduledTriggerInfo.cs" />

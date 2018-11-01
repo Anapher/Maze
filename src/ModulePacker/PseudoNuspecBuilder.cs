@@ -17,9 +17,11 @@ namespace ModulePacker
         {
             _metadata = new Dictionary<string, string>();
             Dependencies = new Dictionary<OrcusFramework, List<PackageDependency>>();
+            IncludedReferences = new List<IncludedReference>();
         }
 
         public Dictionary<OrcusFramework, List<PackageDependency>> Dependencies { get; }
+        public List<IncludedReference> IncludedReferences { get; }
 
         public void Import(NuspecCoreReader reader, OrcusFramework framework)
         {

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="TasksCommon:Commands.Shutdown">Herunterfahren</text>
+		<text key="TasksCommon:Commands.Shutdown.Summary">Fährt den Computer herunter.</text>
+		<text key="TasksCommon:Commands.WakeOnLan">Wake on Lan</text>
+		<text key="TasksCommon:Commands.WakeOnLan.Summary">Starte einen Computer über das Netzwerk.</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="TasksCommon:Commands.Shutdown">Shutdown</text>
+		<text key="TasksCommon:Commands.Shutdown.Summary">Shut down the computer.</text>
+		<text key="TasksCommon:Commands.WakeOnLan">Wake on Lan</text>
+		<text key="TasksCommon:Commands.WakeOnLan.Summary">Awake a computer through a network message.</text>
+	</culture>
+</translation>

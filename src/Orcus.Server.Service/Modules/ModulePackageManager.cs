@@ -28,6 +28,7 @@ using Orcus.Server.Service.Modules.PackageManagement;
 using Orcus.Server.Service.Modules.Resolution;
 using Orcus.Utilities;
 using ILogger = NuGet.Common.ILogger;
+using PackageResolver = Orcus.Server.Service.Modules.Resolver.PackageResolver;
 
 namespace Orcus.Server.Service.Modules
 {
@@ -167,6 +168,10 @@ namespace Orcus.Server.Service.Modules
             var primaryPackageIds = primaryPackages.Select(x => x.Id).ToHashSet();
 
             var allPackages = await ResolverGather.GatherAsync(gatherContext, token);
+            var frameworkRelevantPackages = primaryPackages.Where(x => allPackages.First(y => y.Equals(x)).Dependencies.Any()).ToHashSet();
+            var frameworkRelevantTargets = targetPackages.Where(x => allPackages.First(y => y.Equals(x)).Dependencies.Any()).ToHashSet();
+
+            //we remove all primary packages that have no dependencies for the current framework meaning they don't support this framework
             var availablePackages = allPackages.Where(x => !primaryPackageIds.Contains(x.Id) || x.Dependencies.Any()).ToList();
             if (!availablePackages.Any()) //packages not available for this framework
                 return new PackagesContext(ImmutableDictionary<PackageIdentity, SourcePackageDependencyInfo>.Empty);
@@ -181,18 +186,18 @@ namespace Orcus.Server.Service.Modules
             //2. remove all versions of the package we want to install except the version we actually want to install
             //   it is not a problem if other primary packages might need an update
             prunedAvailablePackages =
-                PrunePackageTreeExtensions.RemoveAllVersionsForIdExcept(prunedAvailablePackages, targetPackages);
+                PrunePackageTreeExtensions.RemoveAllVersionsForIdExcept(prunedAvailablePackages, frameworkRelevantTargets);
 
             //3. remove the downgrades of primary packages
             if (!downgradeAllowed)
                 prunedAvailablePackages =
-                    PrunePackageTreeExtensions.PruneDowngrades(prunedAvailablePackages, primaryPackages);
+                    PrunePackageTreeExtensions.PruneDowngrades(prunedAvailablePackages, frameworkRelevantPackages);
 
             //4. remove prereleases
             if (!resolutionContext.IncludePrerelease)
                 prunedAvailablePackages =
-                    PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, primaryPackages,
-                        targetPackages);
+                    PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, frameworkRelevantPackages,
+                        frameworkRelevantTargets);
 
             /* ===> PackageResolverContext
              * TargetIds            New packages to install or update. These will prefer the highest version.
@@ -209,10 +214,10 @@ namespace Orcus.Server.Service.Modules
 
             var resolverContext = new PackageResolverContext(
                 resolutionContext.DependencyBehavior,
-                targetIds: targetPackages.Select(x => x.Id),
-                requiredPackageIds: primaryPackages.Select(x => x.Id),
+                targetIds: frameworkRelevantTargets.Select(x => x.Id),
+                requiredPackageIds: frameworkRelevantPackages.Select(x => x.Id),
                 packagesConfig: Enumerable.Empty<PackageReference>(),
-                preferredVersions: primaryPackages,
+                preferredVersions: frameworkRelevantPackages,
                 availablePackages: prunedAvailablePackages,
                 packageSources: Enumerable.Empty<PackageSource>(),
                 log: logger);

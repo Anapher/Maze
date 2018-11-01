@@ -11,6 +11,8 @@
     d:DataContext="{d:DesignInstance viewModels:CreateTaskViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    WindowHeight="450"
+    WindowWidth="800"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -18,7 +20,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MaxWidth="250" />
             <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
         <TreeView
@@ -27,24 +29,65 @@
             Grid.Column="0"
             ItemsSource="{Binding TreeViewModels}">
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="createTask:CreateCommandViewModel" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type createTask:CommandsViewModel}" ItemsSource="{Binding Childs}">
                     <TextBlock Text="Commands" />
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="createTask:CommandViewModel">
-                    <TextBlock Text="{Binding Description.Name}" />
+                <DataTemplate DataType="{x:Type createTask:TaskViewModelView}">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl
+                            Width="16"
+                            Height="16"
+                            Content="{Binding Description.Icon}" />
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Description.Name}" />
+                    </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource MetroTreeViewItem}" TargetType="TreeViewItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
         <ContentControl
             Grid.Row="0"
             Grid.Column="1"
-            Content="{Binding ElementName=TreeView, Path=SelectedItem}">
+            Content="{Binding ElementName=TreeView, Path=SelectedItem.NodeViewModel}">
             <ContentControl.Resources>
-                <DataTemplate DataType="viewModels:CreateTaskViewModel">
-                    <createTaskViews:CreateCommandView DataContext="{Binding}" />
-                </DataTemplate>
-                <DataTemplate DataType="createTask:CommandViewModel">
-                    <ContentControl Content="{Binding View}" />
+                <DataTemplate DataType="{x:Type createTask:TaskServicesViewModel}">
+                    <ContentControl>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Content" Value="{Binding SelectedChild.View}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <createTaskViews:TaskServicesView />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Childs.Count}" Value="1">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <createTaskViews:TaskSingleServiceView />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Childs.Count}" Value="0">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <createTaskViews:TaskSingleServiceView />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>

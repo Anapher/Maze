@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <Description>The request transmitter will accepts HTTP requests and deliver them with a gurantee. If the destination is unreachable, the request will be saved locally and automatically transmitted once the server is back on again.</Description>
   </PropertyGroup>
 
   <ItemGroup>

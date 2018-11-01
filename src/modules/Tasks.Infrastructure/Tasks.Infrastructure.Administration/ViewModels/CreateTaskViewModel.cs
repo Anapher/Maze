@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using Orcus.Administration.Library.Services;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 
@@ -7,15 +8,15 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 {
     public class CreateTaskViewModel : BindableBase
     {
-        public CreateTaskViewModel(IComponentContext container)
+        public CreateTaskViewModel(IWindowService windowService, IComponentContext container)
         {
-            TreeViewModels = new List<object>
+            TreeViewModels = new List<ITreeViewItem>
             {
-                new CreateCommandViewModel(container)
+                new CommandsViewModel(windowService, container)
             };
 
         }
 
-        public List<object> TreeViewModels { get; }
+        public List<ITreeViewItem> TreeViewModels { get; }
     }
 }

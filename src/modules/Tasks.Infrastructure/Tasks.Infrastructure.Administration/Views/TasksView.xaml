@@ -18,7 +18,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Menu>
-            <MenuItem Header="{tx:T TasksView:CreateNewTask}" />
+            <MenuItem Command="{Binding CreateTaskCommand}" Header="{tx:T TasksView:CreateNewTask}" />
         </Menu>
         <DataGrid Grid.Row="1" />
     </Grid>

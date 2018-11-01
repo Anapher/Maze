@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Tasks.Infrastructure.Administration.Views.CreateTask
 {
     /// <summary>
-    /// Interaction logic for CreateCommandView.xaml
+    /// Interaction logic for TaskServicesView.xaml
     /// </summary>
-    public partial class CreateCommandView : UserControl
+    public partial class TaskServicesView : UserControl
     {
-        public CreateCommandView()
+        public TaskServicesView()
         {
             InitializeComponent();
         }
