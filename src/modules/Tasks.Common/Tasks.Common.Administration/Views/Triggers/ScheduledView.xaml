@@ -1,0 +1,195 @@
+﻿<UserControl
+    x:Class="Tasks.Common.Administration.Views.Triggers.ScheduledView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shared="clr-namespace:Tasks.Common.Triggers"
+    xmlns:triggers="clr-namespace:Tasks.Common.Administration.Triggers"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    d:DataContext="{d:DesignInstance triggers:ScheduledViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+        <converter:SwitchBooleanConverter x:Key="SwitchBooleanConverter" />
+    </UserControl.Resources>
+    <WrapPanel Margin="10,10,0,10">
+        <StackPanel Margin="0,0,20,10" Orientation="Vertical">
+            <RadioButton Content="{tx:T TasksCommon:Triggers.Scheduled.View.Modes.OneTime}" IsChecked="{Binding Mode, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static shared:ScheduleMode.Once}}" />
+            <RadioButton
+                Margin="0,4,0,0"
+                Content="{tx:T TasksCommon:Triggers.Scheduled.View.Modes.Daily}"
+                IsChecked="{Binding Mode, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static shared:ScheduleMode.Daily}}" />
+            <RadioButton
+                Margin="0,4,0,0"
+                Content="{tx:T TasksCommon:Triggers.Scheduled.View.Modes.Weekly}"
+                IsChecked="{Binding Mode, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static shared:ScheduleMode.Weekly}}" />
+            <RadioButton
+                Margin="0,4,0,0"
+                Content="{tx:T TasksCommon:Triggers.Scheduled.View.Modes.Monthly}"
+                IsChecked="{Binding Mode, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static shared:ScheduleMode.Monthly}}" />
+        </StackPanel>
+        <StackPanel Margin="0,0,10,0">
+            <WrapPanel Orientation="Horizontal">
+                <StackPanel Margin="0,5,10,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="{tx:TC TasksCommon:Triggers.Scheduled.View.Start}" />
+                    <xctk:DateTimeUpDown
+                        Width="220"
+                        Height="22"
+                        Margin="5,0,0,0"
+                        Format="Custom"
+                        FormatString="ddd, dd.MM.yyyy HH:mm:ss"
+                        Kind="Local"
+                        Value="{Binding StartTime}" />
+                </StackPanel>
+                <CheckBox
+                    Margin="0,5,0,0"
+                    Content="{tx:T TasksCommon:Triggers.Scheduled.View.Start.SynchronizeTimeZone}"
+                    IsChecked="{Binding SynchronizeTimeZone}" />
+            </WrapPanel>
+            <GroupBox Margin="0,10,0,0" Padding="10">
+                <GroupBox.Style>
+                    <Style BasedOn="{StaticResource MetroGroupBox}" TargetType="GroupBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Mode}" Value="{x:Static shared:ScheduleMode.Once}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="{x:Static shared:ScheduleMode.Daily}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{tx:TC TasksCommon:Triggers.Scheduled.View.RecurEvery}" />
+                                            <mah:NumericUpDown
+                                                Margin="10,0,0,0"
+                                                Minimum="1"
+                                                StringFormat="{tx:T TasksCommon:Triggers.Scheduled.View.DaysStringFormat}"
+                                                Value="{Binding RecurEvery}" />
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="{x:Static shared:ScheduleMode.Weekly}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock VerticalAlignment="Center" Text="{tx:TC TasksCommon:Triggers.Scheduled.View.RecurEvery}" />
+                                                <mah:NumericUpDown
+                                                    Margin="10,0,0,0"
+                                                    Minimum="1"
+                                                    StringFormat="{tx:T TasksCommon:Triggers.Scheduled.View.WeeksStringFormat}"
+                                                    Value="{Binding RecurEvery}" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    Text="{tx:T TasksCommon:Triggers.Scheduled.View.RecurEvery.at}" />
+                                            </StackPanel>
+                                            <xctk:CheckComboBox
+                                                Height="25"
+                                                Margin="0,5,0,0"
+                                                Delimiter=", "
+                                                DisplayMemberPath="Name"
+                                                IsSelectAllActive="True"
+                                                ItemsSource="{Binding WeekDays}"
+                                                SelectAllContent="{tx:T TasksCommon:Triggers.Scheduled.View.AllDays}"
+                                                SelectedMemberPath="IsSelected"
+                                                ValueMemberPath="Value" />
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="{x:Static shared:ScheduleMode.Monthly}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" MinWidth="60" />
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition Height="4" />
+                                                <RowDefinition />
+                                                <RowDefinition Height="4" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Text="{tx:TC TasksCommon:Triggers.Scheduled.View.Months}" />
+                                            <xctk:CheckComboBox
+                                                Grid.Row="0"
+                                                Grid.Column="2"
+                                                Height="25"
+                                                Delimiter=", "
+                                                DisplayMemberPath="Name"
+                                                IsSelectAllActive="True"
+                                                ItemsSource="{Binding Months}"
+                                                SelectAllContent="{tx:T TasksCommon:Triggers.Scheduled.View.AllMonths}"
+                                                SelectedMemberPath="IsSelected"
+                                                ValueMemberPath="Value" />
+                                            <RadioButton
+                                                Grid.Row="2"
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                Content="{tx:TC TasksCommon:Triggers.Scheduled.View.Days}"
+                                                IsChecked="{Binding MonthlyAtRelativeDays, Converter={StaticResource SwitchBooleanConverter}}" />
+                                            <xctk:CheckComboBox
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                Height="25"
+                                                Delimiter=", "
+                                                DisplayMemberPath="Name"
+                                                IsEnabled="{Binding MonthlyAtRelativeDays, Converter={StaticResource SwitchBooleanConverter}}"
+                                                IsSelectAllActive="False"
+                                                ItemsSource="{Binding MonthDays}"
+                                                SelectedMemberPath="IsSelected"
+                                                ValueMemberPath="Value" />
+                                            <RadioButton
+                                                Grid.Row="4"
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                Content="{tx:TC TasksCommon:Triggers.Scheduled.View.At}"
+                                                IsChecked="{Binding MonthlyAtRelativeDays}" />
+                                            <Grid
+                                                Grid.Row="4"
+                                                Grid.Column="2"
+                                                IsEnabled="{Binding MonthlyAtRelativeDays}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="2*" />
+                                                </Grid.ColumnDefinitions>
+                                                <xctk:CheckComboBox
+                                                    Height="25"
+                                                    Delimiter=", "
+                                                    DisplayMemberPath="Name"
+                                                    IsSelectAllActive="False"
+                                                    ItemsSource="{Binding RelativeDays}"
+                                                    SelectedMemberPath="IsSelected"
+                                                    ValueMemberPath="Value" />
+                                                <xctk:CheckComboBox
+                                                    Grid.Column="1"
+                                                    Height="25"
+                                                    Margin="10,0,0,0"
+                                                    Delimiter=", "
+                                                    DisplayMemberPath="Name"
+                                                    IsSelectAllActive="True"
+                                                    ItemsSource="{Binding WeekDays}"
+                                                    SelectAllContent="{tx:T TasksCommon:Triggers.Scheduled.View.AllDays}"
+                                                    SelectedMemberPath="IsSelected"
+                                                    ValueMemberPath="Value" />
+                                            </Grid>
+                                        </Grid>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </GroupBox.Style>
+            </GroupBox>
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

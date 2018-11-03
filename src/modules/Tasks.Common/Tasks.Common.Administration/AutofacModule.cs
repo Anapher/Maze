@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using Autofac;
 using Tasks.Common.Administration.Resources;
-using Tasks.Infrastructure.Administration.Library.Command;
+using Tasks.Common.Administration.ViewProvider;
+using Tasks.Infrastructure.Administration.Library;
 
 namespace Tasks.Common.Administration
 {
@@ -12,10 +13,11 @@ namespace Tasks.Common.Administration
             base.Load(builder);
 
             builder.RegisterType<VisualStudioIcons>().SingleInstance();
-            builder.RegisterAssemblyTypes(ThisAssembly).Where(x => typeof(ICommandDescription).IsAssignableFrom(x)).As<ICommandDescription>();
+            builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<ITaskServiceDescription>().AsImplementedInterfaces();
             builder.RegisterAssemblyTypes(ThisAssembly)
-                .Where(x => x.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandViewModel<>)))
+                .Where(x => x.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ITaskServiceViewModel<>)))
                 .AsImplementedInterfaces();
+            builder.RegisterType<CommonViewProvider>().AsImplementedInterfaces();
         }
     }
 }

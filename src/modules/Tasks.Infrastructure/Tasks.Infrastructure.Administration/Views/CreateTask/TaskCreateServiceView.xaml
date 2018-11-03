@@ -6,18 +6,38 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:library="clr-namespace:Tasks.Infrastructure.Administration.Library"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     d:DataContext="{d:DesignInstance createTask:TaskCreateServiceViewModel}"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="600"
     DialogResult="{Binding DialogResult}"
     WindowHeight="450"
-    WindowWidth="800"
+    WindowWidth="600"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/VisualStudioIcons.xaml" />
+                <ResourceDictionary Source="../../Resources/Styles/PropertyGrid.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition>
+                <ColumnDefinition.Style>
+                    <Style TargetType="ColumnDefinition">
+                        <Setter Property="Width" Value="*" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding View.View}" Value="{x:Null}">
+                                <Setter Property="Width" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ColumnDefinition.Style>
+            </ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -26,6 +46,7 @@
         <ListBox
             Grid.Row="0"
             ItemsSource="{Binding AvailableServices}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             SelectedItem="{Binding SelectedService}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type library:ITaskServiceDescription}">
@@ -50,17 +71,25 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ContentControl
+        <Border
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="1"
-            Margin="10"
-            Content="{Binding View.View}" />
-        <Button
+            BorderBrush="{StaticResource GrayBrush7}"
+            BorderThickness="1,0,0,0">
+            <ContentControl Content="{Binding View.View}" />
+        </Border>
+        <Border
             Grid.Row="1"
             Grid.Column="0"
-            Margin="5"
-            Command="{Binding CreateCommand}"
-            Content="Create" />
+            BorderBrush="{StaticResource GrayBrush8}"
+            BorderThickness="0,1,0,0">
+            <Button
+                MinWidth="200"
+                Margin="10,9,10,10"
+                HorizontalAlignment="Left"
+                Command="{Binding CreateCommand}"
+                Content="{tx:T Create}" />
+        </Border>
     </Grid>
 </views:WindowUserControl>

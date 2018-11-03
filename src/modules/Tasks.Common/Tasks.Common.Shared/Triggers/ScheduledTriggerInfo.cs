@@ -19,4 +19,13 @@ namespace Tasks.Common.Triggers
         Weekly,
         Monthly
     }
+
+    public enum RelativeDayInMonth
+    {
+        First,
+        Second,
+        Third,
+        Fourth,
+        Last
+    }
 }

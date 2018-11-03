@@ -2,15 +2,97 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="TasksCommon:Categories.Common">Allgemein</text>
 		<text key="TasksCommon:Commands.Shutdown">Herunterfahren</text>
 		<text key="TasksCommon:Commands.Shutdown.Summary">Fährt den Computer herunter.</text>
 		<text key="TasksCommon:Commands.WakeOnLan">Wake on Lan</text>
 		<text key="TasksCommon:Commands.WakeOnLan.Summary">Starte einen Computer über das Netzwerk.</text>
+		<text key="TasksCommon:Filters.OperatingSystem">Betriebssystem</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Errors.NoSystemSelected">Es wurde kein Betriebssystem ausgewählt, sodass die Befehle nie ausgeführt werden.</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Properties.Description">Befehle auf {system} ausführen.</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Summary">Filter nach dem Betriebssystem.</text>
+		<text key="TasksCommon:StopEvents.DateTime">Datum</text>
+		<text key="TasksCommon:StopEvents.DateTime.Errors.DateTimeIsInPast">Das Datum liegt bereits in der Vergangenheit.</text>
+		<text key="TasksCommon:StopEvents.DateTime.Properties.DateTime">Datum und Uhrzeit</text>
+		<text key="TasksCommon:StopEvents.DateTime.Properties.DateTime.Description">Das Datum und die Uhrzeit, zu der alle Befehle gestoppt werden sollen.</text>
+		<text key="TasksCommon:StopEvents.DateTime.Summary">Stoppe alle Befehle an einem bestimmten Zeitpunkt.</text>
+		<text key="TasksCommon:StopEvents.Duration">Zeitdauer</text>
+		<text key="TasksCommon:StopEvents.Duration.Errors.TimeSpanGreaterThanZero">Die Zeitspanne muss größere als Null sein.</text>
+		<text key="TasksCommon:StopEvents.Duration.Properties.Duration">{=TasksCommon:StopEvents.Duration}</text>
+		<text key="TasksCommon:StopEvents.Duration.Properties.Duration.Description">Die Laufzeit der Befehle bis sie gestoppt werden.</text>
+		<text key="TasksCommon:StopEvents.Duration.Summary">Stoppe alle Befehle nach einer bestimmten Zeitspanne.</text>
+		<text key="TasksCommon:Triggers.Immediately">Sofort</text>
+		<text key="TasksCommon:Triggers.Immediately.Summary">Die Befehle werden sofort ausgeführt.</text>
+		<text key="TasksCommon:Triggers.Scheduled">Geplant</text>
+		<text key="TasksCommon:Triggers.Scheduled.Summary">Ausführen nach bestimmten Zeitplan.</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.AllDays">&lt;Alle Tage&gt;</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.AllMonths">&lt;Alle Monate&gt;</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.At">Am</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.First">Ersten</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Fourth">Vierten</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Last">Letzten</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Second">Zweiten</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Third">Dritten</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Days">Tage</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DaysStringFormat">0 Tage</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Every">Jede</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Last">Letzter</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Daily">Täglich</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Monthly">Monatlich</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.OneTime">Einmal</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Weekly">Wöchentlich</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Months">Monate</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.RecurEvery">Wiederhole alle</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.RecurEvery.at">am</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Start" acceptmissing="true">Start</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Start.SynchronizeTimeZone">Synchronisiere Zeitzonen</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.WeeksStringFormat">0 Wochen</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="TasksCommon:Categories.Common">Common</text>
 		<text key="TasksCommon:Commands.Shutdown">Shutdown</text>
 		<text key="TasksCommon:Commands.Shutdown.Summary">Shut down the computer.</text>
 		<text key="TasksCommon:Commands.WakeOnLan">Wake on Lan</text>
 		<text key="TasksCommon:Commands.WakeOnLan.Summary">Awake a computer through a network message.</text>
+		<text key="TasksCommon:Filters.OperatingSystem">Operating System</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Errors.NoSystemSelected">No operating system was selected, so the commands wouldn't be executed anywhere.</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Properties.Description">Execute the commands on {system}.</text>
+		<text key="TasksCommon:Filters.OperatingSystem.Summary">Filter by the operating system.</text>
+		<text key="TasksCommon:StopEvents.DateTime">Date</text>
+		<text key="TasksCommon:StopEvents.DateTime.Errors.DateTimeIsInPast">The date is already in past.</text>
+		<text key="TasksCommon:StopEvents.DateTime.Properties.DateTime">Date and time</text>
+		<text key="TasksCommon:StopEvents.DateTime.Properties.DateTime.Description">The date and time when all commands should be stopped.</text>
+		<text key="TasksCommon:StopEvents.DateTime.Summary">Stop the commands at a given date and time.</text>
+		<text key="TasksCommon:StopEvents.Duration">Duration</text>
+		<text key="TasksCommon:StopEvents.Duration.Errors.TimeSpanGreaterThanZero">The time span must be greater than zero.</text>
+		<text key="TasksCommon:StopEvents.Duration.Properties.Duration">{=TasksCommon:StopEvents.Duration}</text>
+		<text key="TasksCommon:StopEvents.Duration.Properties.Duration.Description">The duration the commands should run until they get stopped.</text>
+		<text key="TasksCommon:StopEvents.Duration.Summary">Stop the commands after a given duration.</text>
+		<text key="TasksCommon:Triggers.Immediately">Immediately</text>
+		<text key="TasksCommon:Triggers.Immediately.Summary">The commands will be triggered immediately.</text>
+		<text key="TasksCommon:Triggers.Scheduled">Scheduled</text>
+		<text key="TasksCommon:Triggers.Scheduled.Summary">Execute at specific points in time.</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.AllDays">&lt;All Days&gt;</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.AllMonths">&lt;All Months&gt;</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.At">At</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.First">First</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Fourth">Fourth</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Last">Last</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Second">Second</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DayInMonth.Third">Third</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Days">Days</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.DaysStringFormat">0 days</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Every">Every</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Last">Last</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Daily">Daily</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Monthly">Monthly</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.OneTime">One time</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Modes.Weekly">Weekly</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Months">Months</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.RecurEvery">Recur every</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.RecurEvery.at">at</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Start">Start</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.Start.SynchronizeTimeZone">Synchronize time zone</text>
+		<text key="TasksCommon:Triggers.Scheduled.View.WeeksStringFormat">0 weeks</text>
 	</culture>
 </translation>

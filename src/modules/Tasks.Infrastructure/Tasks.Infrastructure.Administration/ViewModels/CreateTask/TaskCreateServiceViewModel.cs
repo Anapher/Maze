@@ -61,7 +61,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             {
                 return _createCommand ?? (_createCommand = new DelegateCommand(() =>
                 {
-                    var result = TaskServiceViewModelUtils.Validate(View.ViewModel, new TaskContext());
+                    var result = TaskServiceViewModelUtils.ValidateInput(View.ViewModel);
                     if (result == ValidationResult.Success) DialogResult = true;
                 }));
             }

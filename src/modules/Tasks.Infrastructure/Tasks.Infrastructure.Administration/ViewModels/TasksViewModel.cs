@@ -10,22 +10,18 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     public class TasksViewModel : OverviewTabBase
     {
         private readonly IWindowService _windowService;
+        private DelegateCommand _createTaskCommand;
 
         public TasksViewModel(IWindowService windowService) : base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
         {
             _windowService = windowService;
         }
 
-        private DelegateCommand _createTaskCommand;
-
         public DelegateCommand CreateTaskCommand
         {
             get
             {
-                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(() =>
-                {
-                    _windowService.ShowDialog<CreateTaskViewModel>();
-                }));
+                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(() => { _windowService.ShowDialog<CreateTaskViewModel>(); }));
             }
         }
     }

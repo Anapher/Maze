@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Tasks.Common.Shared.Commands;
-using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Command;
+using Tasks.Infrastructure.Core;
 
 namespace Tasks.Common.Administration.Commands
 {
@@ -11,7 +11,10 @@ namespace Tasks.Common.Administration.Commands
         {
         }
 
-        public ValidationResult Validate(TaskContext context) => ValidationResult.Success;
-        public WakeOnLanCommandInfo Build(TaskContext context) => new WakeOnLanCommandInfo();
+        public ValidationResult ValidateInput() => ValidationResult.Success;
+
+        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+
+        public WakeOnLanCommandInfo Build() => new WakeOnLanCommandInfo();
     }
 }

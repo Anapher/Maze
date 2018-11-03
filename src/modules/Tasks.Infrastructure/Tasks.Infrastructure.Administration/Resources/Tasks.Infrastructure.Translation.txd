@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="TasksInfrastructure:CreateTask.AddAnother">Weiteren {entry} hinzufügen</text>
+		<text key="TasksInfrastructure:CreateTask.Audience">Unterstehende</text>
+		<text key="TasksInfrastructure:CreateTask.Commands">Befehle</text>
+		<text key="TasksInfrastructure:CreateTask.Commands" count="1">Befehl</text>
+		<text key="TasksInfrastructure:CreateTask.Common">Allgemein</text>
+		<text key="TasksInfrastructure:CreateTask.CreateNewEntry">Neuen {entry} hinzufügen</text>
+		<text key="TasksInfrastructure:CreateTask.CreateTask">Aufgabe erstellen</text>
+		<text key="TasksInfrastructure:CreateTask.ExecuteOnce">Einmal pro Client ausführen</text>
+		<text key="TasksInfrastructure:CreateTask.Filters">Filter</text>
+		<text key="TasksInfrastructure:CreateTask.Filters" count="1">Filter</text>
+		<text key="TasksInfrastructure:CreateTask.NoPropertiesWereFound">Es wurden keine Eigenschaften gefunden</text>
+		<text key="TasksInfrastructure:CreateTask.NoSettingsAvailable">Keine Einstellungen verfügbar</text>
+		<text key="TasksInfrastructure:CreateTask.Search">Suchen...</text>
+		<text key="TasksInfrastructure:CreateTask.StopEvents">Stoppen</text>
+		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stopp</text>
+		<text key="TasksInfrastructure:CreateTask.Triggers">Auslöser</text>
+		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Auslöser</text>
+		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">Der Name der Aufgabe darf nicht leer sein.</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="TasksInfrastructure:CreateTask.AddAnother">Add another {entry}</text>
+		<text key="TasksInfrastructure:CreateTask.Audience">Audience</text>
+		<text key="TasksInfrastructure:CreateTask.Commands">Commands</text>
+		<text key="TasksInfrastructure:CreateTask.Commands" count="1">Command</text>
+		<text key="TasksInfrastructure:CreateTask.Common">Common</text>
+		<text key="TasksInfrastructure:CreateTask.CreateNewEntry">Create new {entry}</text>
+		<text key="TasksInfrastructure:CreateTask.CreateTask">Create Task</text>
+		<text key="TasksInfrastructure:CreateTask.ExecuteOnce">Execute once per client</text>
+		<text key="TasksInfrastructure:CreateTask.Filters">Filters</text>
+		<text key="TasksInfrastructure:CreateTask.Filters" count="1">Filter</text>
+		<text key="TasksInfrastructure:CreateTask.NoPropertiesWereFound">No properties were found</text>
+		<text key="TasksInfrastructure:CreateTask.NoSettingsAvailable">No Settings Available</text>
+		<text key="TasksInfrastructure:CreateTask.Search">Search...</text>
+		<text key="TasksInfrastructure:CreateTask.StopEvents">Stop</text>
+		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stop</text>
+		<text key="TasksInfrastructure:CreateTask.Triggers">Triggers</text>
+		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Trigger</text>
+		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">The name of the task cannot be empty.</text>
+	</culture>
+</translation>

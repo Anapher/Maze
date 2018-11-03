@@ -2,11 +2,10 @@
 using System.Globalization;
 using System.Windows;
 using Autofac;
-using Tasks.Infrastructure.Administration.Library.Command;
 
 namespace Tasks.Infrastructure.Administration.Core
 {
-    public class DefaultViewProvider : ICommandViewProvider
+    public class DefaultViewProvider : IViewProviderForAll
     {
         public int Priority { get; } = 0;
 
@@ -32,8 +31,8 @@ namespace Tasks.Infrastructure.Administration.Core
             var viewName = TrimEnd(viewModelType.FullName, "Model", StringComparison.OrdinalIgnoreCase);
             viewName = viewName.Replace(".ViewModels.", ".Views.");
 
-            var viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelType.Assembly.FullName);
-            return Type.GetType(viewModelName);
+            var fullyQualifiedName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelType.Assembly.FullName);
+            return Type.GetType(fullyQualifiedName);
         }
 
         private static string TrimEnd(string input, string suffixToRemove, StringComparison comparisonType)

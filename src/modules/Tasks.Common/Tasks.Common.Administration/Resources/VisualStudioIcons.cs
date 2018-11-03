@@ -12,5 +12,10 @@ namespace Tasks.Common.Administration.Resources
 
         public Viewbox ServerRunTest => GetIcon();
         public Viewbox ShutDown => GetIcon();
+        public Viewbox Event => GetIcon();
+        public Viewbox HistoryTable => GetIcon();
+        public Viewbox ComputerSystem => GetIcon();
+        public Viewbox Timer => GetIcon();
+        public Viewbox Calendar => GetIcon();
     }
 }

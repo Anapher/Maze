@@ -27,7 +27,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Styles\PathBox.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\ButtonSpinner.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.ColorPicker.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.ComboBox.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.DateTimeUpDown.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.NumericUpDown.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.TextBoxMultiline.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\Editor.TimeSpanUpDown.xaml" />
+    <None Remove="Resources\Styles\PropertyGrid\PropertyGrid.xaml" />
+    <None Remove="Resources\Tasks.Infrastructure.Translation.txd" />
+    <None Remove="Resources\VisualStudioIcons.xaml" />
     <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
+    <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Tasks.Infrastructure.Translation.txd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +63,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Styles\PropertyGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="Views\CreateTaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
@@ -55,7 +78,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Resources\Styles\PathBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\ButtonSpinner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.ColorPicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.ComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.DateTimeUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.NumericUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.TextBoxMultiline.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid\Editor.TimeSpanUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\PropertyGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\CreateTask\TaskCreateServiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CreateTask\TaskSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

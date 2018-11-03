@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\VisualStudioIcons.xaml" />
+    <None Remove="Views\ScheduledView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,16 +35,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewProviders\" />
-    <Folder Include="Views\" />
-    <Folder Include="Triggers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\VisualStudioIcons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\Triggers\ScheduledView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Triggers\ScheduledView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />

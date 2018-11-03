@@ -6,6 +6,7 @@
     xmlns:createTaskViews="clr-namespace:Tasks.Infrastructure.Administration.Views.CreateTask"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     d:DataContext="{d:DesignInstance viewModels:CreateTaskViewModel}"
@@ -14,6 +15,14 @@
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/VisualStudioIcons.xaml" />
+                <ResourceDictionary Source="../Resources/Styles/PropertyGrid.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -27,21 +36,63 @@
             x:Name="TreeView"
             Grid.Row="0"
             Grid.Column="0"
+            Padding="0"
+            Background="{StaticResource GrayBrush10}"
+            BorderThickness="0"
             ItemsSource="{Binding TreeViewModels}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type createTask:CommandsViewModel}" ItemsSource="{Binding Childs}">
-                    <TextBlock Text="Commands" />
+                    <TextBlock Text="{tx:T TasksInfrastructure:CreateTask.Commands}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type createTask:TriggersViewModel}" ItemsSource="{Binding Childs}">
+                    <TextBlock Text="{tx:T TasksInfrastructure:CreateTask.Triggers}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type createTask:FiltersViewModel}" ItemsSource="{Binding Childs}">
+                    <TextBlock Text="{tx:T TasksInfrastructure:CreateTask.Filters}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type createTask:StopEventsViewModel}" ItemsSource="{Binding Childs}">
+                    <TextBlock Text="{tx:T TasksInfrastructure:CreateTask.StopEvents}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type createTask:TaskViewModelView}">
                     <StackPanel Orientation="Horizontal">
                         <ContentControl
                             Width="16"
                             Height="16"
-                            Content="{Binding Description.Icon}" />
+                            Content="{Binding Description.Icon}"
+                            Focusable="False" />
                         <TextBlock
                             Margin="4,0,0,0"
                             VerticalAlignment="Center"
                             Text="{Binding Description.Name}" />
+                    </StackPanel>
+                </DataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type createTask:AudienceViewModel}" ItemsSource="{Binding Childs}">
+                    <TextBlock Text="{tx:T TasksInfrastructure:CreateTask.Audience}" />
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type createTask:AudienceStatusChildViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl
+                            Width="16"
+                            Height="16"
+                            Content="{StaticResource VBWPFLibraryIcon}"
+                            Focusable="False" />
+                        <TextBlock Margin="4,0,0,0" VerticalAlignment="Center">
+                            <Run Text="{Binding EstimatedClients}" />
+                            <Run Text="{tx:T Clients, CountBinding={Binding EstimatedClients}}" />
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type createTask:TaskSettingsViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl
+                            Width="16"
+                            Height="16"
+                            Content="{StaticResource ApplicationClassIcon}"
+                            Focusable="False" />
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{tx:T TasksInfrastructure:CreateTask.Common}" />
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>
@@ -49,47 +100,83 @@
                 <Style BasedOn="{StaticResource MetroTreeViewItem}" TargetType="TreeViewItem">
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     <Setter Property="IsExpanded" Value="True" />
+                    <Setter Property="Background" Value="Transparent" />
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
-        <ContentControl
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="{StaticResource GrayBrush9}"
+            BorderBrush="{StaticResource GrayBrush7}"
+            BorderThickness="0,1,0,0">
+            <Button
+                MinWidth="150"
+                Margin="10"
+                HorizontalAlignment="Center"
+                Command="{Binding CreateTaskCommand}"
+                Content="{tx:T TasksInfrastructure:CreateTask.CreateTask}" />
+        </Border>
+        <Border
             Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="1"
-            Content="{Binding ElementName=TreeView, Path=SelectedItem.NodeViewModel}">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type createTask:TaskServicesViewModel}">
-                    <ContentControl>
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Setter Property="Content" Value="{Binding SelectedChild.View}" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <createTaskViews:TaskServicesView />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Childs.Count}" Value="1">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <createTaskViews:TaskSingleServiceView />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Childs.Count}" Value="0">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <createTaskViews:TaskSingleServiceView />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
-                </DataTemplate>
-            </ContentControl.Resources>
-        </ContentControl>
+            BorderBrush="{StaticResource GrayBrush7}"
+            BorderThickness="1,0,0,0">
+            <ContentControl Content="{Binding ElementName=TreeView, Path=SelectedItem.NodeViewModel}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type createTask:TaskServicesViewModel}">
+                        <ContentControl>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Setter Property="Content" Value="{Binding SelectedChild.View}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedChild.View}" Value="{x:Null}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Border Background="{StaticResource GrayBrush9}">
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="25"
+                                                            FontWeight="Bold"
+                                                            Foreground="{StaticResource GrayBrush7}"
+                                                            Text="{tx:T TasksInfrastructure:CreateTask.NoSettingsAvailable}" />
+                                                    </Border>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <createTaskViews:TaskServicesView />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Childs.Count}" Value="1">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <createTaskViews:TaskSingleServiceView />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Childs.Count}" Value="0">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <createTaskViews:TaskSingleServiceView />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type createTask:TaskSettingsViewModel}">
+                        <createTaskViews:TaskSettingsView />
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+        </Border>
     </Grid>
 </views:WindowUserControl>
