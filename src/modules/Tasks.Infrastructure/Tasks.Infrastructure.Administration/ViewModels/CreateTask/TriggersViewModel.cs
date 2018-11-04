@@ -55,9 +55,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override void Apply(OrcusTask orcusTask)
         {
+            orcusTask.Triggers = new List<TriggerInfo>();
             foreach (var taskView in _childs)
             {
-                var dto = TaskServiceViewModelUtils.Build<TriggerInfo>(taskView.ViewModel, new TaskContext());
+                var dto = TaskServiceViewModelUtils.Build<TriggerInfo>(taskView.ViewModel);
                 orcusTask.Triggers.Add(dto);
             }
         }

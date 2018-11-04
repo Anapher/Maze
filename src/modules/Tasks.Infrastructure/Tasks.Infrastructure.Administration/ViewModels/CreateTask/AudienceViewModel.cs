@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base;
 using Tasks.Infrastructure.Core;
+using Tasks.Infrastructure.Core.Audience;
 
 namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 {
@@ -24,7 +25,6 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public void Initialize(OrcusTask orcusTask)
         {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<ValidationResult> ValidateInput() => Enumerable.Empty<ValidationResult>();
@@ -33,6 +33,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public void Apply(OrcusTask orcusTask)
         {
+            orcusTask.Audience = new AudienceCollection {IsAll = true};
         }
     }
 }

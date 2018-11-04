@@ -20,6 +20,5 @@ namespace Tasks.Common.Administration.Filters
         public string Summary { get; } = Tx.T("TasksCommon:Filters.OperatingSystem.Summary");
         public UIElement Icon => _icons.ComputerSystem;
         public Type DtoType { get; } = typeof(OperatingSystemFilterInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

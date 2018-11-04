@@ -73,11 +73,11 @@ namespace Orcus.Server
                 options.AddPolicy("installModules", builder => builder.RequireRole("installingUser"));
             });
 
-            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.Configure());
+            var mcvBuilder = services.AddMvc().AddJsonOptions(options => options.SerializerSettings.Configure());
             services.AddEntityFrameworkSqlite().AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSignalR();
-
+            
             Mapper.Initialize(options =>
             {
                 options.AddProfile<AutoMapperProfile>();
@@ -96,7 +96,7 @@ namespace Orcus.Server
                 .RegisterModule<ModuleManagementModule>();
 
             new PackageInitialization(provider.GetService<IOptions<ModulesOptions>>().Value, services, Configuration)
-                .LoadModules(containerBuilder).Wait();
+                .LoadModules(containerBuilder, mcvBuilder).Wait();
 
             containerBuilder.Populate(services);
 

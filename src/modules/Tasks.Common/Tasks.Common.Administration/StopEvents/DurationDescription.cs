@@ -20,6 +20,5 @@ namespace Tasks.Common.Administration.StopEvents
         public string Summary { get; } = Tx.T("TasksCommon:StopEvents.Duration.Summary");
         public UIElement Icon => _icons.Timer;
         public Type DtoType { get; } = typeof(DurationStopEventInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

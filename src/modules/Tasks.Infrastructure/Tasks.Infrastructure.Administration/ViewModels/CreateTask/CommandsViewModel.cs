@@ -56,9 +56,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override void Apply(OrcusTask orcusTask)
         {
+            orcusTask.Commands = new List<CommandInfo>();
             foreach (var taskView in _childs)
             {
-                var dto = TaskServiceViewModelUtils.Build<CommandInfo>(taskView.ViewModel, new TaskContext());
+                var dto = TaskServiceViewModelUtils.Build<CommandInfo>(taskView.ViewModel);
                 orcusTask.Commands.Add(dto);
             }
         }

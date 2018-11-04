@@ -17,5 +17,6 @@ namespace Tasks.Common.Administration.Resources
         public Viewbox ComputerSystem => GetIcon();
         public Viewbox Timer => GetIcon();
         public Viewbox Calendar => GetIcon();
+        public Viewbox CloudConnectedServices => GetIcon();
     }
 }

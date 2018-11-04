@@ -70,4 +70,8 @@ namespace Tasks.Infrastructure.Core.Tests
             writer.WriteString(Content);
         }
     }
+    
+    public class EmptyCommandInfo : CommandInfo
+    {
+    }
 }

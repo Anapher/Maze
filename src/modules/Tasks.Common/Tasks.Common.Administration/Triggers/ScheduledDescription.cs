@@ -21,6 +21,5 @@ namespace Tasks.Common.Administration.Triggers
         public string Name { get; } = Tx.T("TasksCommon:Triggers.Scheduled");
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.Scheduled.Summary");
         public Type DtoType { get; } = typeof(ScheduledTriggerInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

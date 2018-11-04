@@ -20,6 +20,5 @@ namespace Tasks.Common.Administration.StopEvents
         public string Summary { get; } = Tx.T("TasksCommon:StopEvents.DateTime.Summary");
         public UIElement Icon => _icons.Calendar;
         public Type DtoType { get; } = typeof(DateTimeStopEventInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

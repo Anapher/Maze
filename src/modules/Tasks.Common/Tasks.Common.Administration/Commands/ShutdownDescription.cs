@@ -20,6 +20,5 @@ namespace Tasks.Common.Administration.Commands
         public string Summary { get; } = Tx.T("TasksCommon:Commands.Shutdown.Summary");
         public UIElement Icon => _icons.ShutDown;
         public Type DtoType { get; } = typeof(ShutdownCommandInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server", "src\Orcus.Server\Orcus.Server.csproj", "{16E5D6DC-F93E-47F0-8F67-D2A1DA18E017}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04A14402-20E5-4EA0-8118-635C6865E64F} = {04A14402-20E5-4EA0-8118-635C6865E64F}
+		{3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76} = {3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{9C6E5247-3459-4ECF-9FE3-5E2044295099}"
 EndProject

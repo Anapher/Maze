@@ -14,6 +14,7 @@ namespace Tasks.Common.Administration.Triggers
     public class ScheduledViewModel : BindableBase, ITriggerViewModel<ScheduledTriggerInfo>
     {
         private ScheduleMode _mode;
+        private bool _monthlyAtRelativeDays;
         private int _recurEvery;
         private DateTime _startTime;
         private bool _synchronizeTimeZone;
@@ -27,8 +28,10 @@ namespace Tasks.Common.Administration.Triggers
                 DayOfWeek.Sunday
             };
 
+            StartTime = DateTime.Now;
+
             WeekDays = new List<ListViewModel<DayOfWeek>>();
-            for (int i = 0; i < 7; i++)
+            for (var i = 0; i < 7; i++)
                 WeekDays.Add(new ListViewModel<DayOfWeek>(days[i], currentCulture.DateTimeFormat.DayNames[i]));
 
             MonthDays = Enumerable.Range(1, 31).Select(x => new ListViewModel<int>(x, x.ToString())).ToList();
@@ -38,7 +41,7 @@ namespace Tasks.Common.Administration.Triggers
             RelativeDays = Enum.GetValues(typeof(RelativeDayInMonth)).Cast<RelativeDayInMonth>().Select(x =>
                 new ListViewModel<RelativeDayInMonth>(x, Tx.T($"TasksCommon:Triggers.Scheduled.View.DayInMonth.{x}"))).ToList();
         }
-        
+
         public List<ListViewModel<DayOfWeek>> WeekDays { get; }
         public List<ListViewModel<int>> MonthDays { get; }
         public List<ListViewModel<int>> Months { get; }
@@ -55,8 +58,6 @@ namespace Tasks.Common.Administration.Triggers
             get => _mode;
             set => SetProperty(ref _mode, value);
         }
-
-        private bool _monthlyAtRelativeDays;
 
         public bool MonthlyAtRelativeDays
         {

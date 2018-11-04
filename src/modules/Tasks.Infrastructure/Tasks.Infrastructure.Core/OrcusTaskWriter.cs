@@ -124,7 +124,7 @@ namespace Tasks.Infrastructure.Core
                 {
                     using (var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings {OmitXmlDeclaration = true}))
                     {
-                        serializer.Serialize(xmlWriter, commandInfo);
+                        serializer.Serialize(xmlWriter, commandInfo, _namespaces);
                     }
 
                     stream.Position = 0;
@@ -136,9 +136,19 @@ namespace Tasks.Infrastructure.Core
                         if (isFirstElement)
                         {
                             _xmlWriter.WriteStartElement(XmlNames.Command);
-                            _xmlWriter.WriteAttributeString(XmlNames.CommandName, commandAttribute.Name);
-                            _xmlWriter.WriteAttributeString(XmlNames.CommandModules, commandAttribute.Modules);
-                            _xmlWriter.WriteAttributes(xmlReader, true);
+
+                            if (commandAttribute != null)
+                            {
+                                _xmlWriter.WriteAttributeString(XmlNames.CommandName, commandAttribute.Name);
+                                _xmlWriter.WriteAttributeString(XmlNames.CommandModules, commandAttribute.Modules);
+                            }
+                            else
+                            {
+                                var name = _componentResolver.ResolveName(commandInfo.GetType());
+                                _xmlWriter.WriteAttributeString(XmlNames.CommandName, name);
+                            }
+
+                            _xmlWriter.WriteAttributes(xmlReader, false);
 
                             if (xmlReader.IsEmptyElement)
                                 _xmlWriter.WriteEndElement();

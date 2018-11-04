@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using NuGet.Packaging.Core;
 using Orcus.Administration.Core.Extensions;
 using Orcus.Administration.Library.Channels;
 using Orcus.Administration.Library.Clients;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Prism.Mvvm;
@@ -49,6 +50,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         {
             orcusTask.Name = Name;
             orcusTask.ExecuteOnce = ExecuteOnce;
+            orcusTask.Id = Guid.NewGuid();
         }
     }
 }

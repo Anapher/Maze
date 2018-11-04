@@ -25,10 +25,10 @@ namespace Tasks.Infrastructure.Administration.Utilities
             method.Invoke(viewModel, new[] { dto });
         }
 
-        public static T Build<T>(object viewModel, TaskContext taskContext)
+        public static T Build<T>(object viewModel)
         {
             var method = viewModel.GetType().GetMethod(nameof(ITaskServiceViewModel<string>.Build), BindingFlags.Instance | BindingFlags.Public);
-            return (T) method.Invoke(viewModel, new object[] {taskContext});
+            return (T) method.Invoke(viewModel, new object[0]);
         }
     }
 }

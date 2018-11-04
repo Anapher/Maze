@@ -73,11 +73,17 @@ namespace Tasks.Infrastructure.Server
             }
 
             var list = new List<OrcusTask>();
+            var filenames = new Dictionary<Guid, string>();
             foreach (var fileInfo in directoryInfo.GetFiles($"*.{_options.FileExtension}", SearchOption.AllDirectories))
             {
                 var reader = new OrcusTaskReader(fileInfo.FullName, _taskComponentResolver, _xmlSerializerCache);
-                list.Add(reader.ReadTask());
+                var task = reader.ReadTask();
+
+                list.Add(task);
+                filenames.Add(task.Id, fileInfo.Name);
             }
+
+            _taskFileNames = filenames.ToImmutableDictionary();
 
             return list;
         }
@@ -97,8 +103,9 @@ namespace Tasks.Infrastructure.Server
 
                     _taskFileNames = _taskFileNames.SetItem(orcusTask.Id, filename);
                 }
-
-                using (var fileStream = File.Create(filename))
+                
+                Directory.CreateDirectory(_options.Directory);
+                using (var fileStream = File.Create(Path.Combine(_options.Directory, filename)))
                 using (var xmlWriter = XmlWriter.Create(fileStream, _xmlWriterSettings))
                 {
                     var writer = new OrcusTaskWriter(xmlWriter, _taskComponentResolver, _xmlSerializerCache);

@@ -55,9 +55,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override void Apply(OrcusTask orcusTask)
         {
+            orcusTask.Filters = new List<FilterInfo>();
             foreach (var taskView in _childs)
             {
-                var dto = TaskServiceViewModelUtils.Build<FilterInfo>(taskView.ViewModel, new TaskContext());
+                var dto = TaskServiceViewModelUtils.Build<FilterInfo>(taskView.ViewModel);
                 orcusTask.Filters.Add(dto);
             }
         }

@@ -16,7 +16,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MaxWidth="400" />
             </Grid.ColumnDefinitions>
-            <TextBox />
+            <TextBox Text="{Binding Name}" />
         </Grid>
         <CheckBox
             Margin="0,10,0,0"

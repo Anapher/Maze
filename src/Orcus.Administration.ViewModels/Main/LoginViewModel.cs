@@ -68,7 +68,7 @@ namespace Orcus.Administration.ViewModels.Main
                     {
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
-                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:50486/")};
+                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:50485/") };
                         var client = await OrcusRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");

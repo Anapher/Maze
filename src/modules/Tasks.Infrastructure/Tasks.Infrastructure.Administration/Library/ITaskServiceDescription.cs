@@ -9,7 +9,5 @@ namespace Tasks.Infrastructure.Administration.Library
         string Summary { get; }
         UIElement Icon { get; }
         Type DtoType { get; }
-
-        string Describe(object dto);
     }
 }

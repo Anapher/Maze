@@ -42,7 +42,7 @@ namespace Orcus.Server.AppStart
                 modulesLockFile.Delete(); //invalidate
         }
 
-        public async Task LoadModules(ContainerBuilder builder)
+        public async Task LoadModules(ContainerBuilder builder, IMvcBuilder mvcBuilder)
         {
             InvalidateModulesLock();
 
@@ -85,6 +85,9 @@ namespace Orcus.Server.AppStart
 
                 loader.ModuleTypeMap.Configure(builder);
 
+                foreach (var assembly in loader.ModuleTypeMap.Assemblies)
+                    mvcBuilder.AddApplicationPart(assembly);
+                
                 builder.RegisterInstance(new ModuleControllerProvider(loader.ModuleTypeMap)).AsImplementedInterfaces();
                 builder.RegisterOrcusServices(cache => cache.BuildCache(loader.ModuleTypeMap.Controllers));
             }

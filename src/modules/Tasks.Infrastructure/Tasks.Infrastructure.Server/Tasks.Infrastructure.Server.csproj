@@ -5,8 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Tasks.Infrastructure.Administration\Utilities\AutofacUtilities.cs" Link="Utilities\AutofacUtilities.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
     <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utilities\" />
   </ItemGroup>
 
   <Import Project="..\Tasks.Infrastructure.Management\Tasks.Infrastructure.Management.projitems" Label="Shared" />

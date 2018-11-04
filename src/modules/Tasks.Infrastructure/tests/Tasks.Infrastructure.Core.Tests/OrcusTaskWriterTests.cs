@@ -106,6 +106,35 @@ namespace Tasks.Infrastructure.Core.Tests
             CompareWriteTask(_task, TaskDetails.Execution, expected);
         }
 
+        [Fact]
+        public void TestWriteTaskEmptyCommand()
+        {
+            var task = new OrcusTask
+            {
+                Name = "TestCommand",
+                Id = Guid.Parse("53221F85-23DC-4C4C-BD27-A26A5F85BCA0"),
+                StopEvents = new List<StopEventInfo> { new DurationStopEvent { Duration = TimeSpan.FromMinutes(1.36) } },
+                Commands = new List<CommandInfo> { new WakeOnLanCommand { Content = "Hello World!!!", Hash = 2845 }, new EmptyCommandInfo() }
+            };
+
+            var expected = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<task>
+    <metadata>
+        <name>TestCommand</name>
+        <id>53221f85-23dc-4c4c-bd27-a26a5f85bca0</id>
+    </metadata>
+    <stop>
+        <Duration duration=""PT1M21.6S"" />
+    </stop>
+    <commands>
+        <Command name=""Maze.WakeOnLan"" modules=""SystemUtilities;TaskManager"" hash=""2845"">Hello World!!!</Command>
+        <Command name=""Empty"" />
+    </commands>
+</task>";
+
+            CompareWriteTask(task, TaskDetails.Execution, expected);
+        }
+
         private static void CompareWriteTask(OrcusTask orcusTask, TaskDetails details, string expected)
         {
             var mock = new Mock<ITaskComponentResolver>();
@@ -133,6 +162,8 @@ namespace Tasks.Infrastructure.Core.Tests
                     return arg.Name.Replace("TriggerInfo", null);
                 case var type when typeof(StopEventInfo).IsAssignableFrom(type):
                     return arg.Name.Replace("StopEvent", null);
+                case var type when typeof(CommandInfo).IsAssignableFrom(type):
+                    return arg.Name.Replace("CommandInfo", null);
             }
 
             throw new ArgumentException("Invalid type: " + arg.FullName, nameof(arg));

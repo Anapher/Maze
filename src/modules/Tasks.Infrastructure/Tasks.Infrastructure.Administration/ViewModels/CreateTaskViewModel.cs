@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.Views;
+using Orcus.Server.Connection.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
+using Tasks.Infrastructure.Administration.Rest.V1;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base;
 using Tasks.Infrastructure.Core;
@@ -16,6 +19,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     public class CreateTaskViewModel : BindableBase
     {
         private readonly IDialogWindow _window;
+        private readonly IComponentContext _container;
         private readonly IWindowService _windowService;
         private DelegateCommand _createTaskCommand;
 
@@ -23,9 +27,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         {
             _windowService = windowService;
             _window = window;
+            _container = container;
             TreeViewModels = new List<ITaskConfiguringViewModel>
             {
-                new TaskSettingsViewModel(),
+                new TaskSettingsViewModel{IsSelected = true},
                 new CommandsViewModel(windowService, window, container),
                 new AudienceViewModel(),
                 new TriggersViewModel(windowService, window, container),
@@ -40,7 +45,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         {
             get
             {
-                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(() =>
+                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(async () =>
                 {
                     var errors = TreeViewModels.SelectMany(x => x.ValidateInput()).ToList();
                     if (errors.Any())
@@ -59,6 +64,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                         _window.ShowErrorMessageBox(string.Join(Environment.NewLine, errors.Select(x => x.ErrorMessage)));
                         return;
                     }
+
+                    var componentResolver = _container.Resolve<ITaskComponentResolver>();
+                    var xmlCache = _container.Resolve<IXmlSerializerCache>();
+                    var restClient = _container.Resolve<IRestClient>();
+
+                    await TasksResource.Create(task, componentResolver, xmlCache, restClient);
                 }));
             }
         }

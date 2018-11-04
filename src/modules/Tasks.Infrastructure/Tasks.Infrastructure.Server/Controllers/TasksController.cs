@@ -8,7 +8,7 @@ using Tasks.Infrastructure.Server.Business;
 
 namespace Tasks.Infrastructure.Server.Controllers
 {
-    [Route("v1/[controller]")]
+    [Route("Tasks.Infrastructure/v1/[controller]")]
     public class TasksController : BusinessController
     {
         [HttpPost, Authorize("admin")]

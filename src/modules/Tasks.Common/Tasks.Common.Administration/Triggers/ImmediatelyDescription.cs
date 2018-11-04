@@ -20,6 +20,5 @@ namespace Tasks.Common.Administration.Triggers
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.Immediately.Summary");
         public UIElement Icon => _icons.Event;
         public Type DtoType { get; } = typeof(ImmediatelyTriggerInfo);
-        public string Describe(object dto) => throw new NotImplementedException();
     }
 }

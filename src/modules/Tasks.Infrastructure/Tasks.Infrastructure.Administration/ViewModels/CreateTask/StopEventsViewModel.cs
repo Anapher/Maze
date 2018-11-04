@@ -55,9 +55,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override void Apply(OrcusTask orcusTask)
         {
+            orcusTask.StopEvents = new List<StopEventInfo>();
             foreach (var taskView in _childs)
             {
-                var dto = TaskServiceViewModelUtils.Build<StopEventInfo>(taskView.ViewModel, new TaskContext());
+                var dto = TaskServiceViewModelUtils.Build<StopEventInfo>(taskView.ViewModel);
                 orcusTask.StopEvents.Add(dto);
             }
         }

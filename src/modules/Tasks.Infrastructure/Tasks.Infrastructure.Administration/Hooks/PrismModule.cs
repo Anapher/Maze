@@ -8,6 +8,8 @@ namespace Tasks.Infrastructure.Administration.Hooks
 {
     public class PrismModule : IModule
     {
+        public const string ModuleName = "Tasks.Infrastructure";
+
         private readonly IRegionManager _regionManager;
 
         public PrismModule(IRegionManager regionManager)

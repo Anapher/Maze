@@ -20,7 +20,5 @@ namespace Tasks.Common.Administration.Commands
         public string Summary { get; } = Tx.T("TasksCommon:Commands.WakeOnLan.Summary");
         public UIElement Icon => _icons.ServerRunTest;
         public Type DtoType { get; } = typeof(WakeOnLanCommandInfo);
-
-        public string Describe(object dto) => "Test";
     }
 }
