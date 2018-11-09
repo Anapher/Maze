@@ -31,27 +31,27 @@ namespace Tasks.Infrastructure.Client.Tests
             Assert.NotNull(session);
         }
 
-        [Fact]
-        public async Task TestCreateExecution()
-        {
-            var fileSystem = new MockFileSystem();
-            var options = new TasksOptions {SessionsDirectory = "C:\\test"};
+        //[Fact]
+        //public async Task TestCreateExecution()
+        //{
+        //    var fileSystem = new MockFileSystem();
+        //    var options = new TasksOptions {SessionsDirectory = "C:\\test"};
 
-            var taskId = Guid.Parse("CB49D689-95FD-4A09-A78A-3A4397E9425E");
-            var sessionKey = SessionKey.Create("test");
+        //    var taskId = Guid.Parse("CB49D689-95FD-4A09-A78A-3A4397E9425E");
+        //    var sessionKey = SessionKey.Create("test");
 
-            var mock = new Mock<IRequestTransmitter>();
-            mock.Setup(x => x.Transmit(It.IsAny<HttpRequestMessage>())).ReturnsAsync(true);
+        //    var mock = new Mock<IRequestTransmitter>();
+        //    mock.Setup(x => x.Transmit(It.IsAny<HttpRequestMessage>())).ReturnsAsync(true);
 
-            var sessionManager = new TaskSessionManager(fileSystem, mock.Object, new OptionsWrapper<TasksOptions>(options));
-            await sessionManager.CreateExecution(new OrcusTask {Id = taskId},
-                new TaskSession {Description = "test description", TaskSessionHash = sessionKey.Hash},
-                new TaskExecution {Result = Convert.ToBase64String(Encoding.UTF8.GetBytes("Test"))});
+        //    var sessionManager = new TaskSessionManager(fileSystem, mock.Object, new OptionsWrapper<TasksOptions>(options));
+        //    await sessionManager.CreateExecution(new OrcusTask {Id = taskId},
+        //        new TaskSession {Description = "test description", TaskSessionHash = sessionKey.Hash},
+        //        new TaskExecution {Result = Convert.ToBase64String(Encoding.UTF8.GetBytes("Test"))});
 
-            var path = Assert.Single(fileSystem.AllFiles);
-            Assert.Equal($"C:\\test\\{taskId:N}", path);
+        //    var path = Assert.Single(fileSystem.AllFiles);
+        //    Assert.Equal($"C:\\test\\{taskId:N}", path);
 
-            mock.Verify(x => x.Transmit(It.IsAny<HttpRequestMessage>()), Times.Once);;
-        }
+        //    mock.Verify(x => x.Transmit(It.IsAny<HttpRequestMessage>()), Times.Once);;
+        //}
     }
 }

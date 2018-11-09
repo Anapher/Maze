@@ -6,6 +6,7 @@ using Orcus.Client.Library.Clients;
 using Orcus.Client.Library.Clients.Helpers;
 using Orcus.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core;
+using Tasks.Infrastructure.Core.Data;
 using Tasks.Infrastructure.Core.Dtos;
 
 namespace Tasks.Infrastructure.Client.Rest
@@ -30,7 +31,16 @@ namespace Tasks.Infrastructure.Client.Rest
             }
         }
 
-        public static HttpRequestMessage CreateExecutionUploadRequest(byte[] data) =>
-            CreateRequest(HttpVerb.Post, "executions", data).Build();
+        public static HttpRequestMessage CreateSessionRequest(TaskSession taskSession) =>
+            CreateRequest(HttpVerb.Post, "sessions", taskSession).Build();
+
+        public static HttpRequestMessage CreateExecutionRequest(TaskExecution taskExecution) =>
+            CreateRequest(HttpVerb.Post, "executions", taskExecution).Build();
+
+        public static HttpRequestMessage CreateCommandResultRequest(CommandResult commandResult) =>
+            CreateRequest(HttpVerb.Post, "results", commandResult).Build();
+
+        public static Task ReportProgress(CommandProcessDto commandProcessDto, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, "process", commandProcessDto).Execute(restClient);
     }
 }

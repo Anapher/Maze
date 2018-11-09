@@ -20,7 +20,8 @@ namespace Tasks.Infrastructure.Client
     public interface ITaskSessionManager
     {
         Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description);
-        Task CreateExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution);
+        Task<Guid> StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution);
+        Task AppendCommandResult(OrcusTask orcusTask, CommandResult commandResult);
     }
 
     public class TaskSessionManager : ITaskSessionManager
@@ -38,7 +39,7 @@ namespace Tasks.Infrastructure.Client
             _readerWriterLock = new AsyncReaderWriterLock();
 
             var mapper = BsonMapper.Global;
-            mapper.Entity<TaskSession>().Id(x => x.TaskSessionId).DbRef(x => x.Executions, nameof(TaskExecution));
+            mapper.Entity<TaskSession>().Id(x => x.TaskSessionId, autoId: false).DbRef(x => x.Executions, nameof(TaskExecution));
             mapper.Entity<TaskExecution>().Id(x => x.TaskExecutionId);
         }
 
@@ -52,9 +53,9 @@ namespace Tasks.Infrastructure.Client
                     using (var db = new LiteDatabase(dbStream))
                     {
                         var collection = db.GetCollection<TaskSession>(nameof(TaskSession));
-                        collection.EnsureIndex(x => x.TaskSessionHash, true);
+                        collection.EnsureIndex(x => x.TaskSessionId, true);
 
-                        var taskSession = collection.Include(x => x.Executions).Find(x => x.TaskSessionHash == sessionKey.Hash).SingleOrDefault();
+                        var taskSession = collection.IncludeAll().FindById(sessionKey.Hash);
                         if (taskSession != null)
                             return taskSession;
                     }
@@ -62,8 +63,8 @@ namespace Tasks.Infrastructure.Client
 
             return new TaskSession
             {
+                TaskSessionId = sessionKey.Hash,
                 Description = description,
-                TaskSessionHash = sessionKey.Hash,
                 CreatedOn = DateTimeOffset.UtcNow,
                 TaskReference = new TaskReference {TaskId = orcusTask.Id},
                 Transmissions = ImmutableList<TaskTransmission>.Empty,
@@ -71,7 +72,7 @@ namespace Tasks.Infrastructure.Client
             };
         }
 
-        public async Task CreateExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution)
+        public async Task<Guid> StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution)
         {
             using (await _readerWriterLock.WriterLockAsync())
             {
@@ -82,31 +83,47 @@ namespace Tasks.Infrastructure.Client
                 using (var db = new LiteDatabase(dbStream))
                 {
                     var sessions = db.GetCollection<TaskSession>(nameof(TaskSession));
-                    sessions.EnsureIndex(x => x.TaskSessionHash, true);
+                    sessions.EnsureIndex(x => x.TaskSessionId, unique: true);
 
-                    var taskSessionEntity = sessions.Find(x => x.TaskSessionHash == taskSession.TaskSessionHash).SingleOrDefault();
+                    var taskSessionEntity = sessions.FindById(taskSession.TaskSessionId);
                     if (taskSessionEntity == null)
                     {
                         taskSessionEntity = new TaskSession
                         {
+                            TaskSessionId = taskSession.TaskSessionId,
                             Description = taskSession.Description,
-                            TaskSessionHash = taskSession.TaskSessionHash,
                             CreatedOn = DateTimeOffset.UtcNow
                         };
 
-                        var id = sessions.Insert(taskSessionEntity);
-                        taskSessionEntity.TaskSessionId = id;
+                        _requestTransmitter.Transmit(TasksResource.CreateSessionRequest(taskSessionEntity));
                     }
 
                     taskExecution.TaskSessionId = taskSessionEntity.TaskSessionId;
 
-                    var executions = db.GetCollection<TaskExecution>(nameof(TaskSession));
-                    executions.Insert(taskExecution);
+                    var executions = db.GetCollection<TaskExecution>(nameof(TaskExecution));
+                    Guid executionId = executions.Insert(taskExecution);
 
-                    var result = Convert.FromBase64String(taskExecution.Result);
-                    var request = TasksResource.CreateExecutionUploadRequest(result);
+                    _requestTransmitter.Transmit(TasksResource.CreateExecutionRequest(taskExecution));
 
-                    await _requestTransmitter.Transmit(request);
+                    return executionId;
+                }
+            }
+        }
+
+        public async Task AppendCommandResult(OrcusTask orcusTask, CommandResult commandResult)
+        {
+            using (await _readerWriterLock.WriterLockAsync())
+            {
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                file.Directory.Create();
+
+                using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (var db = new LiteDatabase(dbStream))
+                {
+                    var results = db.GetCollection<CommandResult>(nameof(CommandResult));
+                    results.Insert(commandResult);
+
+                    await _requestTransmitter.Transmit(TasksResource.CreateCommandResultRequest(commandResult));
                 }
             }
         }

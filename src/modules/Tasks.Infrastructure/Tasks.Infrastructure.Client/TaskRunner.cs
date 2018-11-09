@@ -8,12 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Orcus.Client.Library.Clients;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Library;
+using Tasks.Infrastructure.Client.Rest;
 using Tasks.Infrastructure.Client.StopEvents;
 using Tasks.Infrastructure.Client.Trigger;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 
 namespace Tasks.Infrastructure.Client
@@ -135,7 +138,17 @@ namespace Tasks.Infrastructure.Client
         {
             using (var executionScope = Services.CreateScope())
             {
-                var context = new DefaultTaskExecutionContext(Services);
+                var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
+                var restClient = Services.GetRequiredService<IRestClient>();
+
+                var execution = new TaskExecution
+                {
+                    TaskSessionId = taskSession.TaskSessionId,
+                    Timestamp = DateTimeOffset.UtcNow,
+                    TaskExecutionId = Guid.NewGuid()
+                };
+
+                sessionManager.StartExecution(OrcusTask, taskSession, execution);
 
                 await TaskCombinators.ThrottledAsync(OrcusTask.Commands, async (commandInfo, token) =>
                 {
@@ -147,11 +160,31 @@ namespace Tasks.Infrastructure.Client
                         var executionMethod = executorType.GetMethod("InvokeAsync", BindingFlags.Instance);
                         var commandName = commandInfo.GetType().Name.Replace("CommandInfo", null);
 
-                        var execution = new TaskExecution
+                        var commandResult = new CommandResult
                         {
-                            TaskSessionId = taskSession.TaskSessionId, Timestamp = DateTimeOffset.UtcNow, CommandName = commandName
+                            CommandResultId = Guid.NewGuid(),
+                            TaskExecutionId = execution.TaskExecutionId,
+                            CommandName = commandName
                         };
 
+                        async Task UpdateProcess(CommandProcessDto commandProcess)
+                        {
+                            commandProcess.CommandResultId = commandResult.CommandResultId;
+                            commandProcess.TaskExecutionId = commandResult.TaskExecutionId;
+                            commandProcess.TaskSessionHash = taskSession.TaskSessionId;
+                            commandProcess.TaskId = OrcusTask.Id;
+
+                            try
+                            {
+                                await TasksResource.ReportProgress(commandProcess, restClient);
+                            }
+                            catch (Exception)
+                            {
+                                //Ignored, doesn't matter
+                            }
+                        }
+
+                        using(var context = new DefaultTaskExecutionContext(Services, UpdateProcess))
                         try
                         {
                             var task = (Task<HttpResponseMessage>) executionMethod.Invoke(Services,
@@ -162,17 +195,19 @@ namespace Tasks.Infrastructure.Client
                             {
                                 await HttpResponseSerializer.Format(response, memoryStream);
 
-                                execution.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+                                commandResult.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+                                commandResult.Status = (int) response.StatusCode;
                             }
                         }
                         catch (Exception e)
                         {
                             Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
-                            execution.Result = e.ToString();
+                            commandResult.Result = e.ToString();
+                            commandResult.Status = null;
                         }
 
-                        var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
-                        await sessionManager.CreateExecution(OrcusTask, taskSession, execution);
+                        commandResult.FinishedAt = DateTimeOffset.UtcNow;
+                        await sessionManager.AppendCommandResult(OrcusTask, commandResult);
                     }
                 }, cancellationToken);
             }

@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Tasks.Infrastructure.Core.Data
 {
     public class TaskExecution
     {
-        public int TaskExecutionId { get; set; }
-        public int TaskSessionId { get; set; }
+        public Guid TaskExecutionId { get; set; }
+        public string TaskSessionId { get; set; }
 
         public int? TargetId { get; set; }
-        public string CommandName { get; set; }
-        public string Result { get; set; }
-        public int? Status { get; set; }
         public DateTimeOffset Timestamp { get; set; }
+
+        public IList<CommandResult> CommandResults { get; set; }
     }
 }
