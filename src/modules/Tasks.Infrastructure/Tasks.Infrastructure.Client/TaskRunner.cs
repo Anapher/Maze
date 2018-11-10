@@ -15,19 +15,22 @@ using Tasks.Infrastructure.Client.Rest;
 using Tasks.Infrastructure.Client.StopEvents;
 using Tasks.Infrastructure.Client.Trigger;
 using Tasks.Infrastructure.Core;
-using Tasks.Infrastructure.Core.Data;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
+using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Client
 {
     public class TaskRunner
     {
+        private readonly ITaskSessionManager _sessionManager;
+
         public TaskRunner(OrcusTask orcusTask, IServiceProvider services)
         {
             OrcusTask = orcusTask;
             Services = services;
             Logger = services.GetRequiredService<ILogger<TaskRunner>>();
+            _sessionManager = Services.GetRequiredService<ITaskSessionManager>();
         }
 
         public OrcusTask OrcusTask { get; }
@@ -37,118 +40,131 @@ namespace Tasks.Infrastructure.Client
         public async Task Run(CancellationToken cancellationToken)
         {
             using (var localCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-            using (var scope = Services.CreateScope())
-            {
-                //create stop services and add to dictionary
-                var stopTasks = new Dictionary<Task, Type>();
-                foreach (var stopEvent in OrcusTask.StopEvents)
+                try
                 {
-                    var serviceType = typeof(IStopService<>).MakeGenericType(stopEvent.GetType());
-
-                    var service = scope.ServiceProvider.GetService(serviceType);
-                    if (service == null)
+                    using (var scope = Services.CreateScope())
                     {
-                        Logger.LogWarning("The stop service for type {stopEvent} ({resolvedType}) could not be resolved. Skipped.",
-                            stopEvent.GetType(), serviceType);
-                        continue;
-                    }
+                        //create stop services and add to dictionary
+                        var stopTasks = new Dictionary<Task, Type>();
+                        foreach (var stopEvent in OrcusTask.StopEvents)
+                        {
+                            var serviceType = typeof(IStopService<>).MakeGenericType(stopEvent.GetType());
 
-                    var stopContext = new DefaultStopContext();
-                    var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
+                            var service = scope.ServiceProvider.GetService(serviceType);
+                            if (service == null)
+                            {
+                                Logger.LogWarning("The stop service for type {stopEvent} ({resolvedType}) could not be resolved. Skipped.",
+                                    stopEvent.GetType(), serviceType);
+                                continue;
+                            }
 
-                    try
-                    {
-                        var task = (Task) methodInfo.Invoke(service, new object[] {stopEvent, stopContext, localCancellationTokenSource.Token});
-                        stopTasks.Add(task, serviceType);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogError(e, "Error occurred when invoking stop service {stopServiceType}", serviceType);
-                    }
-                }
+                            var stopContext = new DefaultStopContext();
+                            var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
 
-                if (stopTasks.Any())
-                {
-                    //if we have any stop events, we await until one completes.
-                    Task.WhenAny(stopTasks.Keys).ContinueWith(task =>
-                    {
-                        if (task.IsCanceled)
-                            return;
+                            try
+                            {
+                                var task = (Task) methodInfo.Invoke(service,
+                                    new object[] {stopEvent, stopContext, localCancellationTokenSource.Token});
+                                stopTasks.Add(task, serviceType);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.LogError(e, "Error occurred when invoking stop service {stopServiceType}", serviceType);
+                            }
+                        }
 
-                        var type = stopTasks[task.Result];
+                        if (stopTasks.Any())
+                        {
+                            //if we have any stop events, we await until one completes.
+                            Task.WhenAny(stopTasks.Keys).ContinueWith(task =>
+                            {
+                                if (task.IsCanceled)
+                                    return;
 
-                        if (task.IsFaulted) //stop the execution even if it fails, because else the task might run endless
-                            Logger.LogError(task.Exception, "An error occurred on execution {stopService} on task {task}", type, OrcusTask.Id);
+                                var type = stopTasks[task.Result];
 
-                        Logger.LogDebug("Stop service {stopService} stopped the execution of task {task}", type, OrcusTask.Id);
+                                if (task.IsFaulted) //stop the execution even if it fails, because else the task might run endless
+                                    Logger.LogError(task.Exception, "An error occurred on execution {stopService} on task {task}", type,
+                                        OrcusTask.Id);
+
+                                Logger.LogDebug("Stop service {stopService} stopped the execution of task {task}", type, OrcusTask.Id);
+                                localCancellationTokenSource.Cancel();
+                            }).Forget();
+                        }
+
+                        //create triggers and add to dictionary
+                        var triggerTasks = new Dictionary<Task, Type>();
+                        foreach (var triggerInfo in OrcusTask.Triggers)
+                        {
+                            var serviceType = typeof(ITriggerService<>).MakeGenericType(triggerInfo.GetType());
+
+                            var service = scope.ServiceProvider.GetService(serviceType);
+                            if (service == null)
+                            {
+                                Logger.LogWarning("The trigger service for type {triggerInfo} ({resolvedType}) could not be resolved. Skipped.",
+                                    triggerInfo.GetType(), serviceType);
+                                continue;
+                            }
+
+                            var triggerContext = new TaskTriggerContext(this, serviceType.Name);
+                            var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
+
+                            try
+                            {
+                                var task = (Task) methodInfo.Invoke(service,
+                                    new object[] {triggerInfo, triggerContext, localCancellationTokenSource.Token});
+                                triggerTasks.Add(task, serviceType);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.LogError(e, "Error occurred when invoking trigger service {triggerServiceType}", serviceType);
+                            }
+                        }
+
+                        //wait until all triggers have finished
+                        while (triggerTasks.Any())
+                        {
+                            var task = await Task.WhenAny(triggerTasks.Keys);
+                            if (localCancellationTokenSource.IsCancellationRequested)
+                                throw new TaskCanceledException();
+
+                            if (task.IsFaulted)
+                            {
+                                var type = triggerTasks[task];
+                                Logger.LogError(task.Exception, "An error occurred when awaiting the trigger {trigger}", type);
+                            }
+
+                            triggerTasks.Remove(task);
+                        }
+
+                        //also cancel on end of execution so the stop services can finish (e. g. on natual completion)
                         localCancellationTokenSource.Cancel();
-                    }).Forget();
+                    }
                 }
-
-                //create triggers and add to dictionary
-                var triggerTasks = new Dictionary<Task, Type>();
-                foreach (var triggerInfo in OrcusTask.Triggers)
+                finally
                 {
-                    var serviceType = typeof(ITriggerService<>).MakeGenericType(triggerInfo.GetType());
-
-                    var service = scope.ServiceProvider.GetService(serviceType);
-                    if (service == null)
+                    if (!cancellationToken.IsCancellationRequested)
                     {
-                        Logger.LogWarning("The trigger service for type {triggerInfo} ({resolvedType}) could not be resolved. Skipped.",
-                            triggerInfo.GetType(), serviceType);
-                        continue;
-                    }
-
-                    var triggerContext = new TaskTriggerContext(this, serviceType.Name);
-                    var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
-
-                    try
-                    {
-                        var task = (Task) methodInfo.Invoke(service, new object[] {triggerInfo, triggerContext, localCancellationTokenSource.Token});
-                        triggerTasks.Add(task, serviceType);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogError(e, "Error occurred when invoking trigger service {triggerServiceType}", serviceType);
+                        //the task finished
+                        await _sessionManager.MarkTaskFinished(OrcusTask);
                     }
                 }
-
-                //wait until all triggers have finished
-                while (triggerTasks.Any())
-                {
-                    var task = await Task.WhenAny(triggerTasks.Keys);
-                    if (localCancellationTokenSource.IsCancellationRequested)
-                        throw new TaskCanceledException();
-
-                    if (task.IsFaulted)
-                    {
-                        var type = triggerTasks[task];
-                        Logger.LogError(task.Exception, "An error occurred when awaiting the trigger {trigger}", type);
-                    }
-
-                    triggerTasks.Remove(task);
-                }
-
-                //also cancel on end of execution so the stop services can finish (e. g. on natual completion)
-                localCancellationTokenSource.Cancel();
-            }
         }
 
         internal async Task Execute(TaskSession taskSession, CancellationToken cancellationToken)
         {
             using (var executionScope = Services.CreateScope())
             {
-                var sessionManager = Services.GetRequiredService<ITaskSessionManager>();
                 var restClient = Services.GetRequiredService<IRestClient>();
 
                 var execution = new TaskExecution
                 {
                     TaskSessionId = taskSession.TaskSessionId,
-                    Timestamp = DateTimeOffset.UtcNow,
+                    CreatedOn = DateTimeOffset.UtcNow,
                     TaskExecutionId = Guid.NewGuid()
                 };
 
-                sessionManager.StartExecution(OrcusTask, taskSession, execution);
+                _sessionManager.StartExecution(OrcusTask, taskSession, execution).Forget();
 
                 await TaskCombinators.ThrottledAsync(OrcusTask.Commands, async (commandInfo, token) =>
                 {
@@ -162,21 +178,19 @@ namespace Tasks.Infrastructure.Client
 
                         var commandResult = new CommandResult
                         {
-                            CommandResultId = Guid.NewGuid(),
-                            TaskExecutionId = execution.TaskExecutionId,
-                            CommandName = commandName
+                            CommandResultId = Guid.NewGuid(), TaskExecutionId = execution.TaskExecutionId, CommandName = commandName
                         };
 
                         async Task UpdateProcess(CommandProcessDto commandProcess)
                         {
                             commandProcess.CommandResultId = commandResult.CommandResultId;
                             commandProcess.TaskExecutionId = commandResult.TaskExecutionId;
-                            commandProcess.TaskSessionHash = taskSession.TaskSessionId;
+                            commandProcess.TaskSessionId = taskSession.TaskSessionId;
                             commandProcess.TaskId = OrcusTask.Id;
 
                             try
                             {
-                                await TasksResource.ReportProgress(commandProcess, restClient);
+                                await TaskExecutionsResource.ReportProgress(commandProcess, restClient);
                             }
                             catch (Exception)
                             {
@@ -184,30 +198,30 @@ namespace Tasks.Infrastructure.Client
                             }
                         }
 
-                        using(var context = new DefaultTaskExecutionContext(Services, UpdateProcess))
-                        try
-                        {
-                            var task = (Task<HttpResponseMessage>) executionMethod.Invoke(Services,
-                                new object[] {commandInfo, context, cancellationToken});
-                            var response = await task;
-
-                            using (var memoryStream = new MemoryStream())
+                        using (var context = new DefaultTaskExecutionContext(Services, UpdateProcess))
+                            try
                             {
-                                await HttpResponseSerializer.Format(response, memoryStream);
+                                var task = (Task<HttpResponseMessage>) executionMethod.Invoke(Services,
+                                    new object[] {commandInfo, context, cancellationToken});
+                                var response = await task;
 
-                                commandResult.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
-                                commandResult.Status = (int) response.StatusCode;
+                                using (var memoryStream = new MemoryStream())
+                                {
+                                    await HttpResponseSerializer.Format(response, memoryStream);
+
+                                    commandResult.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+                                    commandResult.Status = (int) response.StatusCode;
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
-                            commandResult.Result = e.ToString();
-                            commandResult.Status = null;
-                        }
+                            catch (Exception e)
+                            {
+                                Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
+                                commandResult.Result = e.ToString();
+                                commandResult.Status = null;
+                            }
 
                         commandResult.FinishedAt = DateTimeOffset.UtcNow;
-                        await sessionManager.AppendCommandResult(OrcusTask, commandResult);
+                        await _sessionManager.AppendCommandResult(OrcusTask, commandResult);
                     }
                 }, cancellationToken);
             }

@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Server.Data.EfCode;
-using Tasks.Infrastructure.Core.Data;
 using Tasks.Infrastructure.Server.Business;
+using Tasks.Infrastructure.Server.Core;
+using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 

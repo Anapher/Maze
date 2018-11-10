@@ -4,35 +4,68 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CodeElements.BizRunner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nito.AsyncEx;
 using Orcus.Server.Connection;
 using Tasks.Infrastructure.Core;
+using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Business;
-using Tasks.Infrastructure.Server.Data;
 using Tasks.Infrastructure.Server.Library;
 
-namespace Tasks.Infrastructure.Server
+namespace Tasks.Infrastructure.Server.Core
 {
     public class OrcusTaskManager
     {
         private readonly ITaskDirectory _taskDirectory;
+        private readonly ITasksConnectionManager _connectionManager;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<OrcusTaskManager> _logger;
         private readonly Dictionary<Guid, TaskInfo> _tasks;
         private readonly AsyncLock _tasksLock;
 
-        public OrcusTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider)
+        public OrcusTaskManager(ITaskDirectory taskDirectory, ITasksConnectionManager connectionManager, IServiceProvider serviceProvider,
+            ILogger<OrcusTaskManager> logger)
         {
             _taskDirectory = taskDirectory;
+            _connectionManager = connectionManager;
             _serviceProvider = serviceProvider;
+            _logger = logger;
             _tasks = new Dictionary<Guid, TaskInfo>();
             ClientTasks = ImmutableList<TaskInfo>.Empty;
             _tasksLock = new AsyncLock();
         }
 
         public IImmutableList<TaskInfo> ClientTasks { get; private set; }
+
+        public async Task Initialize()
+        {
+            using (await _tasksLock.LockAsync())
+            {
+                _logger.LogDebug("Initialize: Load tasks");
+                var tasks = await _taskDirectory.LoadTasks();
+
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    foreach (var task in tasks)
+                    {
+                        _logger.LogDebug("Initialize: Load task {taskId}", task.Id);
+
+                        var action = scope.ServiceProvider.GetRequiredService<ICreateTaskAction>();
+                        await action.BizActionAsync(task);
+
+                        if (action.HasErrors)
+                        {
+                            _logger.LogWarning("Initialize: Loading task {taskId} failed: {error}", task.Id, action.Errors.First().ErrorMessage);
+                            continue;
+                        }
+
+                        var hash = _taskDirectory.ComputeTaskHash(task);
+                        InitializeTask(task, hash, transmit: false);
+                    }
+                }
+            }
+        }
 
         public async Task AddTask(OrcusTask orcusTask)
         {
@@ -48,33 +81,19 @@ namespace Tasks.Infrastructure.Server
                     throw new InvalidOperationException($"The task with id {orcusTask.Id} already exists. Please update the existing task.");
                 }
 
-                var filename = await _taskDirectory.WriteTask(orcusTask);
+                await _taskDirectory.WriteTask(orcusTask);
 
                 //add to database
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<TasksDbContext>();
-                    var action = scope.ServiceProvider.GetRequiredService<ICreateOrUpdateTaskAction>();
-                    await action.ToRunner(dbContext).ExecuteAsync((orcusTask, filename));
+                    var action = scope.ServiceProvider.GetRequiredService<ICreateTaskAction>();
+                    await action.BizActionAsync(orcusTask);
 
                     if (action.HasErrors)
                         throw new InvalidOperationException(action.Errors.First().ErrorMessage);
                 }
 
                 InitializeTask(orcusTask, hash, transmit: true);
-            }
-        }
-
-        public async Task Initialize()
-        {
-            using (await _tasksLock.LockAsync())
-            {
-                var tasks = await _taskDirectory.GetTasks();
-                foreach (var task in tasks)
-                {
-                    var hash = _taskDirectory.ComputeTaskHash(task);
-                    InitializeTask(task, hash, transmit: false);
-                }
             }
         }
 
@@ -108,7 +127,10 @@ namespace Tasks.Infrastructure.Server
 
         private async Task TransmitTask(OrcusTask orcusTask, CancellationToken cancellationToken)
         {
-
+            foreach (var clientInfo in _connectionManager.Clients)
+            {
+                await (await clientInfo.Value.GetChannel()).CreateOrUpdateTask("");
+            }
         }
 
         private async Task RunTask(OrcusTaskService taskService, CancellationToken cancellationToken)

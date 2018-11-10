@@ -11,7 +11,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Hubs;
+using Orcus.Server.Library.Hubs;
 using Orcus.Server.Service.Modules;
 using Orcus.Utilities;
 

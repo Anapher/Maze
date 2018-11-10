@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Orcus.Utilities;
 using Serilog;
-using ILogger = Serilog.ILogger;
 
-namespace Tasks.Infrastructure.Client.Utilities
+namespace Tasks.Infrastructure.Management.Utilities
 {
     public class MessageThrottleService<T> : IDisposable where T : class
     {
@@ -83,7 +81,7 @@ namespace Tasks.Infrastructure.Client.Utilities
                 _lastUpdates.Enqueue(DateTimeOffset.UtcNow);
             }
 
-            InvokeUpdate(value);
+            InvokeUpdate(value).Forget();
         }
 
         private async Task InvokeUpdate(T value)

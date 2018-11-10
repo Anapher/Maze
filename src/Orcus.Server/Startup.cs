@@ -18,7 +18,7 @@ using Orcus.Server.BusinessDataAccess;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Data.EfCode;
 using Orcus.Server.Extensions;
-using Orcus.Server.Hubs;
+using Orcus.Server.Library.Hubs;
 using Orcus.Server.Library.Interfaces;
 using Orcus.Server.Library.Services;
 using Orcus.Server.Middleware;

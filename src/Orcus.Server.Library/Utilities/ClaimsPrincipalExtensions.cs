@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 
-namespace Orcus.Server.Authentication
+namespace Orcus.Server.Library.Utilities
 {
     public static class ClaimsPrincipalExtensions
     {

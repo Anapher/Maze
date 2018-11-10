@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
 using Tasks.Infrastructure.Core.Dtos;
+using Tasks.Infrastructure.Server.Core;
 
 namespace Tasks.Infrastructure.Server.Business
 {

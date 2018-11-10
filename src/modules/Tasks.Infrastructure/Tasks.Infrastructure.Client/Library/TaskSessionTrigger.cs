@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Client.Library
 {

@@ -38,9 +38,14 @@ namespace Tasks.Infrastructure.Client
         {
             _logger.LogDebug("Initialize tasks");
 
+            var sessionManager = _serviceProvider.GetRequiredService<ITaskSessionManager>();
+
             var tasks = await _taskDirectory.LoadTasks();
             foreach (var orcusTask in tasks)
             {
+                if (await sessionManager.CheckTaskFinished(orcusTask))
+                    continue;
+
                 var taskRunner = new TaskRunner(orcusTask, _serviceProvider);
                 var cancellationTokenSource = new CancellationTokenSource();
 
@@ -80,6 +85,15 @@ namespace Tasks.Infrastructure.Client
                     //that will remove the task from the dictionary
                     cancellationTokenSource.Cancel();
                     await _taskDirectory.RemoveTask(taskRunner.OrcusTask);
+                }
+            }
+
+            //remove tasks that are not listed anymore
+            foreach (var task in await _taskDirectory.LoadTasks())
+            {
+                if (!tasks.Any(x => x.TaskId == task.Id))
+                {
+                    await _taskDirectory.RemoveTask(task);
                 }
             }
 

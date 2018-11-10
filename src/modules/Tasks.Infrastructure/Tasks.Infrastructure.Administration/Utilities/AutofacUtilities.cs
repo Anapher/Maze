@@ -6,7 +6,7 @@ using Tasks.Infrastructure.Core.StopEvents;
 using Tasks.Infrastructure.Core.Triggers;
 
 // ReSharper disable once CheckNamespace
-namespace Tasks.Infrastructure.Utilities
+namespace Tasks.Infrastructure.Administration.Utilities
 {
     public static class AutofacUtilities
     {

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Data.EfCode;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
-using Tasks.Infrastructure.Core.Data;
-using Tasks.Infrastructure.Management;
+using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 
-namespace Tasks.Infrastructure.Server
+namespace Tasks.Infrastructure.Server.Core
 {
     public class OrcusTaskService
     {
@@ -122,60 +118,9 @@ namespace Tasks.Infrastructure.Server
                     scope.Dispose();
                     return false;
                 }, cancellationToken);
-                
-                var context = new DefaultTaskExecutionContext(taskSession, OrcusTask);
-                foreach (var orcusTaskCommand in OrcusTask.Commands)
-                {
-                    var executorType = typeof(ITaskExecutor<>).MakeGenericType(orcusTaskCommand.GetType());
 
-                    var localService = executionScope.ServiceProvider.GetService(executorType);
-                    if (localService != null)
-                    {
-                        var executionMethod = executorType.GetMethod("InvokeAsync", BindingFlags.Instance);
-                        var commandName = orcusTaskCommand.GetType().Name.Replace("CommandInfo", null);
-
-                        await TaskCombinators.ThrottledAsync(attenders, async (id, token) =>
-                        {
-                            if (!attenderScopes.TryGetValue(id, out var scope))
-                                scope = executionScope.ServiceProvider.CreateScope();
-
-                            using (scope)
-                            {
-                                var service = scope.ServiceProvider.GetRequiredService(executorType);
-
-                                var execution = new TaskExecution
-                                {
-                                    TaskSessionId = taskSession.TaskSessionId, TargetId = id.IsServer ? (int?) null : id.ClientId,
-                                    Timestamp = DateTimeOffset.UtcNow, CommandName = commandName
-                                };
-                                try
-                                {
-                                    var task = (Task<HttpResponseMessage>) executionMethod.Invoke(service,
-                                        new object[] {orcusTaskCommand, id, context, cancellationToken});
-                                    var response = await task;
-
-                                    execution.Status = (int) response.StatusCode;
-
-                                    using (var memoryStream = new MemoryStream())
-                                    {
-                                        await HttpResponseSerializer.Format(response, memoryStream);
-
-                                        execution.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.LogWarning(e, "An error occurred when executing {method}", executorType.FullName);
-                                    execution.Result = e.ToString();
-                                }
-
-                                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                                dbContext.Add(execution);
-                                await dbContext.SaveChangesAsync();
-                            }
-                        }, cancellationToken);
-                    }
-                }
+                var executor = new TaskExecutor(OrcusTask, taskSession, Services);
+                await executor.Execute(attenders, attenderScopes, cancellationToken);
             }
         }
     }

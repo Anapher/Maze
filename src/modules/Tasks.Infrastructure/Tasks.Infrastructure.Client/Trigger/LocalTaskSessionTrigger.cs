@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Tasks.Infrastructure.Client.Library;
-using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Client.Trigger
 {

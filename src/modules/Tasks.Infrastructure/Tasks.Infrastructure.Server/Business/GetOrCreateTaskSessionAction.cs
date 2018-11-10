@@ -6,7 +6,7 @@ using CodeElements.BizRunner.Generic;
 using Microsoft.EntityFrameworkCore;
 using Orcus.Server.Connection;
 using Orcus.Server.Data.EfCode;
-using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Server.Business
 {

@@ -1,30 +1,33 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Orcus.ModuleManagement;
 using Orcus.Server.Authentication;
+using Orcus.Server.Library.Interfaces;
 using Orcus.Server.Library.Services;
 using Orcus.Server.Service.Connection;
 using Orcus.Sockets;
+using Orcus.Utilities;
 
 namespace Orcus.Server.Middleware
 {
     public class OrcusSocketManagerMiddleware
     {
         private readonly IConnectionManager _connectionManager;
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly IServiceProvider _serviceProvider;
         private readonly RequestDelegate _next;
         private readonly OrcusSocketOptions _options;
 
         public OrcusSocketManagerMiddleware(RequestDelegate next, IConnectionManager connectionManager,
-            IOptions<OrcusSocketOptions> options, ILoggerFactory loggerFactory)
+            IOptions<OrcusSocketOptions> options, IServiceProvider serviceProvider)
         {
             _next = next;
             _connectionManager = connectionManager;
+            _serviceProvider = serviceProvider;
             _options = options.Value;
-            _loggerFactory = loggerFactory;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -66,6 +69,8 @@ namespace Orcus.Server.Middleware
                 var connection = new ClientConnection(clientId, wrapper, server);
                 _connectionManager.ClientConnections.TryAdd(clientId, connection);
 
+                _serviceProvider.Execute<IClientConnectedAction, IClientConnection>(connection).Forget();
+
                 try
                 {
                     await connection.BeginListen();
@@ -74,6 +79,8 @@ namespace Orcus.Server.Middleware
                 {
                     _connectionManager.ClientConnections.TryRemove(clientId, out _);
                 }
+
+                await _serviceProvider.Execute<IClientDisconnectedAction, int>(connection.ClientId);
             }
         }
     }

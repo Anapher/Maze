@@ -1,9 +1,15 @@
 ﻿using System;
+#if DAPPER
+using Dapper.Contrib.Extensions;
+#endif
 
-namespace Tasks.Infrastructure.Core.Data
+namespace Tasks.Infrastructure.Management.Data
 {
     public class CommandResult
     {
+#if DAPPER
+        [ExplicitKey]
+#endif
         public Guid CommandResultId { get; set; }
         public Guid TaskExecutionId { get; set; }
 

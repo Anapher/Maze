@@ -45,7 +45,7 @@ namespace Tasks.Infrastructure.Client.Tests
 
         //    var sessionManager = new TaskSessionManager(fileSystem, mock.Object, new OptionsWrapper<TasksOptions>(options));
         //    await sessionManager.CreateExecution(new OrcusTask {Id = taskId},
-        //        new TaskSession {Description = "test description", TaskSessionHash = sessionKey.Hash},
+        //        new TaskSession {Description = "test description", TaskSessionId = sessionKey.Hash},
         //        new TaskExecution {Result = Convert.ToBase64String(Encoding.UTF8.GetBytes("Test"))});
 
         //    var path = Assert.Single(fileSystem.AllFiles);

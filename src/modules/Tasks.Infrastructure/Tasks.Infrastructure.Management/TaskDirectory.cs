@@ -12,7 +12,6 @@ using Nito.AsyncEx;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core;
-
 #if NETCOREAPP2_1
 using Tasks.Infrastructure.Server.Options;
 
@@ -21,7 +20,7 @@ using Tasks.Infrastructure.Client.Options;
 
 #endif
 
-namespace Tasks.Infrastructure
+namespace Tasks.Infrastructure.Management
 {
     public interface ITaskDirectory
     {

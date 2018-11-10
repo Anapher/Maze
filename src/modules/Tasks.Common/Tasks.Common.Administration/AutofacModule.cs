@@ -3,7 +3,7 @@ using Autofac;
 using Tasks.Common.Administration.Resources;
 using Tasks.Common.Administration.ViewProvider;
 using Tasks.Infrastructure.Administration.Library;
-using Tasks.Infrastructure.Utilities;
+using Tasks.Infrastructure.Administration.Utilities;
 
 namespace Tasks.Common.Administration
 {

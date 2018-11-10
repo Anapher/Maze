@@ -9,8 +9,15 @@
     <Import_RootNamespace>Tasks.Infrastructure.Management</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Channels\ITaskManagerChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CommandResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TaskExecution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TaskReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TaskSession.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TaskTransmission.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpResponseSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Library\SessionKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskDirectory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\MessageThrottleService.cs" />
   </ItemGroup>
 </Project>

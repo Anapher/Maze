@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.Options;
 using Nito.AsyncEx;
+using Orcus.Utilities;
 using RequestTransmitter.Client;
+using Tasks.Infrastructure.Client.Data;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Client.Rest;
 using Tasks.Infrastructure.Core;
-using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Management.Data;
 using FileMode = System.IO.FileMode;
 
 namespace Tasks.Infrastructure.Client
@@ -22,6 +24,8 @@ namespace Tasks.Infrastructure.Client
         Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description);
         Task<Guid> StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution);
         Task AppendCommandResult(OrcusTask orcusTask, CommandResult commandResult);
+        Task MarkTaskFinished(OrcusTask orcusTask);
+        Task<bool> CheckTaskFinished(OrcusTask orcusTask);
     }
 
     public class TaskSessionManager : ITaskSessionManager
@@ -40,7 +44,7 @@ namespace Tasks.Infrastructure.Client
 
             var mapper = BsonMapper.Global;
             mapper.Entity<TaskSession>().Id(x => x.TaskSessionId, autoId: false).DbRef(x => x.Executions, nameof(TaskExecution));
-            mapper.Entity<TaskExecution>().Id(x => x.TaskExecutionId);
+            mapper.Entity<TaskExecution>().Id(x => x.TaskExecutionId).DbRef(x => x.CommandResults, nameof(CommandResult));
         }
 
         public async Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description)
@@ -95,7 +99,7 @@ namespace Tasks.Infrastructure.Client
                             CreatedOn = DateTimeOffset.UtcNow
                         };
 
-                        _requestTransmitter.Transmit(TasksResource.CreateSessionRequest(taskSessionEntity));
+                        _requestTransmitter.Transmit(TaskSessionsResource.CreateSessionRequest(taskSessionEntity)).Forget();
                     }
 
                     taskExecution.TaskSessionId = taskSessionEntity.TaskSessionId;
@@ -103,9 +107,46 @@ namespace Tasks.Infrastructure.Client
                     var executions = db.GetCollection<TaskExecution>(nameof(TaskExecution));
                     Guid executionId = executions.Insert(taskExecution);
 
-                    _requestTransmitter.Transmit(TasksResource.CreateExecutionRequest(taskExecution));
+                    _requestTransmitter.Transmit(TaskExecutionsResource.CreateExecutionRequest(taskExecution)).Forget();
 
                     return executionId;
+                }
+            }
+        }
+
+        public async Task MarkTaskFinished(OrcusTask orcusTask)
+        {
+            using (await _readerWriterLock.WriterLockAsync())
+            {
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                file.Directory.Create();
+
+                using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (var db = new LiteDatabase(dbStream))
+                {
+                    var entities = db.GetCollection<OrcusTaskStatus>(nameof(OrcusTaskStatus));
+                    entities.Delete(x => true);
+
+                    entities.Insert(new OrcusTaskStatus {IsFinished = true});
+                }
+            }
+        }
+
+        public async Task<bool> CheckTaskFinished(OrcusTask orcusTask)
+        {
+            using (await _readerWriterLock.ReaderLockAsync())
+            {
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                if (!file.Exists)
+                    return false;
+
+                using (var dbStream = file.Open(FileMode.Open, FileAccess.ReadWrite))
+                using (var db = new LiteDatabase(dbStream))
+                {
+                    var entities = db.GetCollection<OrcusTaskStatus>(nameof(OrcusTaskStatus));
+                    var entity = entities.FindAll().FirstOrDefault();
+
+                    return entity?.IsFinished == true;
                 }
             }
         }
@@ -123,7 +164,7 @@ namespace Tasks.Infrastructure.Client
                     var results = db.GetCollection<CommandResult>(nameof(CommandResult));
                     results.Insert(commandResult);
 
-                    await _requestTransmitter.Transmit(TasksResource.CreateCommandResultRequest(commandResult));
+                    await _requestTransmitter.Transmit(TaskExecutionsResource.CreateCommandResultRequest(commandResult));
                 }
             }
         }

@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Server.Data.EfCode;
 using Orcus.Utilities;
-using Tasks.Infrastructure.Core.Data;
+using Tasks.Infrastructure.Server.Core;
+using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Infrastructure.Server

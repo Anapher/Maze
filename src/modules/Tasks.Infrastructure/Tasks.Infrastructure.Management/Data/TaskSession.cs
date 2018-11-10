@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tasks.Infrastructure.Core.Data
+namespace Tasks.Infrastructure.Management.Data
 {
     public class TaskSession
     {
@@ -12,7 +12,7 @@ namespace Tasks.Infrastructure.Core.Data
         public DateTimeOffset CreatedOn { get; set; }
 
         public TaskReference TaskReference { get; set; }
-        public ICollection<TaskTransmission> Transmissions { get; set; }
-        public ICollection<TaskExecution> Executions { get; set; }
+        public IList<TaskTransmission> Transmissions { get; set; }
+        public IList<TaskExecution> Executions { get; set; }
     }
 }
