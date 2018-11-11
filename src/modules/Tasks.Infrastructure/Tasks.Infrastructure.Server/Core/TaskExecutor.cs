@@ -47,7 +47,7 @@ namespace Tasks.Infrastructure.Server.Core
 
             _executorTypes = _orcusTask.Commands.ToDictionary(x => x, commandInfo => typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType()));
             _executionMethods =
-                _executorTypes.Values.ToDictionary(x => x, executorType => executorType.GetMethod("InvokeAsync", BindingFlags.Instance));
+                _executorTypes.Values.ToDictionary(x => x, executorType => executorType.GetMethod("InvokeAsync"));
         }
 
         public Task Execute(IEnumerable<TargetId> attenders, ConcurrentDictionary<TargetId, IServiceScope> attenderScopes, CancellationToken cancellationToken)
@@ -100,7 +100,7 @@ namespace Tasks.Infrastructure.Server.Core
                 return;
 
             var commandName = commandInfo.GetType().Name.Replace("CommandInfo", null);
-            var commandResult = new CommandResult
+            var commandResult = new CommandResultDto
             {
                 CommandResultId = Guid.NewGuid(),
                 TaskExecutionId = executionId,
@@ -109,11 +109,7 @@ namespace Tasks.Infrastructure.Server.Core
 
             var commandProcessDto = new CommandProcessDto
             {
-                CommandResultId = commandResult.CommandResultId,
-                TaskSessionId = _taskSession.TaskSessionId,
-                TaskId = _orcusTask.Id,
-                TaskExecutionId = executionId,
-                TargetId = id.IsServer ? (int?)null : id.ClientId
+                CommandResultId = commandResult.CommandResultId, TaskExecutionId = executionId, CommandName = commandName
             };
 
             Task UpdateStatus(CommandProcessDto arg)
@@ -153,6 +149,20 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 status.Processes.TryRemove(commandProcessDto.CommandResultId, out _);
             }
+
+            commandResult.FinishedAt = DateTimeOffset.UtcNow;
+
+            var action = services.GetRequiredService<ICreateTaskCommandResultAction>();
+            try
+            {
+                await action.BizActionAsync(commandResult);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Executing ICreateTaskCommandResultAction failed.");
+            }
+
+            await _hubContext.Clients.All.SendAsync("TaskCommandResultCreated", commandResult);
         }
 
         private bool BusinessActionSucceeded(IBizActionStatus status)

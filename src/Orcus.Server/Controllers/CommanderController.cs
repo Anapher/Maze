@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Orcus.Server.Authentication;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Library.Controllers;
+using Orcus.Server.Library.Utilities;
 using Orcus.Server.Service;
 using Orcus.Server.Service.Commander;
 using Orcus.Server.Service.Extensions;
@@ -18,7 +18,7 @@ namespace Orcus.Server.Controllers
     public class CommanderController : BusinessController
     {
         //Path: v1/modules/Orcus.RemoteDesktop/start
-        [Route("v1/modules/{*path}")]
+        [Route("v1/modules/{*path}"), Authorize("admin")]
         public async Task ExecuteCommand(string path, [FromServices] IOrcusRequestExecuter requestExecuter,
             [FromServices] ICommandDistributer commandDistributer)
         {
@@ -44,8 +44,7 @@ namespace Orcus.Server.Controllers
             {
                 if (!targets.IsSingleClient(out var clientId))
                 {
-                    await RestError(BusinessErrors.Commander.SingleCommandTargetRequired)
-                        .ExecuteResultAsync(ControllerContext);
+                    await RestError(BusinessErrors.Commander.SingleCommandTargetRequired).ExecuteResultAsync(ControllerContext);
                     return;
                 }
 

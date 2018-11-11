@@ -10,8 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
-    <PackageReference Include="Prism.Autofac" Version="7.1.0.431" />
-    <PackageReference Include="Prism.Wpf" Version="7.1.0.431" />
+    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
+    <PackageReference Include="Prism.Wpf" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>

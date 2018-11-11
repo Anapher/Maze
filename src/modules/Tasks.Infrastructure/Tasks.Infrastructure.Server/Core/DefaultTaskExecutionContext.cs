@@ -7,7 +7,7 @@ using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Management.Utilities;
 using Tasks.Infrastructure.Server.Library;
 
-namespace Tasks.Infrastructure.Server
+namespace Tasks.Infrastructure.Server.Core
 {
     public class DefaultTaskExecutionContext : TaskExecutionContext, IDisposable
     {
@@ -37,13 +37,13 @@ namespace Tasks.Infrastructure.Server
         {
             _progress = progress;
 
-            _statusUpdate.SendAsync(new CommandProcessDto { Progress = _progress, StatusMessage = _message }).Forget();
+            _statusUpdate.SendAsync(new CommandProcessDto {Progress = _progress, StatusMessage = _message}).Forget();
         }
 
         public override void ReportStatus(string message)
         {
             _message = message;
-            _statusUpdate.SendAsync(new CommandProcessDto { Progress = _progress, StatusMessage = _message }).Forget();
+            _statusUpdate.SendAsync(new CommandProcessDto {Progress = _progress, StatusMessage = _message}).Forget();
         }
     }
 }

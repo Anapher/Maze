@@ -35,7 +35,7 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
         {
             using (var connection = await OpenConnection())
             {
-                await connection.QueryAsync(
+                await connection.ExecuteAsync(
                     "INSERT INTO TaskSession (TaskSessionId, TaskReferenceId, Description, CreatedOn) VALUES (@TaskSessionId, @TaskReferenceId, @Description, @CreatedOn)",
                     taskSession);
             }

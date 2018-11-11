@@ -17,14 +17,6 @@ namespace Orcus.Server.Connection.Error
         Commander_CommandTransmissionFailed,
         Commander_RouteNotFound,
         Commander_ActionError,
-        Commander_ResultError,
-
-        Tasks_NotFound = 3000,
-        Tasks_TaskIdNull,
-        Tasks_RestartOnFailIntervalMustBePositive,
-        Tasks_MaximumRestartsMustBeGreaterThanZero,
-        Tasks_NoAudienceGiven,
-        Tasks_NoTriggersGiven,
-        Tasks_NoCommandsGiven,
+        Commander_ResultError
     }
 }

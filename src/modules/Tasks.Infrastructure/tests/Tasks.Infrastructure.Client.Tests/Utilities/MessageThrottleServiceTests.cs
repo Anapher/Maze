@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tasks.Infrastructure.Client.Utilities;
+using Tasks.Infrastructure.Management.Utilities;
 using Xunit;
 
 namespace Tasks.Infrastructure.Client.Tests.Utilities

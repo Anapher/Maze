@@ -16,6 +16,13 @@ namespace Tasks.Infrastructure.Management.Data
 
         public bool IsCompleted { get; set; }
 
+#if DAPPER
+        [Write(false)]
+#endif
+        public IList<TaskTransmission> Transmissions { get; set; }
+#if DAPPER
+        [Write(false)]
+#endif
         public IList<TaskSession> Sessions { get; set; }
     }
 }

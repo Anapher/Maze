@@ -7,7 +7,6 @@ namespace Tasks.Infrastructure.Management.Data
     {
         [Key]
         public int TaskTransmissionId { get; set; }
-        public string TaskSessionId { get; set; }
 
         public int? TargetId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

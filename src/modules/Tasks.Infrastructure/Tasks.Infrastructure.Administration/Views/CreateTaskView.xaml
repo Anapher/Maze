@@ -12,6 +12,7 @@
     d:DataContext="{d:DesignInstance viewModels:CreateTaskViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    DialogResult="{Binding DialogResult}"
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">

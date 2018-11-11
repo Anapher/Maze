@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using CodeElements.BizRunner;
+using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Configuration;
 using Orcus.Server.Library.Extensions;
 using Orcus.Server.Library.Interfaces;
@@ -23,12 +25,18 @@ namespace Tasks.Infrastructure.Server.Hooks
         {
             base.Load(builder);
 
+            SqlMapperExtensions.TableNameMapper = type => type.Name;
+            SqlMapper.AddTypeHandler(new GuidTypeHandler());
+
             builder.Configure<TasksOptions>(_configuration.GetSection("Tasks"));
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
             builder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
-            builder.RegisterType<OrcusTaskManager>().SingleInstance();
+            builder.RegisterType<OrcusTaskManager>().As<IOrcusTaskManager>().SingleInstance();
             builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<IBizActionStatus>().AsImplementedInterfaces();
             builder.RegisterType<OnServerStartupEvent>().As<IConfigureServerPipelineAction>();
+            builder.RegisterAssemblyTypes(ThisAssembly).Where(x => x.Namespace.EndsWith(".Business") || x.Namespace.EndsWith(".BusinessDataAccess"))
+                .AsImplementedInterfaces();
+            builder.RegisterType<ActiveTasksManager>().SingleInstance();
         }
     }
 }

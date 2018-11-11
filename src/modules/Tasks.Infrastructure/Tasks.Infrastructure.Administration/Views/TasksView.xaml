@@ -20,6 +20,26 @@
         <Menu>
             <MenuItem Command="{Binding CreateTaskCommand}" Header="{tx:T TasksView:CreateNewTask}" />
         </Menu>
-        <DataGrid Grid.Row="1" />
+        <DataGrid
+            Grid.Row="1"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding TasksView}">
+            <DataGrid.Resources>
+                <ContextMenu x:Key="TaskContextMenu">
+                    <MenuItem
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.OpenTaskSessionsCommand}"
+                        CommandParameter="{Binding}"
+                        Header="Open" />
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="{tx:T Name}" />
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">
+                    <Setter Property="ContextMenu" Value="{StaticResource TaskContextMenu}" />
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
     </Grid>
 </UserControl>

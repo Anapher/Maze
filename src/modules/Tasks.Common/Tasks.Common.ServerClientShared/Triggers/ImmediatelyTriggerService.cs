@@ -19,8 +19,6 @@ namespace Tasks.Common.Triggers
     {
         public async Task InvokeAsync(ImmediatelyTriggerInfo triggerInfo, TriggerContext context, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var session = await context.CreateSession(SessionKey.Create("Immediate", DateTimeOffset.UtcNow));
             await session.Invoke();
         }

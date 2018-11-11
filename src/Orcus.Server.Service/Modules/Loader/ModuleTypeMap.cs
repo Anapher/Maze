@@ -5,6 +5,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using NuGet.Packaging.Core;
 
@@ -45,6 +46,8 @@ namespace Orcus.Server.Service.Modules.Loader
                         registrar.RegisterModule(module);
                 }
             }
+
+            builder.RegisterAssemblyTypes(Assemblies.ToArray()).AssignableTo<Profile>().As<Profile>();
         }
     }
 }

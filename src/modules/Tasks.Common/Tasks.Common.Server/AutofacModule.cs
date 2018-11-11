@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Tasks.Infrastructure.Utilities;
+using Tasks.Infrastructure.Administration.Utilities;
 
 namespace Tasks.Common.Server
 {
@@ -10,6 +10,7 @@ namespace Tasks.Common.Server
             base.Load(builder);
             
             builder.RegisterTaskDtos(ThisAssembly);
+            builder.RegisterAssemblyTypes(ThisAssembly).AsImplementedInterfaces();
         }
     }
 }

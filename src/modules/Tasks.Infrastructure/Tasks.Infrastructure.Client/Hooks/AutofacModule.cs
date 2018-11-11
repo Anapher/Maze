@@ -5,6 +5,7 @@ using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Interfaces;
 using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Core;
+using Tasks.Infrastructure.Management;
 
 namespace Tasks.Infrastructure.Client.Hooks
 {

@@ -11,6 +11,10 @@ namespace Tasks.Infrastructure.Server.Hooks
             CreateMap<TaskSessionDto, TaskSession>();
             CreateMap<TaskExecutionDto, TaskExecution>();
             CreateMap<CommandResultDto, CommandResult>();
+
+            CreateMap<TaskSession, TaskSessionDto>();
+            CreateMap<TaskExecution, TaskExecutionDto>();
+            CreateMap<CommandResult, CommandResultDto>();
         }
     }
 }

@@ -31,22 +31,22 @@ namespace Tasks.Infrastructure.Core
                 yield return BusinessErrors.FieldNullOrEmpty("The name may not be empty");
 
             if (Id == Guid.Empty)
-                yield return BusinessErrors.Tasks.TaskGuidEmpty;
+                yield return TaskErrors.TaskGuidEmpty;
 
             if (RestartOnFailInterval != null && RestartOnFailInterval <= TimeSpan.Zero)
-                yield return BusinessErrors.Tasks.RestartOnFailIntervalMustBePositive;
+                yield return TaskErrors.RestartOnFailIntervalMustBePositive;
 
             if (RestartOnFailInterval == null && MaximumRestarts < 1)
-                yield return BusinessErrors.Tasks.MaximumRestartsMustBeGreaterThanZero;
+                yield return TaskErrors.MaximumRestartsMustBeGreaterThanZero;
 
             if (!Audience.IncludesServer && !Audience.IsAll && !Audience.Any())
-                yield return BusinessErrors.Tasks.NoAudienceGiven;
+                yield return TaskErrors.NoAudienceGiven;
 
             if (!Triggers.Any())
-                yield return BusinessErrors.Tasks.NoTriggersGiven;
+                yield return TaskErrors.NoTriggersGiven;
 
             if (!Commands.Any())
-                yield return BusinessErrors.Tasks.NoCommandsGiven;
+                yield return TaskErrors.NoCommandsGiven;
         }
     }
 }

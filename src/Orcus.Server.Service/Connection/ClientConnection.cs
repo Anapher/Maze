@@ -31,7 +31,7 @@ namespace Orcus.Server.Service.Connection
             return WebSocketWrapper.ReceiveAsync();
         }
 
-        public Task<HttpResponseMessage> SendRequest(HttpRequestMessage requestMessage, CancellationToken cancellationToken) =>
+        public Task<HttpResponseMessage> SendMessage(HttpRequestMessage requestMessage, CancellationToken cancellationToken) =>
             OrcusServer.SendRequest(requestMessage, cancellationToken);
     }
 }

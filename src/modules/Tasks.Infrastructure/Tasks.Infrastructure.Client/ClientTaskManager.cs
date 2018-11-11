@@ -13,6 +13,7 @@ using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Rest;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
+using Tasks.Infrastructure.Management;
 
 namespace Tasks.Infrastructure.Client
 {
@@ -40,7 +41,7 @@ namespace Tasks.Infrastructure.Client
 
             var sessionManager = _serviceProvider.GetRequiredService<ITaskSessionManager>();
 
-            var tasks = await _taskDirectory.LoadTasks();
+            var tasks = await _taskDirectory.LoadTasksRefresh();
             foreach (var orcusTask in tasks)
             {
                 if (await sessionManager.CheckTaskFinished(orcusTask))
@@ -51,6 +52,23 @@ namespace Tasks.Infrastructure.Client
 
                 Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
                 RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
+            }
+        }
+
+        public async Task RemoveTask(Guid taskId)
+        {
+            if (Tasks.TryGetValue(taskId, out var taskInfo))
+            {
+                taskInfo.Item2.Cancel();
+                await _taskDirectory.RemoveTask(taskInfo.Item1.OrcusTask);
+            }
+            else
+            {
+                foreach (var task in await _taskDirectory.LoadTasks())
+                {
+                    if (task.Id == taskId)
+                        await _taskDirectory.RemoveTask(task);
+                }
             }
         }
 
@@ -68,11 +86,13 @@ namespace Tasks.Infrastructure.Client
                     var localTaskHash = _taskDirectory.ComputeTaskHash(info.Item1.OrcusTask);
                     if (localTaskHash.Equals(Hash.Parse(taskSyncDto.Hash)))
                     {
+                        //the hash values match, this task is fine
                         tasksToDelete.Remove(taskSyncDto.TaskId);
                         continue;
                     }
                 }
 
+                //the task was either not found or the hash values don't match
                 tasksToUpdate.Add(taskSyncDto);
             }
 
@@ -107,26 +127,8 @@ namespace Tasks.Infrastructure.Client
                     _logger.LogDebug("Update task {taskId}", dto.TaskId);
                     try
                     {
-                        var taskInfo = await TasksResource.FetchTaskAsync(dto.TaskId, taskComponentResolver, xmlSerializerCache, restClient);
-                        await _taskDirectory.WriteTask(taskInfo);
-
-                        if (Tasks.TryGetValue(taskInfo.Id, out var existingTaskInfo))
-                        {
-                            _logger.LogDebug("Cancel runner for task {taskId}", dto.TaskId);
-                            existingTaskInfo.Item2.Cancel();
-                            Tasks.TryRemove(taskInfo.Id, out _);
-                        }
-
-                        var taskRunner = new TaskRunner(taskInfo, _serviceProvider);
-                        var cancellationTokenSource = new CancellationTokenSource();
-
-                        lock (_taskUpdateLock)
-                        {
-                            Tasks.TryRemove(taskInfo.Id, out _);
-                            Tasks.TryAdd(taskInfo.Id, (taskRunner, cancellationTokenSource));
-                        }
-
-                        RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
+                        var orcusTask = await TasksResource.FetchTaskAsync(dto.TaskId, taskComponentResolver, xmlSerializerCache, restClient);
+                        await AddOrUpdateTask(orcusTask);
                     }
                     catch (Exception e)
                     {
@@ -134,6 +136,29 @@ namespace Tasks.Infrastructure.Client
                     }
                 }, CancellationToken.None);
             }
+        }
+
+        public async Task AddOrUpdateTask(OrcusTask orcusTask)
+        {
+            await _taskDirectory.WriteTask(orcusTask);
+
+            if (Tasks.TryGetValue(orcusTask.Id, out var existingTaskInfo))
+            {
+                _logger.LogDebug("Cancel runner for task {taskId}", orcusTask.Id);
+                existingTaskInfo.Item2.Cancel();
+                Tasks.TryRemove(orcusTask.Id, out _);
+            }
+
+            var taskRunner = new TaskRunner(orcusTask, _serviceProvider);
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            lock (_taskUpdateLock)
+            {
+                Tasks.TryRemove(orcusTask.Id, out _);
+                Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
+            }
+
+            RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
         }
 
         private async Task RunTask(TaskRunner taskRunner, CancellationToken cancellationToken)

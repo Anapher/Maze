@@ -185,8 +185,6 @@ namespace Tasks.Infrastructure.Client
                         {
                             commandProcess.CommandResultId = commandResult.CommandResultId;
                             commandProcess.TaskExecutionId = commandResult.TaskExecutionId;
-                            commandProcess.TaskSessionId = taskSession.TaskSessionId;
-                            commandProcess.TaskId = OrcusTask.Id;
 
                             try
                             {

@@ -13,9 +13,9 @@ namespace Tasks.Infrastructure.Server.Hooks
     public class OnServerStartupEvent : IConfigureServerPipelineAction
     {
         private readonly TasksOptions _options;
-        private readonly OrcusTaskManager _orcusTaskManager;
+        private readonly IOrcusTaskManager _orcusTaskManager;
 
-        public OnServerStartupEvent(OrcusTaskManager orcusTaskManager, IOptions<TasksOptions> options)
+        public OnServerStartupEvent(IOrcusTaskManager orcusTaskManager, IOptions<TasksOptions> options)
         {
             _orcusTaskManager = orcusTaskManager;
             _options = options.Value;
@@ -44,7 +44,7 @@ namespace Tasks.Infrastructure.Server.Hooks
                     // Add SQLite support to FluentMigrator
                     .AddSQLite()
                     // Set the connection string
-                    .WithGlobalConnectionString(_options.Directory)
+                    .WithGlobalConnectionString(_options.ConnectionString)
                     // Define the assembly containing the migrations
                     .ScanIn(typeof(InitialCreate).Assembly).For.Migrations())
                 // Enable logging to console in the FluentMigrator way

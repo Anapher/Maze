@@ -27,7 +27,7 @@ namespace Orcus.Server.Service
         {
             if (_connectionManager.ClientConnections.TryGetValue(clientId, out var clientConnection))
             {
-                var response = await clientConnection.SendRequest(request, cancellationToken);
+                var response = await clientConnection.SendMessage(request, cancellationToken);
                 if (response.StatusCode == HttpStatusCode.Created && response.Headers.Location?.Host == "channels")
                 {
                     if (_connectionManager.AdministrationConnections.TryGetValue(accountId, out var administrationConnection))
@@ -41,7 +41,7 @@ namespace Orcus.Server.Service
                 return response;
             }
 
-            throw new ClientNotFoundException();
+            throw new ClientNotFoundException(clientId);
         }
     }
 }

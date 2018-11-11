@@ -9,7 +9,6 @@
     <Import_RootNamespace>Tasks.Infrastructure.Management</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Channels\ITaskManagerChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CommandResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TaskExecution.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TaskReference.cs" />

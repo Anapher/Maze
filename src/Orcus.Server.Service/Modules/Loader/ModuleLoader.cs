@@ -13,6 +13,19 @@ using Orcus.Utilities;
 
 namespace Orcus.Server.Service.Modules.Loader
 {
+    public class AssemblyNameComparer : IEqualityComparer<AssemblyName>
+    {
+        public bool Equals(AssemblyName x, AssemblyName y)
+        {
+            return AssemblyName.ReferenceMatchesDefinition(y, x);
+        }
+
+        public int GetHashCode(AssemblyName obj)
+        {
+            return obj.FullName.GetHashCode();
+        }
+    }
+
     public class ModuleLoader
     {
         private readonly IModuleProject _project;
@@ -35,7 +48,7 @@ namespace Orcus.Server.Service.Modules.Loader
             var mapper = new ModuleMapper(_project.Framework, _project.ModulesDirectory, _project.Runtime, _project.Architecture);
             var map = mapper.BuildMap(packagesLock);
             
-            var dependencyPaths = new Dictionary<AssemblyName, AssemblyInfo>();
+            var dependencyPaths = new Dictionary<AssemblyName, AssemblyInfo>(new AssemblyNameComparer());
             _dependencyAssemblies = dependencyPaths;
 
             while (map.TryPop(out var dependencyLayer))

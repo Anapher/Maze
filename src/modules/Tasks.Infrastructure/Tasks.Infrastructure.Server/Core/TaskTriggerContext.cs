@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Orcus.Server.Data.EfCode;
-using Tasks.Infrastructure.Server.Business;
-using Tasks.Infrastructure.Server.Core;
+using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management.Data;
+using Tasks.Infrastructure.Server.Business;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 
-namespace Tasks.Infrastructure.Server
+namespace Tasks.Infrastructure.Server.Core
 {
     public class TaskTriggerContext : TriggerContext
     {
@@ -34,14 +33,17 @@ namespace Tasks.Infrastructure.Server
             TaskSession taskSession;
             using (var scope = _taskService.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var action = scope.ServiceProvider.GetRequiredService<ICreateTaskSessionAction>();
+                taskSession = await action.BizActionAsync(new TaskSessionDto
+                {
+                    TaskSessionId = sessionKey.Hash,
+                    Description = description,
+                    TaskReferenceId = _taskService.OrcusTask.Id,
+                    CreatedOn = DateTimeOffset.UtcNow
+                });
 
-                var action = _taskService.Services.GetRequiredService<IGetOrCreateTaskSessionAction>();
-                taskSession = await action.BizActionAsync((_taskService.OrcusTask.Id, sessionKey.Hash, description));
                 if (action.HasErrors)
                     throw new InvalidOperationException(action.Errors.First().ErrorMessage);
-
-                await context.SaveChangesAsync();
             }
 
             return new TaskSessionTriggerService(_taskService, taskSession);

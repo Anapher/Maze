@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -78,12 +79,6 @@ namespace Orcus.Server
                 builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSignalR();
             
-            Mapper.Initialize(options =>
-            {
-                options.AddProfile<AutoMapperProfile>();
-                options.AddProfile<ServerAutoMapperProfile>();
-            });
-            
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ConnectionManager>().As<IConnectionManager>().SingleInstance();
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>().SingleInstance();
@@ -101,6 +96,17 @@ namespace Orcus.Server
             containerBuilder.Populate(services);
 
             var container = containerBuilder.Build();
+            Mapper.Initialize(options =>
+            {
+                options.AddProfile<AutoMapperProfile>();
+                options.AddProfile<ServerAutoMapperProfile>();
+
+                foreach (var autoMapperProfile in container.Resolve<IEnumerable<Profile>>())
+                {
+                    options.AddProfile(autoMapperProfile);
+                }
+            });
+
             container.Execute<IStartupAction>().Wait();
 
             return new AutofacServiceProvider(container);

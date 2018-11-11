@@ -60,12 +60,13 @@ namespace Tasks.Infrastructure.Server.Core
                         continue;
                     }
 
-                    var triggerContext = new TaskTriggerContext(this, serviceType.Name, _aggregatedClientFilter);
-                    var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
+                    var triggerContext = new TaskTriggerContext(this, service.GetType().Name, _aggregatedClientFilter);
+                    var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance | BindingFlags.Public);
 
                     try
                     {
-                        var task = (Task) methodInfo.Invoke(service, new object[] {triggerInfo, triggerContext, cancellationToken});
+                        var task = Task.Run(async () =>
+                            await (Task) methodInfo.Invoke(service, new object[] {triggerInfo, triggerContext, cancellationToken}));
                         tasks.Add(task, serviceType);
                     }
                     catch (Exception e)

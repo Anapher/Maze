@@ -40,6 +40,8 @@
     <None Remove="Resources\VisualStudioIcons.xaml" />
     <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
     <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
+    <None Remove="Views\TaskOverviewView.xaml" />
+    <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,7 @@
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.4.0" />
+    <PackageReference Include="LoadingIndicators.WPF" Version="0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -109,6 +112,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\CreateTask\TaskSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\TaskOverviewView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\TaskOverview\OverviewTreeView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

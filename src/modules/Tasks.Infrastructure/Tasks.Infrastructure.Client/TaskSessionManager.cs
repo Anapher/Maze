@@ -71,7 +71,7 @@ namespace Tasks.Infrastructure.Client
                 Description = description,
                 CreatedOn = DateTimeOffset.UtcNow,
                 TaskReference = new TaskReference {TaskId = orcusTask.Id},
-                Transmissions = ImmutableList<TaskTransmission>.Empty,
+                TaskReferenceId = orcusTask.Id,
                 Executions = ImmutableList<TaskExecution>.Empty
             };
         }

@@ -12,6 +12,8 @@ using Nito.AsyncEx;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core;
+using TasksCacheDictionary = System.Collections.Immutable.ImmutableDictionary<System.Guid, (string, Tasks.Infrastructure.Core.OrcusTask)>;
+
 #if NETCOREAPP2_1
 using Tasks.Infrastructure.Server.Options;
 
@@ -22,11 +24,49 @@ using Tasks.Infrastructure.Client.Options;
 
 namespace Tasks.Infrastructure.Management
 {
+    /// <summary>
+    ///     Management for the directory that contains the tasks
+    /// </summary>
     public interface ITaskDirectory
     {
+        /// <summary>
+        ///     Read all tasks from the directory. When the tasks were already loaded before, the cached task list is returned.
+        /// </summary>
+        /// <returns>Return all tasks from the directory.</returns>
         Task<IEnumerable<OrcusTask>> LoadTasks();
+
+        /// <summary>
+        ///     Read all tasks from the directory.
+        /// </summary>
+        /// <returns>Return all tasks from the directory.</returns>
+        Task<IEnumerable<OrcusTask>> LoadTasksRefresh();
+
+        /// <summary>
+        ///     Write a task to the directory and replace an existing one if necessary.
+        /// </summary>
+        /// <param name="orcusTask">The task that should be saved.</param>
+        /// <returns>Return the file name of the task</returns>
         Task<string> WriteTask(OrcusTask orcusTask);
-        Task RemoveTask(OrcusTask orcusTask);
+
+        /// <summary>
+        ///     Get an task encoded (xml) by the task id
+        /// </summary>
+        /// <param name="taskId">The task id of the task.</param>
+        /// <returns>Return the encoded task (utf8/xml).</returns>
+        Task<byte[]> GetEncodedTask(Guid taskId);
+
+        /// <summary>
+        ///     Remove a task from the directory
+        /// </summary>
+        /// <param name="orcusTask">The task that should be removed.</param>
+        /// <returns>Return true if the task was successfully removed, false if the task was not found.</returns>
+        Task<bool> RemoveTask(OrcusTask orcusTask);
+
+        /// <summary>
+        ///     Compute the hash value of a task.
+        /// </summary>
+        /// <param name="orcusTask">The task which should be hashed.</param>
+        /// <returns>Return the hash value of the task as SHA256 hash.</returns>
         Hash ComputeTaskHash(OrcusTask orcusTask);
     }
 
@@ -37,8 +77,8 @@ namespace Tasks.Infrastructure.Management
         private readonly ILogger<TaskDirectory> _logger;
         private readonly TasksOptions _options;
         private readonly AsyncReaderWriterLock _tasksLock;
-        private IImmutableDictionary<Guid, string> _taskFileNames;
         private readonly XmlWriterSettings _xmlWriterSettings;
+        private IImmutableDictionary<Guid, (string, OrcusTask)> _cachedTasks;
 
         public TaskDirectory(IOptions<TasksOptions> options, ITaskComponentResolver taskComponentResolver, IXmlSerializerCache xmlSerializerCache,
             ILogger<TaskDirectory> logger)
@@ -53,6 +93,20 @@ namespace Tasks.Infrastructure.Management
 
         public async Task<IEnumerable<OrcusTask>> LoadTasks()
         {
+            if (_cachedTasks != null)
+                return _cachedTasks.Values.Select(x => x.Item2);
+            
+            using (await _tasksLock.ReaderLockAsync())
+            {
+                if (_cachedTasks != null)
+                    return _cachedTasks.Values.Select(x => x.Item2);
+
+                return LoadTasksLockAquired();
+            }
+        }
+
+        public async Task<IEnumerable<OrcusTask>> LoadTasksRefresh()
+        {
             using (await _tasksLock.ReaderLockAsync())
             {
                 return LoadTasksLockAquired();
@@ -64,12 +118,11 @@ namespace Tasks.Infrastructure.Management
             var directoryInfo = new DirectoryInfo(_options.Directory);
             if (!directoryInfo.Exists)
             {
-                _taskFileNames = ImmutableDictionary<Guid, string>.Empty;
-                return Enumerable.Empty<OrcusTask>();
+                _cachedTasks = TasksCacheDictionary.Empty;
+                return _cachedTasks.Values.Select(x => x.Item2);
             }
 
-            var filenames = new Dictionary<Guid, string>();
-            var list = new List<OrcusTask>();
+            var tasks = new Dictionary<Guid, (string, OrcusTask)>();
             foreach (var fileInfo in directoryInfo.GetFiles($"*.{_options.FileExtension}", SearchOption.AllDirectories))
             {
                 var reader = new OrcusTaskReader(fileInfo.FullName, _taskComponentResolver, _xmlSerializerCache);
@@ -85,35 +138,36 @@ namespace Tasks.Infrastructure.Management
                     continue;
                 }
 
-                if (filenames.ContainsKey(task.Id))
+                if (_cachedTasks?.ContainsKey(task.Id) == true)
                 {
                     _logger.LogWarning("The task of the file {file1} has the same id like the task of {file2}. {file1} is skipped.",
-                        fileInfo.FullName, filenames[task.Id]);
+                        fileInfo.FullName, _cachedTasks[task.Id].Item1);
                     continue;
                 }
 
-                list.Add(task);
-                filenames.Add(task.Id, fileInfo.FullName);
+                tasks.Add(task.Id, (fileInfo.FullName, task));
             }
-            _taskFileNames = filenames.ToImmutableDictionary();
+            
+            _cachedTasks = tasks.ToImmutableDictionary();
 
-            return list;
+            return tasks.Values.Select(x => x.Item2);
         }
 
         public async Task<string> WriteTask(OrcusTask orcusTask)
         {
             using (await _tasksLock.WriterLockAsync())
             {
-                if (_taskFileNames == null)
+                if (_cachedTasks == null)
                     LoadTasksLockAquired();
 
-                if (!_taskFileNames.TryGetValue(orcusTask.Id, out var filename))
+                string filename;
+                if (_cachedTasks.TryGetValue(orcusTask.Id, out var taskLink))
+                    filename = taskLink.Item1;
+                else
                 {
                     //new task
                     var name = NameGeneratorUtilities.ToFilename(orcusTask.Name, includeSpace: false) + "." + _options.FileExtension;
                     filename = NameGeneratorUtilities.MakeUnique(name, "_[N]", s => File.Exists(Path.Combine(_options.Directory, s)));
-
-                    _taskFileNames = _taskFileNames.SetItem(orcusTask.Id, filename);
                 }
 
                 using (var fileStream = File.Create(filename))
@@ -123,22 +177,38 @@ namespace Tasks.Infrastructure.Management
                     writer.Write(orcusTask, TaskDetails.Server);
                 }
 
+                _cachedTasks = _cachedTasks.SetItem(orcusTask.Id, (filename, orcusTask));
                 return filename;
             }
         }
 
-        public async Task RemoveTask(OrcusTask orcusTask)
+        public async Task<byte[]> GetEncodedTask(Guid taskId)
+        {
+            using (await _tasksLock.ReaderLockAsync())
+            {
+                if (_cachedTasks == null)
+                    LoadTasksLockAquired();
+
+                if (!_cachedTasks.TryGetValue(taskId, out var taskLink))
+                    throw new ArgumentException("The task was not found");
+
+                return File.ReadAllBytes(taskLink.Item1);
+            }
+        }
+
+        public async Task<bool> RemoveTask(OrcusTask orcusTask)
         {
             using (await _tasksLock.WriterLockAsync())
             {
-                if (_taskFileNames == null)
+                if (_cachedTasks == null)
                     LoadTasksLockAquired();
 
-                if (!_taskFileNames.TryGetValue(orcusTask.Id, out var filename))
-                    throw new ArgumentException("The task was not found");
+                if (!_cachedTasks.TryGetValue(orcusTask.Id, out var taskLink))
+                    return false;
 
-                _taskFileNames = _taskFileNames.Remove(orcusTask.Id);
-                File.Delete(filename);
+                File.Delete(taskLink.Item1);
+                _cachedTasks = _cachedTasks.Remove(orcusTask.Id);
+                return true;
             }
         }
 

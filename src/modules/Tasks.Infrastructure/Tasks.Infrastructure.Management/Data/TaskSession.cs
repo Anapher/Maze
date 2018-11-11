@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+#if DAPPER
+using Dapper.Contrib.Extensions;
+
+#endif
 
 namespace Tasks.Infrastructure.Management.Data
 {
@@ -11,8 +15,14 @@ namespace Tasks.Infrastructure.Management.Data
         public string Description { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
 
+#if DAPPER
+        [Write(false)]
+#endif
         public TaskReference TaskReference { get; set; }
-        public IList<TaskTransmission> Transmissions { get; set; }
+
+#if DAPPER
+        [Write(false)]
+#endif
         public IList<TaskExecution> Executions { get; set; }
     }
 }

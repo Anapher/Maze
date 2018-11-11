@@ -14,11 +14,15 @@ namespace Tasks.Infrastructure.Management.Data
 #endif
         public Guid TaskExecutionId { get; set; }
 
+        public Guid TaskReferenceId { get; set; }
         public string TaskSessionId { get; set; }
 
         public int? TargetId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
 
+#if DAPPER
+        [Write(false)]
+#endif
         public IList<CommandResult> CommandResults { get; set; }
     }
 }

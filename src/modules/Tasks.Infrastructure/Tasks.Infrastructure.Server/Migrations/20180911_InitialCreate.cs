@@ -15,20 +15,24 @@ namespace Tasks.Infrastructure.Server.Migrations
                 .WithColumn("TaskSessionId").AsString()
                 .WithColumn("TaskReferenceId").AsGuid().ForeignKey("TaskReference", "TaskId")
                 .WithColumn("Description").AsString()
-                .WithColumn("CreatedOn").AsDateTimeOffset().NotNullable();
+                .WithColumn("CreatedOn").AsDateTime().NotNullable();
             Create.PrimaryKey().OnTable("TaskSession").Columns("TaskSessionId", "TaskReferenceId");
 
             Create.Table("TaskTransmission")
                 .WithColumn("TaskTransmissionId").AsInt32().PrimaryKey()
                 .WithColumn("TaskSessionId").AsString().ForeignKey("TaskSession", "TaskSessionId")
                 .WithColumn("TargetId").AsInt32().Nullable()
-                .WithColumn("CreatedOn").AsDateTimeOffset().NotNullable();
+                .WithColumn("CreatedOn").AsDateTime().NotNullable();
 
             Create.Table("TaskExecution")
                 .WithColumn("TaskExecutionId").AsGuid().PrimaryKey()
-                .WithColumn("TaskSessionId").AsString().ForeignKey("TaskSession", "TaskSessionId")
+                .WithColumn("TaskSessionId").AsString().NotNullable()
+                .WithColumn("TaskReferenceId").AsGuid().NotNullable()
                 .WithColumn("TargetId").AsInt32().Nullable()
-                .WithColumn("CreatedOn").AsDateTimeOffset().NotNullable();
+                .WithColumn("CreatedOn").AsDateTime().NotNullable();
+
+            Create.ForeignKey().FromTable("TaskExecution").ForeignColumns("TaskSessionId", "TaskReferenceId").ToTable("TaskSession")
+                .PrimaryColumns("TaskSessionId", "TaskReferenceId");
 
             Create.Table("CommandResult")
                 .WithColumn("CommandResultId").AsGuid().PrimaryKey()
@@ -36,7 +40,7 @@ namespace Tasks.Infrastructure.Server.Migrations
                 .WithColumn("CommandName").AsString().NotNullable()
                 .WithColumn("Result").AsString().NotNullable()
                 .WithColumn("Status").AsInt32().Nullable()
-                .WithColumn("FinishedAt").AsDateTimeOffset().NotNullable();
+                .WithColumn("FinishedAt").AsDateTime().NotNullable();
         }
 
         public override void Down()

@@ -18,8 +18,8 @@ namespace Tasks.Infrastructure.Core.Dtos
             if (TaskExecutionId == default)
                 yield return new ValidationResult("The task execution id must not be zero.");
 
-            if (string.IsNullOrWhiteSpace(TaskSessionId) || !Hash.TryParse(TaskSessionId, out var hash) || !hash.IsSha256Hash)
-                yield return new ValidationResult("The task session id must be a SHA256 hash value.");
+            if (!Hash.TryParse(TaskSessionId, out var hash) || hash.HashData.Length != 16)
+                yield return new ValidationResult("The task session id must be a 128 bit hash value.");
         }
     }
 }

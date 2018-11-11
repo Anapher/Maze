@@ -1,15 +1,10 @@
 ﻿using System;
 using System.IO.Abstractions.TestingHelpers;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Moq;
-using RequestTransmitter.Client;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Core;
-using Tasks.Infrastructure.Core.Data;
 using Xunit;
 
 namespace Tasks.Infrastructure.Client.Tests
@@ -20,7 +15,7 @@ namespace Tasks.Infrastructure.Client.Tests
         public async Task TestOpenNonExistingSession()
         {
             var fileSystem = new MockFileSystem();
-            var options = new TasksOptions{SessionsDirectory = "C:\\test"};
+            var options = new TasksOptions {SessionsDirectory = "C:\\test"};
 
             var taskId = Guid.Parse("CB49D689-95FD-4A09-A78A-3A4397E9425E");
 

@@ -22,6 +22,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private readonly IComponentContext _container;
         private readonly IWindowService _windowService;
         private DelegateCommand _createTaskCommand;
+        private bool? _dialogResult;
 
         public CreateTaskViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container)
         {
@@ -40,6 +41,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         }
 
         public List<ITaskConfiguringViewModel> TreeViewModels { get; }
+
+        public bool? DialogResult
+        {
+            get => _dialogResult;
+            set => SetProperty(ref _dialogResult, value);
+        }
 
         public DelegateCommand CreateTaskCommand
         {
@@ -69,7 +76,15 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     var xmlCache = _container.Resolve<IXmlSerializerCache>();
                     var restClient = _container.Resolve<IRestClient>();
 
-                    await TasksResource.Create(task, componentResolver, xmlCache, restClient);
+                    try
+                    {
+                        await TasksResource.Create(task, componentResolver, xmlCache, restClient);
+                        DialogResult = true;
+                    }
+                    catch (Exception e)
+                    {
+                        e.ShowMessage(_window);
+                    }
                 }));
             }
         }

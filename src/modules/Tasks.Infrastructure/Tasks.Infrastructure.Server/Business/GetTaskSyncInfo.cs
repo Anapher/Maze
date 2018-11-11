@@ -14,9 +14,9 @@ namespace Tasks.Infrastructure.Server.Business
 
     public class GetTaskSyncInfo : BusinessActionErrors, IGetTaskSyncInfo
     {
-        private readonly OrcusTaskManager _orcusTaskManager;
+        private readonly IOrcusTaskManager _orcusTaskManager;
 
-        public GetTaskSyncInfo(OrcusTaskManager orcusTaskManager)
+        public GetTaskSyncInfo(IOrcusTaskManager orcusTaskManager)
         {
             _orcusTaskManager = orcusTaskManager;
         }
