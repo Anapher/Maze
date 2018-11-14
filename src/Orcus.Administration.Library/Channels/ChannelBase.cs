@@ -4,11 +4,26 @@ using Orcus.Modules.Api;
 
 namespace Orcus.Administration.Library.Channels
 {
+    /// <summary>
+    ///     A base class for <see cref="IAwareDataChannel"/>
+    /// </summary>
     public abstract class ChannelBase : IAwareDataChannel
     {
+        /// <summary>
+        ///     The required offset when sending data using <see cref="Send"/> with hasOffset: <code>true</code>
+        /// </summary>
         protected int RequiredOffset;
+
+        /// <summary>
+        ///     Send data to the remote channel
+        /// </summary>
         protected SendDelegate Send;
+
+        /// <summary>
+        ///     True if the current channel is disposed
+        /// </summary>
         protected bool IsDisposed;
+
         private readonly object _disposeLock = new object();
 
         public void Dispose()
@@ -33,9 +48,11 @@ namespace Orcus.Administration.Library.Channels
             }
         }
 
+        /// <summary>
+        ///     Dispose resources. It is guaranteed that this method will only be called once.
+        /// </summary>
         protected virtual void InternalDispose()
         {
-
         }
 
         event EventHandler IAwareDataChannel.CloseChannel
@@ -71,8 +88,18 @@ namespace Orcus.Administration.Library.Channels
 
         private event EventHandler CloseChannel;
 
+        /// <summary>
+        ///     This method is called when data from the remote channel was received
+        /// </summary>
+        /// <param name="buffer">TThe data buffer</param>
+        /// <param name="offset">The offset in the <see cref="buffer"/> where the data begins</param>
+        /// <param name="count">The size of data found in the <see cref="buffer"/></param>
         protected abstract void ReceiveData(byte[] buffer, int offset, int count);
 
+        /// <summary>
+        ///     Initialize the data channel after it was activated
+        /// </summary>
+        /// <param name="responseMessage">The response message that created this channel</param>
         protected virtual void Initialize(HttpResponseMessage responseMessage)
         {
         }

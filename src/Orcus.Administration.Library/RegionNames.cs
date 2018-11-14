@@ -1,5 +1,8 @@
 ﻿namespace Orcus.Administration.Library
 {
+    /// <summary>
+    ///     Region names of Prism
+    /// </summary>
     public static class RegionNames
     {
         /// <summary>

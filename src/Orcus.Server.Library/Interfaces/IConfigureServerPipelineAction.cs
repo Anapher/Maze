@@ -4,10 +4,16 @@ using Orcus.Modules.Api;
 
 namespace Orcus.Server.Library.Interfaces
 {
+    /// <summary>
+    ///     An action that will be invoked when the server pipeline is configured.
+    /// </summary>
     public interface IConfigureServerPipelineAction : IActionInterface<PipelineInfo>
     {
     }
 
+    /// <summary>
+    ///     Information about the current server pipeline
+    /// </summary>
     public class PipelineInfo
     {
         public PipelineInfo(IApplicationBuilder applicationBuilder, IHostingEnvironment hostingEnvironment)

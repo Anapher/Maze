@@ -6,8 +6,15 @@ using Orcus.Server.Connection.Error;
 
 namespace Orcus.Server.Library.Utilities
 {
+    /// <summary>
+    ///     Extensions for business actions
+    /// </summary>
     public static class BizActionStatusExtensions
     {
+        /// <summary>
+        ///     On succeed, returns an <see cref="OkResult"/>, else return a failed response with the error messages.
+        /// </summary>
+        /// <param name="status">The business action status</param>
         public static IActionResult ToActionResult(this IBizActionStatus status)
         {
             if (!status.HasErrors)
@@ -19,6 +26,10 @@ namespace Orcus.Server.Library.Utilities
             return new JsonResult(errors) {StatusCode = httpCode};
         }
 
+        /// <summary>
+        ///     Create an action result out of a rest error
+        /// </summary>
+        /// <param name="error">The <see cref="RestError"/></param>
         public static IActionResult ToActionResult(this RestError error)
         {
             var httpCode = (int) ErrorTypes.ErrorStatusCodes[error.Type];
