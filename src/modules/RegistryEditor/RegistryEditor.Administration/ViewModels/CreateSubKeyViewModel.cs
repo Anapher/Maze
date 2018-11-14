@@ -10,12 +10,12 @@ namespace RegistryEditor.Administration.ViewModels
         private bool? _dialogResult;
         private string _name;
 
-        public CreateSubKeyViewModel(string subKeyLocation)
+        public void Initialize(string subKeyLocation)
         {
             SubKeyLocation = subKeyLocation;
         }
 
-        public string SubKeyLocation { get; }
+        public string SubKeyLocation { get; private set; }
 
         public string Name
         {

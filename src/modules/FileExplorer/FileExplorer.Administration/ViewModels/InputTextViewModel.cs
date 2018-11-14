@@ -10,17 +10,14 @@ namespace FileExplorer.Administration.ViewModels
         private DelegateCommand<string> _okCommand;
         private string _text;
 
-        public InputTextViewModel(string defaultText, string watermark, string affirmerButtonText)
+        public InputTextViewModel()
         {
-            Text = defaultText;
-            Watermark = watermark;
-            AffirmerButtonText = affirmerButtonText;
             Predicate = s => !string.IsNullOrEmpty(s);
         }
 
         public Predicate<string> Predicate { get; set; }
-        public string Watermark { get; }
-        public string AffirmerButtonText { get; }
+        public string Watermark { get; private set; }
+        public string AffirmerButtonText { get; private set; }
 
         public bool? DialogResult
         {
@@ -42,6 +39,13 @@ namespace FileExplorer.Administration.ViewModels
                            new DelegateCommand<string>(parameter => DialogResult = true,
                                s => Predicate?.Invoke(s) ?? true).ObservesProperty(() => Text));
             }
+        }
+
+        public void Initialize(string defaultText, string watermark, string affirmerButtonText)
+        {
+            Text = defaultText;
+            Watermark = watermark;
+            AffirmerButtonText = affirmerButtonText;
         }
     }
 }

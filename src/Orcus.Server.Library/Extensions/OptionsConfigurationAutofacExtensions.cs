@@ -8,6 +8,7 @@ namespace Orcus.Server.Library.Extensions
     /// <summary>
     ///     Extension methods for adding configuration related options services to the DI container.
     /// </summary>
+    [Obsolete]
     public static class OptionsConfigurationAutofacExtensions
     {
         /// <summary>

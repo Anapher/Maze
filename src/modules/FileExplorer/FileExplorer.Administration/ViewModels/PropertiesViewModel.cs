@@ -23,7 +23,13 @@ namespace FileExplorer.Administration.ViewModels
 {
     public class PropertiesViewModel : BindableBase
     {
-        public PropertiesViewModel(FileViewModel fileViewModel, FilePropertiesDto dto, IPackageRestClient restClient)
+        public EntryViewModel Entry { get; private set; }
+        public bool IsFile => !Entry.IsDirectory;
+        public ListCollectionView GeneralProperties { get; private set;  }
+        public DetailsPropertyViewModel DetailsViewModel { get; private set; }
+        public List<ComputeHashViewModel> HashViewModels { get; private set; }
+
+        public void Initialize(FileViewModel fileViewModel, FilePropertiesDto dto, ITargetedRestClient restClient)
         {
             var properties = GeneralPropertyViewModel.CreateFileProperties(fileViewModel, dto).ToList();
             GeneralProperties = CreateGeneralProperties(properties);
@@ -34,12 +40,6 @@ namespace FileExplorer.Administration.ViewModels
                 HashViewModels = Enum.GetValues(typeof(FileHashAlgorithm)).Cast<FileHashAlgorithm>()
                     .Select(x => new ComputeHashViewModel(Entry.Source.Path, x, restClient)).ToList();
         }
-
-        public EntryViewModel Entry { get; }
-        public bool IsFile => !Entry.IsDirectory;
-        public ListCollectionView GeneralProperties { get; }
-        public DetailsPropertyViewModel DetailsViewModel { get; }
-        public List<ComputeHashViewModel> HashViewModels { get; }
 
         private ListCollectionView CreateGeneralProperties(IList properties)
         {
@@ -53,7 +53,7 @@ namespace FileExplorer.Administration.ViewModels
     public class ComputeHashViewModel : BindableBase
     {
         private readonly string _path;
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
 
         private DelegateCommand _copyHashCommand;
 
@@ -64,7 +64,7 @@ namespace FileExplorer.Administration.ViewModels
 
         private DelegateCommand _startComputingCommand;
 
-        public ComputeHashViewModel(string path, FileHashAlgorithm hashAlgorithm, IPackageRestClient restClient)
+        public ComputeHashViewModel(string path, FileHashAlgorithm hashAlgorithm, ITargetedRestClient restClient)
         {
             _path = path;
             HashAlgorithm = hashAlgorithm;

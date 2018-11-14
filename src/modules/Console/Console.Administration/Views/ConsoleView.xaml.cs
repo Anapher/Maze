@@ -11,7 +11,7 @@ namespace Console.Administration.Views
     /// </summary>
     public partial class ConsoleView
     {
-        public ConsoleView(IWindowViewManager viewManager) : base(viewManager)
+        public ConsoleView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;

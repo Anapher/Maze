@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private readonly IReadOnlyList<IFilterViewProvider> _viewProviders;
 
-        public FiltersViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container) : base(windowService, window, container)
+        public FiltersViewModel(IWindowService windowService, IComponentContext container) : base(windowService, container)
         {
             _viewProviders = container.Resolve<IEnumerable<IFilterViewProvider>>().OrderByDescending(x => x.Priority).ToList();
         }

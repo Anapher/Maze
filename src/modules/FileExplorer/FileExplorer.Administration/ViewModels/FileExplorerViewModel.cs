@@ -24,12 +24,12 @@ namespace FileExplorer.Administration.ViewModels
         private CancellationTokenSource _openPathCancellationTokenSource;
         private bool _isLoaded;
 
-        public FileExplorerViewModel(IShellStatusBar statusBar, IDialogWindow window, IMemoryCache cache,
+        public FileExplorerViewModel(IShellStatusBar statusBar, IWindowService windowService, IMemoryCache cache,
             ITargetedRestClient client, IAppDispatcher dispatcher, IImageProvider imageProvider)
         {
             StatusBar = statusBar;
-            Window = window;
-            RestClient = client.CreatePackageSpecific("FileExplorer");
+            Window = windowService;
+            RestClient = client;
             FileSystem = new RemoteFileSystem(cache, RestClient);
             ImageProvider = imageProvider;
             Dispatcher = dispatcher;
@@ -48,9 +48,9 @@ namespace FileExplorer.Administration.ViewModels
 
         public event EventHandler<PathContent> PathChanged;
 
-        public IPackageRestClient RestClient { get; }
+        public ITargetedRestClient RestClient { get; }
         public IShellStatusBar StatusBar { get; }
-        public IDialogWindow Window { get; }
+        public IWindowService Window { get; }
         public IImageProvider ImageProvider { get; }
         public IAppDispatcher Dispatcher { get; }
         public IFileSystem FileSystem { get; }

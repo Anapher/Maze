@@ -11,7 +11,7 @@ namespace FileExplorer.Administration.Views
     /// </summary>
     public partial class InputTextView
     {
-        public InputTextView(IWindowViewManager viewManager) : base(viewManager)
+        public InputTextView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
             Loaded += OnLoaded;

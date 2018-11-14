@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private readonly IReadOnlyList<IStopEventViewProvider> _viewProviders;
 
-        public StopEventsViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container) : base(windowService, window, container)
+        public StopEventsViewModel(IWindowService windowService, IComponentContext container) : base(windowService, container)
         {
             _viewProviders = container.Resolve<IEnumerable<IStopEventViewProvider>>().OrderByDescending(x => x.Priority).ToList();
         }

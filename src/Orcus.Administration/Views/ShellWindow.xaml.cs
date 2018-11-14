@@ -4,6 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.Extensions;
+using Anapher.Wpf.Swan.ViewInterface;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Controls;
@@ -15,7 +16,7 @@ namespace Orcus.Administration.Views
     /// <summary>
     ///     Interaction logic for ShellWindow.xaml
     /// </summary>
-    public partial class ShellWindow : IWindowViewManager
+    public partial class ShellWindow : IShellWindow
     {
         private StatusBarManager _statusBarManager;
         private object _titleBarIcon;
@@ -25,42 +26,6 @@ namespace Orcus.Administration.Views
         {
             InitializeComponent();
             ShowIconOnTitleBar = false;
-        }
-
-        public void InitializeWindow(object content, StatusBarManager statusBarManager)
-        {
-            if (statusBarManager == null)
-                Content = content;
-            else
-            {
-                _statusBarManager = statusBarManager;
-                statusBarManager.RightContent = _rightStatusBarContent;
-
-                var grid = new Grid();
-                grid.RowDefinitions.Add(new RowDefinition {Height = new GridLength(1, GridUnitType.Star)});
-                grid.RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
-
-                var statusBar = new StatusBar { ShellStatusBar = statusBarManager };
-                Grid.SetRow(statusBar, 1);
-                grid.Children.Add(statusBar);
-
-                if (content is UIElement uiElement)
-                {
-                    Grid.SetRow(uiElement, 0);
-                    grid.Children.Add(uiElement);
-                }
-                else
-                {
-                    var contentControl = new ContentControl {Content = content};
-                    Grid.SetRow(contentControl, 0);
-                    grid.Children.Add(contentControl);
-                }
-
-                Content = grid;
-            }
-
-            if (content is FrameworkElement fw)
-                DataContext = fw.DataContext;
         }
 
         public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons,
@@ -132,6 +97,54 @@ namespace Orcus.Administration.Views
         public bool? ShowDialog(VistaFolderBrowserDialog folderDialog)
         {
             return folderDialog.ShowDialog(this);
+        }
+
+        public void InitalizeContent(object content, StatusBarManager statusBarManager)
+        {
+            if (statusBarManager == null)
+                Content = content;
+            else
+            {
+                _statusBarManager = statusBarManager;
+                statusBarManager.RightContent = _rightStatusBarContent;
+
+                var grid = new Grid();
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+                var statusBar = new StatusBar { ShellStatusBar = statusBarManager };
+                Grid.SetRow(statusBar, 1);
+                grid.Children.Add(statusBar);
+
+                if (content is UIElement uiElement)
+                {
+                    Grid.SetRow(uiElement, 0);
+                    grid.Children.Add(uiElement);
+                }
+                else
+                {
+                    var contentControl = new ContentControl { Content = content };
+                    Grid.SetRow(contentControl, 0);
+                    grid.Children.Add(contentControl);
+                }
+
+                Content = grid;
+            }
+
+            if (content is FrameworkElement fw)
+                DataContext = fw.DataContext;
+        }
+
+        public void Show(IWindow owner)
+        {
+            Owner = owner as Window;
+            Show();
+        }
+
+        public bool? ShowDialog(IWindow owner)
+        {
+            Owner = owner as Window;
+            return ShowDialog();
         }
     }
 }

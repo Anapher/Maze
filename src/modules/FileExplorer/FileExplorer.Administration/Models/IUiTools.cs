@@ -8,7 +8,7 @@ namespace FileExplorer.Administration.Models
     public interface IUiTools
     {
         IShellStatusBar StatusBar { get; }
-        IDialogWindow Window { get; }
+        IWindowService Window { get; }
         IImageProvider ImageProvider { get; }
         IAppDispatcher Dispatcher { get; }
     }

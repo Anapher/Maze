@@ -13,6 +13,7 @@ using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Administration.Library.Views;
 using Orcus.Utilities;
 using Unclassified.TxLib;
 
@@ -22,16 +23,14 @@ namespace FileExplorer.Administration.Menus
     {
         private readonly FileExplorerListFileContextMenu _contextMenu;
         private readonly VisualStudioIcons _icons;
-        private readonly IWindowService _windowService;
         private readonly IItemMenuFactory _menuFactory;
 
         public ListFileContextMenuManager(FileExplorerListFileContextMenu contextMenu, IItemMenuFactory menuFactory,
-            VisualStudioIcons icons, IWindowService windowService)
+            VisualStudioIcons icons)
         {
             _contextMenu = contextMenu;
             _menuFactory = menuFactory;
             _icons = icons;
-            _windowService = windowService;
         }
 
         public override void Build()
@@ -105,9 +104,11 @@ namespace FileExplorer.Administration.Menus
                 .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:StatusBar.LoadProperties"));
             if (!properties.Failed)
             {
-                _windowService.Show(new PropertiesViewModel(file, properties.Result, context.RestClient),
-                    Tx.T("FileExplorer:Properties.Title", "name", file.Name), context.Window,
-                    window => window.ViewManager.TaskBarIcon = file.Icon, null);
+                context.Window.Show<PropertiesViewModel>(null, window =>
+                {
+                    window.Title = Tx.T("FileExplorer:Properties.Title", "name", file.Name);
+                    window.TaskBarIcon = file.Icon;
+                }, viewModel => viewModel.Initialize(file, properties.Result, context.RestClient), out var _);
             }
         }
 
@@ -135,8 +136,10 @@ namespace FileExplorer.Administration.Menus
 
         private void ExecuteFile(FileViewModel file, FileExplorerViewModel context)
         {
-            _windowService.ShowDialog(new ExecuteFileViewModel(file, context.RestClient), Tx.T("FileExplorer:Execute"), context.Window,
-                window => window.ViewManager.TitleBarIcon = _icons.StartupProject, null);
+            context.Window.ShowDialog<ExecuteFileViewModel>(window => {
+                window.Title = Tx.T("FileExplorer:Execute");
+                window.TitleBarIcon = _icons.StartupProject;
+            }, viewModel => viewModel.Initialize(file, context.RestClient), out var _);
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

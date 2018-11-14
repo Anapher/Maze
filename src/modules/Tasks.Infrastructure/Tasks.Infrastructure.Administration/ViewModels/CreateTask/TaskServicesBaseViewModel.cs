@@ -22,17 +22,15 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         protected readonly ObservableCollection<TaskViewModelView> _childs;
         protected readonly IComponentContext Container;
         protected readonly IWindowService WindowService;
-        private readonly IDialogWindow _window;
         private DelegateCommand _addNewCommand;
         private bool _isSelected;
         private DelegateCommand<TaskViewModelView> _removeChildCommand;
         private TaskViewModelView _selectedChild;
         private ITaskServiceDescription _selectedService;
 
-        protected TaskServicesBaseViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container)
+        protected TaskServicesBaseViewModel(IWindowService windowService, IComponentContext container)
         {
             WindowService = windowService;
-            _window = window;
             Container = container;
             _childs = new ObservableCollection<TaskViewModelView>();
 
@@ -90,8 +88,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             {
                 return _addNewCommand ?? (_addNewCommand = new DelegateCommand(() =>
                 {
-                    var viewModel = new TaskCreateServiceViewModel(this);
-                    if (WindowService.ShowDialog(viewModel, Tx.T("TasksInfrastructure:CreateTask.CreateNewEntry", "entry", EntryName), _window) == true)
+                    if(WindowService.ShowDialog<TaskCreateServiceViewModel>(Tx.T("TasksInfrastructure:CreateTask.CreateNewEntry", "entry", EntryName),  out var viewModel) == true)
                         AddChild(viewModel.View);
                 }));
             }

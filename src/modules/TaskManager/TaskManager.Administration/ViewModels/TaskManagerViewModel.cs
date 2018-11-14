@@ -25,9 +25,8 @@ namespace TaskManager.Administration.ViewModels
 {
     public class TaskManagerViewModel : ViewModelBase
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
-        private readonly IDialogWindow _window;
         private readonly IWindowService _windowService;
 
         private DelegateCommand<ProcessViewModel> _bringToFrontCommand;
@@ -50,12 +49,11 @@ namespace TaskManager.Administration.ViewModels
         private readonly DispatcherTimer _refreshTimer;
         private bool _autoRefresh;
 
-        public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient, IDialogWindow window, IWindowService windowService)
+        public TaskManagerViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient, IWindowService windowService)
         {
             _statusBar = statusBar;
-            _window = window;
             _windowService = windowService;
-            _restClient = restClient.CreatePackageSpecific("TaskManager");
+            _restClient = restClient;
             _refreshTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(10)};
             _refreshTimer.Tick += RefreshTimerOnTick;
         }
@@ -232,9 +230,10 @@ namespace TaskManager.Administration.ViewModels
                         .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("TaskManager:StatusBar.LoadProperties"));
                     if (!properties.Failed)
                     {
-                        _windowService.Show(new PropertiesViewModel(properties.Result, parameter, _restClient),
-                            Tx.T("TaskManager:Properties.Title", "name", parameter.Name, "id", parameter.Id.ToString()), _window,
-                            window => window.ViewManager.TaskBarIcon = parameter.Icon, null);
+                        _windowService.Show<PropertiesViewModel>(window => {
+                            window.Title = Tx.T("TaskManager:Properties.Title", "name", parameter.Name, "id", parameter.Id.ToString());
+                            window.TaskBarIcon = parameter.Icon;
+                        }, vm => vm.Initialize(properties.Result, parameter), out var viewModel);
                     }
                 }));
             }

@@ -9,19 +9,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 {
     public class TaskCreateServiceViewModel : BindableBase
     {
-        private readonly TaskServicesViewModel _taskServices;
+        private TaskServicesViewModel _taskServices;
         private DelegateCommand _createCommand;
         private bool? _dialogResult;
         private ITaskServiceDescription _selectedService;
         private TaskViewModelView _view;
 
-        public TaskCreateServiceViewModel(TaskServicesViewModel taskServices)
-        {
-            _taskServices = taskServices;
-            AvailableServices = taskServices.AvailableServices;
-        }
-
-        public IList<ITaskServiceDescription> AvailableServices { get; }
+        public IList<ITaskServiceDescription> AvailableServices { get; private set; }
 
         public ITaskServiceDescription SelectedService
         {
@@ -36,8 +30,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                     }
                     else
                     {
-                        var viewModelView = _taskServices.CreateView(value);
-                        View = viewModelView;
+                        View = _taskServices.CreateView(value);
                     }
                 }
             }
@@ -65,6 +58,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                     if (result == ValidationResult.Success) DialogResult = true;
                 }));
             }
+        }
+
+        public void Initialize(TaskServicesViewModel taskServices)
+        {
+            _taskServices = taskServices;
+            AvailableServices = taskServices.AvailableServices;
         }
     }
 }

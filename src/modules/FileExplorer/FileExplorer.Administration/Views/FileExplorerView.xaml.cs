@@ -15,7 +15,7 @@ namespace FileExplorer.Administration.Views
     {
         private readonly IComponentContext _scope;
 
-        public FileExplorerView(IWindowViewManager viewManager, IComponentContext scope) : base(viewManager)
+        public FileExplorerView(IShellWindow viewManager, IComponentContext scope) : base(viewManager)
         {
             InitializeComponent();
 

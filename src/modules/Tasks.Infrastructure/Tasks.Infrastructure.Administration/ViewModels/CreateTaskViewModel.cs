@@ -4,7 +4,6 @@ using System.Linq;
 using Autofac;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.Views;
 using Orcus.Server.Connection.Utilities;
 using Prism.Commands;
@@ -18,25 +17,23 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 {
     public class CreateTaskViewModel : BindableBase
     {
-        private readonly IDialogWindow _window;
-        private readonly IComponentContext _container;
         private readonly IWindowService _windowService;
+        private readonly IComponentContext _container;
         private DelegateCommand _createTaskCommand;
         private bool? _dialogResult;
 
-        public CreateTaskViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container)
+        public CreateTaskViewModel(IWindowService windowService, IComponentContext container)
         {
             _windowService = windowService;
-            _window = window;
             _container = container;
             TreeViewModels = new List<ITaskConfiguringViewModel>
             {
                 new TaskSettingsViewModel{IsSelected = true},
-                new CommandsViewModel(windowService, window, container),
+                new CommandsViewModel(windowService, container),
                 new AudienceViewModel(),
-                new TriggersViewModel(windowService, window, container),
-                new FiltersViewModel(windowService, window, container),
-                new StopEventsViewModel(windowService, window, container)
+                new TriggersViewModel(windowService, container),
+                new FiltersViewModel(windowService, container),
+                new StopEventsViewModel(windowService, container)
             };
         }
 
@@ -57,7 +54,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     var errors = TreeViewModels.SelectMany(x => x.ValidateInput()).ToList();
                     if (errors.Any())
                     {
-                        _window.ShowErrorMessageBox(string.Join(Environment.NewLine, errors.Select(x => x.ErrorMessage)));
+                        _windowService.ShowErrorMessageBox(string.Join(Environment.NewLine, errors.Select(x => x.ErrorMessage)));
                         return;
                     }
 
@@ -68,7 +65,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     errors = TreeViewModels.SelectMany(x => x.ValidateContext(task)).ToList();
                     if (errors.Any())
                     {
-                        _window.ShowErrorMessageBox(string.Join(Environment.NewLine, errors.Select(x => x.ErrorMessage)));
+                        _windowService.ShowErrorMessageBox(string.Join(Environment.NewLine, errors.Select(x => x.ErrorMessage)));
                         return;
                     }
 
@@ -83,7 +80,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     }
                     catch (Exception e)
                     {
-                        e.ShowMessage(_window);
+                        e.ShowMessage(_windowService);
                     }
                 }));
             }

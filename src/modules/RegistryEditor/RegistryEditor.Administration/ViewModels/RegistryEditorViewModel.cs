@@ -24,9 +24,8 @@ namespace RegistryEditor.Administration.ViewModels
 {
     public class RegistryEditorViewModel : ViewModelBase
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
-        private readonly IDialogWindow _window;
         private readonly IWindowService _windowService;
         private DelegateCommand<RegistryKeyViewModel> _createNewSubKeyCommand;
         private DelegateCommand<RegistryValueType?> _createRegistryValueCommand;
@@ -39,12 +38,11 @@ namespace RegistryEditor.Administration.ViewModels
         private DelegateCommand<RegistryValueViewModel> _removeRegistryValueCommand;
         private RegistryTreeViewModel _treeViewModel;
 
-        public RegistryEditorViewModel(IDialogWindow window, IWindowService windowService, IShellStatusBar statusBar, ITargetedRestClient restClient)
+        public RegistryEditorViewModel(IWindowService windowService, IShellStatusBar statusBar, ITargetedRestClient restClient)
         {
-            _window = window;
             _windowService = windowService;
             _statusBar = statusBar;
-            _restClient = restClient.CreatePackageSpecific("RegistryEditor");
+            _restClient = restClient;
         }
 
         public RegistryTreeViewModel TreeViewModel
@@ -71,8 +69,7 @@ namespace RegistryEditor.Administration.ViewModels
             {
                 return _createNewSubKeyCommand ?? (_createNewSubKeyCommand = new DelegateCommand<RegistryKeyViewModel>(async parameter =>
                 {
-                    var viewModel = new CreateSubKeyViewModel(parameter.RegistryKey.Path);
-                    if (_windowService.ShowDialog(viewModel, null, _window) == true)
+                    if (_windowService.ShowDialog<CreateSubKeyViewModel>(vm => vm.Initialize(parameter.RegistryKey.Path), out var viewModel) == true)
                     {
                         var path = parameter.RegistryKey.Path + "\\" + viewModel.Name;
 
@@ -91,7 +88,7 @@ namespace RegistryEditor.Administration.ViewModels
             {
                 return _removeRegistryKeyCommand ?? (_removeRegistryKeyCommand = new DelegateCommand<RegistryKeyViewModel>(async parameter =>
                 {
-                    if (_window.ShowMessage(Tx.T("RegistryEditor:MessageBox.SureDeleteSubKey", "name", parameter.RegistryKey.Name), Tx.T("Warning"),
+                    if (_windowService.ShowMessage(Tx.T("RegistryEditor:MessageBox.SureDeleteSubKey", "name", parameter.RegistryKey.Name), Tx.T("Warning"),
                             MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel) != MessageBoxResult.OK)
                         return;
 
@@ -109,8 +106,7 @@ namespace RegistryEditor.Administration.ViewModels
             {
                 return _createRegistryValueCommand ?? (_createRegistryValueCommand = new DelegateCommand<RegistryValueType?>(async parameter =>
                 {
-                    var viewModel = new CreateEditValueViewModel(parameter.Value);
-                    if (_windowService.ShowDialog(viewModel, null, _window) == true)
+                    if (_windowService.ShowDialog<CreateEditValueViewModel>(vm => vm.InitializeCreation(parameter.Value), out var viewModel) == true)
                     {
                         var root = TreeViewModel.Selection.AsRoot();
 
@@ -128,8 +124,7 @@ namespace RegistryEditor.Administration.ViewModels
             {
                 return _editRegistryValueCommand ?? (_editRegistryValueCommand = new DelegateCommand<RegistryValueViewModel>(async parameter =>
                 {
-                    var viewModel = new CreateEditValueViewModel(parameter.Dto);
-                    if (_windowService.ShowDialog(viewModel, null, _window) == true)
+                    if (_windowService.ShowDialog<CreateEditValueViewModel>(vm => vm.InitializeEdit(parameter.Dto), out var viewModel) == true)
                     {
                         var root = TreeViewModel.Selection.AsRoot();
 
@@ -147,7 +142,7 @@ namespace RegistryEditor.Administration.ViewModels
             {
                 return _removeRegistryValueCommand ?? (_removeRegistryValueCommand = new DelegateCommand<RegistryValueViewModel>(async parameter =>
                 {
-                    if (_window.ShowMessage(Tx.T("RegistryEditor:MessageBox.SureRemoveRegistryValue", "name", parameter.Dto.Name), Tx.T("Warning"),
+                    if (_windowService.ShowMessage(Tx.T("RegistryEditor:MessageBox.SureRemoveRegistryValue", "name", parameter.Dto.Name), Tx.T("Warning"),
                             MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel) != MessageBoxResult.OK)
                         return;
 

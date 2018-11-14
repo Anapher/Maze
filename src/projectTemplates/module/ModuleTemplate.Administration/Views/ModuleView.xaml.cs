@@ -7,7 +7,7 @@ namespace ModuleTemplate.Administration.Views
     /// </summary>
     public partial class ModuleView
     {
-        public ModuleView(IWindowViewManager viewManager) : base(viewManager)
+        public ModuleView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

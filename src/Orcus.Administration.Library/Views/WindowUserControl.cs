@@ -3,9 +3,11 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+using Orcus.Administration.Library.StatusBar;
 
 namespace Orcus.Administration.Library.Views
 {
@@ -64,9 +66,9 @@ namespace Orcus.Administration.Library.Views
             typeof(double), typeof(WindowUserControl),
             new PropertyMetadata(default(double), (o, args) => GetViewManager(o).Height = (double) args.NewValue));
 
-        protected readonly IWindowViewManager ViewManager;
+        protected readonly IShellWindow ViewManager;
 
-        public WindowUserControl(IWindowViewManager viewManager)
+        public WindowUserControl(IShellWindow viewManager)
         {
             ViewManager = viewManager;
         }
@@ -153,7 +155,7 @@ namespace Orcus.Administration.Library.Views
             set => SetValue(EscapeClosesWindowProperty, value);
         }
 
-        private static IWindowViewManager GetViewManager(DependencyObject d)
+        private static IShellWindow GetViewManager(DependencyObject d)
         {
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -163,7 +165,7 @@ namespace Orcus.Administration.Library.Views
         }
 #if DEBUG
 #pragma warning disable CS0067
-        private class DummyViewManager : IWindowViewManager
+        private class DummyViewManager : IShellWindow
         {
             public WindowState WindowState { get; set; }
             public event EventHandler Closed;
@@ -185,6 +187,21 @@ namespace Orcus.Administration.Library.Views
             public bool? ShowDialog(FileDialog fileDialog) => throw new NotImplementedException();
             public bool? ShowDialog(VistaFolderBrowserDialog folderDialog) => throw new NotImplementedException();
 
+            public void InitalizeContent(object content, StatusBarManager statusBarManager)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Show(IWindow owner)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool? ShowDialog(IWindow owner)
+            {
+                throw new NotImplementedException();
+            }
+
             public string Title { get; set; }
             public object RightStatusBarContent { get; set; }
             public bool EscapeClosesWindow { get; set; }
@@ -198,6 +215,7 @@ namespace Orcus.Administration.Library.Views
             public ResizeMode ResizeMode { get; set; }
             public double Height { get; set; }
             public double Width { get; set; }
+            public SizeToContent SizeToContent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         }
 #endif
     }

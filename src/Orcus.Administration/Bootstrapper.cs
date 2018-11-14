@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Anapher.Wpf.Swan;
+using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
@@ -76,8 +77,8 @@ namespace Orcus.Administration
             builder.RegisterType<ShellWindowFactory>().As<IShellWindowFactory>().SingleInstance();
             builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
             builder.RegisterType<VisualStudioIcons>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterInstance(Application.Current.MainWindow).As<IWindow>();
             builder.RegisterType<WindowService>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterInstance(new WpfWindow(Application.Current.MainWindow)).AsImplementedInterfaces();
 
             foreach (var packageCarrier in _appLoadContext.ModulesCatalog.Packages)
                 builder.RegisterAssemblyModules(packageCarrier.Assembly);

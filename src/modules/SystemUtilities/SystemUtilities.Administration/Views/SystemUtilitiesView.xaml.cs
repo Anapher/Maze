@@ -7,7 +7,7 @@ namespace SystemUtilities.Administration.Views
     /// </summary>
     public partial class SystemUtilitiesView
     {
-        public SystemUtilitiesView(IWindowViewManager viewManager) : base(viewManager)
+        public SystemUtilitiesView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

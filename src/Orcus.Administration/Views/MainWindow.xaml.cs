@@ -1,4 +1,5 @@
 ﻿using System.Security;
+using Anapher.Wpf.Swan.ViewInterface;
 using Orcus.Administration.Core.Modules;
 using Orcus.Administration.ViewModels;
 using Orcus.Administration.ViewModels.Main;
@@ -11,7 +12,7 @@ namespace Orcus.Administration.Views
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : IWindow
     {
         public MainWindow()
         {

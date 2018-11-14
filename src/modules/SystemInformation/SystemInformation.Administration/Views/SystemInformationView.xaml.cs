@@ -7,7 +7,7 @@ namespace SystemInformation.Administration.Views
     /// </summary>
     public partial class SystemInformationView
     {
-        public SystemInformationView(IWindowViewManager viewManager) : base(viewManager)
+        public SystemInformationView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

@@ -3,6 +3,7 @@ using Anapher.Wpf.Swan.ViewInterface;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
@@ -14,9 +15,9 @@ namespace UserInteraction.Administration.ViewModels
 {
     public class MessageBoxViewModel : BindableBase
     {
-        private readonly IWindow _window;
+        private readonly IWindowService _windowService;
         private readonly IShellStatusBar _statusBar;
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private string _caption;
         private MsgBxButtons _messageBoxButtons;
         private MsgBxIcon _messageBoxIcon;
@@ -24,9 +25,9 @@ namespace UserInteraction.Administration.ViewModels
         private DelegateCommand _testCommand;
         private string _text;
 
-        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow window, IShellStatusBar statusBar)
+        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow windowService, IShellStatusBar statusBar)
         {
-            _window = window;
+            _windowService = windowService;
             _statusBar = statusBar;
             _restClient = restClient.CreateLocal();
         }
@@ -83,7 +84,7 @@ namespace UserInteraction.Administration.ViewModels
 
                     var result = await MessageBoxResource.OpenAsync(dto, _restClient)
                         .DisplayOnStatusBar(_statusBar, Tx.T("UserInteraction:MessageBox.SendingMessage"),
-                            StatusBarAnimation.Send).OnErrorShowMessageBox(_window);
+                            StatusBarAnimation.Send).OnErrorShowMessageBox(_windowService);
                     if (!result.Failed)
                     {
                         _statusBar.ShowSuccess(Tx.T("UserInteraction:MessageBox.MessageBoxClosed", "result", result.Result.ToString()));

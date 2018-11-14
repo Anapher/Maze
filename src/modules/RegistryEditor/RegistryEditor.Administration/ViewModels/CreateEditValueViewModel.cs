@@ -16,35 +16,35 @@ namespace RegistryEditor.Administration.ViewModels
         private DelegateCommand _okCommand;
         private RegistryValueDto _value;
 
-        public CreateEditValueViewModel(RegistryValueDto registryValue)
+        public void InitializeEdit(RegistryValueDto registryValue)
         {
             Value = JsonConvert.DeserializeObject<RegistryValueDto>(JsonConvert.SerializeObject(registryValue,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()})); //clone
+                new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })); //clone
             Name = string.IsNullOrEmpty(registryValue.Name) ? Tx.T("RegistryEditor:DefaultValue") : registryValue.Name;
             Title = Tx.T("RegistryEditor:EditValueTitle", "name", Tx.T($"RegistryEditor:Type.{registryValue.Type}Value"));
         }
 
-        public CreateEditValueViewModel(RegistryValueType type)
+        public void InitializeCreation(RegistryValueType type)
         {
             switch (type)
             {
                 case RegistryValueType.String:
-                    Value = new StringRegistryValueDto {Value = string.Empty};
+                    Value = new StringRegistryValueDto { Value = string.Empty };
                     break;
                 case RegistryValueType.Binary:
-                    Value = new BinaryRegistryValueDto {Value = new byte[0]};
+                    Value = new BinaryRegistryValueDto { Value = new byte[0] };
                     break;
                 case RegistryValueType.DWord:
-                    Value = new DWordRegistryValueDto {Value = 0};
+                    Value = new DWordRegistryValueDto { Value = 0 };
                     break;
                 case RegistryValueType.QWord:
-                    Value = new QWordRegistryValueDto {Value = 0};
+                    Value = new QWordRegistryValueDto { Value = 0 };
                     break;
                 case RegistryValueType.MultiString:
-                    Value = new MultiStringRegistryValueDto {Value = new string[0]};
+                    Value = new MultiStringRegistryValueDto { Value = new string[0] };
                     break;
                 case RegistryValueType.ExpandableString:
-                    Value = new ExpandableStringRegistryValueDto {Value = string.Empty};
+                    Value = new ExpandableStringRegistryValueDto { Value = string.Empty };
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -60,8 +60,8 @@ namespace RegistryEditor.Administration.ViewModels
             set => SetProperty(ref _dialogResult, value);
         }
 
-        public string Title { get; }
-        public bool IsCreate { get; }
+        public string Title { get; private set; }
+        public bool IsCreate { get; private set; }
 
         public string Name
         {

@@ -11,24 +11,24 @@ namespace FileExplorer.Administration.ViewModels
 {
     public class ExecuteFileViewModel : ViewModelBase
     {
-        private readonly FileViewModel _fileViewModel;
-        private readonly IPackageRestClient _restClient;
+        private FileViewModel _fileViewModel;
+        private ITargetedRestClient _restClient;
         private string[] _availableVerbs;
         private bool? _dialogResult;
         private AsyncRelayCommand _executeCommand;
         private string _filename;
 
-        public ExecuteFileViewModel(FileViewModel fileViewModel, IPackageRestClient restClient)
+        public void Initialize(FileViewModel fileViewModel, ITargetedRestClient restClient)
         {
             _fileViewModel = fileViewModel;
             _restClient = restClient;
-            ExecuteDto = new ExecuteFileDto {FileName = fileViewModel.Source.Path};
+            ExecuteDto = new ExecuteFileDto { FileName = fileViewModel.Source.Path };
 
             if (!ExecuteDto.FileName.EndsWith(".exe"))
                 ExecuteDto.UseShellExecute = true;
         }
 
-        public ExecuteFileDto ExecuteDto { get; }
+        public ExecuteFileDto ExecuteDto { get; private set; }
 
         public bool? DialogResult
         {

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using Autofac;
 using MahApps.Metro.IconPacks;
-using Microsoft.Extensions.DependencyInjection;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Administration.Library.Views;
 using Orcus.Utilities;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Rest.V1;
@@ -63,11 +61,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 return _openTaskSessionsCommand ?? (_openTaskSessionsCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
                     var sessions = await TasksResource.GetTaskSessions(parameter.Id, _restClient);
-
-                    var viewModel = _services.Resolve<TaskOverviewViewModel>();
-                    viewModel.Initialize(sessions);
-
-                    _windowService.ShowDialog(viewModel);
+                    _windowService.ShowDialog<TaskOverviewViewModel>(x => x.Initialize(sessions));
                 }));
             }
         }

@@ -17,7 +17,7 @@ namespace TaskManager.Administration.ViewModels
 {
     public class PropertiesViewModel : BindableBase, IDisposable
     {
-        private readonly IPackageRestClient _restClient;
+        private ITargetedRestClient _restClient;
         private List<ActiveConnectionDto> _activeConnections;
         private int _exitCode;
         private ChangingProcessPropertiesDto _propertiesDto;
@@ -28,9 +28,16 @@ namespace TaskManager.Administration.ViewModels
         private bool _isDisposed;
         private bool _refreshedActiveConnections;
 
-        public PropertiesViewModel(ProcessPropertiesDto properties, ProcessViewModel process, IPackageRestClient restClient)
+        public PropertiesViewModel(ITargetedRestClient restClient)
         {
             _restClient = restClient;
+
+            _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            _refreshTimer.Tick += RefreshTimerOnTick;
+        }
+
+        public void Initialize(ProcessPropertiesDto properties, ProcessViewModel process)
+        {
             StaticPropertiesDto = properties;
             PropertiesDto = properties;
             Process = process;
@@ -48,15 +55,12 @@ namespace TaskManager.Administration.ViewModels
             Icon = ImageUtilities.GetBitmapImage(properties.Icon);
             Status = properties.Status;
 
-            _refreshTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(5)};
-            _refreshTimer.Tick += RefreshTimerOnTick;
-
             InitializeChannel().Forget();
             UpdateActiveConnections().Forget();
         }
 
-        public ProcessViewModel Process { get; }
-        public ProcessPropertiesDto StaticPropertiesDto { get; }
+        public ProcessViewModel Process { get; private set; }
+        public ProcessPropertiesDto StaticPropertiesDto { get; private set; }
 
         public ChangingProcessPropertiesDto PropertiesDto
         {
@@ -91,8 +95,8 @@ namespace TaskManager.Administration.ViewModels
             set => SetProperty(ref _totalProcessorTime, value);
         }
 
-        public string ParentProcessString { get; }
-        public BitmapImage Icon { get; }
+        public string ParentProcessString { get; private set;  }
+        public BitmapImage Icon { get; private set; }
 
         private async Task UpdateActiveConnections()
         {

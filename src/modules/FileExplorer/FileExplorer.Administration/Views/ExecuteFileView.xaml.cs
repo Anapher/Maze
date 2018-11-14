@@ -7,7 +7,7 @@ namespace FileExplorer.Administration.Views
     /// </summary>
     public partial class ExecuteFileView
     {
-        public ExecuteFileView(IWindowViewManager viewManager) : base(viewManager)
+        public ExecuteFileView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

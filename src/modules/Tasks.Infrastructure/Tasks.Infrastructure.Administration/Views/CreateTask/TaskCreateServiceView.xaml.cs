@@ -7,7 +7,7 @@ namespace Tasks.Infrastructure.Administration.Views.CreateTask
     /// </summary>
     public partial class TaskCreateServiceView
     {
-        public TaskCreateServiceView(IWindowViewManager viewManager) : base(viewManager)
+        public TaskCreateServiceView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

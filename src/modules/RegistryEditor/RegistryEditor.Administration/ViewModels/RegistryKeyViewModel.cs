@@ -20,7 +20,7 @@ namespace RegistryEditor.Administration.ViewModels
 {
     public class RegistryKeyViewModel : BindableBase, ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>, IAsyncAutoComplete
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
         private readonly RegistryTreeViewModel _rootTreeViewModel;
         private int _bringIntoViewToken;
@@ -29,7 +29,7 @@ namespace RegistryEditor.Administration.ViewModels
         private DelegateCommand _refreshCommand;
         private DelegateCommand _toggleExpansionCommand;
 
-        public RegistryKeyViewModel(RegistryTreeViewModel rootTreeViewModel, IntegratedRegistryKey registryKey, IPackageRestClient restClient,
+        public RegistryKeyViewModel(RegistryTreeViewModel rootTreeViewModel, IntegratedRegistryKey registryKey, ITargetedRestClient restClient,
             IShellStatusBar statusBar, RegistryKeyViewModel parentViewModel)
         {
             RegistryKey = registryKey;

@@ -7,6 +7,7 @@ using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.Views;
 using Prism.Commands;
 using Unclassified.TxLib;
 
@@ -34,13 +35,12 @@ namespace Orcus.Administration.Services
                 Icon = iconFactory.Create(),
                 Command = new DelegateCommand<ClientViewModel>(model =>
                 {
-                    _windowService.Show(typeof(TViewModel), Tx.T(txLibResource), null,
-                        window => window.ViewManager.TitleBarIcon = iconFactory.Create(), builder =>
-                        {
-                            builder.RegisterInstance(model);
-                            builder.Register(context => _orcusRestClient.CreateTargeted(model.ClientId))
-                                .SingleInstance();
-                        });
+                    _windowService.Show(typeof(TViewModel), builder =>
+                    {
+                        builder.RegisterInstance(model);
+                        builder.Register(_ => _orcusRestClient.CreateTargeted(model.ClientId))
+                            .SingleInstance();
+                    }, window => window.TitleBarIcon = iconFactory.Create(), null, out var _);
                 })
             });
         }

@@ -7,7 +7,7 @@ namespace Tasks.Infrastructure.Administration.Views
     /// </summary>
     public partial class TaskOverviewView
     {
-        public TaskOverviewView(IWindowViewManager viewManager) : base(viewManager)
+        public TaskOverviewView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

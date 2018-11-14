@@ -1,142 +1,116 @@
-﻿using System;
-using System.Windows;
+﻿using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
 using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
-using Prism.Regions;
+using Prism;
+using System;
+using System.Windows;
 
 namespace Orcus.Administration.Services
 {
     public class WindowService : IWindowService
     {
-        private readonly IComponentContext _componentContext;
+        private readonly IWindow _window;
         private readonly IViewModelResolver _viewModelResolver;
+        private readonly IContainer _container;
         private readonly IShellWindowFactory _shellWindowFactory;
 
-        public WindowService(IComponentContext componentContext, IViewModelResolver viewModelResolver,
-            IShellWindowFactory shellWindowFactory)
+        public WindowService(IContainer container, IViewModelResolver viewModelResolver,
+            IShellWindowFactory shellWindowFactory, IWindow window)
         {
-            _componentContext = componentContext;
+            _window = window;
             _viewModelResolver = viewModelResolver;
+            _container = container;
             _shellWindowFactory = shellWindowFactory;
         }
 
-        private IShellWindow Initialize(Type viewModelType, string title, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        private IShellWindow Initialize(Type viewModelType, Action<IShellWindow> configureWindow,
+            Action<ContainerBuilder> setupContainer, out object viewModel)
         {
             var viewType = _viewModelResolver.ResolveViewType(viewModelType);
             var window = _shellWindowFactory.Create();
-            window.InitializeTitleBar(title, null);
 
             StatusBarManager statusBar = null;
-            var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
+            var lifescope = _container.BeginLifetimeScope(builder =>
             {
-                builder.RegisterInstance(window.ViewManager).As<IWindow>().As<IDialogWindow>().As<IWindowViewManager>();
+                builder.RegisterInstance(window).As<IWindow>().As<IShellWindow>();
                 builder.Register(context => statusBar = new StatusBarManager()).As<IShellStatusBar>().SingleInstance();
                 builder.RegisterType(viewType);
                 builder.RegisterType(viewModelType);
+                builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
 
                 setupContainer?.Invoke(builder);
             });
 
-            var viewModel = lifescope.Resolve(viewModelType);
-            var view = (FrameworkElement) lifescope.Resolve(viewType);
+            viewModel = lifescope.Resolve(viewModelType);
+            var view = (FrameworkElement)lifescope.Resolve(viewType);
             view.DataContext = viewModel;
 
             window.InitalizeContent(view, statusBar);
-            SetupLoadUnload(window, viewModel, lifescope);
+            SetupWindowClosed(window, viewModel, lifescope);
 
-            if (double.IsNaN(window.ViewManager.Height) && double.IsNaN(window.ViewManager.Width))
-                window.Window.SizeToContent = SizeToContent.WidthAndHeight;
-            else if (double.IsNaN(window.ViewManager.Height))
-                window.Window.SizeToContent = SizeToContent.Height;
-            else if (double.IsNaN(window.ViewManager.Width))
-                window.Window.SizeToContent = SizeToContent.Width;
+            if (double.IsNaN(window.Height) && double.IsNaN(window.Width))
+                window.SizeToContent = SizeToContent.WidthAndHeight;
+            else if (double.IsNaN(window.Height))
+                window.SizeToContent = SizeToContent.Height;
+            else if (double.IsNaN(window.Width))
+                window.SizeToContent = SizeToContent.Width;
 
             configureWindow?.Invoke(window);
             return window;
         }
 
-        public IShellWindow Initialize(object viewModel, string title, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        private static void SetupWindowClosed(IShellWindow window, object viewModel, ILifetimeScope lifescope)
         {
-            var viewType = _viewModelResolver.ResolveViewType(viewModel.GetType());
-            var window = _shellWindowFactory.Create();
-            window.InitializeTitleBar(title, null);
-
-            StatusBarManager statusBar = null;
-            var lifescope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope(builder =>
+            if (viewModel is IActiveAware activeAware)
             {
-                builder.RegisterInstance(window.ViewManager).As<IWindow>().As<IDialogWindow>().As<IWindowViewManager>();
-                builder.Register(context => statusBar = new StatusBarManager()).As<IShellStatusBar>().SingleInstance();
-                builder.RegisterType(viewType);
-
-                setupContainer?.Invoke(builder);
-            });
-
-            var view = (FrameworkElement) lifescope.Resolve(viewType);
-            view.DataContext = viewModel;
-
-            window.InitalizeContent(view, statusBar);
-            SetupLoadUnload(window, viewModel, lifescope);
-
-            if (double.IsNaN(window.ViewManager.Height) && double.IsNaN(window.ViewManager.Width))
-                window.Window.SizeToContent = SizeToContent.WidthAndHeight;
-            else if (double.IsNaN(window.ViewManager.Height))
-                window.Window.SizeToContent = SizeToContent.Height;
-            else if (double.IsNaN(window.ViewManager.Width))
-                window.Window.SizeToContent = SizeToContent.Width;
-
-            if (viewModel is IDisposable disposableViewModel)
-                window.ViewManager.Closed += (sender, args) => disposableViewModel.Dispose();
-
-            configureWindow?.Invoke(window);
-            return window;
-        }
-
-        private static void SetupLoadUnload(IShellWindow window, object viewModel, ILifetimeScope lifescope)
-        {
-            if (viewModel is INavigationAware navigationAware)
-            {
-                window.Window.Loaded += (sender, args) => navigationAware.OnNavigatedTo(null);
-                window.Window.Closed += (sender, args) => navigationAware.OnNavigatedFrom(null);
+                window.Closed += (sender, args) => activeAware.IsActive = false;
             }
 
-            window.Window.Closed += (sender, args) => lifescope.Dispose();
+            window.Closed += (sender, args) => lifescope.Dispose();
         }
 
-        public void Show(Type viewModelType, string title, IWindow owner, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        public bool? ShowDialog(Type viewModelType, Action<ContainerBuilder> configureContainer, Action<IShellWindow> configureWindow, Action<object> configureViewModel, out object viewModel)
         {
-            var window = Initialize(viewModelType, title, configureWindow, setupContainer);
-            window.Show(owner);
+            var window = Initialize(viewModelType, configureWindow, configureContainer, out viewModel);
+            configureWindow?.Invoke(window);
+            configureViewModel?.Invoke(viewModel);
+
+            return window.ShowDialog(_window);
         }
 
-        public void Show(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        public void Show(Type viewModelType, Action<ContainerBuilder> configureContainer, Action<IShellWindow> configureWindow, Action<object> configureViewModel, out object viewModel)
         {
-            var window = Initialize(viewModel, title, configureWindow, setupContainer);
-            window.Show(owner);
+            var window = Initialize(viewModelType, configureWindow, configureContainer, out viewModel);
+            configureWindow?.Invoke(window);
+            configureViewModel?.Invoke(viewModel);
+
+            window.Show(_window);
         }
 
-        public bool? ShowDialog(Type viewModelType, string title, IWindow owner, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        public bool? ShowDialog(VistaFileDialog fileDialog)
         {
-            var window = Initialize(viewModelType, title, configureWindow, setupContainer);
-            window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            return window.ShowDialog(owner);
+            return fileDialog.ShowDialog(_window as Window);
         }
 
-        public bool? ShowDialog(object viewModel, string title, IWindow owner, Action<IShellWindow> configureWindow,
-            Action<ContainerBuilder> setupContainer)
+        public bool? ShowDialog(FileDialog fileDialog)
         {
-            var window = Initialize(viewModel, title, configureWindow, setupContainer);
-            window.Window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            return fileDialog.ShowDialog(_window as Window);
+        }
 
-            return window.ShowDialog(owner);
+        public bool? ShowDialog(VistaFolderBrowserDialog folderDialog)
+        {
+            return folderDialog.ShowDialog(_window as Window);
+        }
+
+        public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons, MessageBoxImage icon, MessageBoxResult defResult, MessageBoxOptions options)
+        {
+            return MessageBoxEx.Show(_window as Window, text, caption, buttons, icon, defResult, options);
         }
     }
 }

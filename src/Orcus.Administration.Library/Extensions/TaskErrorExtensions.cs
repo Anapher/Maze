@@ -13,7 +13,7 @@ namespace Orcus.Administration.Library.Extensions
 {
     public static class TaskErrorExtensions
     {
-        public static async Task<bool> EnumerateItems<T>(this IList<T> items, IWindow window, Func<T, Task> action)
+        public static async Task<bool> EnumerateItems<T>(this IList<T> items, IWindowInteractionService window, Func<T, Task> action)
         {
             var dontShowErrors = false;
             for (var i = 0; i < items.Count; i++)
@@ -34,7 +34,7 @@ namespace Orcus.Administration.Library.Extensions
             return true;
         }
 
-        public static async Task<bool> OnErrorShowMessageBox(this Task task, IWindow window,
+        public static async Task<bool> OnErrorShowMessageBox(this Task task, IWindowInteractionService window,
             DoNotAskAgainInfo dontShowAgain, bool isLastItem = false)
         {
             try
@@ -51,7 +51,7 @@ namespace Orcus.Administration.Library.Extensions
             }
         }
 
-        public static async Task<bool> OnErrorShowMessageBox(this Task task, IWindow window)
+        public static async Task<bool> OnErrorShowMessageBox(this Task task, IWindowInteractionService window)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Orcus.Administration.Library.Extensions
             }
         }
 
-        public static async void OnErrorShowMessageBoxAsync(this Task task, IWindow window)
+        public static async void OnErrorShowMessageBoxAsync(this Task task, IWindowInteractionService window)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Orcus.Administration.Library.Extensions
             }
         }
 
-        public static async Task<SuccessOrError<T>> OnErrorShowMessageBox<T>(this Task<T> task, IWindow window)
+        public static async Task<SuccessOrError<T>> OnErrorShowMessageBox<T>(this Task<T> task, IWindowInteractionService window)
         {
             T result;
             try
@@ -98,7 +98,7 @@ namespace Orcus.Administration.Library.Extensions
             return new SuccessOrError<T>(result);
         }
 
-        public static bool ShowErrorMessageContinue(this Exception exception, IWindow window)
+        public static bool ShowErrorMessageContinue(this Exception exception, IWindowInteractionService window)
         {
             if (exception is RestException restException)
                 return window.ShowMessage(
@@ -110,7 +110,7 @@ namespace Orcus.Administration.Library.Extensions
                        Tx.T("Error"), MessageBoxButton.OKCancel, MessageBoxImage.Error) == MessageBoxResult.OK;
         }
 
-        public static bool ShowErrorMessageContinue(this Exception exception, IWindow window, ref bool dontShowAgain,
+        public static bool ShowErrorMessageContinue(this Exception exception, IWindowInteractionService window, ref bool dontShowAgain,
             bool isLastItem = false)
         {
             if (!dontShowAgain)
@@ -145,7 +145,7 @@ namespace Orcus.Administration.Library.Extensions
             return false;
         }
 
-        public static void ShowMessage(this Exception exception, IWindow window)
+        public static void ShowMessage(this Exception exception, IWindowInteractionService window)
         {
             if (exception is RestException restException)
                 restException.ShowMessage(window);
@@ -153,7 +153,7 @@ namespace Orcus.Administration.Library.Extensions
                 window.ShowErrorMessageBox(Tx.T("MainWindow:UnexpectedErrorOccurred", "message", exception.Message));
         }
 
-        public static void ShowMessage(this RestException exception, IWindow window)
+        public static void ShowMessage(this RestException exception, IWindowInteractionService window)
         {
             window.ShowErrorMessageBox(GetRestExceptionMessage(exception));
         }

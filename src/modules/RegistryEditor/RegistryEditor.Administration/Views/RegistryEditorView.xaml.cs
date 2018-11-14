@@ -7,7 +7,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class RegistryEditorView
     {
-        public RegistryEditorView(IWindowViewManager viewManager) : base(viewManager)
+        public RegistryEditorView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

@@ -12,8 +12,8 @@ using Ookii.Dialogs.Wpf;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.StatusBar;
+using Orcus.Administration.Library.Views;
 using Orcus.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
@@ -79,15 +79,12 @@ namespace FileExplorer.Administration.Menus
 
         private void CreateDirectory(FileExplorerViewModel context)
         {
-            var inputVm =
-                new InputTextViewModel(Tx.T("FileExplorer:NewFolder"), Tx.T("FileExplorer:FolderName"),
-                    Tx.T("Create"))
-                {
-                    Predicate = s => context.FileSystem.IsValidFilename(s)
-                };
-            if (_windowService.ShowDialog(inputVm, Tx.T("FileExplorer:CreateNewFolder"), context.Window) == true)
+            if (context.Window.ShowDialog<InputTextViewModel>(Tx.T("FileExplorer:CreateNewFolder"), vm => {
+                vm.Initialize(Tx.T("FileExplorer:NewFolder"), Tx.T("FileExplorer:FolderName"),
+                        Tx.T("Create"));
+                vm.Predicate = s => context.FileSystem.IsValidFilename(s); }, out var viewModel) == true)
             {
-                context.FileSystem.CreateDirectory(Path.Combine(context.CurrentPath, inputVm.Text))
+                context.FileSystem.CreateDirectory(Path.Combine(context.CurrentPath, viewModel.Text))
                     .DisplayOnStatusBarCatchErrors(context.StatusBar, Tx.T("FileExplorer:CreateNewFolder")).Forget();
             }
         }

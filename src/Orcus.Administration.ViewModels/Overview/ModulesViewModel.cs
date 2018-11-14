@@ -19,6 +19,7 @@ using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Rest.Modules.V1;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Administration.Library.Views;
 using Orcus.Administration.ViewModels.Overview.Modules;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
@@ -32,7 +33,7 @@ namespace Orcus.Administration.ViewModels.Overview
     {
         private readonly IOrcusRestClient _restClient;
         private readonly List<IModuleTabViewModel> _tabViewModels;
-        private readonly IWindow _window;
+        private readonly IWindowService _windowService;
 
         private DelegateCommand _displayRepositorySourcesInfoCommand;
         private List<FindPackageByIdResource> _findPackageByIdResources;
@@ -49,10 +50,10 @@ namespace Orcus.Administration.ViewModels.Overview
         private DelegateCommand<ModuleViewModel> _uninstallModuleCommand;
         private DelegateCommand<ModuleViewModel> _updateModuleCommand;
 
-        public ModulesViewModel(IOrcusRestClient restClient, IWindow window) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
+        public ModulesViewModel(IOrcusRestClient restClient, IWindowService windowService) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
         {
             _restClient = restClient;
-            _window = window;
+            _windowService = windowService;
 
             _tabViewModels = new List<IModuleTabViewModel> {new BrowseTabViewModel(), new InstalledTabViewModel(), new UpdatesTabViewModel()};
             BrowseLoaded = new PubSubEvent();
@@ -177,7 +178,7 @@ namespace Orcus.Administration.ViewModels.Overview
             {
                 return _displayRepositorySourcesInfoCommand ?? (_displayRepositorySourcesInfoCommand = new DelegateCommand(() =>
                 {
-                    _window.ShowMessage(Tx.T("ModulesView:SourcesInfo"), Tx.T("Information"), MessageBoxButton.OK,
+                    _windowService.ShowMessage(Tx.T("ModulesView:SourcesInfo"), Tx.T("Information"), MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }));
             }
@@ -253,7 +254,7 @@ namespace Orcus.Administration.ViewModels.Overview
             }
             catch (Exception e)
             {
-                e.ShowMessage(_window);
+                e.ShowMessage(_windowService);
             }
         }
 
@@ -265,7 +266,7 @@ namespace Orcus.Administration.ViewModels.Overview
             }
             catch (Exception e)
             {
-                e.ShowMessage(_window);
+                e.ShowMessage(_windowService);
             }
         }
 

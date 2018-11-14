@@ -17,8 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private readonly IReadOnlyList<ICommandViewProvider> _viewProviders;
 
-        public CommandsViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container) : base(windowService, window,
-            container)
+        public CommandsViewModel(IWindowService windowService, IComponentContext container) : base(windowService, container)
         {
             _viewProviders = container.Resolve<IEnumerable<ICommandViewProvider>>().OrderByDescending(x => x.Priority).ToList();
         }

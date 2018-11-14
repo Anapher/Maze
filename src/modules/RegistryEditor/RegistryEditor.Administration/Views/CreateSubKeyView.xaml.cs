@@ -8,7 +8,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class CreateSubKeyView
     {
-        public CreateSubKeyView(IWindowViewManager viewManager, VisualStudioIcons icons) : base(viewManager)
+        public CreateSubKeyView(IShellWindow viewManager, VisualStudioIcons icons) : base(viewManager)
         {
             InitializeComponent();
             Icon = icons.NewSolutionFolder;

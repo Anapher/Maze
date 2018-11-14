@@ -1,10 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.Controls;
+using Orcus.Administration.Library.StatusBar;
 
 namespace Orcus.Administration.Library.Views
 {
-    public interface IWindowViewManager : IDialogWindow
+    public interface IShellWindow : IWindow
     {
         string Title { get; set; }
         object RightStatusBarContent { get; set; }
@@ -19,5 +21,10 @@ namespace Orcus.Administration.Library.Views
         ResizeMode ResizeMode { get; set; }
         double Height { get; set; }
         double Width { get; set; }
+        SizeToContent SizeToContent { get; set; }
+
+        void InitalizeContent(object content, StatusBarManager statusBarManager);
+        void Show(IWindow owner);
+        bool? ShowDialog(IWindow owner);
     }
 }

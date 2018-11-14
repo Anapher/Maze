@@ -11,7 +11,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class CreateEditValueView
     {
-        public CreateEditValueView(IWindowViewManager viewManager, VisualStudioIcons icons) : base(viewManager)
+        public CreateEditValueView(IShellWindow viewManager, VisualStudioIcons icons) : base(viewManager)
         {
             InitializeComponent();
             Icon = icons.Edit;

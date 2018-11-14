@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private readonly IReadOnlyList<ITriggerViewProvider> _viewProviders;
 
-        public TriggersViewModel(IWindowService windowService, IDialogWindow window, IComponentContext container) : base(windowService, window, container)
+        public TriggersViewModel(IWindowService windowService, IComponentContext container) : base(windowService, container)
         {
             _viewProviders = container.Resolve<IEnumerable<ITriggerViewProvider>>().OrderByDescending(x => x.Priority).ToList();
         }

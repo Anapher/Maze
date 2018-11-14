@@ -7,7 +7,7 @@ namespace ClipboardManager.Administration.Views
     /// </summary>
     public partial class ClipboardManagerView
     {
-        public ClipboardManagerView(IWindowViewManager viewManager) : base(viewManager)
+        public ClipboardManagerView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

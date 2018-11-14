@@ -7,7 +7,7 @@ namespace TaskManager.Administration.Views
     /// </summary>
     public partial class TaskManagerView
     {
-        public TaskManagerView(IWindowViewManager windowViewManager) : base(windowViewManager)
+        public TaskManagerView(IShellWindow windowViewManager) : base(windowViewManager)
         {
             InitializeComponent();
         }

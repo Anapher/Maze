@@ -7,7 +7,7 @@ namespace TaskManager.Administration.Views
     /// </summary>
     public partial class PropertiesView
     {
-        public PropertiesView(IWindowViewManager viewManager) : base(viewManager)
+        public PropertiesView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }
