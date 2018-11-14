@@ -9,11 +9,11 @@ namespace SystemInformation.Administration.Rest
 {
     public class SystemInformationResource : ResourceBase<SystemInformationResource>
     {
-        public SystemInformationResource() : base(null)
+        public SystemInformationResource() : base("SystemInformation")
         {
         }
 
-        public static async Task<List<SystemInfoDto>> FetchInformation(IPackageRestClient restClient) =>
+        public static async Task<List<SystemInfoDto>> FetchInformation(ITargetedRestClient restClient) =>
             await CreateRequest(HttpVerb.Get, "").Execute(restClient).Return<List<SystemInfoDto>>();
         //{
         //    var response = ;

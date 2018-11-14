@@ -7,14 +7,14 @@ namespace TaskManager.Administration.Rest
 {
     public class TaskManagerResource : ChannelResource<TaskManagerResource>
     {
-        public TaskManagerResource() : base(null)
+        public TaskManagerResource() : base("TaskManager")
         {
         }
 
-        public static Task<CallTransmissionChannel<IProcessesProvider>> GetProcessProvider(IPackageRestClient restClient) =>
+        public static Task<CallTransmissionChannel<IProcessesProvider>> GetProcessProvider(ITargetedRestClient restClient) =>
             restClient.CreateChannel<TaskManagerResource, IProcessesProvider>("processesProvider");
 
-        public static Task<CallTransmissionChannel<IProcessWatcher>> GetProcessWatcher(IPackageRestClient restClient) =>
+        public static Task<CallTransmissionChannel<IProcessWatcher>> GetProcessWatcher(ITargetedRestClient restClient) =>
             restClient.CreateChannel<TaskManagerResource, IProcessWatcher>("processWatcher");
     }
 }

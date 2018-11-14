@@ -27,7 +27,7 @@ namespace FileExplorer.Administration.ViewModels
     {
         private static readonly ILog Logger = LogProvider.For<FileTransferViewModel>();
 
-        private IPackageRestClient _restClient;
+        private ITargetedRestClient _restClient;
         private FileExplorerViewModel _baseVm;
         private readonly ObservableCollection<FileTransferViewModel> _transfers;
         private bool _isBusy;

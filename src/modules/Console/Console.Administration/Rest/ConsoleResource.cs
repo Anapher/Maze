@@ -7,11 +7,11 @@ namespace Console.Administration.Rest
 {
     public class ConsoleResource : ChannelResource<ConsoleResource>
     {
-        public ConsoleResource() : base(null)
+        public ConsoleResource() : base("Console")
         {
         }
 
-        public static async Task<ProcessInterface> ProcessWatcher(IPackageRestClient restClient) =>
+        public static async Task<ProcessInterface> ProcessWatcher(ITargetedRestClient restClient) =>
             new ProcessInterface(await restClient.CreateChannel<ConsoleResource, IProcessChannel>("processChannel"));
     }
 }

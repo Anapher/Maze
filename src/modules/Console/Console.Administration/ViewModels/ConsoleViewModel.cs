@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Console.Administration.Rest;
 using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.ViewModels;
 using Prism.Commands;
 using Prism.Regions;
@@ -10,13 +9,13 @@ namespace Console.Administration.ViewModels
 {
     public class ConsoleViewModel : ViewModelBase
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private ProcessInterface _processConsole;
         private DelegateCommand _processExitedCommand;
 
         public ConsoleViewModel(ITargetedRestClient restClient)
         {
-            _restClient = restClient.CreatePackageSpecific("Console");
+            _restClient = restClient;
         }
 
         public ProcessInterface ProcessConsole

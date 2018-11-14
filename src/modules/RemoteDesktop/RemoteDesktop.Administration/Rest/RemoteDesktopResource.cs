@@ -11,7 +11,7 @@ namespace RemoteDesktop.Administration.Rest
 {
     public class RemoteDesktopResource : ChannelResource<RemoteDesktopResource>
     {
-        public RemoteDesktopResource() : base(null)
+        public RemoteDesktopResource() : base("RemoteDesktop")
         {
         }
 

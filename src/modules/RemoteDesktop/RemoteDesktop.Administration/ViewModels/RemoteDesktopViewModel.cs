@@ -15,13 +15,13 @@ namespace RemoteDesktop.Administration.ViewModels
 {
     public class RemoteDesktopViewModel : ViewModelBase
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private WriteableBitmap _image;
         private string _title;
 
         public RemoteDesktopViewModel(ITargetedRestClient restClient)
         {
-            _restClient = restClient.CreatePackageSpecific("RemoteDesktop");
+            _restClient = restClient;
         }
 
         public WriteableBitmap Image

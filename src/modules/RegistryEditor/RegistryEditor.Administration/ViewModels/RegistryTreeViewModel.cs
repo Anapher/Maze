@@ -17,10 +17,10 @@ namespace RegistryEditor.Administration.ViewModels
 {
     public class RegistryTreeViewModel : ISupportTreeSelector<RegistryKeyViewModel, IntegratedRegistryKey>, IAsyncAutoComplete
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
 
-        public RegistryTreeViewModel(IPackageRestClient restClient, IShellStatusBar statusBar)
+        public RegistryTreeViewModel(ITargetedRestClient restClient, IShellStatusBar statusBar)
         {
             _restClient = restClient;
             _statusBar = statusBar;

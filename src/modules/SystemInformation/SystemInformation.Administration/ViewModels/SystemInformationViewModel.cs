@@ -14,7 +14,7 @@ namespace SystemInformation.Administration.ViewModels
 {
     public class SystemInformationViewModel : ViewModelBase
     {
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly IShellStatusBar _statusBar;
 
         private DelegateCommand<SystemInfoViewModel> _copyNameAndValueCommand;
@@ -25,7 +25,7 @@ namespace SystemInformation.Administration.ViewModels
         public SystemInformationViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient)
         {
             _statusBar = statusBar;
-            _restClient = restClient.CreatePackageSpecific("SystemInformation");
+            _restClient = restClient;
         }
 
         public List<SystemInfoGroupViewModel> Groups

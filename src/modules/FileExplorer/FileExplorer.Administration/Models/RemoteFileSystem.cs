@@ -24,12 +24,12 @@ namespace FileExplorer.Administration.Models
     public class RemoteFileSystem : IFileSystem
     {
         private readonly IMemoryCache _globalCache;
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
         private readonly ConcurrentDictionary<string, CachedDirectory> _localCache;
         private readonly bool _caseInsensitivePaths = true;
         private CachedDirectory _computerDirectory;
 
-        public RemoteFileSystem(IMemoryCache globalCache, IPackageRestClient restClient)
+        public RemoteFileSystem(IMemoryCache globalCache, ITargetedRestClient restClient)
         {
             _globalCache = globalCache;
             _restClient = restClient;
