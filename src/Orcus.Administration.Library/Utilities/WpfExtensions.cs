@@ -5,6 +5,9 @@ using System.Windows.Media.Media3D;
 
 namespace Orcus.Administration.Library.Utilities
 {
+    /// <summary>
+    ///     Wpf Extensions
+    /// </summary>
     public static class WpfExtensions
     {
         /// <summary>
@@ -21,6 +24,12 @@ namespace Orcus.Administration.Library.Utilities
             return (T) child;
         }
 
+        /// <summary>
+        ///     Go the visual tree upward to search for an <see cref="DependencyObject"/> of a given type
+        /// </summary>
+        /// <typeparam name="T">The type of the control that should be searched for</typeparam>
+        /// <param name="source">The source <see cref="DependencyObject"/> that acts as the origin the search starts from.s</param>
+        /// <returns>Return the found control or <code>null</code></returns>
         public static T VisualUpwardSearch<T>(DependencyObject source) where T : DependencyObject
         {
             DependencyObject returnVal = source;
@@ -97,7 +106,13 @@ namespace Orcus.Administration.Library.Utilities
             return foundChild;
         }
 
-        public static T GetFirstChildOfType<T>(DependencyObject dependencyObject) where T : DependencyObject
+        /// <summary>
+        ///     Go the visual tree downward to search for an <see cref="DependencyObject"/> of a given type
+        /// </summary>
+        /// <typeparam name="T">The type of the control that should be searched for</typeparam>
+        /// <param name="source">The source <see cref="DependencyObject"/> that acts as the origin the search starts from.s</param>
+        /// <returns>Return the found control or <code>null</code></returns>
+        public static T VisualDownwardSearch<T>(DependencyObject dependencyObject) where T : DependencyObject
         {
             if (dependencyObject == null)
             {
@@ -108,7 +123,7 @@ namespace Orcus.Administration.Library.Utilities
             {
                 var child = VisualTreeHelper.GetChild(dependencyObject, i);
 
-                var result = child as T ?? GetFirstChildOfType<T>(child);
+                var result = child as T ?? VisualDownwardSearch<T>(child);
 
                 if (result != null)
                 {
@@ -117,21 +132,6 @@ namespace Orcus.Administration.Library.Utilities
             }
 
             return null;
-        }
-
-        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
-        {
-            //get parent item
-            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
-
-            //we've reached the end of the tree
-            if (parentObject == null) return null;
-
-            //check if the parent matches the type we're looking for
-            T parent = parentObject as T;
-            if (parent != null)
-                return parent;
-            return FindParent<T>(parentObject);
         }
 
         public static T GetDescendantByType<T>(Visual element) where T : Visual

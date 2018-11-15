@@ -5,6 +5,9 @@ using System.Windows.Media;
 
 namespace Orcus.Administration.Library.Models
 {
+    /// <summary>
+    ///     A factory class that can create multiple instances of the same icon
+    /// </summary>
     public static class IconFactory
     {
         /// <summary>
