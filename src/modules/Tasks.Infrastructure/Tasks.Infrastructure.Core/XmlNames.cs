@@ -1,5 +1,8 @@
 ﻿namespace Tasks.Infrastructure.Core
 {
+    /// <summary>
+    ///     Important key words for XML serializing <see cref="OrcusTask"/>
+    /// </summary>
     public static class XmlNames
     {
         public const string Root = "task";

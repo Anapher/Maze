@@ -2,6 +2,9 @@
 
 namespace Tasks.Infrastructure.Server.Library
 {
+    /// <summary>
+    ///     An attribute that should be applied to a <see cref="IFilterService{TFilterInfo}"/> to specify the cost of the operation.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class FilterPerformanceCostAttribute : Attribute
     {

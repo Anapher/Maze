@@ -4,9 +4,19 @@ using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Server.Library
 {
+    /// <summary>
+    ///     Provide information about the execution proess of a command
+    /// </summary>
     public abstract class TaskExecutionContext
     {
+        /// <summary>
+        ///     The session this command is executed on
+        /// </summary>
         public abstract TaskSession Session { get; }
+
+        /// <summary>
+        ///     The task that contains the command.
+        /// </summary>
         public abstract OrcusTask OrcusTask { get; }
 
         /// <summary>

@@ -11,6 +11,9 @@ using Tasks.Infrastructure.Core.Commands;
 
 namespace Tasks.Infrastructure.Core
 {
+    /// <summary>
+    ///     Writer for an <see cref="OrcusTask"/>
+    /// </summary>
     public class OrcusTaskWriter
     {
         private readonly XmlWriter _xmlWriter;

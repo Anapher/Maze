@@ -24,6 +24,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         public TaskOverviewViewModel(IOrcusRestClient restClient, IAppDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
+
             restClient.HubConnection.On<TaskSessionDto>("TaskSessionCreated", OnTaskSessionCreated);
             restClient.HubConnection.On<TaskExecutionDto>("TaskExecutionCreated", OnTaskExecutionCreated);
             restClient.HubConnection.On<CommandResultDto>("TaskCommandResultCreated", OnTaskCommandResultCreated);

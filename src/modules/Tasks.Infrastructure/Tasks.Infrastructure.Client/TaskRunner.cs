@@ -178,7 +178,9 @@ namespace Tasks.Infrastructure.Client
 
                         var commandResult = new CommandResult
                         {
-                            CommandResultId = Guid.NewGuid(), TaskExecutionId = execution.TaskExecutionId, CommandName = commandName
+                            CommandResultId = Guid.NewGuid(),
+                            TaskExecutionId = execution.TaskExecutionId,
+                            CommandName = commandName
                         };
 
                         async Task UpdateProcess(CommandProcessDto commandProcess)

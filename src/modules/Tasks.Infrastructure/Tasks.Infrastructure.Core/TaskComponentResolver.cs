@@ -10,6 +10,9 @@ using Tasks.Infrastructure.Core.Triggers;
 
 namespace Tasks.Infrastructure.Core
 {
+    /// <summary>
+    ///     Default implementation for <see cref="ITaskComponentResolver"/>
+    /// </summary>
     public class TaskComponentResolver : ITaskComponentResolver
     {
         private readonly IImmutableDictionary<string, Type> _commandTypes;

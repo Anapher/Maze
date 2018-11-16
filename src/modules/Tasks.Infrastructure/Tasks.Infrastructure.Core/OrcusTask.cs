@@ -11,18 +11,47 @@ using Tasks.Infrastructure.Core.Triggers;
 
 namespace Tasks.Infrastructure.Core
 {
+    /// <summary>
+    ///     An Orcus Task
+    /// </summary>
     public class OrcusTask : IValidatableObject
     {
+        /// <summary>
+        ///     The name of the task. This value must not be unique and may only be used for displaying to the user
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        ///     The unique <see cref="Guid"/> for the task
+        /// </summary>
         public Guid Id { get; set; }
         public bool ExecuteOnce { get; set; }
         public TimeSpan? RestartOnFailInterval { get; set; }
         public int? MaximumRestarts { get; set; }
 
+        /// <summary>
+        ///     The audience of the task that decides who should execute the commands.
+        /// </summary>
         public AudienceCollection Audience { get; set; }
+
+        /// <summary>
+        ///     Filters for the audience that can apply more specific conditions
+        /// </summary>
         public IList<FilterInfo> Filters { get; set; }
+
+        /// <summary>
+        ///     Triggers decide when the commands should be executed
+        /// </summary>
         public IList<TriggerInfo> Triggers { get; set; }
+
+        /// <summary>
+        ///     Stop events automatically cancel running commands
+        /// </summary>
         public IList<StopEventInfo> StopEvents { get; set; }
+
+        /// <summary>
+        ///     The commands
+        /// </summary>
         public IList<CommandInfo> Commands { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
