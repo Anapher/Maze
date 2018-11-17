@@ -7,7 +7,7 @@ namespace RemoteDesktop.Administration.Views
     /// </summary>
     public partial class RemoteDesktopView
     {
-        public RemoteDesktopView(IWindowViewManager viewManager) : base(viewManager)
+        public RemoteDesktopView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

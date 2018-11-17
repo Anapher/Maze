@@ -7,7 +7,6 @@ using Orcus.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
-using UserInteraction.Administration.Extensions;
 using UserInteraction.Administration.Rest;
 using UserInteraction.Dtos.MessageBox;
 
@@ -25,11 +24,11 @@ namespace UserInteraction.Administration.ViewModels
         private DelegateCommand _testCommand;
         private string _text;
 
-        public MessageBoxViewModel(ITargetedRestClient restClient, IWindow windowService, IShellStatusBar statusBar)
+        public MessageBoxViewModel(ITargetedRestClient restClient, IWindowService windowService, IShellStatusBar statusBar)
         {
             _windowService = windowService;
             _statusBar = statusBar;
-            _restClient = restClient.CreateLocal();
+            _restClient = restClient;
         }
 
         public MsgBxIcon MessageBoxIcon

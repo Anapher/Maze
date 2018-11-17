@@ -8,12 +8,12 @@ namespace ModuleTemplate.Administration.ViewModels
     public class ModuleViewModel : ViewModelBase
     {
         private readonly IShellStatusBar _statusBar;
-        private readonly IPackageRestClient _restClient;
+        private readonly ITargetedRestClient _restClient;
 
         public ModuleViewModel(IShellStatusBar statusBar, ITargetedRestClient restClient)
         {
             _statusBar = statusBar;
-            _restClient = restClient.CreatePackageSpecific("Module");
+            _restClient = restClient;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ClientPanel.Administration.Views
     /// </summary>
     public partial class ClientPanelView
     {
-        public ClientPanelView(IWindowViewManager viewManager) : base(viewManager)
+        public ClientPanelView(IShellWindow viewManager) : base(viewManager)
         {
             InitializeComponent();
         }

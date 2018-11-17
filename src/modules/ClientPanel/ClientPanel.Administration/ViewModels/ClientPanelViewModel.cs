@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using SystemInformation.Administration.ViewModels;
 using SystemUtilities.Administration.Rest;
-using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using ClientPanel.Administration.Rest;
 using ClipboardManager.Administration.Utilities;
@@ -14,8 +13,8 @@ using FileExplorer.Administration.ViewModels;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.ViewModels;
+using Orcus.Administration.Library.Views;
 using Orcus.Utilities;
 using Prism.Commands;
 using Prism.Regions;
@@ -32,9 +31,7 @@ namespace ClientPanel.Administration.ViewModels
     {
         private readonly ClientViewModel _clientViewModel;
         private readonly IOrcusRestClient _orcusRestClient;
-        private readonly IPackageRestClient _remoteDesktopRestClient;
-        private readonly IPackageRestClient _restClient;
-        private readonly IWindow _window;
+        private readonly ITargetedRestClient _restClient;
         private readonly IWindowService _windowService;
         private readonly ClipboardSynchronizer _clipboardSynchronizer;
         private DelegateCommand<ButtonAction> _executeButtonActionCommand;
@@ -49,17 +46,15 @@ namespace ClientPanel.Administration.ViewModels
         private WriteableBitmap _remoteImage;
         private string _title;
 
-        public ClientPanelViewModel(ITargetedRestClient restClient, IOrcusRestClient orcusRestClient, ClientViewModel clientViewModel, IWindow window,
+        public ClientPanelViewModel(ITargetedRestClient restClient, IOrcusRestClient orcusRestClient, ClientViewModel clientViewModel,
             IWindowService windowService, ClipboardSynchronizer clipboardSynchronizer)
         {
             _orcusRestClient = orcusRestClient;
             _windowService = windowService;
             _clipboardSynchronizer = clipboardSynchronizer;
             _clientViewModel = clientViewModel;
-            _window = window;
 
-            _remoteDesktopRestClient = restClient.CreatePackageSpecific("RemoteDesktop");
-            _restClient = restClient.CreatePackageSpecific("ClientPanel");
+            _restClient = restClient;
 
             Title = $"{clientViewModel.Username} [{clientViewModel.LatestSession.IpAddress}]";
             ComputerPowerCommands = new List<ButtonAction>
@@ -189,7 +184,7 @@ namespace ClientPanel.Administration.ViewModels
                     }
                     catch (Exception e)
                     {
-                        e.ShowMessage(_window);
+                        e.ShowMessage(_windowService);
                     }
                 }));
             }
@@ -197,25 +192,25 @@ namespace ClientPanel.Administration.ViewModels
 
         private void OpenCommandWindow(Type viewModelType, string title)
         {
-            _windowService.Show(viewModelType, title, _window, null, builder =>
+            _windowService.Show(viewModelType, builder =>
             {
                 builder.RegisterInstance(_clientViewModel);
                 builder.RegisterInstance(_orcusRestClient.CreateTargeted(_clientViewModel));
-            });
+            }, null, null, out _);
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
 
-            var parameters = await RemoteDesktopResource.GetParameters(_remoteDesktopRestClient);
+            var parameters = await RemoteDesktopResource.GetParameters(_restClient);
             var monitor = parameters.Screens.FirstOrDefault(x => x.IsPrimary) ?? parameters.Screens.First();
 
             var remoteDesktop = await RemoteDesktopResource.CreateScreenChannel(
                 new DesktopDuplicationOptions {Monitor = {Value = Array.IndexOf(parameters.Screens, monitor)}}, new x264Options(),
-                _remoteDesktopRestClient);
+                _restClient);
             remoteDesktop.PropertyChanged += RemoteDesktopOnPropertyChanged;
-            await remoteDesktop.StartRecording(_remoteDesktopRestClient);
+            await remoteDesktop.StartRecording(_restClient);
         }
 
         private void RemoteDesktopOnPropertyChanged(object sender, PropertyChangedEventArgs e)

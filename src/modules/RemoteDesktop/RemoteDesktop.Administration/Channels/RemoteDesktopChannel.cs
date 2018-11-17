@@ -50,7 +50,7 @@ namespace RemoteDesktop.Administration.Channels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Task StartRecording(IPackageRestClient restClient)
+        public Task StartRecording(ITargetedRestClient restClient)
         {
             if (IsRecording)
                 throw new InvalidOperationException("Channel is already recording");

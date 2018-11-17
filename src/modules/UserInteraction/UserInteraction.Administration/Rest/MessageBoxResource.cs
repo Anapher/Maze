@@ -7,7 +7,7 @@ namespace UserInteraction.Administration.Rest
 {
     public class MessageBoxResource : ResourceBase<MessageBoxResource>
     {
-        public MessageBoxResource() : base("messageBox")
+        public MessageBoxResource() : base("UserInteraction/messageBox")
         {
         }
 

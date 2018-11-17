@@ -6,7 +6,7 @@ using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Menu.MenuBase;
 using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
+using Orcus.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Modularity;
 using Unclassified.TxLib;
@@ -38,12 +38,15 @@ namespace ClientPanel.Administration
                 Icon = _icons.CodeDefinitionWindow,
                 Command = new DelegateCommand<ClientViewModel>(clientViewModel =>
                 {
-                    _windowService.Show(typeof(ClientPanelViewModel), Tx.T("ClientPanel:ClientPanel"), null, window => window.ViewManager.TitleBarIcon = _icons.CodeDefinitionWindow,
-                        builder =>
-                        {
-                            builder.RegisterInstance(clientViewModel);
-                            builder.Register(context => _restClient.CreateTargeted(clientViewModel.ClientId)).SingleInstance();
-                        });
+                    _windowService.Show<ClientPanelViewModel>(builder =>
+                    {
+                        builder.RegisterInstance(clientViewModel);
+                        builder.Register(context => _restClient.CreateTargeted(clientViewModel.ClientId)).SingleInstance();
+                    }, window =>
+                    {
+                        window.TitleBarIcon = _icons.CodeDefinitionWindow;
+                        window.Title = Tx.T("ClientPanel:ClientPanel");
+                    }, null, out _);
                 })
             });
         }
