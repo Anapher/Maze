@@ -23,6 +23,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview
                 Status = CommandStatus.Error;
         }
 
+        public Guid CommandResultId { get; }
         public Guid TaskExecutionId { get; }
 
         public string CommandName { get; }
@@ -30,8 +31,6 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview
         public int? StatusCode { get; }
         public DateTimeOffset FinishedAt { get; }
         public CommandStatus Status { get; }
-
-        public Guid CommandResultId { get; }
     }
 
     public class CommandProcessViewModel : BindableBase, ICommandStatusViewModel

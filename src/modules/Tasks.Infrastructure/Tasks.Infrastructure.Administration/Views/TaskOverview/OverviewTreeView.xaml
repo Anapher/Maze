@@ -9,6 +9,7 @@
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
+    xmlns:extensions="clr-namespace:Tasks.Infrastructure.Administration.Extensions"
     d:DataContext="{d:DesignInstance viewModels:TaskOverviewViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -21,7 +22,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <TreeView Grid.IsSharedSizeScope="True" ItemsSource="{Binding Sessions}">
+    <TreeView
+        extensions:TreeViewExtensions.SelectOnRightClick="True"
+        Grid.IsSharedSizeScope="True" SelectedItemChanged="TreeView_OnSelectedItemChanged"
+        ItemsSource="{Binding Sessions}">
         <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type taskOverview:TaskSessionViewModel}" ItemsSource="{Binding Executions}">
                 <Grid>
@@ -218,5 +222,10 @@
                 </Grid>
             </DataTemplate>
         </TreeView.Resources>
+        <TreeView.ItemContainerStyle>
+            <Style BasedOn="{StaticResource MetroTreeViewItem}" TargetType="TreeViewItem">
+                <Setter Property="extensions:FrameworkElementExtensions.SupressBringIntoView" Value="True" />
+            </Style>
+        </TreeView.ItemContainerStyle>
     </TreeView>
 </UserControl>

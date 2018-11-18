@@ -22,6 +22,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private Dictionary<string, TaskSessionViewModel> _sessions;
         private Dictionary<Guid, TaskExecutionViewModel> _executions;
         private Dictionary<Guid, ICommandStatusViewModel> _results;
+        private object _selectedItem;
 
         public TaskOverviewViewModel(IOrcusRestClient restClient, IAppDispatcher dispatcher)
         {
@@ -36,6 +37,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         public string Title { get; private set; }
 
         public ICollectionView Sessions { get; private set; }
+
+        public object SelectedItem
+        {
+            get => _selectedItem;
+            set => SetProperty(ref _selectedItem, value);
+        }
 
         public void Initialize(TaskSessionsInfo taskSessions, TaskViewModel taskViewModel)
         {
