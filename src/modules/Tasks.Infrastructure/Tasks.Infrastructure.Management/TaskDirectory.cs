@@ -79,6 +79,7 @@ namespace Tasks.Infrastructure.Management
         private readonly AsyncReaderWriterLock _tasksLock;
         private readonly XmlWriterSettings _xmlWriterSettings;
         private IImmutableDictionary<Guid, (string, OrcusTask)> _cachedTasks;
+        private readonly string _tasksDirectory;
 
         public TaskDirectory(IOptions<TasksOptions> options, ITaskComponentResolver taskComponentResolver, IXmlSerializerCache xmlSerializerCache,
             ILogger<TaskDirectory> logger)
@@ -87,6 +88,8 @@ namespace Tasks.Infrastructure.Management
             _xmlSerializerCache = xmlSerializerCache;
             _logger = logger;
             _options = options.Value;
+            _tasksDirectory = Environment.ExpandEnvironmentVariables(_options.Directory);
+
             _tasksLock = new AsyncReaderWriterLock();
             _xmlWriterSettings = new XmlWriterSettings {OmitXmlDeclaration = false, Indent = true};
         }
@@ -115,7 +118,7 @@ namespace Tasks.Infrastructure.Management
 
         private IEnumerable<OrcusTask> LoadTasksLockAquired()
         {
-            var directoryInfo = new DirectoryInfo(_options.Directory);
+            var directoryInfo = new DirectoryInfo(_tasksDirectory);
             if (!directoryInfo.Exists)
             {
                 _cachedTasks = TasksCacheDictionary.Empty;
@@ -167,8 +170,11 @@ namespace Tasks.Infrastructure.Management
                 {
                     //new task
                     var name = NameGeneratorUtilities.ToFilename(orcusTask.Name, includeSpace: false) + "." + _options.FileExtension;
-                    filename = NameGeneratorUtilities.MakeUnique(name, "_[N]", s => File.Exists(Path.Combine(_options.Directory, s)));
+                    filename = NameGeneratorUtilities.MakeUnique(name, "_[N]", s => File.Exists(Path.Combine(_tasksDirectory, s)));
+                    filename = Path.Combine(_tasksDirectory, filename);
                 }
+
+                Directory.CreateDirectory(_tasksDirectory);
 
                 using (var fileStream = File.Create(filename))
                 using (var xmlWriter = XmlWriter.Create(fileStream, _xmlWriterSettings))

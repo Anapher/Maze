@@ -9,6 +9,7 @@ using Orcus.Server.Library.Interfaces;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Core;
+using Tasks.Infrastructure.Server.Dapper;
 using Tasks.Infrastructure.Server.Options;
 
 namespace Tasks.Infrastructure.Server.Hooks

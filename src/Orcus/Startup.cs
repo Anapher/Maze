@@ -1,7 +1,11 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.IO.Abstractions;
+using System.Linq;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Services;
@@ -11,6 +15,7 @@ using Orcus.Core.Services;
 using Orcus.Extensions;
 using Orcus.ModuleManagement;
 using Orcus.Options;
+using Orcus.Server.Connection.Utilities;
 
 namespace Orcus
 {
@@ -42,11 +47,14 @@ namespace Orcus
             builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().As<IManagementCoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
+            builder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
 
             builder.RegisterInstance(new SerilogLoggerFactory()).As<ILoggerFactory>().SingleInstance();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
             builder.RegisterInstance(ArrayPool<char>.Create());
             builder.RegisterInstance(ArrayPool<byte>.Create());
+            
+            builder.Populate(Enumerable.Empty<ServiceDescriptor>());
 
             builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
             

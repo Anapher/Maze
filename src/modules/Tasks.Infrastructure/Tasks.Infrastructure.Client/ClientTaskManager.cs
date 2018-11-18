@@ -10,14 +10,23 @@ using Orcus.Client.Library.Clients;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
-using Tasks.Infrastructure.Client.Rest;
+using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 
 namespace Tasks.Infrastructure.Client
 {
-    public class ClientTaskManager
+    public interface IClientTaskManager
+    {
+        ConcurrentDictionary<Guid, (TaskRunner, CancellationTokenSource)> Tasks { get; }
+        Task Initialize();
+        Task RemoveTask(Guid taskId);
+        Task Synchronize(List<TaskSyncDto> tasks, IRestClient restClient);
+        Task AddOrUpdateTask(OrcusTask orcusTask);
+    }
+
+    public class ClientTaskManager : IClientTaskManager
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ITaskDirectory _taskDirectory;

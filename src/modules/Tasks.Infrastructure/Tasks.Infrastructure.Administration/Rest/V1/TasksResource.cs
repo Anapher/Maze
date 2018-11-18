@@ -12,9 +12,9 @@ using Tasks.Infrastructure.Core.Dtos;
 
 namespace Tasks.Infrastructure.Administration.Rest.V1
 {
-    public class TasksResource : ResourceBase<TasksResource>
+    public class TasksResource : ModuleResource<TasksResource>
     {
-        public TasksResource() : base($"{PrismModule.ModuleName}/v1/tasks")
+        public TasksResource() : base(PrismModule.ModuleName, "tasks")
         {
         }
 

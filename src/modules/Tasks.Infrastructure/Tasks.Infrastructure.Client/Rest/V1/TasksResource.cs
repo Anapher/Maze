@@ -7,11 +7,11 @@ using Orcus.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 
-namespace Tasks.Infrastructure.Client.Rest
+namespace Tasks.Infrastructure.Client.Rest.V1
 {
-    public class TasksResource : VersionedResource<TasksResource>
+    public class TasksResource : ModuleResource<TasksResource>
     {
-        public TasksResource() : base("tasks")
+        public TasksResource() : base("Tasks.Infrastructure", "tasks")
         {
         }
 

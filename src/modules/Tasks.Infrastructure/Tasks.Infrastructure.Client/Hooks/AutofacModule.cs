@@ -27,9 +27,9 @@ namespace Tasks.Infrastructure.Client.Hooks
             builder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
             builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
             builder.RegisterType<TaskSessionManager>().As<ITaskSessionManager>().SingleInstance();
+            builder.RegisterType<ClientTaskManager>().As<IClientTaskManager>().SingleInstance();
 
             builder.RegisterType<OnConnectedAction>().As<IConnectedAction>();
-            builder.RegisterType<StartupAction>().As<IStartupAction>();
         }
     }
 }

@@ -12,7 +12,7 @@ using RequestTransmitter.Client;
 using Tasks.Infrastructure.Client.Data;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Options;
-using Tasks.Infrastructure.Client.Rest;
+using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
 using FileMode = System.IO.FileMode;
@@ -31,7 +31,7 @@ namespace Tasks.Infrastructure.Client
     public class TaskSessionManager : ITaskSessionManager
     {
         private readonly IFileSystem _fileSystem;
-        private readonly TasksOptions _options;
+        private readonly string _sessionsDirectory;
         private readonly AsyncReaderWriterLock _readerWriterLock;
         private readonly IRequestTransmitter _requestTransmitter;
 
@@ -39,12 +39,13 @@ namespace Tasks.Infrastructure.Client
         {
             _fileSystem = fileSystem;
             _requestTransmitter = requestTransmitter;
-            _options = options.Value;
+            _sessionsDirectory = Environment.ExpandEnvironmentVariables(options.Value.SessionsDirectory);
             _readerWriterLock = new AsyncReaderWriterLock();
 
             var mapper = BsonMapper.Global;
             mapper.Entity<TaskSession>().Id(x => x.TaskSessionId, autoId: false).DbRef(x => x.Executions, nameof(TaskExecution));
             mapper.Entity<TaskExecution>().Id(x => x.TaskExecutionId).DbRef(x => x.CommandResults, nameof(CommandResult));
+            mapper.Entity<OrcusTaskStatus>().Id(x => x.IsFinished, autoId: false);
         }
 
         public async Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description)
@@ -95,6 +96,7 @@ namespace Tasks.Infrastructure.Client
                         taskSessionEntity = new TaskSession
                         {
                             TaskSessionId = taskSession.TaskSessionId,
+                            TaskReferenceId = orcusTask.Id,
                             Description = taskSession.Description,
                             CreatedOn = DateTimeOffset.UtcNow
                         };
@@ -169,6 +171,6 @@ namespace Tasks.Infrastructure.Client
             }
         }
 
-        private string GetTaskDbFilename(OrcusTask orcusTask) => _fileSystem.Path.Combine(_options.SessionsDirectory, orcusTask.Id.ToString("N"));
+        private string GetTaskDbFilename(OrcusTask orcusTask) => _fileSystem.Path.Combine(_sessionsDirectory, orcusTask.Id.ToString("N"));
     }
 }

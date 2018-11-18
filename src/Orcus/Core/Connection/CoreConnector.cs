@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Orcus.Client.Library.Interfaces;
 using Orcus.Client.Library.Services;
@@ -72,7 +71,6 @@ namespace Orcus.Core.Connection
                                 loadedContext.Configure(builder);
                             
                             builder.RegisterOrcusServices(cache => cache.BuildCache(controllers));
-                            builder.RegisterType<AutofacServiceProvider>().AsImplementedInterfaces();
                             builder.RegisterInstance(connection.RestClient).AsImplementedInterfaces();
                         });
 

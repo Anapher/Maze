@@ -74,7 +74,6 @@
     <Compile Include="Exceptions\RestAuthenticationException.cs" />
     <Compile Include="Exceptions\RestException.cs" />
     <Compile Include="Exceptions\RestNotFoundException.cs" />
-    <Compile Include="Extensions\AutofacServiceProvider.cs" />
     <Compile Include="Extensions\SerilogLoggerFactory.cs" />
     <Compile Include="Options\ConnectionOptions.cs" />
     <Compile Include="Options\ModulesOptions.cs" />
@@ -140,6 +139,9 @@
   <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>4.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection">
+      <Version>4.3.1</Version>
     </PackageReference>
     <PackageReference Include="Costura.Fody">
       <Version>3.1.0</Version>

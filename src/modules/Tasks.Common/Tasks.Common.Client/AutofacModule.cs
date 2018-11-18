@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Tasks.Infrastructure.Core.Utilities;
 
-namespace Tasks.Common.Server
+namespace Tasks.Common.Client
 {
     public class AutofacModule : Module
     {

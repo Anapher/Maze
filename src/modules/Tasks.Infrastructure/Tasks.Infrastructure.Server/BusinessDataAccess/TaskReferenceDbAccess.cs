@@ -7,6 +7,7 @@ using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Options;
 using Tasks.Infrastructure.Server.BusinessDataAccess.Base;
 using Tasks.Infrastructure.Management.Data;
+using Tasks.Infrastructure.Server.Dapper;
 using Tasks.Infrastructure.Server.Options;
 
 namespace Tasks.Infrastructure.Server.BusinessDataAccess
@@ -94,11 +95,31 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
         {
             using (var connection = await OpenConnection())
             {
-                var executions = await connection.QueryAsync<CommandResult>(
+                //No dapper mapping because of InvalidCaseException of Status
+                //https://github.com/StackExchange/Dapper/issues/1001
+
+                var reader = connection.ExecuteReader(
                     "SELECT CommandResult.CommandResultId, CommandResult.TaskExecutionId, CommandResult.CommandName, CommandResult.Result, CommandResult.Status, CommandResult.FinishedAt FROM CommandResult INNER JOIN TaskExecution ON TaskExecution.TaskExecutionId = CommandResult.TaskExecutionId INNER JOIN TaskSession ON TaskSession.TaskSessionId = TaskExecution.TaskSessionId WHERE TaskSession.TaskReferenceId = @taskId",
                     new {taskId});
+                var result = new List<CommandResult>();
 
-                return executions.ToList();
+                using (reader)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new CommandResult
+                        {
+                            CommandResultId = GuidTypeHandler.Parse((byte[]) reader.GetValue(0)),
+                            TaskExecutionId = GuidTypeHandler.Parse((byte[])reader.GetValue(1)),
+                            CommandName = reader.GetString(2),
+                            Result = reader.GetString(3),
+                            Status = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4),
+                            FinishedAt = DateTimeOffset.FromUnixTimeMilliseconds(reader.GetInt64(5))
+                        });
+                    }
+                }
+
+                return result;
             }
         }
     }

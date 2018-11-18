@@ -5,11 +5,11 @@ using Orcus.Client.Library.Clients.Helpers;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management.Data;
 
-namespace Tasks.Infrastructure.Client.Rest
+namespace Tasks.Infrastructure.Client.Rest.V1
 {
-    public class TaskExecutionsResource : VersionedResource<TaskExecutionsResource>
+    public class TaskExecutionsResource : ModuleResource<TaskExecutionsResource>
     {
-        public TaskExecutionsResource() : base("executions")
+        public TaskExecutionsResource() : base("Tasks.Infrastructure", "executions")
         {
         }
 

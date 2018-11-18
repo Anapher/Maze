@@ -12,12 +12,14 @@ using Orcus.Client.Library.Clients;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Rest;
+using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Client.StopEvents;
 using Tasks.Infrastructure.Client.Trigger;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
+using Orcus.Server.Connection.Extensions;
 
 namespace Tasks.Infrastructure.Client
 {
@@ -106,8 +108,8 @@ namespace Tasks.Infrastructure.Client
                                 continue;
                             }
 
-                            var triggerContext = new TaskTriggerContext(this, serviceType.Name);
-                            var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance);
+                            var triggerContext = new TaskTriggerContext(this, service.GetType().Name.TrimEnd("TriggerService", StringComparison.Ordinal));
+                            var methodInfo = serviceType.GetMethod("InvokeAsync");
 
                             try
                             {
@@ -160,6 +162,7 @@ namespace Tasks.Infrastructure.Client
                 var execution = new TaskExecution
                 {
                     TaskSessionId = taskSession.TaskSessionId,
+                    TaskReferenceId = taskSession.TaskReferenceId,
                     CreatedOn = DateTimeOffset.UtcNow,
                     TaskExecutionId = Guid.NewGuid()
                 };
@@ -173,7 +176,7 @@ namespace Tasks.Infrastructure.Client
                     var localService = executionScope.ServiceProvider.GetService(executorType);
                     if (localService != null)
                     {
-                        var executionMethod = executorType.GetMethod("InvokeAsync", BindingFlags.Instance);
+                        var executionMethod = executorType.GetMethod("InvokeAsync");
                         var commandName = commandInfo.GetType().Name.Replace("CommandInfo", null);
 
                         var commandResult = new CommandResult
@@ -187,6 +190,7 @@ namespace Tasks.Infrastructure.Client
                         {
                             commandProcess.CommandResultId = commandResult.CommandResultId;
                             commandProcess.TaskExecutionId = commandResult.TaskExecutionId;
+                            commandProcess.CommandName = commandName;
 
                             try
                             {
@@ -198,10 +202,13 @@ namespace Tasks.Infrastructure.Client
                             }
                         }
 
+                        //notify that this command is running now
+                        UpdateProcess(new CommandProcessDto()).Forget();
+
                         using (var context = new DefaultTaskExecutionContext(Services, UpdateProcess))
                             try
                             {
-                                var task = (Task<HttpResponseMessage>) executionMethod.Invoke(Services,
+                                var task = (Task<HttpResponseMessage>) executionMethod.Invoke(localService,
                                     new object[] {commandInfo, context, cancellationToken});
                                 var response = await task;
 

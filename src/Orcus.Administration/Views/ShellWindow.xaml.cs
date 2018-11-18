@@ -131,7 +131,6 @@ namespace Orcus.Administration.Views
 
         public void Show(IWindow owner)
         {
-            Owner = owner as Window;
             Show();
         }
 
