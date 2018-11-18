@@ -7,7 +7,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Autofac;
 using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.Views;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Library;
@@ -88,7 +87,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             {
                 return _addNewCommand ?? (_addNewCommand = new DelegateCommand(() =>
                 {
-                    if(WindowService.ShowDialog<TaskCreateServiceViewModel>(Tx.T("TasksInfrastructure:CreateTask.CreateNewEntry", "entry", EntryName),  out var viewModel) == true)
+                    if (WindowService.ShowDialog<TaskCreateServiceViewModel>(
+                            Tx.T("TasksInfrastructure:CreateTask.CreateNewEntry", "entry", EntryName), vm => vm.Initialize(this),
+                            out var viewModel) == true)
                         AddChild(viewModel.View);
                 }));
             }

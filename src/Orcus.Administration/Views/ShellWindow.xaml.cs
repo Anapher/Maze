@@ -28,12 +28,6 @@ namespace Orcus.Administration.Views
             ShowIconOnTitleBar = false;
         }
 
-        public MessageBoxResult ShowMessageBox(string text, string caption, MessageBoxButton buttons,
-            MessageBoxImage icon, MessageBoxResult defResult, MessageBoxOptions options)
-        {
-            return MessageBoxEx.Show(this, text, caption, buttons, icon, defResult, options);
-        }
-
         public object TitleBarIcon
         {
             get => _titleBarIcon;

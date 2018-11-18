@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Orcus.Server.Connection.Extensions;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
@@ -60,7 +61,8 @@ namespace Tasks.Infrastructure.Server.Core
                         continue;
                     }
 
-                    var triggerContext = new TaskTriggerContext(this, service.GetType().Name, _aggregatedClientFilter);
+                    var triggerContext = new TaskTriggerContext(this, service.GetType().Name.TrimEnd("TriggerService", StringComparison.Ordinal),
+                        _aggregatedClientFilter);
                     var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance | BindingFlags.Public);
 
                     try

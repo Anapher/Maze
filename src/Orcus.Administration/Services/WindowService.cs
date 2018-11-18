@@ -78,6 +78,7 @@ namespace Orcus.Administration.Services
         public bool? ShowDialog(Type viewModelType, Action<ContainerBuilder> configureContainer, Action<IShellWindow> configureWindow, Action<object> configureViewModel, out object viewModel)
         {
             var window = Initialize(viewModelType, configureWindow, configureContainer, out viewModel);
+
             configureWindow?.Invoke(window);
             configureViewModel?.Invoke(viewModel);
 

@@ -17,6 +17,7 @@
 		<text key="TasksInfrastructure:CreateTask.Search">Suchen...</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents">Stoppen</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stopp</text>
+		<text key="TasksInfrastructure:CreateTask.Title">Neue Aufgabe erstellen</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers">Auslöser</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Auslöser</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">Der Name der Aufgabe darf nicht leer sein.</text>
@@ -25,6 +26,7 @@
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnServer">Ausführung auf Server</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions">Ausführungen</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions" count="1">Ausführung</text>
+		<text key="TasksInfrastructure:TaskOverview.Title">Aufgabe '{name}' Übersicht</text>
 	</culture>
 	<culture name="en" primary="true">
 		<text key="TasksInfrastructure:CreateTask.AddAnother">Add another {entry}</text>
@@ -42,6 +44,7 @@
 		<text key="TasksInfrastructure:CreateTask.Search">Search...</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents">Stop</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stop</text>
+		<text key="TasksInfrastructure:CreateTask.Title">Create new task</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers">Triggers</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Trigger</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">The name of the task cannot be empty.</text>
@@ -50,5 +53,6 @@
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnServer">Execution on server</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions">executions</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions" count="1">execution</text>
+		<text key="TasksInfrastructure:TaskOverview.Title">Task '{name}' overview</text>
 	</culture>
 </translation>

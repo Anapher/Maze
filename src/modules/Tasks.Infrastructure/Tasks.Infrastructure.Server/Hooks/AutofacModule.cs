@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using CodeElements.BizRunner;
 using Dapper;
 using Dapper.Contrib.Extensions;
@@ -26,7 +27,17 @@ namespace Tasks.Infrastructure.Server.Hooks
             base.Load(builder);
 
             SqlMapperExtensions.TableNameMapper = type => type.Name;
+
+            SqlMapper.RemoveTypeMap(typeof(Guid?));
+            SqlMapper.RemoveTypeMap(typeof(Guid));
+            SqlMapper.RemoveTypeMap(typeof(DateTimeOffset));
+            SqlMapper.RemoveTypeMap(typeof(DateTimeOffset?));
+            SqlMapper.RemoveTypeMap(typeof(DateTime));
+            SqlMapper.RemoveTypeMap(typeof(DateTime?));
+
             SqlMapper.AddTypeHandler(new GuidTypeHandler());
+            SqlMapper.AddTypeHandler(new DateTimeHandler());
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
 
             builder.Configure<TasksOptions>(_configuration.GetSection("Tasks"));
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();

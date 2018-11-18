@@ -17,6 +17,7 @@ namespace Tasks.Infrastructure.Management.Utilities
         private readonly Queue<DateTimeOffset> _lastUpdates;
         private readonly Timer _timer;
         private bool _isTimerEnabled;
+        private bool _isDisposed;
 
         public MessageThrottleService(Func<T, Task> update)
         {
@@ -27,7 +28,11 @@ namespace Tasks.Infrastructure.Management.Utilities
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            lock (_updateLock)
+            {
+                _timer.Dispose();
+                _isDisposed = true;
+            }
         }
 
         public Func<T, Task> Update { get; }
@@ -38,10 +43,13 @@ namespace Tasks.Infrastructure.Management.Utilities
         {
             lock (_updateLock)
             {
+                if (_isDisposed)
+                    return;
+
                 _value = newValue;
 
                 var now = DateTimeOffset.UtcNow;
-                while (now > _lastUpdates.Peek().Add(Interval))
+                while (_lastUpdates.Any() && now > _lastUpdates.Peek().Add(Interval))
                 {
                     _lastUpdates.Dequeue();
                 }
@@ -71,6 +79,9 @@ namespace Tasks.Infrastructure.Management.Utilities
             T value;
             lock (_updateLock)
             {
+                if (_isDisposed)
+                    return;
+
                 _timer.Change(0, 0);
                 _isTimerEnabled = false;
 

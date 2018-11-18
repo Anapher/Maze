@@ -4,7 +4,6 @@ using Dapper;
 
 namespace Tasks.Infrastructure.Server.Hooks
 {
-    // first add this class to your project
     public class GuidTypeHandler : SqlMapper.TypeHandler<Guid>
     {
         public override Guid Parse(object value)

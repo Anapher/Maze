@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Options;
 using Tasks.Infrastructure.Server.BusinessDataAccess.Base;
@@ -22,7 +23,8 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
         {
             using (var connection = await OpenConnection())
             {
-                await connection.InsertAsync(taskExecution);
+                await connection.ExecuteAsync(
+                    "INSERT INTO TaskExecution (TaskExecutionId, TaskReferenceId, TaskSessionId, TargetId, CreatedOn) VALUES (@TaskExecutionId, @TaskReferenceId, @TaskSessionId, @TargetId, @CreatedOn)", taskExecution);
             }
         }
     }

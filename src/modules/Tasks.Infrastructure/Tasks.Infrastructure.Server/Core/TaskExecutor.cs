@@ -11,6 +11,7 @@ using CodeElements.BizRunner;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Orcus.Server.Connection.Extensions;
 using Orcus.Server.Library.Hubs;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
@@ -46,8 +47,7 @@ namespace Tasks.Infrastructure.Server.Core
             _hubContext = services.GetRequiredService<IHubContext<AdministrationHub>>();
 
             _executorTypes = _orcusTask.Commands.ToDictionary(x => x, commandInfo => typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType()));
-            _executionMethods =
-                _executorTypes.Values.ToDictionary(x => x, executorType => executorType.GetMethod("InvokeAsync"));
+            _executionMethods = _executorTypes.Values.ToDictionary(x => x, executorType => executorType.GetMethod("InvokeAsync"));
         }
 
         public Task Execute(IEnumerable<TargetId> attenders, ConcurrentDictionary<TargetId, IServiceScope> attenderScopes, CancellationToken cancellationToken)
@@ -99,7 +99,7 @@ namespace Tasks.Infrastructure.Server.Core
             if (service == null)
                 return;
 
-            var commandName = commandInfo.GetType().Name.Replace("CommandInfo", null);
+            var commandName = commandInfo.GetType().Name.TrimEnd("CommandInfo", StringComparison.Ordinal);
             var commandResult = new CommandResultDto
             {
                 CommandResultId = Guid.NewGuid(),
@@ -127,6 +127,8 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 using (var context = new DefaultTaskExecutionContext(_taskSession, _orcusTask, services, UpdateStatus))
                 {
+                    context.ReportProgress(null); //important to notify about the start of the operation
+
                     var task = (Task<HttpResponseMessage>) executionMethod.Invoke(service,
                         new object[] {commandInfo, id, context, cancellationToken});
                     var response = await task;
@@ -136,7 +138,7 @@ namespace Tasks.Infrastructure.Server.Core
                         await HttpResponseSerializer.Format(response, memoryStream);
 
                         commandResult.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
-                        commandResult.Status = (int)response.StatusCode;
+                        commandResult.Status = (int) response.StatusCode;
                     }
                 }
             }

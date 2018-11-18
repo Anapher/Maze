@@ -43,15 +43,7 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Core\Converter\Converters.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Material\Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="modules\mahapps.metro.iconpacks.material\2.3.0\lib\uap10.0\MahApps.Metro.IconPacks.Material\Themes\PackIconMaterial.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Tasks\**\*;modules\**\*</DefaultItemExcludes>
+  </PropertyGroup>
 </Project>

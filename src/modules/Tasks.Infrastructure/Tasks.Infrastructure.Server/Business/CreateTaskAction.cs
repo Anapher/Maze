@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -30,7 +31,7 @@ namespace Tasks.Infrastructure.Server.Business
             var taskReference = await _dbAccess.FindAsync(inputData.Id);
             if (taskReference == null)
             {
-                taskReference = new TaskReference {TaskId = inputData.Id, IsCompleted = false};
+                taskReference = new TaskReference {TaskId = inputData.Id, IsCompleted = false, AddedOn = DateTimeOffset.UtcNow};
                 await _dbAccess.CreateAsync(taskReference);
             }
 

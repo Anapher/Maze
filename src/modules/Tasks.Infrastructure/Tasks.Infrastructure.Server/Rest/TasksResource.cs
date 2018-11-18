@@ -8,11 +8,9 @@ using Tasks.Infrastructure.Core;
 
 namespace Tasks.Infrastructure.Server.Rest
 {
-    public class TasksResource : VersionedResource<TasksResource>
+    public class TasksResource : Resource<TasksResource>
     {
-        public TasksResource() : base("Tasks.Infrastructure/v1/tasks")
-        {
-        }
+        public override string ResourceUri { get; } = "Tasks.Infrastructure/v1/tasks";
 
         public static async Task CreateOrUpdateTask(OrcusTask orcusTask, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlCache,
             IRestClient restClient)

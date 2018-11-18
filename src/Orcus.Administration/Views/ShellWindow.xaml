@@ -7,4 +7,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="ShellWindow"
     Style="{StaticResource NormalWindow}"
+    WindowStartupLocation="CenterOwner"
     mc:Ignorable="d" />

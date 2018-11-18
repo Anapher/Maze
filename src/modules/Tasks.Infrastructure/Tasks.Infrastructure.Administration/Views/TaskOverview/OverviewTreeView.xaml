@@ -27,7 +27,8 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" SharedSizeGroup="HeaderColumnWidth" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="TimestampColumnWidth" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <ContentPresenter Content="{StaticResource TriggeredFolderIcon}" />
@@ -37,17 +38,22 @@
                             FontStyle="Italic"
                             Opacity=".8">
                             <Run Text="(" /><Run Text="{Binding Executions.Count, Mode=OneWay}" />
-                            <Run Text="{tx:T TasksInfrastructure:TaskOverview.Executions, CountBinding={Binding Executions.Count}}" /><Run Text=")" />
+                            <Run Text="{tx:T TasksInfrastructure:TaskOverview.Executions, CountBinding={Binding Executions.Count, Mode=OneWay}}" /><Run Text=")" />
                         </TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding CreatedOn}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="24,0,5,0"
+                        Text="{tx:Time TimeBinding={Binding CreatedOn},
+                                       Details='YearMonthDay,HourMinuteSecond'}" />
                 </Grid>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type taskOverview:TaskExecutionViewModel}" ItemsSource="{Binding Results}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" SharedSizeGroup="HeaderColumnWidth" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="TimestampColumnWidth" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <ContentPresenter Content="{StaticResource SQLTriggerIcon}" />
@@ -57,7 +63,7 @@
                                     <Setter Property="Content">
                                         <Setter.Value>
                                             <TextBlock>
-                                                <Run Text="{tx:T TasksInfrastructure:TaskOverview.ExecutionOnClient}" /><Run Text="{Binding TargetId}" />
+                                                <Run Text="{tx:T TasksInfrastructure:TaskOverview.ExecutionOnClient}" /><Run Text="{Binding TargetId, Mode=OneWay}" />
                                             </TextBlock>
                                         </Setter.Value>
                                     </Setter>
@@ -74,17 +80,22 @@
                             FontStyle="Italic"
                             Opacity=".8">
                             <Run Text="(" /><Run Text="{Binding Results.Count, Mode=OneWay}" />
-                            <Run Text="{tx:T TasksInfrastructure:CreateTask.Commands, CountBinding={Binding Results.Count}}" /><Run Text=")" />
+                            <Run Text="{tx:T TasksInfrastructure:CreateTask.Commands, CountBinding={Binding Results.Count, Mode=OneWay}}" /><Run Text=")" />
                         </TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding CreatedOn}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="12,0,5,0"
+                        Text="{tx:Time TimeBinding={Binding CreatedOn},
+                                       Details='YearMonthDay,HourMinuteSecond'}" />
                 </Grid>
             </HierarchicalDataTemplate>
             <DataTemplate DataType="{x:Type taskOverview:CommandResultViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" SharedSizeGroup="HeaderColumnWidth" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="TimestampColumnWidth" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <ContentControl>
@@ -112,25 +123,41 @@
                             <Run Text="(" /><Run Text="{Binding StatusCode, Mode=OneWay}" /><Run Text=")" />
                         </TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding FinishedAt}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="0,0,5,0"
+                        Text="{tx:Time TimeBinding={Binding FinishedAt},
+                                       Details='YearMonthDay,HourMinuteSecond'}" />
                 </Grid>
             </DataTemplate>
             <DataTemplate DataType="{x:Type taskOverview:CommandProcessViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" SharedSizeGroup="HeaderColumnWidth" />
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="TimestampColumnWidth" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <wpf:LoadingIndicator
+                            Margin="-15"
                             IsActive="True"
-                            SpeedRatio=".7"
-                            Style="{StaticResource LoadingIndicatorArcsRingStyleKey}">
+                            RenderTransformOrigin=".5,.5"
+                            SpeedRatio=".7">
+                            <wpf:LoadingIndicator.Style>
+                                <Style BasedOn="{StaticResource LoadingIndicatorArcsRingStyleKey}" TargetType="wpf:LoadingIndicator">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentColorBrush2}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsSelected}" Value="true">
+                                            <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </wpf:LoadingIndicator.Style>
                             <wpf:LoadingIndicator.RenderTransform>
-                                <ScaleTransform ScaleX=".4" ScaleY=".4" />
+                                <ScaleTransform ScaleX=".34" ScaleY=".34" />
                             </wpf:LoadingIndicator.RenderTransform>
                         </wpf:LoadingIndicator>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center">
                             <Run Text="{Binding CommandName, Mode=OneWay}" />
                         </TextBlock>
                         <TextBlock VerticalAlignment="Center">
@@ -147,7 +174,10 @@
                             <Run FontStyle="Italic" Text="{Binding StatusMessage, Mode=OneWay}" />
                         </TextBlock>
                     </StackPanel>
-                    <ContentControl Grid.Column="1" VerticalAlignment="Center">
+                    <ContentControl
+                        Grid.Column="2"
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center">
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
                                 <Setter Property="Content">

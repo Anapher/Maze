@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Command;

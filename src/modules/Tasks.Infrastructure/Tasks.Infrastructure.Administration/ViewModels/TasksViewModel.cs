@@ -61,7 +61,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 return _openTaskSessionsCommand ?? (_openTaskSessionsCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
                     var sessions = await TasksResource.GetTaskSessions(parameter.Id, _restClient);
-                    _windowService.ShowDialog<TaskOverviewViewModel>(x => x.Initialize(sessions));
+                    _windowService.ShowDialog<TaskOverviewViewModel>(x => x.Initialize(sessions, parameter));
                 }));
             }
         }

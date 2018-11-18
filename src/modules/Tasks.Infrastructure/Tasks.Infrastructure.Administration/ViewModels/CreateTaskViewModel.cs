@@ -12,6 +12,7 @@ using Tasks.Infrastructure.Administration.Rest.V1;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base;
 using Tasks.Infrastructure.Core;
+using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
@@ -35,7 +36,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 new FiltersViewModel(windowService, container),
                 new StopEventsViewModel(windowService, container)
             };
+
+            Title = Tx.T("TasksInfrastructure:CreateTask.Title");
         }
+
+        public string Title { get; set; }
 
         public List<ITaskConfiguringViewModel> TreeViewModels { get; }
 

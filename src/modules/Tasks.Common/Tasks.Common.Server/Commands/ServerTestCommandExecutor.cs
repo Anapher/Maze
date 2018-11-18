@@ -12,7 +12,12 @@ namespace Tasks.Common.Server.Commands
         public async Task<HttpResponseMessage> InvokeAsync(ServerTestCommandInfo commandInfo, TargetId targetId, TaskExecutionContext context,
             CancellationToken cancellationToken)
         {
-            await Task.Delay(10000, cancellationToken);
+            for (int i = 0; i < 100; i++)
+            {
+                await Task.Delay(100, cancellationToken);
+                context.ReportProgress(i / 100d);
+                context.ReportStatus($"Doing some stuff ({i}%)");
+            }
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }

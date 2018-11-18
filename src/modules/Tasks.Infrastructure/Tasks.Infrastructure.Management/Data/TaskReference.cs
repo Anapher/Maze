@@ -15,6 +15,7 @@ namespace Tasks.Infrastructure.Management.Data
         public Guid TaskId { get; set; }
 
         public bool IsCompleted { get; set; }
+        public DateTimeOffset AddedOn { get; set; }
 
 #if DAPPER
         [Write(false)]

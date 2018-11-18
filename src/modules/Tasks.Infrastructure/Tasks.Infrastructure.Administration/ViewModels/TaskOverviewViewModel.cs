@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Services;
 using Prism.Mvvm;
+using Tasks.Infrastructure.Administration.ViewModels.Overview;
 using Tasks.Infrastructure.Administration.ViewModels.TaskOverview;
 using Tasks.Infrastructure.Core.Dtos;
+using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
@@ -31,9 +33,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             restClient.HubConnection.On<CommandProcessDto>("TaskCommandProcess", OnTaskCommandProcess);
         }
 
+        public string Title { get; private set; }
+
         public ICollectionView Sessions { get; private set; }
 
-        public void Initialize(TaskSessionsInfo taskSessions)
+        public void Initialize(TaskSessionsInfo taskSessions, TaskViewModel taskViewModel)
         {
             _sessions = taskSessions.Sessions.ToDictionary(x => x.TaskSessionId, dto => new TaskSessionViewModel(dto),
                 StringComparer.OrdinalIgnoreCase);
@@ -59,6 +63,8 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 
             _sessionsCollection = sessions;
             Sessions = new ListCollectionView(_sessionsCollection);
+
+            Title = Tx.T("TasksInfrastructure:TaskOverview.Title", "name", taskViewModel.Name);
         }
 
         private void OnTaskSessionCreated(TaskSessionDto obj)
@@ -95,7 +101,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         {
             _dispatcher.Current.BeginInvoke(new Action(() =>
             {
-                if (!_executions.TryGetValue(obj.CommandResultId, out var execution))
+                if (!_executions.TryGetValue(obj.TaskExecutionId, out var execution))
                     return;
 
                 if (execution.Results == null)
