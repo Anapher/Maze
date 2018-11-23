@@ -9,8 +9,12 @@
     <Import_RootNamespace>Tasks.Common.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\Base\ProcessCommandInfoBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DownloadAndExecuteCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DownloadCommandInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ServerTestCommandInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ShutdownCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\StartProcessCommandInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\WakeOnLanCommandInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Filters\OperatingSystemFilterInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StopEvents\DateTimeStopEventInfo.cs" />
@@ -18,5 +22,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ImmediatelyTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnJoinTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ScheduledTriggerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Crc32Algorithm.cs" />
   </ItemGroup>
 </Project>

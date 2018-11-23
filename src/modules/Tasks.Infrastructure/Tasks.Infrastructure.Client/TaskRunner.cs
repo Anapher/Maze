@@ -20,6 +20,7 @@ using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
 using Orcus.Server.Connection.Extensions;
+using System.Collections.Concurrent;
 
 namespace Tasks.Infrastructure.Client
 {
@@ -169,6 +170,8 @@ namespace Tasks.Infrastructure.Client
 
                 _sessionManager.StartExecution(OrcusTask, taskSession, execution).Forget();
 
+                var afterExecutionTasks = new ConcurrentQueue<Func<Task>>();
+
                 await TaskCombinators.ThrottledAsync(OrcusTask.Commands, async (commandInfo, token) =>
                 {
                     var executorType = typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType());
@@ -219,6 +222,9 @@ namespace Tasks.Infrastructure.Client
                                     commandResult.Result = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
                                     commandResult.Status = (int) response.StatusCode;
                                 }
+
+                                if (context.AfterExecutionCallback != null)
+                                    afterExecutionTasks.Enqueue(context.AfterExecutionCallback);
                             }
                             catch (Exception e)
                             {
@@ -231,6 +237,17 @@ namespace Tasks.Infrastructure.Client
                         await _sessionManager.AppendCommandResult(OrcusTask, commandResult);
                     }
                 }, cancellationToken);
+
+                while (afterExecutionTasks.TryDequeue(out var afterExecution))
+                {
+                    try
+                    {
+                        await afterExecution.Invoke();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
             }
         }
     }

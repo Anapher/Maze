@@ -20,6 +20,7 @@ namespace Tasks.Infrastructure.Client
         }
 
         public override IServiceProvider Services { get; }
+        public override Func<Task> AfterExecutionCallback { get; set; }
 
         public void Dispose()
         {

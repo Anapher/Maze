@@ -15,7 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\TaskSession.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TaskTransmission.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpResponseSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Library\LoggingTaskExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Library\SessionKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Library\TaskExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\MessageThrottleService.cs" />
   </ItemGroup>
