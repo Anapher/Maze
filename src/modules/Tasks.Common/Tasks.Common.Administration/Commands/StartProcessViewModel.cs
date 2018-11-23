@@ -1,7 +1,7 @@
-﻿using Orcus.Utilities;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using Orcus.Utilities;
 using Tasks.Common.Administration.Commands.Base;
 using Tasks.Common.Shared.Commands;
 using Tasks.Infrastructure.Administration.Library.Command;
@@ -15,14 +15,15 @@ namespace Tasks.Common.Administration.Commands
     {
         public StartProcessViewModel()
         {
-            this.RegisterProperty(() => FileName, Tx.T("TasksCommon:Commands.StartProcess.Properties.FileName"), Tx.T("TasksCommon:Commands.StartProcess.Properties.FileName.Summary"), Tx.T("TasksCommon:Commands.StartProcess.File"));
+            this.RegisterProperty(() => FileName, Tx.T("TasksCommon:Commands.StartProcess.Properties.FileName"),
+                Tx.T("TasksCommon:Commands.StartProcess.Properties.FileName.Description"), Tx.T("TasksCommon:Commands.StartProcess.File"));
         }
-        
+
         public string FileName { get; set; }
 
         public StartProcessCommandInfo Build()
         {
-            var result = new StartProcessCommandInfo { FileName = FileName };
+            var result = new StartProcessCommandInfo {FileName = FileName};
             ApplyProcessProperties(result);
 
             return result;
@@ -35,10 +36,7 @@ namespace Tasks.Common.Administration.Commands
             FileName = model.FileName;
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask)
-        {
-            return ValidationResult.Success;
-        }
+        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
 
         public override ValidationResult ValidateInput()
         {

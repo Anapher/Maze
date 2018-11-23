@@ -15,32 +15,29 @@ namespace Tasks.Common.Administration.Commands
     {
         public DownloadViewModel()
         {
+            FileSource = new FileSourceViewModel();
+
             this.RegisterFileSource(FileSource);
-            this.RegisterProperty(() => TargetPath, Tx.T("TasksCommon:Commands.Download.Properties.TargetPath"), Tx.T("TasksCommon:Commands.Download.Properties.TargetPath.Description"), Tx.T("TasksCommon:Categories.Common"));
+            this.RegisterProperty(() => TargetPath, Tx.T("TasksCommon:Commands.Download.Properties.TargetPath"),
+                Tx.T("TasksCommon:Commands.Download.Properties.TargetPath.Description"), Tx.T("TasksCommon:Categories.Common"));
+            this.RegisterProperty(() => FileExistsBehavior, Tx.T("TasksCommon:Commands.Download.Properties.FileExistsBehavior"),
+                Tx.T("TasksCommon:Commands.Download.Properties.FileExistsBehavior.Description"), Tx.T("TasksCommon:Categories.Behavior"));
         }
 
         public string TargetPath { get; set; }
-        public FileSourceViewModel FileSource { get; set; }
+        public FileSourceViewModel FileSource { get; }
+        public FileExistsBehavior FileExistsBehavior { get; set; }
 
-        public DownloadCommandInfo Build()
-        {
-            return new DownloadCommandInfo
-            {
-                TargetPath = TargetPath,
-                FileSource = FileSource.Build()
-            };
-        }
+        public DownloadCommandInfo Build() => new DownloadCommandInfo {TargetPath = TargetPath, FileExistsBehavior = FileExistsBehavior, FileSource = FileSource.Build()};
 
         public void Initialize(DownloadCommandInfo model)
         {
             FileSource.Initialize(model.FileSource);
             TargetPath = model.TargetPath;
+            FileExistsBehavior = model.FileExistsBehavior;
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask)
-        {
-            return ValidationResult.Success;
-        }
+        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
 
         public ValidationResult ValidateInput()
         {

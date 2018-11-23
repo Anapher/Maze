@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using Orcus.Server.Connection.Utilities;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Orcus.Server.Connection.Utilities;
 using Tasks.Common.Client.Utilities;
 using Tasks.Common.Shared.Commands;
 using Tasks.Infrastructure.Client.Library;
@@ -15,7 +15,8 @@ namespace Tasks.Common.Client.Commands
 {
     public class DownloadCommandExecutor : LoggingTaskExecutor, ITaskExecutor<DownloadCommandInfo>
     {
-        public async Task<HttpResponseMessage> InvokeAsync(DownloadCommandInfo commandInfo, TaskExecutionContext context, CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> InvokeAsync(DownloadCommandInfo commandInfo, TaskExecutionContext context,
+            CancellationToken cancellationToken)
         {
             var targetFile = new FileInfo(commandInfo.TargetPath);
 
@@ -39,6 +40,7 @@ namespace Tasks.Common.Client.Commands
                             this.LogError(e, "Overwriting the file failed.");
                             return Log(HttpStatusCode.InternalServerError);
                         }
+
                         break;
                     case FileExistsBehavior.SaveWithDifferentName:
                         this.LogInformation("File {path} already exists. Searching for a new name...", targetFile.FullName);
@@ -86,6 +88,7 @@ namespace Tasks.Common.Client.Commands
                                 }
                             });
                         }
+
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

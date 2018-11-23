@@ -18,5 +18,8 @@ namespace Tasks.Common.Administration.Resources
         public Viewbox Timer => GetIcon();
         public Viewbox Calendar => GetIcon();
         public Viewbox CloudConnectedServices => GetIcon();
+        public Viewbox CloudRun => GetIcon();
+        public Viewbox DownloadFile => GetIcon();
+        public Viewbox StartupProject => GetIcon();
     }
 }

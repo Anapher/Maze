@@ -20,7 +20,7 @@ namespace Tasks.Common.Client.Utilities
         {
             if (fileSource.Checksum != null)
             {
-                var algo = (FileHashAlgorithm) Enum.Parse(typeof(FileHashAlgorithm), fileSource.Checksum.Scheme, true);
+                var algo = (FileHashAlgorithm) Enum.Parse(typeof(FileHashAlgorithm), fileSource.Checksum.Scheme, ignoreCase: true);
 
                 using (var hashAlgorithm = algo.CreateHashAlgorithm())
                 using (var cryptoStream = new CryptoStream(stream, hashAlgorithm, CryptoStreamMode.Write))
@@ -60,7 +60,8 @@ namespace Tasks.Common.Client.Utilities
                 targetStream.Write(buffer, 0, buffer.Length);
                 return true;
             }
-            else if (fileSource.Data.Scheme == "http" || fileSource.Data.Scheme == "https")
+
+            if (fileSource.Data.Scheme == "http" || fileSource.Data.Scheme == "https")
             {
                 context.ReportStatus("Download headers...");
 
@@ -91,7 +92,7 @@ namespace Tasks.Common.Client.Utilities
                                 totalDataLoaded += read;
 
                                 if (contentLength != null)
-                                    context.ReportProgress((double)totalDataLoaded / contentLength);
+                                    context.ReportProgress((double) totalDataLoaded / contentLength);
 
                                 context.ReportStatus($"Downloading... ({DataSizeFormatter.BytesToString(totalDataLoaded)})");
                             }

@@ -149,7 +149,7 @@ namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
                 return;
 
             if (IsCategorized)
-                collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+                collectionView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(PropertyItem.Category)));
             else
                 collectionView.GroupDescriptions.Clear();
         }
@@ -231,7 +231,8 @@ namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
 
             _propertiesCollection = new ObservableCollection<PropertyItem>(commandProperties.Properties.Select(x => new PropertyItem(x, editorFinder)));
             var properties = new ListCollectionView(_propertiesCollection);
-            properties.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+            properties.SortDescriptions.Add(new SortDescription(nameof(PropertyItem.Category), ListSortDirection.Ascending));
+            properties.SortDescriptions.Add(new SortDescription(nameof(PropertyItem.DisplayName), ListSortDirection.Ascending));
             properties.Filter = FilterProperties;
 
             ApplyGroupDescription(properties);

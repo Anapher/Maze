@@ -11,23 +11,21 @@ namespace Tasks.Common.Administration.Commands
     {
         public DownloadAndExecuteViewModel()
         {
+            FileSource = new FileSourceViewModel();
             this.RegisterFileSource(FileSource);
         }
 
-        public FileSourceViewModel FileSource { get; set; }
+        public FileSourceViewModel FileSource { get; }
 
         public DownloadAndExecuteCommandInfo Build()
         {
-            var result = new DownloadAndExecuteCommandInfo { FileSource = FileSource.Build() };
+            var result = new DownloadAndExecuteCommandInfo {FileSource = FileSource.Build()};
             ApplyProcessProperties(result);
 
             return result;
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask)
-        {
-            return ValidationResult.Success;
-        }
+        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
 
         public override void Initialize(DownloadAndExecuteCommandInfo model)
         {

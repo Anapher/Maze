@@ -4,6 +4,7 @@ using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Command;
 using Tasks.Infrastructure.Administration.PropertyGrid;
 using Tasks.Infrastructure.Core;
+using Unclassified.TxLib;
 
 namespace Tasks.Common.Administration.Commands
 {
@@ -11,17 +12,19 @@ namespace Tasks.Common.Administration.Commands
     {
         public WakeOnLanViewModel()
         {
-            this.RegisterProperty(() => TryOverClient, "Try over Clients", "", "");
-        }
-
-        public void Initialize(WakeOnLanCommandInfo model)
-        {
+            this.RegisterProperty(() => TryOverClient, Tx.T("TasksCommon:Commands.WakeOnLan.Properties.TryOverClients"),
+                Tx.T("TasksCommon:Commands.WakeOnLan.Properties.TryOverClients.Summary"), Tx.T("TasksCommon:Categories.Common"));
         }
 
         public bool TryOverClient { get; set; }
 
+        public void Initialize(WakeOnLanCommandInfo model)
+        {
+            TryOverClient = model.TryOverClient;
+        }
+
         public ValidationResult ValidateInput() => ValidationResult.Success;
         public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
-        public WakeOnLanCommandInfo Build() => new WakeOnLanCommandInfo();
+        public WakeOnLanCommandInfo Build() => new WakeOnLanCommandInfo{TryOverClient = TryOverClient};
     }
 }

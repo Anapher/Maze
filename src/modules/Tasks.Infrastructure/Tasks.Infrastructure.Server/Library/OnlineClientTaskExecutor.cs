@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Tasks.Infrastructure.Management.Library;
 
 namespace Tasks.Infrastructure.Server.Library
 {
@@ -9,7 +10,7 @@ namespace Tasks.Infrastructure.Server.Library
     {
         private readonly IConnectionManager _connectionManager;
 
-        public OnlineClientTaskExecutor(IConnectionManager connectionManager)
+        protected OnlineClientTaskExecutor(IConnectionManager connectionManager)
         {
             _connectionManager = connectionManager;
         }

@@ -1,8 +1,8 @@
-﻿using Orcus.Server.Connection;
-using Orcus.Utilities;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using Orcus.Server.Connection;
+using Orcus.Utilities;
 using Tasks.Common.Shared.Commands;
 using Tasks.Infrastructure.Administration.PropertyGrid.Attributes;
 using Unclassified.TxLib;
@@ -11,11 +11,12 @@ namespace Tasks.Common.Administration.Commands.Utils
 {
     public class FileSourceViewModel
     {
-        private const string _binaryPlaceholder = "<Binary>";
+        private const string BinaryPlaceholder = "<Binary>";
         private string _cachedFile;
 
         [Path(PathMode = PathMode.File)]
         public string LocalPath { get; set; }
+
         public string Url { get; set; }
 
         public FileHashAlgorithm HashAlgorithm { get; set; }
@@ -53,7 +54,7 @@ namespace Tasks.Common.Administration.Commands.Utils
             switch (uri.Scheme)
             {
                 case "binary":
-                    LocalPath = _binaryPlaceholder;
+                    LocalPath = BinaryPlaceholder;
                     _cachedFile = uri.AbsolutePath;
                     break;
                 case "http":
@@ -68,24 +69,26 @@ namespace Tasks.Common.Administration.Commands.Utils
             if (!string.IsNullOrWhiteSpace(FileHash))
             {
                 if (!Hash.TryParse(FileHash, out var hash))
-                    return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidFileHash"));
+                    return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidFileHash"), nameof(FileHash).Yield());
 
                 using (var hashAlgorithm = HashAlgorithm.CreateHashAlgorithm())
                 {
                     if (hash.HashData.Length != hashAlgorithm.HashSize / 8)
-                        return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidHashSize", "algorithm", HashAlgorithm.ToString(), "expected", hashAlgorithm.HashSize.ToString(), "current", (FileHash.Length * 8).ToString()));
+                        return new ValidationResult(
+                            Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidHashSize", "algorithm", HashAlgorithm.ToString(), "expected",
+                                hashAlgorithm.HashSize.ToString(), "current", (FileHash.Length * 8).ToString()), nameof(FileHash).Yield());
                 }
             }
 
             if (string.IsNullOrWhiteSpace(LocalPath) && string.IsNullOrWhiteSpace(Url))
-                return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.NoFileSourceSelected"));
+                return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.NoFileSourceSelected"), new []{nameof(Url), nameof(LocalPath)});
 
             if (!string.IsNullOrWhiteSpace(LocalPath) && !string.IsNullOrWhiteSpace(Url))
-                return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.OnlyOneSourceAllowed"));
+                return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.OnlyOneSourceAllowed"), new[] { nameof(Url), nameof(LocalPath) });
 
             if (!string.IsNullOrWhiteSpace(LocalPath))
             {
-                if (LocalPath == _binaryPlaceholder)
+                if (LocalPath == BinaryPlaceholder)
                 {
                     if (_cachedFile != null)
                         return ValidationResult.Success;
@@ -107,20 +110,19 @@ namespace Tasks.Common.Administration.Commands.Utils
             }
 
             if (!string.IsNullOrWhiteSpace(Url))
-            {
                 try
                 {
                     var uri = new Uri(Url, UriKind.Absolute);
-                    if (!string.Equals(uri.Scheme, "http", StringComparison.OrdinalIgnoreCase) && !string.Equals(uri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
-                        return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.UrlNotHttp"));
+                    if (!string.Equals(uri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(uri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                        return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.UrlNotHttp"), nameof(Url).Yield());
 
                     return ValidationResult.Success;
                 }
                 catch (Exception)
                 {
-                    return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidUri"));
+                    return new ValidationResult(Tx.T("TasksCommon:Utilities.FileSource.Errors.InvalidUri"), nameof(Url).Yield());
                 }
-            }
 
             throw new InvalidOperationException();
         }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Tasks.Common.Administration.Resources;
 using Tasks.Common.Shared.Commands;
@@ -13,17 +9,16 @@ namespace Tasks.Common.Administration.Commands
 {
     public class StartProcessDescription : ICommandDescription
     {
+        private readonly VisualStudioIcons _icons;
+
         public StartProcessDescription(VisualStudioIcons icons)
         {
-
+            _icons = icons;
         }
 
         public string Name => Tx.T("TasksCommon:Commands.StartProcess");
-
         public string Summary => Tx.T("TasksCommon:Commands.StartProcess.Summary");
-
-        public UIElement Icon => throw new NotImplementedException();
-
+        public UIElement Icon => _icons.StartupProject;
         public Type DtoType => typeof(StartProcessCommandInfo);
     }
 }

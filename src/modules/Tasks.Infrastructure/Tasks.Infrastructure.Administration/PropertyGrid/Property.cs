@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -12,6 +13,7 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
     {
         private readonly IProvideEditableProperties _provideEditableProperties;
         private readonly PropertyInfo _propertyInfo;
+        private readonly object _propertyProvidingObject;
 
         /// <summary>
         ///     Initialize <see cref="Property{T}" />
@@ -29,7 +31,44 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
             Description = description;
             Category = category;
 
-            _propertyInfo = (PropertyInfo) ((MemberExpression) property.Body).Member;
+            var memberExpression = (MemberExpression) property.Body;
+            _propertyInfo = (PropertyInfo) memberExpression.Member;
+
+            var expr = memberExpression.Expression;
+            var memberInfos = new Stack<MemberInfo>();
+
+            // https://stackoverflow.com/a/3954131/4166138
+            // "descend" toward's the root object reference:
+            while (expr is MemberExpression)
+            {
+                var memberExpr = expr as MemberExpression;
+                memberInfos.Push(memberExpr.Member);
+                expr = memberExpr.Expression;
+            }
+
+            // fetch the root object reference:
+            var constExpr = expr as ConstantExpression;
+            var objReference = constExpr.Value;
+
+            // "ascend" back whence we came from and resolve object references along the way:
+            while (memberInfos.Count > 0)  // or some other break condition
+            {
+                var mi = memberInfos.Pop();
+                if (mi.MemberType == MemberTypes.Property)
+                {
+                    objReference = objReference.GetType()
+                        .GetProperty(mi.Name)
+                        .GetValue(objReference, null);
+                }
+                else if (mi.MemberType == MemberTypes.Field)
+                {
+                    objReference = objReference.GetType()
+                        .GetField(mi.Name)
+                        .GetValue(objReference);
+                }
+            }
+
+            _propertyProvidingObject = objReference;
         }
 
         /// <summary>
@@ -37,8 +76,8 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
         /// </summary>
         public T Value
         {
-            get => (T) _propertyInfo.GetValue(_provideEditableProperties, null);
-            set => _propertyInfo.SetValue(_provideEditableProperties, value, null);
+            get => (T) _propertyInfo.GetValue(_propertyProvidingObject, null);
+            set => _propertyInfo.SetValue(_propertyProvidingObject, value, null);
         }
 
         /// <summary>
