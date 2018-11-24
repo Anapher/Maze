@@ -15,12 +15,13 @@ namespace RequestTransmitter.Client
     public class RequestTransmitter : IRequestTransmitter
     {
         private readonly ICoreConnector _coreConnector;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IRequestStorage _requestStorage;
-        private readonly RequestTransmitterOptions _options;
         private readonly ILogger<RequestTransmitter> _logger;
+        private readonly RequestTransmitterOptions _options;
+        private readonly IRequestStorage _requestStorage;
+        private readonly IServiceProvider _serviceProvider;
 
-        public RequestTransmitter(ICoreConnector coreConnector, IServiceProvider serviceProvider, IRequestStorage requestStorage, IOptions<RequestTransmitterOptions> options, ILogger<RequestTransmitter> logger)
+        public RequestTransmitter(ICoreConnector coreConnector, IServiceProvider serviceProvider, IRequestStorage requestStorage,
+            IOptions<RequestTransmitterOptions> options, ILogger<RequestTransmitter> logger)
         {
             _coreConnector = coreConnector;
             _serviceProvider = serviceProvider;
@@ -59,6 +60,7 @@ namespace RequestTransmitter.Client
                                     typeof(TResponseCallback).FullName);
                             }
                         }
+
                         return true;
                     }
                     catch (OperationCanceledException)
@@ -72,9 +74,7 @@ namespace RequestTransmitter.Client
                 }
 
             if (typeof(TResponseCallback) != typeof(NullResponseCallback))
-            {
                 requestMessage.Headers.Add("Response-Callback", typeof(IResponseCallback).AssemblyQualifiedName);
-            }
 
             await _requestStorage.Push(requestMessage);
             return false;

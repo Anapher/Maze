@@ -23,10 +23,13 @@ namespace Tasks.Infrastructure.Administration.Rest.V1
         {
             using (var taskMemoryStream = new MemoryStream())
             {
-                var stream = new StreamContent(taskMemoryStream);
-                stream.Headers.ContentEncoding.Add("xml");
                 var taskWriter = new OrcusTaskWriter(taskMemoryStream, componentResolver, xmlCache);
                 taskWriter.Write(orcusTask, TaskDetails.Server);
+
+                taskMemoryStream.Position = 0;
+
+                var stream = new StreamContent(taskMemoryStream);
+                stream.Headers.ContentEncoding.Add("xml");
 
                 await CreateRequest(HttpVerb.Post, null, stream).Execute(restClient);
             }

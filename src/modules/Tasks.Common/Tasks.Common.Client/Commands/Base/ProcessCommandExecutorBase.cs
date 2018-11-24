@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Tasks.Common.Client.Utilities;
-using Tasks.Infrastructure.Management.Library;
+using Tasks.Infrastructure.Client.Library;
 
 namespace Tasks.Common.Client.Commands.Base
 {

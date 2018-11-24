@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Services;
 using Prism.Mvvm;
+using Tasks.Infrastructure.Administration.Core;
 using Tasks.Infrastructure.Administration.ViewModels.Overview;
 using Tasks.Infrastructure.Administration.ViewModels.TaskOverview;
 using Tasks.Infrastructure.Core.Dtos;
@@ -18,15 +19,17 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     public class TaskOverviewViewModel : BindableBase
     {
         private readonly IAppDispatcher _dispatcher;
+        private readonly ICommandResultViewFactory _commandResultViewFactory;
         private ObservableCollection<TaskSessionViewModel> _sessionsCollection;
         private Dictionary<string, TaskSessionViewModel> _sessions;
         private Dictionary<Guid, TaskExecutionViewModel> _executions;
         private Dictionary<Guid, ICommandStatusViewModel> _results;
         private object _selectedItem;
 
-        public TaskOverviewViewModel(IOrcusRestClient restClient, IAppDispatcher dispatcher)
+        public TaskOverviewViewModel(IOrcusRestClient restClient, IAppDispatcher dispatcher, ICommandResultViewFactory commandResultViewFactory)
         {
             _dispatcher = dispatcher;
+            _commandResultViewFactory = commandResultViewFactory;
 
             restClient.HubConnection.On<TaskSessionDto>("TaskSessionCreated", OnTaskSessionCreated);
             restClient.HubConnection.On<TaskExecutionDto>("TaskExecutionCreated", OnTaskExecutionCreated);
@@ -41,7 +44,16 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         public object SelectedItem
         {
             get => _selectedItem;
-            set => SetProperty(ref _selectedItem, value);
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (value is CommandResultViewModel commandResult && commandResult.View == null)
+                    {
+                        commandResult.View = _commandResultViewFactory.GetView(commandResult.CommandResult, commandResult.Result);
+                    }
+                }
+            }
         }
 
         public void Initialize(TaskSessionsInfo taskSessions, TaskViewModel taskViewModel)

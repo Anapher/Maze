@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="Serilog.Formatting.Compact" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

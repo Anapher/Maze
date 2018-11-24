@@ -130,6 +130,15 @@
             Grid.Column="0"
             BorderBrush="{StaticResource GrayBrush8}"
             BorderThickness="0,1,0,0">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedChild}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Button
                 MinWidth="200"
                 Margin="10"

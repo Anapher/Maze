@@ -1,45 +1,82 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Extensions.Logging;
+using Serilog.Formatting;
+using Serilog.Formatting.Compact;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-namespace Tasks.Infrastructure.Management.Library
+#if NETCOREAPP2_1
+namespace Tasks.Infrastructure.Server.Library
+
+#else
+namespace Tasks.Infrastructure.Client.Library
+
+#endif
 {
     public abstract class LoggingTaskExecutor : ILogger
     {
-        private readonly StringBuilder _loggerBuilder;
+        private readonly MemoryStringSink _sink;
 
-        public LoggingTaskExecutor()
+        protected LoggingTaskExecutor()
         {
-            _loggerBuilder = new StringBuilder();
+            _sink = new MemoryStringSink(new CompactJsonFormatter());
+
+            Logger =
+                new SerilogLoggerProvider(new LoggerConfiguration().MinimumLevel.Debug().WriteTo
+                    .Sink(_sink).CreateLogger()).CreateLogger("LoggingTaskExecutor");
         }
 
-        protected HttpResponseMessage Log(HttpStatusCode statusCode)
-        {
-            return new HttpResponseMessage(statusCode) { Content = new StringContent(_loggerBuilder.ToString()) { Headers = { ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("orcus/log") } } };
-        }
+        public ILogger Logger { get; }
 
-        protected HttpResponseMessage NotExecuted(string reason)
-        {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent($"The command was not executed.\r\nReason: {reason}") };
-        }
+        public IDisposable BeginScope<TState>(TState state) => Logger.BeginScope(state);
 
-        public ILogger Logger => this;
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            throw new NotSupportedException();
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return true;
-        }
+        public bool IsEnabled(LogLevel logLevel) => true;
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            _loggerBuilder.AppendFormat("[{0}]: {1}\r\n", logLevel, formatter.Invoke(state, exception));
+            Logger.Log(logLevel, eventId, state, exception, formatter);
         }
+
+        protected HttpResponseMessage Log(HttpStatusCode statusCode) =>
+            new HttpResponseMessage(statusCode)
+            {
+                Content = new StringContent(_sink.ToString()) {Headers = {ContentType = new MediaTypeHeaderValue("orcus/jsonlog")}}
+            };
+
+        protected HttpResponseMessage NotExecuted(string reason) =>
+            new HttpResponseMessage(HttpStatusCode.BadRequest) {Content = new StringContent($"The command was not executed.\r\nReason: {reason}")};
+    }
+
+    public class MemoryStringSink : ILogEventSink
+    {
+        private readonly ITextFormatter _formatter;
+        private readonly StringBuilder _stringBuilder;
+        private readonly StringWriter _stringWriter;
+        private readonly object _syncLock = new object();
+
+        public MemoryStringSink(ITextFormatter formatter)
+        {
+            _formatter = formatter;
+            _stringBuilder = new StringBuilder();
+            _stringWriter = new StringWriter(_stringBuilder);
+        }
+
+        public void Emit(LogEvent logEvent)
+        {
+            lock (_syncLock)
+            {
+                _formatter.Format(logEvent, _stringWriter);
+            }
+        }
+
+        public override string ToString() => _stringBuilder.ToString();
     }
 }

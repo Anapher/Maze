@@ -13,6 +13,7 @@ using Tasks.Infrastructure.Client.Data;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Client.Rest.V1;
+using Tasks.Infrastructure.Client.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
 using FileMode = System.IO.FileMode;
@@ -84,34 +85,42 @@ namespace Tasks.Infrastructure.Client
                 var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
                 file.Directory.Create();
 
-                using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                using (var db = new LiteDatabase(dbStream))
+                var transmitterQueue = new TaskQueue();
+                try
                 {
-                    var sessions = db.GetCollection<TaskSession>(nameof(TaskSession));
-                    sessions.EnsureIndex(x => x.TaskSessionId, unique: true);
-
-                    var taskSessionEntity = sessions.FindById(taskSession.TaskSessionId);
-                    if (taskSessionEntity == null)
+                    using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    using (var db = new LiteDatabase(dbStream))
                     {
-                        taskSessionEntity = new TaskSession
+                        var sessions = db.GetCollection<TaskSession>(nameof(TaskSession));
+                        sessions.EnsureIndex(x => x.TaskSessionId, unique: true);
+
+                        var taskSessionEntity = sessions.FindById(taskSession.TaskSessionId);
+                        if (taskSessionEntity == null)
                         {
-                            TaskSessionId = taskSession.TaskSessionId,
-                            TaskReferenceId = orcusTask.Id,
-                            Description = taskSession.Description,
-                            CreatedOn = DateTimeOffset.UtcNow
-                        };
+                            taskSessionEntity = new TaskSession
+                            {
+                                TaskSessionId = taskSession.TaskSessionId,
+                                TaskReferenceId = orcusTask.Id,
+                                Description = taskSession.Description,
+                                CreatedOn = DateTimeOffset.UtcNow
+                            };
 
-                        _requestTransmitter.Transmit(TaskSessionsResource.CreateSessionRequest(taskSessionEntity)).Forget();
+                            transmitterQueue.Enqueue(() => _requestTransmitter.Transmit(TaskSessionsResource.CreateSessionRequest(taskSessionEntity))).Forget();
+                        }
+
+                        taskExecution.TaskSessionId = taskSessionEntity.TaskSessionId;
+
+                        var executions = db.GetCollection<TaskExecution>(nameof(TaskExecution));
+                        Guid executionId = executions.Insert(taskExecution);
+
+                        transmitterQueue.Enqueue(() => _requestTransmitter.Transmit(TaskExecutionsResource.CreateExecutionRequest(taskExecution))).Forget();
+
+                        return executionId;
                     }
-
-                    taskExecution.TaskSessionId = taskSessionEntity.TaskSessionId;
-
-                    var executions = db.GetCollection<TaskExecution>(nameof(TaskExecution));
-                    Guid executionId = executions.Insert(taskExecution);
-
-                    _requestTransmitter.Transmit(TaskExecutionsResource.CreateExecutionRequest(taskExecution)).Forget();
-
-                    return executionId;
+                }
+                finally 
+                {
+                    await transmitterQueue.DisposeAsync();
                 }
             }
         }

@@ -313,7 +313,7 @@
                         </TextBlock>
                         <Border
                             Grid.Row="2"
-                            Height="75"
+                            MinHeight="75"
                             BorderBrush="{StaticResource GrayBrush10}"
                             BorderThickness="0,1,0,0">
                             <Border.Style>

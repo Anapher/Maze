@@ -42,6 +42,7 @@
     <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
     <None Remove="Views\TaskOverviewView.xaml" />
     <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
+    <None Remove="Views\TaskOverview\ResultView\ExceptionView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,7 @@
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.4.0" />
     <PackageReference Include="LoadingIndicators.WPF" Version="0.0.1" />
+    <PackageReference Include="Serilog.Formatting.Compact.Reader" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -118,6 +120,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TaskOverview\OverviewTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\TaskOverview\ResultView\ExceptionView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

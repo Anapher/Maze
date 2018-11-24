@@ -46,7 +46,7 @@ namespace RequestTransmitter.Client.Storage
                 if (!_fileSystem.Directory.Exists(_options.RequestDirectory))
                     return null;
 
-                var file = _fileSystem.Directory.EnumerateFiles(_options.RequestDirectory).FirstOrDefault();
+                var file = _fileSystem.Directory.EnumerateFiles(_options.RequestDirectory).OrderBy(x => x).FirstOrDefault();
                 if (file == null)
                     return null;
 
@@ -61,7 +61,7 @@ namespace RequestTransmitter.Client.Storage
                 if (!_fileSystem.Directory.Exists(_options.RequestDirectory))
                     return;
 
-                var file = _fileSystem.Directory.EnumerateFiles(_options.RequestDirectory).FirstOrDefault();
+                var file = _fileSystem.Directory.EnumerateFiles(_options.RequestDirectory).OrderBy(x => x).FirstOrDefault();
                 if (file == null)
                     return;
 

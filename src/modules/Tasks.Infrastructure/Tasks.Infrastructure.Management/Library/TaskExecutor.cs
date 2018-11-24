@@ -1,7 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http;
 
-namespace Tasks.Infrastructure.Management.Library
+#if NETCOREAPP2_1
+namespace Tasks.Infrastructure.Server.Library
+
+#else
+namespace Tasks.Infrastructure.Client.Library
+
+#endif
 {
     public abstract class TaskExecutor
     {

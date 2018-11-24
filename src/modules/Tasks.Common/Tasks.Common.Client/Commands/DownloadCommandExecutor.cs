@@ -9,7 +9,6 @@ using Orcus.Server.Connection.Utilities;
 using Tasks.Common.Client.Utilities;
 using Tasks.Common.Shared.Commands;
 using Tasks.Infrastructure.Client.Library;
-using Tasks.Infrastructure.Management.Library;
 
 namespace Tasks.Common.Client.Commands
 {
