@@ -38,7 +38,10 @@ namespace Tasks.Infrastructure.Server.Controllers
         [HttpGet("sync")]
         public async Task<IActionResult> GetSyncInfo([FromServices] IGetTaskSyncInfo getTaskSyncInfo)
         {
-            var tasks = await getTaskSyncInfo.BizActionAsync();
+            if (User.IsAdministrator())
+                return BadRequest();
+
+            var tasks = await getTaskSyncInfo.BizActionAsync(User.GetClientId());
             return BizActionStatus(getTaskSyncInfo, () => Ok(tasks));
         }
 
@@ -55,8 +58,7 @@ namespace Tasks.Infrastructure.Server.Controllers
         }
 
         [HttpGet("{taskId}")]
-        public async Task GetTask(Guid taskId, [FromServices] ITaskComponentResolver taskComponentResolver,
-            [FromServices] IXmlSerializerCache serializerCache, [FromServices] ITaskDirectory taskDirectory)
+        public async Task GetTask(Guid taskId, [FromServices] ITaskDirectory taskDirectory)
         {
             if (!User.IsAdministrator())
             {

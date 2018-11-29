@@ -43,6 +43,7 @@
     <None Remove="Views\TaskOverviewView.xaml" />
     <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
     <None Remove="Views\TaskOverview\ResultView\ExceptionView.xaml" />
+    <None Remove="Views\TaskOverview\ResultView\LogView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -123,6 +124,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TaskOverview\ResultView\ExceptionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\TaskOverview\ResultView\LogView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

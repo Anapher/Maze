@@ -20,8 +20,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)StopEvents\DateTimeStopEventInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StopEvents\DurationStopEventInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ImmediatelyTriggerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnAppStartTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnJoinTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ScheduledTriggerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\SystemRestartTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Crc32Algorithm.cs" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Tasks.Infrastructure.Administration.Controls.PropertyGrid;
 using Tasks.Infrastructure.Administration.Core;
+using Tasks.Infrastructure.Administration.Library.Result;
 using Tasks.Infrastructure.Core;
 
 namespace Tasks.Infrastructure.Administration.Hooks
@@ -16,6 +17,7 @@ namespace Tasks.Infrastructure.Administration.Hooks
             builder.RegisterType<DefaultViewProvider>().AsImplementedInterfaces();
             builder.RegisterType<PropertyGridViewProvider>().AsImplementedInterfaces();
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
+            builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<ICommandResultViewProvider>().SingleInstance();
         }
     }
 }

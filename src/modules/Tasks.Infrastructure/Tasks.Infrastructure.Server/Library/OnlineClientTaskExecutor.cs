@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace Tasks.Infrastructure.Server.Library
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TCommandInfo"></typeparam>
     public abstract class OnlineClientTaskExecutor<TCommandInfo> : TaskExecutor
     {
         private readonly IConnectionManager _connectionManager;

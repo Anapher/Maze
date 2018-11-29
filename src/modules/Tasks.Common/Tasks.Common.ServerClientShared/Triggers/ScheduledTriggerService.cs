@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Tasks.Common.Triggers;
 
 #if LIBRARY_CLIENT
 using Tasks.Infrastructure.Client.Library;
@@ -12,63 +13,120 @@ using Tasks.Infrastructure.Server.Library;
 
 #endif
 
-namespace Tasks.Common.Triggers
+namespace Tasks.Common.ServerClientShared.Triggers
 {
     public class ScheduledTriggerService : ITriggerService<ScheduledTriggerInfo>
     {
         public async Task InvokeAsync(ScheduledTriggerInfo triggerInfo, TriggerContext context, CancellationToken cancellationToken)
         {
-            while (await InternalInvokeAsync(triggerInfo, context, cancellationToken))
+            while (true)
             {
-                var session = await context.CreateSession(SessionKey.Create("Scheduled", DateTimeOffset.UtcNow));
+                var synchronizedTime = GetNextTriggerTime(triggerInfo, DateTimeOffset.UtcNow);
+                if (synchronizedTime == null)
+                    return;
+
+                var nextTriggerTime = synchronizedTime.Value;
+                if (!triggerInfo.SynchronizeTimeZone)
+                {
+                    //ignore offset
+                    nextTriggerTime = new DateTimeOffset(nextTriggerTime.DateTime, DateTimeOffset.UtcNow.Offset);
+                }
+
+                context.ReportNextTrigger(nextTriggerTime);
+                await Task.Delay(nextTriggerTime - DateTimeOffset.UtcNow, cancellationToken);
+
+                //important: use synchronized time
+                var session = await context.CreateSession(SessionKey.Create("ScheduledTrigger", synchronizedTime.Value));
                 await session.Invoke();
             }
         }
 
-        public async Task<bool> InternalInvokeAsync(ScheduledTriggerInfo triggerInfo, TriggerContext context,
-            CancellationToken cancellationToken)
+        public static DateTimeOffset? GetNextTriggerTime(ScheduledTriggerInfo triggerInfo, DateTimeOffset now)
         {
-            var diff = triggerInfo.StartTime - DateTimeOffset.UtcNow;
+            var diff = triggerInfo.StartTime - now;
             if (diff > TimeSpan.Zero)
-            {
-                await Task.Delay(diff, cancellationToken);
-                return true;
-            }
-            
+                return triggerInfo.StartTime;
+
             switch (triggerInfo.ScheduleMode)
             {
                 case ScheduleMode.Once:
-                    return false;
+                    return null;
                 case ScheduleMode.Daily:
-                    var days = (DateTimeOffset.UtcNow - triggerInfo.StartTime).TotalDays;
-                    diff = TimeSpan.FromDays(triggerInfo.RepetitionInterval - (days % (triggerInfo.RepetitionInterval)));
-                    await Task.Delay(diff, cancellationToken);
-                    return true;
+                    var periods = Math.Ceiling(diff.TotalDays / triggerInfo.RecurEvery);
+                    return triggerInfo.StartTime.AddDays(periods * triggerInfo.RecurEvery);
                 case ScheduleMode.Weekly:
-                    var now = DateTimeOffset.UtcNow;
-                    var weekTimeSpan = TimeSpan.FromDays(triggerInfo.RepetitionInterval * 7);
-                    var daysSinceStart = (now - triggerInfo.StartTime).TotalDays;
-                    var currentWeekOffset = Math.Floor(daysSinceStart / weekTimeSpan.TotalDays);
-                    var currentWeek = triggerInfo.StartTime.AddDays(weekTimeSpan.TotalDays * currentWeekOffset);
+                    var diffWeeks = diff.TotalDays / 7;
+                    var period = Math.Floor(diffWeeks / triggerInfo.RecurEvery);
 
-                    var timeOfTheDay = (triggerInfo.StartTime - triggerInfo.StartTime.Date).TotalHours;
-                    var weekdayQueue =
-                        new Queue<DateTime>(triggerInfo.Days.Select(x => GetNextWeekday(currentWeek.DateTime, x).AddHours(timeOfTheDay))
-                            .OrderBy(x => x));
-                    var nextTime = weekdayQueue.Dequeue();
+                    var currentPeriodStart = triggerInfo.StartTime.AddDays(period * triggerInfo.RecurEvery * 7);
+                    var nextTrigger = GetNextWeekDate(now, currentPeriodStart, triggerInfo.WeekDays);
+                    if (nextTrigger != null)
+                        return nextTrigger.Value;
 
-                    while (now > nextTime)
-                    {
-                        var fixedTime = nextTime.AddDays(weekTimeSpan.TotalDays);
-                        weekdayQueue.Enqueue(fixedTime);
-
-                        nextTime = weekdayQueue.Dequeue();
-                    }
-
-                    await Task.Delay(nextTime - now, cancellationToken);
-                    return true;
+                    var nextPeriodStart = triggerInfo.StartTime.AddDays((period + 1) * triggerInfo.RecurEvery * 7);
+                    return GetNextWeekDate(now, nextPeriodStart, triggerInfo.WeekDays) ?? throw new InvalidOperationException();
                 case ScheduleMode.Monthly:
-                    return false;
+                    var nextTime = GetNextMonthlyDateTime(now, true, triggerInfo);
+                    return nextTime ?? GetNextMonthlyDateTime(now, false, triggerInfo) ?? throw new InvalidOperationException();
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static DateTimeOffset? GetNextMonthlyDateTime(DateTimeOffset now, bool includeCurrent, ScheduledTriggerInfo triggerInfo)
+        {
+            var year = now.Year;
+            var closestMonth = triggerInfo.Months.Select(x => (int?)x).Where(x => includeCurrent ? x >= now.Month : x > now.Month).OrderBy(x => x).FirstOrDefault();
+            if (closestMonth == null)
+            {
+                closestMonth = triggerInfo.Months.OrderBy(x => x).First();
+                year = now.Year + 1;
+            }
+
+            IEnumerable<int> days;
+            if (triggerInfo.MonthlyAtRelativeDays)
+            {
+                var allDays = triggerInfo.WeekDays.SelectMany(x => triggerInfo.RelativeMonthDays.Select(y => GetRelativeDate(year, closestMonth.Value, y, x)));
+                days = allDays.Select(x => x.Day);
+            }
+            else
+            {
+                days = triggerInfo.MonthDays;
+            }
+
+            var includeToday = triggerInfo.StartTime.TimeOfDay > now.TimeOfDay;
+            var nextDay = days.Select(x => (int?)x).Where(x => includeToday ? x >= now.Day : x > now.Day).OrderBy(x => x).FirstOrDefault();
+            if (nextDay == null)
+                return null;
+
+            return new DateTimeOffset(year, closestMonth.Value, nextDay.Value, triggerInfo.StartTime.Hour, triggerInfo.StartTime.Minute, triggerInfo.StartTime.Second, triggerInfo.StartTime.Offset);
+        }
+
+        public static DateTimeOffset? GetNextWeekDate(DateTimeOffset now, DateTimeOffset weekStartTime, IEnumerable<DayOfWeek> days)
+        {
+            var time = weekStartTime.TimeOfDay;
+
+            return days.Select(day => (DateTimeOffset?) GetNextWeekday(weekStartTime.DateTime, day)).Where(x => x > now).OrderBy(x => x).FirstOrDefault();
+        }
+
+        public static DateTime GetRelativeDate(int year, int month, RelativeDayInMonth relativeDay, DayOfWeek day)
+        {
+            var monthBegin = new DateTime(year, month, 1);
+            var firstDay = GetNextWeekday(monthBegin, day);
+
+            switch (relativeDay)
+            {
+                case RelativeDayInMonth.First:
+                    return firstDay;
+                case RelativeDayInMonth.Second:
+                    return firstDay.AddDays(7);
+                case RelativeDayInMonth.Third:
+                    return firstDay.AddDays(14);
+                case RelativeDayInMonth.Fourth:
+                    return firstDay.AddDays(21);
+                case RelativeDayInMonth.Last:
+                    var totalDays = DateTime.DaysInMonth(year, month);
+                    return firstDay.AddDays(Math.Floor((totalDays - firstDay.Day) / 7d) * 7);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

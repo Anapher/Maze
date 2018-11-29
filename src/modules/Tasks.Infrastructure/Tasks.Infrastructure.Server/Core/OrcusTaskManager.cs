@@ -14,6 +14,7 @@ using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Business;
+using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 using Tasks.Infrastructure.Server.Rest;
 
@@ -176,6 +177,15 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 var services = scope.ServiceProvider;
 
+                var filters = new AggregatedClientFilter(services.GetRequiredService<ILogger< AggregatedClientFilter>>());
+
+                filters.Add(new AudienceFilter(orcusTask.Audience));
+                foreach (var filterInfo in orcusTask.Filters)
+                {
+                    var filterType = typeof(IFilterService<>).MakeGenericType(filterInfo.GetType());
+                    filters.Add(new CustomFilterFactory(filterType, filterInfo, services.GetRequiredService < ILogger<CustomFilterFactory>>()));
+                }
+
                 var tasksComponentResolver = services.GetRequiredService<ITaskComponentResolver>();
                 var xmlSerializerCache = services.GetRequiredService<IXmlSerializerCache>();
 
@@ -183,6 +193,9 @@ namespace Tasks.Infrastructure.Server.Core
                 foreach (var clientConnection in connectionManager.ClientConnections.Values)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!await filters.IsClientIncluded(clientConnection.ClientId, services))
+                        continue;
 
                     try
                     {

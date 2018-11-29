@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Input;
 using Autofac;
@@ -149,6 +150,24 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 var validationResult = TaskServiceViewModelUtils.ValidateContext(taskViewModelView.ViewModel, orcusTask);
                 if (validationResult != ValidationResult.Success)
                     yield return validationResult;
+            }
+
+            foreach (var child in _childs)
+            {
+                var audienceAttribute = child.ViewModel.GetType().GetCustomAttribute<TaskAudienceAttribute>();
+                switch (audienceAttribute.Mode)
+                {
+                    case TaskAudienceMode.Clients:
+                        if (!orcusTask.Audience.Any() && !orcusTask.Audience.IsAll)
+                            yield return new ValidationResult("No clients included");
+                        break;
+                    case TaskAudienceMode.Server:
+                        if (!orcusTask.Audience.IncludesServer)
+                            yield return new ValidationResult("No server included");
+                        break;
+                    case TaskAudienceMode.ClientsAndServer:
+                        break;
+                }
             }
         }
 

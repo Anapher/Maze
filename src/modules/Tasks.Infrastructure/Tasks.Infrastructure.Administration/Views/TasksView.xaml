@@ -29,7 +29,12 @@
                     <MenuItem
                         Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.OpenTaskSessionsCommand}"
                         CommandParameter="{Binding}"
-                        Header="Open" />
+                        Header="Open Results" />
+
+                    <MenuItem Header="Edit" />
+
+                    <MenuItem Header="Disable/Enable" />
+                    <MenuItem Header="Remove" />
                 </ContextMenu>
             </DataGrid.Resources>
             <DataGrid.Columns>

@@ -292,11 +292,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Core.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Common.Administration", "src\modules\Tasks.Common\Tasks.Common.Administration\Tasks.Common.Administration.csproj", "{FDF9E744-A967-4CFF-B4ED-891A533DD3C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Common.Administration.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Administration.Tests\Tasks.Common.Administration.Tests.csproj", "{8478E10C-83B1-493E-A1AA-3476C41B89B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Common.Administration.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Administration.Tests\Tasks.Common.Administration.Tests.csproj", "{8478E10C-83B1-493E-A1AA-3476C41B89B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{80E5F868-FC6B-47B8-8A16-5A1A8CF3B408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Infrastructure.Administration.Tests", "src\modules\Tasks.Infrastructure\tests\Tasks.Infrastructure.Administration.Tests\Tasks.Infrastructure.Administration.Tests.csproj", "{53B241B7-243D-498D-95E3-DD14C946E4D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Administration.Tests", "src\modules\Tasks.Infrastructure\tests\Tasks.Infrastructure.Administration.Tests\Tasks.Infrastructure.Administration.Tests.csproj", "{53B241B7-243D-498D-95E3-DD14C946E4D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Common.Client.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Client.Tests\Tasks.Common.Client.Tests.csproj", "{79384309-BB57-46D8-8C94-971ADA143A84}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -1306,6 +1308,18 @@ Global
 		{53B241B7-243D-498D-95E3-DD14C946E4D1}.Release|x64.Build.0 = Release|Any CPU
 		{53B241B7-243D-498D-95E3-DD14C946E4D1}.Release|x86.ActiveCfg = Release|Any CPU
 		{53B241B7-243D-498D-95E3-DD14C946E4D1}.Release|x86.Build.0 = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|x64.Build.0 = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Debug|x86.Build.0 = Debug|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|x64.ActiveCfg = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|x64.Build.0 = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|x86.ActiveCfg = Release|Any CPU
+		{79384309-BB57-46D8-8C94-971ADA143A84}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1426,6 +1440,7 @@ Global
 		{8478E10C-83B1-493E-A1AA-3476C41B89B9} = {80E5F868-FC6B-47B8-8A16-5A1A8CF3B408}
 		{80E5F868-FC6B-47B8-8A16-5A1A8CF3B408} = {D62BDE9B-2915-4AC6-9386-464B59D429B6}
 		{53B241B7-243D-498D-95E3-DD14C946E4D1} = {CC318C26-9963-443C-8AC7-479553FF8FCF}
+		{79384309-BB57-46D8-8C94-971ADA143A84} = {80E5F868-FC6B-47B8-8A16-5A1A8CF3B408}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F57289F4-0A09-4A58-93AC-2300FC2FC599}

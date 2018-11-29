@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Tasks.Common.Server.Triggers;
 using Tasks.Infrastructure.Core.Utilities;
 
 namespace Tasks.Common.Server
@@ -11,6 +12,7 @@ namespace Tasks.Common.Server
 
             builder.RegisterTaskDtos(ThisAssembly);
             builder.RegisterAssemblyTypes(ThisAssembly).AsImplementedInterfaces();
+            builder.RegisterType<ClientEventNotifier>().As<IClientEventNotifier>().SingleInstance();
         }
     }
 }

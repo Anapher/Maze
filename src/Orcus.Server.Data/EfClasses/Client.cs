@@ -21,5 +21,6 @@ namespace Orcus.Server.Data.EfClasses
         public DateTimeOffset CreatedOn { get; private set; }
 
         public ICollection<ClientSession> ClientSessions { get; set; }
+        public ICollection<ClientGroupMembership> ClientGroupMemberships { get; set; }
     }
 }
