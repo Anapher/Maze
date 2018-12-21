@@ -14,7 +14,9 @@ namespace Tasks.Infrastructure.Management.Data
 #endif
         public Guid TaskId { get; set; }
 
+        public bool IsEnabled { get; set; }
         public bool IsCompleted { get; set; }
+        
         public DateTimeOffset AddedOn { get; set; }
 
 #if DAPPER

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:taskOverview="clr-namespace:Tasks.Infrastructure.Administration.Views.TaskOverview"
+    xmlns:taskOverview1="clr-namespace:Tasks.Infrastructure.Administration.ViewModels.TaskOverview"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     Title="{Binding Title}"
@@ -17,15 +18,30 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="1" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <taskOverview:OverviewTreeView />
-        <Grid Grid.Column="1">
+        <GridSplitter
+            Grid.Column="1"
+            Margin="-2,0"
+            HorizontalAlignment="Stretch"
+            Background="{StaticResource GrayBrush7}"
+            BorderBrush="Transparent"
+            BorderThickness="2,0"
+            Foreground="{StaticResource BlackBrush}" />
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" MaxHeight="200" />
             </Grid.RowDefinitions>
-            <TextBox />
+            <ContentControl Content="{Binding SelectedItem}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type taskOverview1:CommandResultViewModel}">
+                        <ContentControl Content="{Binding View}" />
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />

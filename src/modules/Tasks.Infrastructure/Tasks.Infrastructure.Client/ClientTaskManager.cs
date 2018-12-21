@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Tasks.Infrastructure.Client
         Task RemoveTask(Guid taskId);
         Task Synchronize(List<TaskSyncDto> tasks, IRestClient restClient);
         Task AddOrUpdateTask(OrcusTask orcusTask);
+        Task TriggerNow(Guid taskId);
     }
 
     public class ClientTaskManager : IClientTaskManager
@@ -69,14 +71,14 @@ namespace Tasks.Infrastructure.Client
             if (Tasks.TryGetValue(taskId, out var taskInfo))
             {
                 taskInfo.Item2.Cancel();
-                await _taskDirectory.RemoveTask(taskInfo.Item1.OrcusTask);
+                await _taskDirectory.RemoveTask(taskInfo.Item1.OrcusTask.Id);
             }
             else
             {
                 foreach (var task in await _taskDirectory.LoadTasks())
                 {
                     if (task.Id == taskId)
-                        await _taskDirectory.RemoveTask(task);
+                        await _taskDirectory.RemoveTask(task.Id);
                 }
             }
         }
@@ -113,7 +115,7 @@ namespace Tasks.Infrastructure.Client
 
                     //that will remove the task from the dictionary
                     cancellationTokenSource.Cancel();
-                    await _taskDirectory.RemoveTask(taskRunner.OrcusTask);
+                    await _taskDirectory.RemoveTask(taskRunner.OrcusTask.Id);
                 }
             }
 
@@ -122,7 +124,7 @@ namespace Tasks.Infrastructure.Client
             {
                 if (!tasks.Any(x => x.TaskId == task.Id))
                 {
-                    await _taskDirectory.RemoveTask(task);
+                    await _taskDirectory.RemoveTask(task.Id);
                 }
             }
 
@@ -145,6 +147,8 @@ namespace Tasks.Infrastructure.Client
                     }
                 }, CancellationToken.None);
             }
+
+            await UpdateTaskMachineStatus(restClient);
         }
 
         public async Task AddOrUpdateTask(OrcusTask orcusTask)
@@ -170,8 +174,20 @@ namespace Tasks.Infrastructure.Client
             RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
         }
 
+        public Task TriggerNow(Guid taskId)
+        {
+            if (Tasks.TryGetValue(taskId, out var info))
+            {
+                return info.Item1.TriggerNow();
+            }
+
+            return Task.CompletedTask;
+        }
+
         private async Task RunTask(TaskRunner taskRunner, CancellationToken cancellationToken)
         {
+            taskRunner.PropertyChanged += TaskRunnerOnPropertyChanged;
+
             try
             {
                 await taskRunner.Run(cancellationToken);
@@ -194,7 +210,42 @@ namespace Tasks.Infrastructure.Client
                 }
             }
             
-            await _taskDirectory.RemoveTask(taskRunner.OrcusTask);
+            //the task is marked as finished in the task runner
+            await _taskDirectory.RemoveTask(taskRunner.OrcusTask.Id);
+
+            await TryUpdateTaskMachineStatus();
+        }
+
+        private void TaskRunnerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(TaskRunner.NextTrigger):
+                    TryUpdateTaskMachineStatus().Forget();
+                    break;
+            }
+        }
+
+        private async Task TryUpdateTaskMachineStatus()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var restClient = scope.ServiceProvider.GetRequiredService<IRestClient>();
+                await UpdateTaskMachineStatus(restClient);
+            }
+        }
+
+        private async Task UpdateTaskMachineStatus(IRestClient restClient)
+        {
+            var tasks = Tasks.Select(x => new ActiveClientTaskDto { TaskId = x.Key, NextTrigger = x.Value.Item1.NextTrigger }).ToList();
+            try
+            {
+                await TasksResource.UpdateMachineStatus(tasks, restClient);
+            }
+            catch (Exception)
+            {
+                // doesn't matter
+            }
         }
     }
 }

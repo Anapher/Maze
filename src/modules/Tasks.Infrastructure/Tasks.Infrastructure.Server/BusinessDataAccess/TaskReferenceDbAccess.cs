@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Options;
+using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Server.BusinessDataAccess.Base;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Dapper;
@@ -16,12 +17,15 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
     {
         Task<TaskReference> FindAsync(Guid taskId);
         Task CreateAsync(TaskReference taskReference);
-        Task Delete(Guid taskId);
+        Task DeleteAsync(Guid taskId);
         Task SetCompletionStatus(Guid taskId, bool status);
+        Task SetTaskIsEnabled(Guid taskId, bool isEnabled);
 
         Task<IList<TaskSession>> GetSessions(Guid taskId);
         Task<IList<TaskExecution>> GetExecutions(Guid taskId);
         Task<IList<CommandResult>> GetCommandResults(Guid taskId);
+
+        Task<IDictionary<Guid, TaskInfoDto>> GetTasks();
     }
 
     public class TaskReferenceDbAccess : SqliteDbAccess, ITaskReferenceDbAccess
@@ -48,11 +52,17 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
             }
         }
 
-        public async Task Delete(Guid taskId)
+        public async Task DeleteAsync(Guid taskId)
         {
             using (var connection = await OpenConnection())
             {
-                await connection.DeleteAsync(new TaskReference {TaskId = taskId});
+                await connection.ExecuteAsync(
+                    "DELETE FROM CommandResult INNER JOIN TaskExecution ON CommandResult.TaskExecutionId = TaskExecution.TaskExecutionId WHERE TaskExecution.TaskReferenceId = @taskId",
+                    new {taskId});
+                await connection.ExecuteAsync("DELETE FROM TaskExecution WHERE TaskReferenceId = @taskId", new {taskId});
+                await connection.ExecuteAsync("DELETE FROM TaskSession WHERE TaskReferenceId = @taskId", new {taskId});
+                await connection.ExecuteAsync("DELETE FROM TaskTransmission WHERE TaskReferenceId = @taskId", new {taskId});
+                await connection.ExecuteAsync("DELETE FROM TaskReference WHERE TaskReferenceId = @taskId", new {taskId});
             }
         }
 
@@ -62,6 +72,14 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
             {
                 await connection.ExecuteAsync("UPDATE TaskReference SET IsCompleted = @status WHERE TaskId = @taskId",
                     new {status, taskId});
+            }
+        }
+
+        public async Task SetTaskIsEnabled(Guid taskId, bool isEnabled)
+        {
+            using (var connection = await OpenConnection())
+            {
+                await connection.ExecuteAsync("UPDATE TaskReference SET IsEnabled = @isEnabled WHERE TaskId = @taskId", new {isEnabled, taskId});
             }
         }
 
@@ -120,6 +138,36 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
                 }
 
                 return result;
+            }
+        }
+
+        public async Task<IDictionary<Guid, TaskInfoDto>> GetTasks()
+        {
+            using (var connection = await OpenConnection())
+            {
+                var tasks = (await connection.QueryAsync<TaskInfoDto>("SELECT TaskId AS Id, IsEnabled, AddedOn FROM TaskReference")).ToDictionary(x => x.Id, x => x);
+
+                var executions = await connection.QueryAsync<TaskInfoDto>(
+                    "SELECT TaskReferenceId AS `Id`, COUNT(*) AS TotalExecutions FROM TaskExecution GROUP BY TaskReferenceId");
+                foreach (var taskInfoDto in executions)
+                    tasks[taskInfoDto.Id].TotalExecutions = taskInfoDto.TotalExecutions;
+
+                var sessions = await connection.QueryAsync<TaskSession>("SELECT TaskSessionId, TaskReferenceId FROM TaskSession");
+                foreach (var taskSession in sessions)
+                {
+                    var task = tasks[taskSession.TaskReferenceId];
+                    if (task.Sessions == null)
+                        task.Sessions = new List<string>();
+
+                    task.Sessions.Add(taskSession.TaskSessionId);
+                }
+
+                var lastExecutions =
+                    await connection.QueryAsync<TaskInfoDto>("SELECT TaskReferenceId AS Id, MAX(CreatedOn) AS LastExecution FROM TaskExecution GROUP BY TaskReferenceId");
+                foreach (var lastExecution in lastExecutions)
+                    tasks[lastExecution.Id].LastExecution = lastExecution.LastExecution;
+
+                return tasks;
             }
         }
     }

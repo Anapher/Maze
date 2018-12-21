@@ -22,7 +22,7 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
         {
             using (var connection = await OpenConnection())
             {
-                await connection.ExecuteAsync("INSERT INTO TaskTransmission (TargetId, CreatedOn) VALUES (@TargetId, @CreatedOn)", taskTransmission);
+                await connection.ExecuteAsync("INSERT INTO TaskTransmission (TaskReferenceId, TargetId, CreatedOn) VALUES (@TaskReferenceId, @TargetId, @CreatedOn)", taskTransmission);
             }
         }
     }

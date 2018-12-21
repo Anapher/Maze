@@ -17,7 +17,8 @@ namespace Tasks.Infrastructure.Administration.Hooks
             builder.RegisterType<DefaultViewProvider>().AsImplementedInterfaces();
             builder.RegisterType<PropertyGridViewProvider>().AsImplementedInterfaces();
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
-            builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<ICommandResultViewProvider>().SingleInstance();
+            builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<ICommandResultViewProvider>().As<ICommandResultViewProvider>().SingleInstance();
+            builder.RegisterType<CommandResultViewFactory>().As<ICommandResultViewFactory>();
         }
     }
 }

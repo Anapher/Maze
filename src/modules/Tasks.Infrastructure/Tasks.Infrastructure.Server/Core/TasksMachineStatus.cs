@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using Tasks.Infrastructure.Core.Dtos;
 
 namespace Tasks.Infrastructure.Server.Core
@@ -9,10 +10,9 @@ namespace Tasks.Infrastructure.Server.Core
         public TasksMachineStatus()
         {
             Processes = new ConcurrentDictionary<Guid, CommandProcessDto>();
-            ActiveTasks = new ConcurrentDictionary<Guid, ActiveClientTaskDto>();
         }
 
         public ConcurrentDictionary<Guid, CommandProcessDto> Processes { get; }
-        public ConcurrentDictionary<Guid, ActiveClientTaskDto> ActiveTasks { get; }
+        public IImmutableList<ActiveClientTaskDto> ActiveTasks { get; set; }
     }
 }

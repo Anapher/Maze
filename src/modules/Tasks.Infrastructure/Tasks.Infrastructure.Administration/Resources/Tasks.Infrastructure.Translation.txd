@@ -21,11 +21,23 @@
 		<text key="TasksInfrastructure:CreateTask.Triggers">Auslöser</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Auslöser</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">Der Name der Aufgabe darf nicht leer sein.</text>
+		<text key="TasksInfrastructure:TaskOverview.Created">Erstellt</text>
+		<text key="TasksInfrastructure:TaskOverview.Disable">Deaktivieren</text>
+		<text key="TasksInfrastructure:TaskOverview.Edit">Bearbeiten</text>
+		<text key="TasksInfrastructure:TaskOverview.Enable">Aktivieren</text>
+		<text key="TasksInfrastructure:TaskOverview.Execute">Ausführen</text>
 		<text key="TasksInfrastructure:TaskOverview.Executing">Wird ausgeführt...</text>
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnClient">Ausführung auf Client #</text>
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnServer">Ausführung auf Server</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions">Ausführungen</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions" count="1">Ausführung</text>
+		<text key="TasksInfrastructure:TaskOverview.LastExecution">Letzte Ausführung</text>
+		<text key="TasksInfrastructure:TaskOverview.NextExecution">Nächste Ausführung</text>
+		<text key="TasksInfrastructure:TaskOverview.RemoveTask">Sind Sie sicher, dass Sie die Aufgabe '{name}' mitsamt aller Sitzungen, Ausführungen und Ergebnissen entfernen möchten?</text>
+		<text key="TasksInfrastructure:TaskOverview.ShowResults">Ergebnisse anzeigen</text>
+		<text key="TasksInfrastructure:TaskOverview.Status">Status</text>
+		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Deaktiviert</text>
+		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Aktiviert</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Aufgabe '{name}' Übersicht</text>
 	</culture>
 	<culture name="en" primary="true">
@@ -48,11 +60,23 @@
 		<text key="TasksInfrastructure:CreateTask.Triggers">Triggers</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Trigger</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">The name of the task cannot be empty.</text>
+		<text key="TasksInfrastructure:TaskOverview.Created">Created</text>
+		<text key="TasksInfrastructure:TaskOverview.Disable">Disable</text>
+		<text key="TasksInfrastructure:TaskOverview.Edit">Edit</text>
+		<text key="TasksInfrastructure:TaskOverview.Enable">Enable</text>
+		<text key="TasksInfrastructure:TaskOverview.Execute">Execute</text>
 		<text key="TasksInfrastructure:TaskOverview.Executing">Executing...</text>
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnClient">Execution on client #</text>
 		<text key="TasksInfrastructure:TaskOverview.ExecutionOnServer">Execution on server</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions">executions</text>
 		<text key="TasksInfrastructure:TaskOverview.Executions" count="1">execution</text>
+		<text key="TasksInfrastructure:TaskOverview.LastExecution">Last Execution</text>
+		<text key="TasksInfrastructure:TaskOverview.NextExecution">Next Execution</text>
+		<text key="TasksInfrastructure:TaskOverview.RemoveTask">Are you sure that you want to remove the task '{name}' including all sessions, executions and results?</text>
+		<text key="TasksInfrastructure:TaskOverview.ShowResults">Show Results</text>
+		<text key="TasksInfrastructure:TaskOverview.Status">Status</text>
+		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Disabled</text>
+		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Enabled</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Task '{name}' overview</text>
 	</culture>
 </translation>

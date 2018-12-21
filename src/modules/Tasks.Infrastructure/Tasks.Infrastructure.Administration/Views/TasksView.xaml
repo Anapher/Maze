@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"
+    xmlns:overview="clr-namespace:Tasks.Infrastructure.Administration.ViewModels.Overview"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:TasksViewModel}"
@@ -12,6 +13,13 @@
     d:DesignWidth="800"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/VisualStudioIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -27,18 +35,135 @@
             <DataGrid.Resources>
                 <ContextMenu x:Key="TaskContextMenu">
                     <MenuItem
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.TriggerCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{tx:T TasksInfrastructure:TaskOverview.Execute}"
+                        Icon="{StaticResource StartWithoutDebugIcon}" />
+                    <Separator />
+                    <MenuItem
                         Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.OpenTaskSessionsCommand}"
                         CommandParameter="{Binding}"
-                        Header="Open Results" />
+                        Header="{tx:T TasksInfrastructure:TaskOverview.ShowResults}"
+                        Icon="{StaticResource FlatListIcon}" />
 
-                    <MenuItem Header="Edit" />
+                    <MenuItem Header="{tx:T TasksInfrastructure:TaskOverview.Edit}" Icon="{StaticResource EditIcon}" />
 
-                    <MenuItem Header="Disable/Enable" />
-                    <MenuItem Header="Remove" />
+                    <MenuItem Command="{Binding}">
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEnabled}" Value="true">
+                                        <Setter Property="Header" Value="{tx:T TasksInfrastructure:TaskOverview.Disable}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsEnabled}" Value="false">
+                                        <Setter Property="Header" Value="{tx:T TasksInfrastructure:TaskOverview.Enable}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <MenuItem
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.RemoveCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{tx:T Remove}"
+                        Icon="{StaticResource CancelIcon}" />
                 </ContextMenu>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="{tx:T Name}" />
+                <DataGridTextColumn
+                    Width="3*"
+                    Binding="{Binding Name}"
+                    Header="{tx:T Name}" />
+                <DataGridTemplateColumn
+                    Width="*"
+                    MaxWidth="90"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.Status}"
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type overview:TaskViewModel}">
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{tx:T TasksInfrastructure:TaskOverview.Status.Enabled}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEnabled}" Value="false">
+                                                <Setter Property="Text" Value="{tx:T TasksInfrastructure:TaskOverview.Status.Disabled}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="*"
+                    MaxWidth="120"
+                    Binding="{Binding Commands}"
+                    Header="{tx:T TasksInfrastructure:CreateTask.Commands,
+                                  Count=2}"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    MaxWidth="120"
+                    Binding="{Binding TotalExecutions}"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.Executions,
+                                  Count=2}"
+                    IsReadOnly="True" />
+                <DataGridTemplateColumn
+                    Width="*"
+                    MaxWidth="120"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.NextExecution}"
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type overview:TaskViewModel}">
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding NextExecution}}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding NextExecution}" Value="{x:Null}">
+                                                <Setter Property="Text" Value="{tx:T Unknown}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsActive}" Value="false">
+                                                <Setter Property="Text" Value="{tx:T None}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    MaxWidth="120"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.LastExecution}"
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type overview:TaskViewModel}">
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding LastExecution}}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding LastExecution}" Value="{x:Null}">
+                                                <Setter Property="Text" Value="{tx:T None}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="2*"
+                    MaxWidth="120"
+                    Binding="{tx:Time TimeBinding={Binding AddedOn},
+                                      Details='YearMonthDay,HourMinuteSecond'}"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.Created}"
+                    IsReadOnly="True" />
             </DataGrid.Columns>
             <DataGrid.RowStyle>
                 <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">

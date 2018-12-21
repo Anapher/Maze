@@ -13,7 +13,7 @@ namespace Tasks.Infrastructure.Management
     {
         public static void FormatHeaders(HttpResponseMessage response, StreamWriter textWriter)
         {
-            textWriter.WriteLine(response.StatusCode);
+            textWriter.WriteLine((int) response.StatusCode);
 
             EncodeHeaders(
                 response.Headers.Concat(response.Content?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>())

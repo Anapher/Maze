@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Orcus.Server.Connection.Utilities;
@@ -27,5 +28,8 @@ namespace Tasks.Infrastructure.Server.Rest
                 await CreateRequest(HttpVerb.Post, null, stream).Execute(restClient);
             }
         }
+
+        public static Task DeleteTask(Guid taskId, IRestClient restClient) => CreateRequest(HttpVerb.Delete, taskId).Execute(restClient);
+        public static Task TriggerTask(Guid taskId, IRestClient restClient) => CreateRequest(HttpVerb.Get, $"{taskId:N}/trigger").Execute(restClient);
     }
 }

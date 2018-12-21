@@ -11,9 +11,9 @@ namespace Tasks.Infrastructure.Client.Controllers
     [Route("tasks")]
     public class TasksController : OrcusController
     {
-        private readonly ClientTaskManager _clientTaskManager;
+        private readonly IClientTaskManager _clientTaskManager;
 
-        public TasksController(ClientTaskManager clientTaskManager)
+        public TasksController(IClientTaskManager clientTaskManager)
         {
             _clientTaskManager = clientTaskManager;
         }
@@ -33,6 +33,13 @@ namespace Tasks.Infrastructure.Client.Controllers
         public async Task<IActionResult> DeleteTask(Guid taskId)
         {
             await _clientTaskManager.RemoveTask(taskId);
+            return Ok();
+        }
+
+        [OrcusGet("{taskId}/trigger")]
+        public async Task<IActionResult> TriggerTask(Guid taskId)
+        {
+            await _clientTaskManager.TriggerNow(taskId);
             return Ok();
         }
     }

@@ -35,9 +35,38 @@ namespace Tasks.Infrastructure.Administration.Rest.V1
             }
         }
 
+        public static async Task Update(OrcusTask orcusTask, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlCache,
+            IRestClient restClient)
+        {
+            using (var taskMemoryStream = new MemoryStream())
+            {
+                var taskWriter = new OrcusTaskWriter(taskMemoryStream, componentResolver, xmlCache);
+                taskWriter.Write(orcusTask, TaskDetails.Server);
+
+                taskMemoryStream.Position = 0;
+
+                var stream = new StreamContent(taskMemoryStream);
+                stream.Headers.ContentEncoding.Add("xml");
+
+                await CreateRequest(HttpVerb.Put, orcusTask.Id, stream).Execute(restClient);
+            }
+        }
+
         public static Task<List<TaskInfoDto>> GetTasks(IRestClient restClient) => CreateRequest().Execute(restClient).Return<List<TaskInfoDto>>();
 
         public static Task<TaskSessionsInfo> GetTaskSessions(Guid taskId, IRestClient restClient) =>
             CreateRequest(HttpVerb.Get, taskId + "/sessions").Execute(restClient).Return<TaskSessionsInfo>();
+
+        public static Task RemoveTask(Guid taskId, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Delete, taskId).Execute(restClient);
+
+        public static Task EnableTask(Guid taskId, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, taskId + "/enable").Execute(restClient);
+
+        public static Task DisableTask(Guid taskId, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Post, taskId + "/disable").Execute(restClient);
+
+        public static Task TriggerTask(Guid taskId, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, taskId + "/trigger").Execute(restClient);
     }
 }

@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Orcus.Client.Library.Clients;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Client.Library;
-using Tasks.Infrastructure.Client.Rest;
 using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Client.StopEvents;
 using Tasks.Infrastructure.Client.Trigger;
@@ -21,12 +20,15 @@ using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
 using Orcus.Server.Connection.Extensions;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Tasks.Infrastructure.Client
 {
-    public class TaskRunner
+    public class TaskRunner : INotifyPropertyChanged
     {
         private readonly ITaskSessionManager _sessionManager;
+        private DateTimeOffset? _nextTrigger;
 
         public TaskRunner(OrcusTask orcusTask, IServiceProvider services)
         {
@@ -39,6 +41,19 @@ namespace Tasks.Infrastructure.Client
         public OrcusTask OrcusTask { get; }
         public IServiceProvider Services { get; }
         public ILogger Logger { get; }
+
+        public DateTimeOffset? NextTrigger
+        {
+            get => _nextTrigger;
+            set
+            {
+                if (_nextTrigger != value)
+                {
+                    _nextTrigger = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public async Task Run(CancellationToken cancellationToken)
         {
@@ -154,6 +169,13 @@ namespace Tasks.Infrastructure.Client
                 }
         }
 
+        public async Task TriggerNow()
+        {
+            var context = new TaskTriggerContext(this, "Manually Triggered");
+            var session = await context.CreateSession(SessionKey.Create("ManualTrigger", DateTimeOffset.UtcNow));
+            await session.Invoke();
+        }
+
         internal async Task Execute(TaskSession taskSession, CancellationToken cancellationToken)
         {
             using (var executionScope = Services.CreateScope())
@@ -249,6 +271,13 @@ namespace Tasks.Infrastructure.Client
                     }
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Tasks.Infrastructure.Server.Migrations
 
             Create.Table("TaskTransmission")
                 .WithColumn("TaskTransmissionId").AsInt32().PrimaryKey()
+                .WithColumn("TaskReferenceId").AsGuid().NotNullable()
                 .WithColumn("TargetId").AsInt32().Nullable()
                 .WithColumn("CreatedOn").AsInt64().NotNullable();
 

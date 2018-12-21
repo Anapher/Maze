@@ -28,6 +28,7 @@ namespace Tasks.Infrastructure.Client.Trigger
 
         public override void ReportNextTrigger(DateTimeOffset dateTimeOffset)
         {
+            _taskRunner.NextTrigger = dateTimeOffset;
         }
     }
 }

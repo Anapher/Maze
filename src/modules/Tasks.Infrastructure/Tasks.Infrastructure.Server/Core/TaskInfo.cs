@@ -38,5 +38,6 @@ namespace Tasks.Infrastructure.Server.Core
 
         public bool ExecuteOnServer { get; }
         public bool ExecuteOnClients { get; }
+        public DateTimeOffset? NextExecution { get; set; }
     }
 }

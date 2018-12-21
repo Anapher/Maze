@@ -134,7 +134,8 @@ namespace Orcus.Sockets.Internal.Http
             var response = new HttpResponseMessage();
             var contentHeaders = new HeaderDictionary();
 
-            var statusCode = int.Parse(textReader.ReadLine());
+            var line = textReader.ReadLine();
+            var statusCode = int.Parse(line);
             response.StatusCode = (HttpStatusCode) statusCode;
 
             var headers = new HeaderDictionary();

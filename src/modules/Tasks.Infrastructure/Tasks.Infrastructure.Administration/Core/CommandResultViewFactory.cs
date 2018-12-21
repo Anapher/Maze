@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using Autofac;
-using Microsoft.Extensions.Logging;
+using Orcus.Administration.Library.Logging;
 using Tasks.Infrastructure.Administration.Library.Result;
 using Tasks.Infrastructure.Administration.Utilities;
 using Tasks.Infrastructure.Core.Dtos;
@@ -19,12 +19,11 @@ namespace Tasks.Infrastructure.Administration.Core
     public class CommandResultViewFactory : ICommandResultViewFactory
     {
         private readonly ILifetimeScope _context;
-        private readonly ILogger<CommandResultViewFactory> _logger;
+        private static readonly ILog Logger = LogProvider.For<CommandResultViewFactory>();
 
-        public CommandResultViewFactory(ILifetimeScope context, ILogger<CommandResultViewFactory> logger)
+        public CommandResultViewFactory(ILifetimeScope context)
         {
             _context = context;
-            _logger = logger;
         }
 
         public UIElement GetView(CommandResultDto commandResult, string result)
@@ -46,7 +45,7 @@ namespace Tasks.Infrastructure.Administration.Core
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, "Error occurred on GetView() on {viewProviderType}", viewProvider.GetType().FullName);
+                        Logger.Error(e, "Error occurred on GetView() on {viewProviderType}", viewProvider.GetType().FullName);
                     }
             }
 

@@ -58,9 +58,9 @@ namespace Tasks.Infrastructure.Management
         /// <summary>
         ///     Remove a task from the directory
         /// </summary>
-        /// <param name="orcusTask">The task that should be removed.</param>
+        /// <param name="taskId">The id of the task that should be removed.</param>
         /// <returns>Return true if the task was successfully removed, false if the task was not found.</returns>
-        Task<bool> RemoveTask(OrcusTask orcusTask);
+        Task<bool> RemoveTask(Guid taskId);
 
         /// <summary>
         ///     Compute the hash value of a task.
@@ -202,18 +202,18 @@ namespace Tasks.Infrastructure.Management
             }
         }
 
-        public async Task<bool> RemoveTask(OrcusTask orcusTask)
+        public async Task<bool> RemoveTask(Guid taskId)
         {
             using (await _tasksLock.WriterLockAsync())
             {
                 if (_cachedTasks == null)
                     LoadTasksLockAquired();
 
-                if (!_cachedTasks.TryGetValue(orcusTask.Id, out var taskLink))
+                if (!_cachedTasks.TryGetValue(taskId, out var taskLink))
                     return false;
 
                 File.Delete(taskLink.Item1);
-                _cachedTasks = _cachedTasks.Remove(orcusTask.Id);
+                _cachedTasks = _cachedTasks.Remove(taskId);
                 return true;
             }
         }

@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview.ResultView
 
         public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IComponentContext context)
         {
-            if (responseMessage.Content.Headers.ContentType.MediaType != "orcus/jsonlog")
+            if (responseMessage.Content?.Headers.ContentType.MediaType != "orcus/jsonlog")
                 return null;
 
             var log = responseMessage.Content.ReadAsStringAsync().Result;

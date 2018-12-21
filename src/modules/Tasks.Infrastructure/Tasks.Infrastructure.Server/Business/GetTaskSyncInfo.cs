@@ -45,7 +45,7 @@ namespace Tasks.Infrastructure.Server.Business
                 if (!await filters.IsClientIncluded(inputData, _services))
                     continue;
 
-                tasks.Add(new TaskSyncDto { TaskId = taskInfo.OrcusTask.Id, Hash = taskInfo.Hash.ToString() });
+                tasks.Add(new TaskSyncDto { TaskId = taskInfo.OrcusTask.Id, Hash = taskInfo.Hash.ToString()});
             }
 
             return tasks;

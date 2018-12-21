@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
 using Tasks.Infrastructure.Management.Data;
@@ -21,7 +23,11 @@ namespace Tasks.Infrastructure.Server.Business
 
         public async Task<TaskTransmission> BizActionAsync(TaskTransmission inputData)
         {
-            //no validation required
+            if (inputData.TaskReferenceId == Guid.Empty)
+                return ReturnError<TaskTransmission>(new ValidationResult("The TaskReferenceId must not be empty"));
+
+            if (inputData.CreatedOn == default)
+                return ReturnError<TaskTransmission>(new ValidationResult("The CreatedOn must not be the default value"));
 
             await _dbAccess.CreateAsync(inputData);
             return inputData;

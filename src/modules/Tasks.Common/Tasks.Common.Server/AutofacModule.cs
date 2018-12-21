@@ -12,7 +12,7 @@ namespace Tasks.Common.Server
 
             builder.RegisterTaskDtos(ThisAssembly);
             builder.RegisterAssemblyTypes(ThisAssembly).AsImplementedInterfaces();
-            builder.RegisterType<ClientEventNotifier>().As<IClientEventNotifier>().SingleInstance();
+            builder.RegisterType<ClientEventNotifier>().AsSelf().As<IClientEventNotifier>().SingleInstance();
         }
     }
 }

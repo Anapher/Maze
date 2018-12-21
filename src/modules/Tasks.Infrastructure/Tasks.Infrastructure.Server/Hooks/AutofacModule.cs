@@ -43,12 +43,13 @@ namespace Tasks.Infrastructure.Server.Hooks
             builder.Configure<TasksOptions>(_configuration.GetSection("Tasks"));
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
             builder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
-            builder.RegisterType<OrcusTaskManager>().As<IOrcusTaskManager>().SingleInstance();
+            builder.RegisterType<OrcusTaskManager>().As<IOrcusTaskManagerManagement>().As<IOrcusTaskManager>().SingleInstance();
             builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<IBizActionStatus>().AsImplementedInterfaces();
             builder.RegisterType<OnServerStartupEvent>().As<IConfigureServerPipelineAction>();
             builder.RegisterAssemblyTypes(ThisAssembly).Where(x => x.Namespace.EndsWith(".Business") || x.Namespace.EndsWith(".BusinessDataAccess"))
                 .AsImplementedInterfaces();
             builder.RegisterType<ActiveTasksManager>().SingleInstance();
+            builder.RegisterType<OnClientDisconnected>().As<IClientDisconnectedAction>();
         }
     }
 }

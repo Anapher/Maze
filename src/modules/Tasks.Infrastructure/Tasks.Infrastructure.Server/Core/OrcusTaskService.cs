@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,9 +18,10 @@ using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Infrastructure.Server.Core
 {
-    public class OrcusTaskService
+    public class OrcusTaskService : INotifyPropertyChanged
     {
         private AggregatedClientFilter _aggregatedClientFilter;
+        private DateTimeOffset _nextExecution;
 
         public OrcusTaskService(OrcusTask orcusTask, IServiceProvider services)
         {
@@ -30,6 +33,16 @@ namespace Tasks.Infrastructure.Server.Core
         public OrcusTask OrcusTask { get; }
         public ILogger Logger { get; }
         public IServiceProvider Services { get; }
+
+        public DateTimeOffset NextExecution
+        {
+            get => _nextExecution;
+            set
+            {
+                _nextExecution = value;
+                OnPropertyChanged();
+            }
+        }
 
         public async Task Run(CancellationToken cancellationToken)
         {
@@ -125,6 +138,13 @@ namespace Tasks.Infrastructure.Server.Core
                 var executor = new TaskExecutor(OrcusTask, taskSession, Services);
                 await executor.Execute(attenders, attenderScopes, cancellationToken);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

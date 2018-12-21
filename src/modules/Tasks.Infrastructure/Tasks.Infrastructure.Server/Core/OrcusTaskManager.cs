@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -10,10 +11,12 @@ using Nito.AsyncEx;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Library.Services;
+using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Business;
+using Tasks.Infrastructure.Server.Business.TaskManager;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 using Tasks.Infrastructure.Server.Rest;
@@ -35,17 +38,17 @@ namespace Tasks.Infrastructure.Server.Core
         /// <summary>
         ///     Iniitalize the task manager. This must only be called once at startup.
         /// </summary>
-        /// <returns></returns>
         Task Initialize();
-
-        /// <summary>
-        ///     Add a new task and execute it.
-        /// </summary>
-        /// <param name="orcusTask">The task information</param>
-        Task AddTask(OrcusTask orcusTask);
     }
 
-    public class OrcusTaskManager : IOrcusTaskManager
+    public interface IOrcusTaskManagerManagement
+    {
+        Task<TaskInfo> CancelTask(Guid taskId);
+        Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally);
+        Task TriggerNow(Guid taskId);
+    }
+
+    public class OrcusTaskManager : IOrcusTaskManager, IOrcusTaskManagerManagement
     {
         private readonly ITaskDirectory _taskDirectory;
         private readonly IServiceProvider _serviceProvider;
@@ -53,6 +56,7 @@ namespace Tasks.Infrastructure.Server.Core
         private readonly Dictionary<Guid, TaskInfo> _tasks;
         private readonly AsyncLock _tasksLock;
         private IImmutableList<TaskInfo> _localActiveTasks;
+        private readonly ConcurrentDictionary<Guid, Func<Task>> _immediateTriggers;
 
         public OrcusTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider,
             ILogger<OrcusTaskManager> logger)
@@ -64,6 +68,7 @@ namespace Tasks.Infrastructure.Server.Core
             ClientTasks = ImmutableList<TaskInfo>.Empty;
             LocalActiveTasks = ImmutableList<TaskInfo>.Empty;
             _tasksLock = new AsyncLock();
+            _immediateTriggers = new ConcurrentDictionary<Guid, Func<Task>>();
         }
 
         public IImmutableList<TaskInfo> ClientTasks { get; private set; }
@@ -73,7 +78,7 @@ namespace Tasks.Infrastructure.Server.Core
             get => _localActiveTasks;
             private set => _localActiveTasks = value;
         }
-
+        
         public async Task Initialize()
         {
             using (await _tasksLock.LockAsync())
@@ -88,8 +93,7 @@ namespace Tasks.Infrastructure.Server.Core
                         _logger.LogDebug("Initialize: Load task {taskId}", task.Id);
                         try
                         {
-
-                            var action = scope.ServiceProvider.GetRequiredService<ICreateTaskAction>();
+                            var action = scope.ServiceProvider.GetRequiredService<IVerifyTaskInDatabaseAction>();
                             var taskReference = await action.BizActionAsync(task);
 
                             if (action.HasErrors)
@@ -98,8 +102,13 @@ namespace Tasks.Infrastructure.Server.Core
                                 continue;
                             }
 
+                            if (!taskReference.IsEnabled)
+                                continue;
+
                             var hash = _taskDirectory.ComputeTaskHash(task);
-                            InitializeTask(task, hash, transmit: false, executeLocally: !taskReference.IsCompleted);
+
+                            //transmit = false because that is executed on load and no clients should be connected anyways
+                            InitializeTask(task, hash, transmit: false, executeLocally: !taskReference.IsCompleted).Forget();
                         }
                         catch (Exception e)
                         {
@@ -110,37 +119,45 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task AddTask(OrcusTask orcusTask)
+        public async Task TriggerNow(Guid taskId)
+        {
+            if (_immediateTriggers.TryGetValue(taskId, out var taskFunc))
+                await taskFunc();
+        }
+
+        public async Task<TaskInfo> CancelTask(Guid taskId)
         {
             using (await _tasksLock.LockAsync())
             {
-                var hash = _taskDirectory.ComputeTaskHash(orcusTask);
-
-                if (_tasks.TryGetValue(orcusTask.Id, out var taskInfo))
+                if (_tasks.TryGetValue(taskId, out var taskInfo))
                 {
-                    if (hash.Equals(taskInfo.Hash)) //the tasks are equal
-                        return;
+                    taskInfo.Dispose();
+                    ClientTasks = ClientTasks.Remove(taskInfo);
 
-                    throw new InvalidOperationException($"The task with id {orcusTask.Id} already exists. Please update the existing task.");
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var connectionManager = scope.ServiceProvider.GetRequiredService<IConnectionManager>();
+                        foreach (var clientConnection in connectionManager.ClientConnections.Values)
+                        {
+                            try
+                            {
+                                await TasksResource.DeleteTask(taskId, clientConnection);
+                            }
+                            catch (Exception)
+                            {
+                                // ignored
+                            }
+                        }
+                    }
+
+                    return taskInfo;
                 }
 
-                await _taskDirectory.WriteTask(orcusTask);
-
-                //add to database
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var action = scope.ServiceProvider.GetRequiredService<ICreateTaskAction>();
-                    await action.BizActionAsync(orcusTask);
-
-                    if (action.HasErrors)
-                        throw new InvalidOperationException(action.Errors.First().ErrorMessage);
-                }
-
-                InitializeTask(orcusTask, hash, transmit: true, executeLocally: true);
+                throw new ArgumentException("The task could not be found.");
             }
         }
 
-        private void InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally)
+        public Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally)
         {
             var (executeOnServer, executeOnClient) = GetTaskExecutionMode(orcusTask);
 
@@ -155,12 +172,24 @@ namespace Tasks.Infrastructure.Server.Core
             if (executeOnServer && executeLocally)
             {
                 var taskService = new OrcusTaskService(orcusTask, _serviceProvider);
+                taskService.PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == nameof(OrcusTaskService.NextExecution))
+                    {
+                        taskInfo.NextExecution = taskService.NextExecution;
+                        //Event
+                    }
+                };
+
                 executionTasks.Add(RunTask(taskService, taskInfo.Token).ContinueWith(task => LocalTaskExecutionCompleted(taskInfo)));
 
                 LocalActiveTasks = LocalActiveTasks.Add(taskInfo);
             }
+
             if (executeOnClient)
             {
+                //we always transmit to clients because they have their own logic to check if it completed
+
                 if (transmit)
                     executionTasks.Add(TransmitTask(orcusTask, taskInfo.Token));
 
@@ -168,7 +197,7 @@ namespace Tasks.Infrastructure.Server.Core
             }
 
             LocalActiveTasks = LocalActiveTasks.Add(taskInfo);
-            Task.WhenAll(executionTasks).ContinueWith(task => TaskExecutionCompleted(taskInfo));
+            return Task.WhenAll(executionTasks).ContinueWith(task => TaskExecutionCompleted(taskInfo));
         }
 
         private async Task TransmitTask(OrcusTask orcusTask, CancellationToken cancellationToken)
@@ -208,13 +237,17 @@ namespace Tasks.Infrastructure.Server.Core
                     }
 
                     var action = services.GetRequiredService<ICreateTaskTransmissionAction>();
-                    await action.BizActionAsync(new TaskTransmission {TargetId = clientConnection.ClientId, CreatedOn = DateTimeOffset.UtcNow});
+                    await action.BizActionAsync(new TaskTransmission
+                    {
+                        TaskReferenceId = orcusTask.Id, TargetId = clientConnection.ClientId, CreatedOn = DateTimeOffset.UtcNow
+                    });
                 }
             }
         }
 
         private async Task RunTask(OrcusTaskService taskService, CancellationToken cancellationToken)
         {
+            _immediateTriggers.TryAdd(taskService.OrcusTask.Id, taskService.TriggerNow);
             try
             {
                 await taskService.Run(cancellationToken);
@@ -227,6 +260,10 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 taskService.Logger.LogCritical(e, "An error occurred when running task service for task {taskId}.", taskService.OrcusTask.Id);
                 return;
+            }
+            finally
+            {
+                _immediateTriggers.TryRemove(taskService.OrcusTask.Id, out _);
             }
 
             using (var scope = _serviceProvider.CreateScope())

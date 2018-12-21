@@ -64,7 +64,7 @@ namespace Tasks.Infrastructure.Server.Core
 
         public override void ReportNextTrigger(DateTimeOffset dateTimeOffset)
         {
-            throw new NotImplementedException();
+            _taskService.NextExecution = dateTimeOffset;
         }
     }
 }
