@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ImmediatelyTriggerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnAppStartupTriggerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ScheduledTriggerService.cs" />
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
     <SharedGUID>72dc8c93-056d-401c-b5a8-fd9b7016cf99</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Tasks.Common.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Tasks.Common</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Base\ProcessCommandInfoBase.cs" />
@@ -20,7 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)StopEvents\DateTimeStopEventInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StopEvents\DurationStopEventInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ImmediatelyTriggerInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnAppStartTriggerInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnAppStartupTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\OnJoinTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\ScheduledTriggerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triggers\SystemRestartTriggerInfo.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Tasks.Common.Administration.Resources;
-using Tasks.Common.Shared.Triggers;
+using Tasks.Common.Triggers;
 using Tasks.Infrastructure.Administration.Library.Trigger;
 using Unclassified.TxLib;
 

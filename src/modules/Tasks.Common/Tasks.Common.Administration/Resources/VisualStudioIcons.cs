@@ -21,5 +21,6 @@ namespace Tasks.Common.Administration.Resources
         public Viewbox CloudRun => GetIcon();
         public Viewbox DownloadFile => GetIcon();
         public Viewbox StartupProject => GetIcon();
+        public Viewbox VBWindowsService => GetIcon();
     }
 }

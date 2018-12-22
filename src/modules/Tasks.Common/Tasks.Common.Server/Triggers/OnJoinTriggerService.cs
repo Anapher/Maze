@@ -4,7 +4,7 @@ using Orcus.Server.Library.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Tasks.Common.Shared.Triggers;
+using Tasks.Common.Triggers;
 using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Common.Server.Triggers

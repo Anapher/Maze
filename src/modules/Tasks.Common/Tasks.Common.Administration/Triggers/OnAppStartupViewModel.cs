@@ -5,14 +5,14 @@ using Tasks.Infrastructure.Core;
 
 namespace Tasks.Common.Administration.Triggers
 {
-    public class OnJoinViewModel : ITriggerViewModel<OnJoinTriggerInfo>
+    public class OnAppStartupViewModel : ITriggerViewModel<OnAppStartupTriggerInfo>
     {
-        public void Initialize(OnJoinTriggerInfo model)
+        public void Initialize(OnAppStartupTriggerInfo model)
         {
         }
 
         public ValidationResult ValidateInput() => ValidationResult.Success;
         public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
-        public OnJoinTriggerInfo Build() => new OnJoinTriggerInfo();
+        public OnAppStartupTriggerInfo Build() => new OnAppStartupTriggerInfo();
     }
 }

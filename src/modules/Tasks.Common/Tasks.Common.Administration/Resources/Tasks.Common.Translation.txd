@@ -54,6 +54,8 @@
 		<text key="TasksCommon:StopEvents.Duration.Summary">Stoppe alle Befehle nach einer bestimmten Zeitspanne.</text>
 		<text key="TasksCommon:Triggers.Immediately">Sofort</text>
 		<text key="TasksCommon:Triggers.Immediately.Summary">Die Befehle werden sofort ausgeführt.</text>
+		<text key="TasksCommon:Triggers.OnAppStartup">Beim Starten der App</text>
+		<text key="TasksCommon:Triggers.OnAppStartup.Summary">Ausführen bei jedem Start der Anwendung.</text>
 		<text key="TasksCommon:Triggers.OnJoin">Beim Verbinden</text>
 		<text key="TasksCommon:Triggers.OnJoin.Summary">Ausführen wenn sich der Client mit dem Server verbunden hat.</text>
 		<text key="TasksCommon:Triggers.Scheduled">Geplant</text>
@@ -152,6 +154,8 @@
 		<text key="TasksCommon:StopEvents.Duration.Summary">Stop the commands after a given duration.</text>
 		<text key="TasksCommon:Triggers.Immediately">Immediately</text>
 		<text key="TasksCommon:Triggers.Immediately.Summary">The commands will be triggered immediately.</text>
+		<text key="TasksCommon:Triggers.OnAppStartup">On App Startup</text>
+		<text key="TasksCommon:Triggers.OnAppStartup.Summary">Execute on every startup of the application.</text>
 		<text key="TasksCommon:Triggers.OnJoin">On Join</text>
 		<text key="TasksCommon:Triggers.OnJoin.Summary">Execute when the client connected to the server.</text>
 		<text key="TasksCommon:Triggers.Scheduled">Scheduled</text>

@@ -58,12 +58,12 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
             using (var connection = await OpenConnection())
             {
                 await connection.ExecuteAsync(
-                    "DELETE CommandResult FROM CommandResult INNER JOIN TaskExecution ON CommandResult.TaskExecutionId = TaskExecution.TaskExecutionId WHERE TaskExecution.TaskReferenceId = @taskId",
+                    "DELETE FROM CommandResult WHERE TaskExecutionId IN (SELECT TaskExecutionId FROM TaskExecution WHERE TaskReferenceId = @taskId)",
                     new {taskId});
                 await connection.ExecuteAsync("DELETE FROM TaskExecution WHERE TaskReferenceId = @taskId", new {taskId});
                 await connection.ExecuteAsync("DELETE FROM TaskSession WHERE TaskReferenceId = @taskId", new {taskId});
                 await connection.ExecuteAsync("DELETE FROM TaskTransmission WHERE TaskReferenceId = @taskId", new {taskId});
-                await connection.ExecuteAsync("DELETE FROM TaskReference WHERE TaskReferenceId = @taskId", new {taskId});
+                await connection.ExecuteAsync("DELETE FROM TaskReference WHERE TaskId = @taskId", new {taskId});
             }
         }
 

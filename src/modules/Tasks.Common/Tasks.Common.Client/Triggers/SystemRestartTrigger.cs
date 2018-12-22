@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Tasks.Common.Shared.Triggers;
+using Tasks.Common.Triggers;
 using Tasks.Infrastructure.Client.Library;
 
 namespace Tasks.Common.ServerClientShared.Triggers
@@ -11,7 +11,7 @@ namespace Tasks.Common.ServerClientShared.Triggers
     public class SystemRestartTrigger : ITriggerService<SystemRestartTriggerInfo>
     {
         [DllImport("kernel32")]
-        private extern static UInt64 GetTickCount64();
+        private static extern UInt64 GetTickCount64();
 
         public async Task InvokeAsync(SystemRestartTriggerInfo triggerInfo, TriggerContext context, CancellationToken cancellationToken)
         {

@@ -41,6 +41,9 @@
                     <DataTemplate DataType="{x:Type taskOverview1:CommandResultViewModel}">
                         <ContentControl Content="{Binding View}" />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type taskOverview1:TaskSessionViewModel}">
+                        <taskOverview:SessionStatisticsView />
+                    </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
             <Grid Grid.Row="1">

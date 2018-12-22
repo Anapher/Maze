@@ -44,6 +44,7 @@
     <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
     <None Remove="Views\TaskOverview\ResultView\ExceptionView.xaml" />
     <None Remove="Views\TaskOverview\ResultView\LogView.xaml" />
+    <None Remove="Views\TaskOverview\SessionStatisticsView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,6 +128,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TaskOverview\ResultView\LogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\TaskOverview\SessionStatisticsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

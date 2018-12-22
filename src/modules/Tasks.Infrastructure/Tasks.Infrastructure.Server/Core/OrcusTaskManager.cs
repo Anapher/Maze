@@ -18,7 +18,7 @@ using Tasks.Infrastructure.Server.Business;
 using Tasks.Infrastructure.Server.Business.TaskManager;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
-using Tasks.Infrastructure.Server.Rest;
+using Tasks.Infrastructure.Server.Rest.V1;
 
 namespace Tasks.Infrastructure.Server.Core
 {

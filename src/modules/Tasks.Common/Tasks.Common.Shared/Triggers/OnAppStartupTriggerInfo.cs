@@ -1,8 +1,8 @@
 ﻿using Tasks.Infrastructure.Core.Triggers;
 
-namespace Tasks.Common.Shared.Triggers
+namespace Tasks.Common.Triggers
 {
-    public class OnAppStartTriggerInfo : TriggerInfo
+    public class OnAppStartupTriggerInfo : TriggerInfo
     {
         public bool OncePerDay { get; set; }
     }

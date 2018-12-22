@@ -7,7 +7,7 @@ using Orcus.Server.Library.Clients;
 using Orcus.Server.Library.Clients.Helpers;
 using Tasks.Infrastructure.Core;
 
-namespace Tasks.Infrastructure.Server.Rest
+namespace Tasks.Infrastructure.Server.Rest.V1
 {
     public class TasksResource : ModuleResource<TasksResource>
     {
@@ -20,10 +20,13 @@ namespace Tasks.Infrastructure.Server.Rest
         {
             using (var taskMemoryStream = new MemoryStream())
             {
+                var taskWriter = new OrcusTaskWriter(taskMemoryStream, componentResolver, xmlCache);
+                taskWriter.Write(orcusTask, TaskDetails.Server);
+
+                taskMemoryStream.Position = 0;
+
                 var stream = new StreamContent(taskMemoryStream);
                 stream.Headers.ContentEncoding.Add("xml");
-                var taskWriter = new OrcusTaskWriter(taskMemoryStream, componentResolver, xmlCache);
-                taskWriter.Write(orcusTask, TaskDetails.Client);
 
                 await CreateRequest(HttpVerb.Post, null, stream).Execute(restClient);
             }

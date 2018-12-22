@@ -7,7 +7,7 @@ using Orcus.Server.Library.Services;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Core;
-using Tasks.Infrastructure.Server.Rest;
+using Tasks.Infrastructure.Server.Rest.V1;
 
 namespace Tasks.Infrastructure.Server.Business.TaskManager
 {
