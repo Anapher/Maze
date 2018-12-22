@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Orcus.Server.Library.Controllers;
 using Orcus.Server.Library.Hubs;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Server.Business;
 
@@ -25,7 +26,7 @@ namespace Tasks.Infrastructure.Server.Controllers
 
             return await BizActionStatus(action, async () =>
             {
-                await _hubContext.Clients.All.SendAsync("TaskSessionCreated", taskSessionDto);
+                await _hubContext.Clients.All.SendAsync(HubEventNames.TaskSessionCreated, taskSessionDto);
                 return Ok();
             });
         }

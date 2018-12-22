@@ -71,7 +71,8 @@ namespace Tasks.Infrastructure.Server.Core
                 TaskExecutionId = Guid.NewGuid(),
                 TaskSessionId = _taskSession.TaskSessionId,
                 TargetId = id.IsServer ? (int?) null : id.ClientId,
-                CreatedOn = DateTimeOffset.UtcNow
+                CreatedOn = DateTimeOffset.UtcNow,
+                TaskReferenceId = _orcusTask.Id
             };
 
             var action = services.GetRequiredService<ICreateTaskExecutionAction>();
@@ -80,7 +81,7 @@ namespace Tasks.Infrastructure.Server.Core
             if (!BusinessActionSucceeded(action))
                 return;
 
-            await _hubContext.Clients.All.SendAsync("TaskExecutionCreated", execution, cancellationToken);
+            await _hubContext.Clients.All.SendAsync(HubEventNames.TaskExecutionCreated, execution, cancellationToken);
 
             var machineStatus = _activeTasksManager.ActiveCommands.GetOrAdd(id, _ => new TasksMachineStatus());
             foreach (var commandInfo in _orcusTask.Commands)
@@ -117,7 +118,7 @@ namespace Tasks.Infrastructure.Server.Core
                 commandProcessDto.StatusMessage = arg.StatusMessage;
                 commandProcessDto.Progress = arg.Progress;
 
-                return _hubContext.Clients.All.SendAsync("TaskCommandProcess", commandProcessDto, cancellationToken);
+                return _hubContext.Clients.All.SendAsync(HubEventNames.TaskCommandProcess, commandProcessDto, cancellationToken);
             }
 
             var executionMethod = _executionMethods[executorType];
@@ -164,7 +165,7 @@ namespace Tasks.Infrastructure.Server.Core
                 _logger.LogError(e, "Executing ICreateTaskCommandResultAction failed.");
             }
 
-            await _hubContext.Clients.All.SendAsync("TaskCommandResultCreated", commandResult);
+            await _hubContext.Clients.All.SendAsync(HubEventNames.TaskCommandResultCreated, commandResult);
         }
 
         private bool BusinessActionSucceeded(IBizActionStatus status)

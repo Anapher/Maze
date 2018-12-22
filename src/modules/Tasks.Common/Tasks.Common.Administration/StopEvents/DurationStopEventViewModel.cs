@@ -22,6 +22,8 @@ namespace Tasks.Common.Administration.StopEvents
         public void Initialize(DurationStopEventInfo model)
         {
             Duration = model.Duration;
+
+            OnPropertiesChanged();
         }
 
         public ValidationResult ValidateInput()

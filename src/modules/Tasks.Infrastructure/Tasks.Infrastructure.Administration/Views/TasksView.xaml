@@ -46,17 +46,23 @@
                         Header="{tx:T TasksInfrastructure:TaskOverview.ShowResults}"
                         Icon="{StaticResource FlatListIcon}" />
 
-                    <MenuItem Header="{tx:T TasksInfrastructure:TaskOverview.Edit}" Icon="{StaticResource EditIcon}" />
+                    <MenuItem
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.UpdateTaskCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{tx:T TasksInfrastructure:TaskOverview.Edit}"
+                        Icon="{StaticResource EditIcon}" />
 
-                    <MenuItem Command="{Binding}">
+                    <MenuItem Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.ToggleTaskIsEnabledCommand}" CommandParameter="{Binding}">
                         <MenuItem.Style>
                             <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="MenuItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsEnabled}" Value="true">
                                         <Setter Property="Header" Value="{tx:T TasksInfrastructure:TaskOverview.Disable}" />
+                                        <Setter Property="Icon" Value="{StaticResource TestNotCoveredIcon}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsEnabled}" Value="false">
                                         <Setter Property="Header" Value="{tx:T TasksInfrastructure:TaskOverview.Enable}" />
+                                        <Setter Property="Icon" Value="{StaticResource EnableDebuggingIcon}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -73,7 +79,8 @@
                 <DataGridTextColumn
                     Width="3*"
                     Binding="{Binding Name}"
-                    Header="{tx:T Name}" />
+                    Header="{tx:T Name}"
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn
                     Width="*"
                     MaxWidth="90"
@@ -110,6 +117,10 @@
                     Header="{tx:T TasksInfrastructure:TaskOverview.Executions,
                                   Count=2}"
                     IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding IsCompletedOnServer}"
+                    Header="{tx:T TasksInfrastructure:TaskOverview.CompletedOnServer}"
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn
                     Width="*"
                     MaxWidth="120"
@@ -120,7 +131,7 @@
                             <TextBlock>
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding NextExecution}}" />
+                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding NextExecution}, Details='YearMonthDay,HourMinuteSecond'}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding NextExecution}" Value="{x:Null}">
                                                 <Setter Property="Text" Value="{tx:T Unknown}" />
@@ -145,7 +156,7 @@
                             <TextBlock>
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding LastExecution}}" />
+                                        <Setter Property="Text" Value="{tx:Time TimeBinding={Binding LastExecution}, Details='YearMonthDay,HourMinuteSecond'}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding LastExecution}" Value="{x:Null}">
                                                 <Setter Property="Text" Value="{tx:T None}" />

@@ -53,6 +53,8 @@ namespace Tasks.Common.Administration.Filters
             WindowsServer2008 = model.WindowsServer2008;
             WindowsServer2012 = model.WindowsServer2012;
             WindowsServer2016 = model.WindowsServer2016;
+
+            OnPropertiesChanged();
         }
 
         public ValidationResult ValidateInput()

@@ -21,6 +21,8 @@ namespace Tasks.Common.Administration.Commands
         public void Initialize(WakeOnLanCommandInfo model)
         {
             TryOverClient = model.TryOverClient;
+
+            OnPropertiesChanged();
         }
 
         public ValidationResult ValidateInput() => ValidationResult.Success;

@@ -31,9 +31,9 @@ namespace Tasks.Common.Administration.Commands
 
         public override void Initialize(StartProcessCommandInfo model)
         {
-            base.Initialize(model);
-
             FileName = model.FileName;
+
+            base.Initialize(model);
         }
 
         public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;

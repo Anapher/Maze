@@ -57,10 +57,10 @@ namespace Tasks.Infrastructure.Core
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                yield return BusinessErrors.FieldNullOrEmpty("The name may not be empty");
+                yield return BusinessErrors.FieldNullOrEmpty(nameof(Name));
 
             if (Id == Guid.Empty)
-                yield return TaskErrors.TaskGuidEmpty;
+                yield return BusinessErrors.FieldNullOrEmpty(nameof(Id));
 
             if (RestartOnFailInterval != null && RestartOnFailInterval <= TimeSpan.Zero)
                 yield return TaskErrors.RestartOnFailIntervalMustBePositive;

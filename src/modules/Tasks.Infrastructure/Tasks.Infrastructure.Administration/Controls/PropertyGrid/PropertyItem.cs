@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Tasks.Infrastructure.Administration.PropertyGrid;
@@ -34,6 +35,8 @@ namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
             Description = property.Description;
             Category = property.Category;
             Value = property.Value;
+
+            property.PropertyChanged += PropertyOnPropertyChanged;
 
             Editor = finder.FindAndCreateEditor(this);
             Editor.GotFocus += EditorOnGotFocus;
@@ -109,6 +112,11 @@ namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
         private void RaiseItemSelectionChangedEvent()
         {
             RaiseEvent(new RoutedEventArgs(ItemSelectionChangedEvent));
+        }
+
+        private void PropertyOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Value = Property.Value;
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)

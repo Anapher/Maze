@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:taskOverview="clr-namespace:Tasks.Infrastructure.Administration.Views.TaskOverview"
     xmlns:taskOverview1="clr-namespace:Tasks.Infrastructure.Administration.ViewModels.TaskOverview"
+    xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
     Title="{Binding Title}"
@@ -49,5 +50,22 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </Grid>
+        <TextBlock
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="{tx:T TasksInfrastructure:TaskOverview.NoResultsAvailable}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Sessions.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </Grid>
 </views:WindowUserControl>

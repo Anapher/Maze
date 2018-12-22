@@ -35,6 +35,8 @@ namespace Tasks.Common.Administration.Commands
             FileSource.Initialize(model.FileSource);
             TargetPath = model.TargetPath;
             FileExistsBehavior = model.FileExistsBehavior;
+
+            OnPropertiesChanged();
         }
 
         public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;

@@ -25,8 +25,8 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         private DelegateCommand _addNewCommand;
         private bool _isSelected;
         private DelegateCommand<TaskViewModelView> _removeChildCommand;
-        private TaskViewModelView _selectedChild;
-        private ITaskServiceDescription _selectedService;
+        protected TaskViewModelView _selectedChild;
+        protected ITaskServiceDescription _selectedService;
 
         protected TaskServicesBaseViewModel(IWindowService windowService, IComponentContext container)
         {
@@ -155,19 +155,20 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             foreach (var child in _childs)
             {
                 var audienceAttribute = child.ViewModel.GetType().GetCustomAttribute<TaskAudienceAttribute>();
-                switch (audienceAttribute.Mode)
-                {
-                    case TaskAudienceMode.Clients:
-                        if (!orcusTask.Audience.Any() && !orcusTask.Audience.IsAll)
-                            yield return new ValidationResult("No clients included");
-                        break;
-                    case TaskAudienceMode.Server:
-                        if (!orcusTask.Audience.IncludesServer)
-                            yield return new ValidationResult("No server included");
-                        break;
-                    case TaskAudienceMode.ClientsAndServer:
-                        break;
-                }
+                if (audienceAttribute != null)
+                    switch (audienceAttribute.Mode)
+                    {
+                        case TaskAudienceMode.Clients:
+                            if (!orcusTask.Audience.Any() && !orcusTask.Audience.IsAll)
+                                yield return new ValidationResult("No clients included");
+                            break;
+                        case TaskAudienceMode.Server:
+                            if (!orcusTask.Audience.IncludesServer)
+                                yield return new ValidationResult("No server included");
+                            break;
+                        case TaskAudienceMode.ClientsAndServer:
+                            break;
+                    }
             }
         }
 

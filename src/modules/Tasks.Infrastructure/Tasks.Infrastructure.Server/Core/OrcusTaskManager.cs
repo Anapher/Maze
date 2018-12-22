@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -45,7 +44,7 @@ namespace Tasks.Infrastructure.Server.Core
     {
         Task<TaskInfo> CancelTask(Guid taskId);
         Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally);
-        Task TriggerNow(Guid taskId);
+        Task TriggerNow(OrcusTask task);
     }
 
     public class OrcusTaskManager : IOrcusTaskManager, IOrcusTaskManagerManagement
@@ -56,7 +55,6 @@ namespace Tasks.Infrastructure.Server.Core
         private readonly Dictionary<Guid, TaskInfo> _tasks;
         private readonly AsyncLock _tasksLock;
         private IImmutableList<TaskInfo> _localActiveTasks;
-        private readonly ConcurrentDictionary<Guid, Func<Task>> _immediateTriggers;
 
         public OrcusTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider,
             ILogger<OrcusTaskManager> logger)
@@ -68,7 +66,6 @@ namespace Tasks.Infrastructure.Server.Core
             ClientTasks = ImmutableList<TaskInfo>.Empty;
             LocalActiveTasks = ImmutableList<TaskInfo>.Empty;
             _tasksLock = new AsyncLock();
-            _immediateTriggers = new ConcurrentDictionary<Guid, Func<Task>>();
         }
 
         public IImmutableList<TaskInfo> ClientTasks { get; private set; }
@@ -119,10 +116,10 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task TriggerNow(Guid taskId)
+        public async Task TriggerNow(OrcusTask task)
         {
-            if (_immediateTriggers.TryGetValue(taskId, out var taskFunc))
-                await taskFunc();
+            var service = new OrcusTaskService(task, _serviceProvider);
+            await service.TriggerNow();
         }
 
         public async Task<TaskInfo> CancelTask(Guid taskId)
@@ -132,6 +129,8 @@ namespace Tasks.Infrastructure.Server.Core
                 if (_tasks.TryGetValue(taskId, out var taskInfo))
                 {
                     taskInfo.Dispose();
+                    _tasks.Remove(taskId);
+
                     ClientTasks = ClientTasks.Remove(taskInfo);
 
                     using (var scope = _serviceProvider.CreateScope())
@@ -195,8 +194,7 @@ namespace Tasks.Infrastructure.Server.Core
 
                 ClientTasks = ClientTasks.Add(taskInfo);
             }
-
-            LocalActiveTasks = LocalActiveTasks.Add(taskInfo);
+            
             return Task.WhenAll(executionTasks).ContinueWith(task => TaskExecutionCompleted(taskInfo));
         }
 
@@ -247,7 +245,6 @@ namespace Tasks.Infrastructure.Server.Core
 
         private async Task RunTask(OrcusTaskService taskService, CancellationToken cancellationToken)
         {
-            _immediateTriggers.TryAdd(taskService.OrcusTask.Id, taskService.TriggerNow);
             try
             {
                 await taskService.Run(cancellationToken);
@@ -260,10 +257,6 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 taskService.Logger.LogCritical(e, "An error occurred when running task service for task {taskId}.", taskService.OrcusTask.Id);
                 return;
-            }
-            finally
-            {
-                _immediateTriggers.TryRemove(taskService.OrcusTask.Id, out _);
             }
 
             using (var scope = _serviceProvider.CreateScope())

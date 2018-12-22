@@ -10,6 +10,7 @@ namespace Tasks.Infrastructure.Server.Migrations
             Create.Table("TaskReference")
                 .WithColumn("TaskId").AsGuid().PrimaryKey()
                 .WithColumn("IsCompleted").AsBoolean().NotNullable()
+                .WithColumn("IsEnabled").AsBoolean().NotNullable()
                 .WithColumn("AddedOn").AsInt64().NotNullable();
 
             Create.Table("TaskSession")

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using Autofac;
 using Orcus.Administration.Library.Views;
@@ -51,6 +49,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, commandInfo);
                 AddChild(view);
+
+                if (orcusTask.Commands.Count == 1)
+                {
+                    SetProperty(ref _selectedService, description, nameof(SelectedService));
+                    SetProperty(ref _selectedChild, view, nameof(SelectedChild));
+                }
             }
         }
 

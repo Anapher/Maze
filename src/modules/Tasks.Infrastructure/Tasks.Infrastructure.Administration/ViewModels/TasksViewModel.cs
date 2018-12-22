@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -14,18 +15,20 @@ using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Administration.Library.Views;
+using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Rest.V1;
 using Tasks.Infrastructure.Administration.ViewModels.Overview;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
-    public class TasksViewModel : OverviewTabBase
+    public class TasksViewModel : OverviewTabBase, IDisposable
     {
-        private readonly IRestClient _restClient;
+        private readonly IOrcusRestClient _restClient;
         private readonly IAppDispatcher _dispatcher;
         private readonly IComponentContext _services;
         private readonly IWindowService _windowService;
@@ -36,6 +39,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private DelegateCommand<TaskViewModel> _openTaskSessionsCommand;
         private DelegateCommand<TaskViewModel> _removeCommand;
         private DelegateCommand<TaskViewModel> _triggerCommand;
+        private DelegateCommand<TaskViewModel> _toggleTaskIsEnabledCommand;
+        private DelegateCommand<TaskViewModel> _updateTaskCommand;
+        private readonly Stack<IDisposable> _disposables = new Stack<IDisposable>();
+        private bool _isEventsInitialized;
 
         public TasksViewModel(IWindowService windowService, IOrcusRestClient restClient, IAppDispatcher dispatcher, IComponentContext services) :
             base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
@@ -44,9 +51,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             _restClient = restClient;
             _dispatcher = dispatcher;
             _services = services;
+        }
 
-            restClient.HubConnection.On<TaskExecutionDto>("TaskExecutionCreated", OnTaskExecutionCreated);
-            restClient.HubConnection.On<TaskSessionDto>("TaskSessionCreated", OnTaskSessionCreated);
+        public void Dispose()
+        {
+            _disposables.Dispose();
         }
 
         public ICollectionView TasksView
@@ -105,15 +114,36 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             }
         }
 
-        private DelegateCommand<TaskViewModel> _toggleTaskIsEnabledCommand;
-
         public DelegateCommand<TaskViewModel> ToggleTaskIsEnabledCommand
         {
             get
             {
-                return _toggleTaskIsEnabledCommand ?? (_toggleTaskIsEnabledCommand = new DelegateCommand<TaskViewModel>(parameter =>
+                return _toggleTaskIsEnabledCommand ?? (_toggleTaskIsEnabledCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
-                    //TODO
+                    if (parameter.IsEnabled)
+                    {
+                        await TasksResource.DisableTask(parameter.Id, _restClient).OnErrorShowMessageBox(_windowService);
+                    }
+                    else
+                    {
+                        await TasksResource.EnableTask(parameter.Id, _restClient).OnErrorShowMessageBox(_windowService);
+                    }
+                }));
+            }
+        }
+
+        public DelegateCommand<TaskViewModel> UpdateTaskCommand
+        {
+            get
+            {
+                return _updateTaskCommand ?? (_updateTaskCommand = new DelegateCommand<TaskViewModel>(async parameter =>
+                {
+                    var resolver = _services.Resolve<ITaskComponentResolver>();
+                    var xmlCache = _services.Resolve<IXmlSerializerCache>();
+
+                    var task = await TasksResource.FetchTaskAsync(parameter.Id, resolver, xmlCache, _restClient);
+                    if (_windowService.ShowDialog<CreateTaskViewModel>(vm => vm.UpdateTask(task)) == true)
+                        UpdateTasks().Forget();
                 }));
             }
         }
@@ -134,7 +164,23 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             var tasks = await TasksResource.GetTasks(_restClient);
             _tasks = new ObservableCollection<TaskViewModel>(tasks.Select(x => new TaskViewModel(x)));
 
+            InitializeEvents();
+
             TasksView = new ListCollectionView(_tasks);
+        }
+
+        private void InitializeEvents()
+        {
+            if (_isEventsInitialized)
+                return;
+
+            _restClient.HubConnection.On<TaskExecutionDto>(HubEventNames.TaskExecutionCreated, OnTaskExecutionCreated).DisposeWith(_disposables);
+            _restClient.HubConnection.On<TaskSessionDto>(HubEventNames.TaskSessionCreated, OnTaskSessionCreated).DisposeWith(_disposables);
+            _restClient.HubConnection.On<Guid>(HubEventNames.TaskUpdated, OnTaskUpdated).DisposeWith(_disposables);
+            _restClient.HubConnection.On<Guid>(HubEventNames.TaskRemoved, OnTaskRemoved).DisposeWith(_disposables);
+            _restClient.HubConnection.On<Guid>(HubEventNames.TaskCreated, OnTaskCreated).DisposeWith(_disposables);
+
+            _isEventsInitialized = true;
         }
 
         private void OnTaskExecutionCreated(TaskExecutionDto obj)
@@ -158,6 +204,42 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             {
                 var taskViewModel = _tasks.FirstOrDefault(x => x.Id == obj.TaskReferenceId);
                 taskViewModel?.Sessions.Add(obj.TaskSessionId);
+            }));
+        }
+
+        private void OnTaskRemoved(Guid taskId)
+        {
+            _dispatcher.Current.BeginInvoke(new Action(() =>
+            {
+                var taskViewModel = _tasks.FirstOrDefault(x => x.Id == taskId);
+                if (taskViewModel != null)
+                    _tasks.Remove(taskViewModel);
+            }));
+        }
+
+        private void OnTaskUpdated(Guid taskId)
+        {
+            _dispatcher.Current.BeginInvoke(new Action(async () =>
+            {
+                var taskViewModel = _tasks.FirstOrDefault(x => x.Id == taskId);
+                if (taskViewModel != null)
+                {
+                    var taskInfo = await TasksResource.GetTaskInfo(taskId, _restClient);
+                    taskViewModel.Update(taskInfo);
+                }
+            }));
+        }
+
+        private void OnTaskCreated(Guid taskId)
+        {
+            _dispatcher.Current.BeginInvoke(new Action(async () =>
+            {
+                var taskViewModel = _tasks.FirstOrDefault(x => x.Id == taskId);
+                if (taskViewModel == null)
+                {
+                    var taskInfo = await TasksResource.GetTaskInfo(taskId, _restClient);
+                    _tasks.Add(new TaskViewModel(taskInfo));
+                }
             }));
         }
     }

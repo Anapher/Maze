@@ -9,7 +9,6 @@
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
     xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
-    Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:CreateTaskViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -17,6 +16,18 @@
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
+    <views:WindowUserControl.Style>
+        <Style TargetType="views:WindowUserControl">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Update}" Value="true">
+                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask.Title.Update}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Update}" Value="false">
+                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask.Title}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </views:WindowUserControl.Style>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -116,8 +127,20 @@
                 MinWidth="150"
                 Margin="10"
                 HorizontalAlignment="Center"
-                Command="{Binding CreateTaskCommand}"
-                Content="{tx:T TasksInfrastructure:CreateTask.CreateTask}" />
+                Command="{Binding CreateTaskCommand}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource MetroButton}" TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Update}" Value="true">
+                                <Setter Property="Content" Value="{tx:T TasksInfrastructure:CreateTask.UpdateTask}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Update}" Value="false">
+                                <Setter Property="Content" Value="{tx:T TasksInfrastructure:CreateTask.CreateTask}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Border>
         <Border
             Grid.Row="0"

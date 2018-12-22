@@ -13,6 +13,6 @@ namespace Tasks.Infrastructure.Server.Core
         }
 
         public ConcurrentDictionary<Guid, CommandProcessDto> Processes { get; }
-        public IImmutableList<ActiveClientTaskDto> ActiveTasks { get; set; }
+        public IImmutableList<ClientTaskDto> Tasks { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.BusinessDataAccess;
 using Tasks.Infrastructure.Server.Core;
@@ -31,7 +31,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
             var task = tasks.FirstOrDefault(x => x.Id == inputData);
             if (task == null)
             {
-                AddValidationResult(new ValidationResult("The task does not exist."));
+                AddValidationResult(TaskErrors.TaskNotFound);
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
             var taskReference = await _dbAccess.FindAsync(inputData);
             var hash = _taskDirectory.ComputeTaskHash(task);
 
-            _management.InitializeTask(task, hash, true, !taskReference.IsCompleted);
+            await _management.InitializeTask(task, hash, true, !taskReference.IsCompleted);
         }
     }
 }

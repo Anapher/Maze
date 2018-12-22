@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Orcus.Server.Library.Controllers;
 using Orcus.Server.Library.Hubs;
 using Orcus.Server.Library.Utilities;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Server.Business;
 using Tasks.Infrastructure.Server.Core;
@@ -30,7 +31,7 @@ namespace Tasks.Infrastructure.Server.Controllers
 
             return await BizActionStatus(action, async () =>
             {
-                await _hubContext.Clients.All.SendAsync("TaskExecutionCreated", taskExecutionDto);
+                await _hubContext.Clients.All.SendAsync(HubEventNames.TaskExecutionCreated, taskExecutionDto);
                 return Ok();
             });
         }
@@ -45,7 +46,7 @@ namespace Tasks.Infrastructure.Server.Controllers
             await action.BizActionAsync(commandResultDto);
             return await BizActionStatus(action, async () =>
             {
-                await _hubContext.Clients.All.SendAsync("TaskCommandResultCreated", commandResultDto);
+                await _hubContext.Clients.All.SendAsync(HubEventNames.TaskCommandResultCreated, commandResultDto);
                 return Ok();
             });
         }
@@ -58,7 +59,7 @@ namespace Tasks.Infrastructure.Server.Controllers
             var status = activeTasksManager.ActiveCommands.GetOrAdd(new TargetId(clientId), _ => new TasksMachineStatus());
             status.Processes.AddOrUpdate(commandResultDto.CommandResultId, commandResultDto, (id, _) => commandResultDto);
 
-            await _hubContext.Clients.All.SendAsync("TaskCommandProcess", commandResultDto);
+            await _hubContext.Clients.All.SendAsync(HubEventNames.TaskCommandProcess, commandResultDto);
             return Ok();
         }
     }

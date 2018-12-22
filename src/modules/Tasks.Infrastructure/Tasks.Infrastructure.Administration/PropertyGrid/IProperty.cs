@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace Tasks.Infrastructure.Administration.PropertyGrid
@@ -6,7 +7,7 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
     /// <summary>
     ///     Represents a property in the PropertyGrid
     /// </summary>
-    public interface IProperty
+    public interface IProperty : INotifyPropertyChanged
     {
         /// <summary>
         ///     The display name of the property
@@ -42,5 +43,10 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
         ///     The type of the property
         /// </summary>
         Type PropertyType { get; }
+
+        /// <summary>
+        ///     Triggered if the source property changed
+        /// </summary>
+        void OnPropertyChanged();
     }
 }

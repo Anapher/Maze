@@ -12,7 +12,6 @@ using Tasks.Infrastructure.Administration.Rest.V1;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base;
 using Tasks.Infrastructure.Core;
-using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
@@ -22,6 +21,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private readonly IComponentContext _container;
         private DelegateCommand _createTaskCommand;
         private bool? _dialogResult;
+        private bool _update;
 
         public CreateTaskViewModel(IWindowService windowService, IComponentContext container)
         {
@@ -36,11 +36,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 new FiltersViewModel(windowService, container),
                 new StopEventsViewModel(windowService, container)
             };
-
-            Title = Tx.T("TasksInfrastructure:CreateTask.Title");
         }
-
-        public string Title { get; set; }
 
         public List<ITaskConfiguringViewModel> TreeViewModels { get; }
 
@@ -48,6 +44,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         {
             get => _dialogResult;
             set => SetProperty(ref _dialogResult, value);
+        }
+
+        public bool Update
+        {
+            get => _update;
+            set => SetProperty(ref _update, value);
         }
 
         public DelegateCommand CreateTaskCommand
@@ -80,7 +82,15 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 
                     try
                     {
-                        await TasksResource.Create(task, componentResolver, xmlCache, restClient);
+                        if (_update)
+                        {
+                            await TasksResource.Update(task, componentResolver, xmlCache, restClient);
+                        }
+                        else
+                        {
+                            await TasksResource.Create(task, componentResolver, xmlCache, restClient);
+                        }
+
                         DialogResult = true;
                     }
                     catch (Exception e)
@@ -89,6 +99,16 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     }
                 }));
             }
+        }
+
+        public void UpdateTask(OrcusTask orcusTask)
+        {
+            foreach (var taskConfiguringViewModel in TreeViewModels)
+            {
+                taskConfiguringViewModel.Initialize(orcusTask);
+            }
+
+            Update = true;
         }
     }
 }

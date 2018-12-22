@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -35,7 +34,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
 
             var taskReference = await _dbAccess.FindAsync(inputData.Id);
             if (taskReference != null)
-                return ReturnError<TaskReference>(new ValidationResult("The task already exists."));
+                return ReturnError<TaskReference>(TaskErrors.TaskAlreadyExists);
 
             await _taskDirectory.WriteTask(inputData);
 

@@ -87,15 +87,14 @@ namespace Tasks.Infrastructure.Client
         {
             _logger.LogDebug("Synchronize tasks...");
 
-            var tasksToDelete = Tasks.ToDictionary(x => x.Key, x => x.Value);
+            var tasksToDelete = (await _taskDirectory.LoadTasks()).ToDictionary(x => x.Id, x => _taskDirectory.ComputeTaskHash(x));
             var tasksToUpdate = new List<TaskSyncDto>();
 
             foreach (var taskSyncDto in tasks)
             {
-                if (tasksToDelete.TryGetValue(taskSyncDto.TaskId, out var info))
+                if (tasksToDelete.TryGetValue(taskSyncDto.TaskId, out var taskHash))
                 {
-                    var localTaskHash = _taskDirectory.ComputeTaskHash(info.Item1.OrcusTask);
-                    if (localTaskHash.Equals(Hash.Parse(taskSyncDto.Hash)))
+                    if (taskHash.Equals(Hash.Parse(taskSyncDto.Hash)))
                     {
                         //the hash values match, this task is fine
                         tasksToDelete.Remove(taskSyncDto.TaskId);
@@ -105,27 +104,6 @@ namespace Tasks.Infrastructure.Client
 
                 //the task was either not found or the hash values don't match
                 tasksToUpdate.Add(taskSyncDto);
-            }
-
-            if (tasksToDelete.Any())
-            {
-                foreach (var (taskRunner, cancellationTokenSource) in tasksToDelete.Values)
-                {
-                    _logger.LogDebug("Remove task {taskId}", taskRunner.OrcusTask.Id);
-
-                    //that will remove the task from the dictionary
-                    cancellationTokenSource.Cancel();
-                    await _taskDirectory.RemoveTask(taskRunner.OrcusTask.Id);
-                }
-            }
-
-            //remove tasks that are not listed anymore
-            foreach (var task in await _taskDirectory.LoadTasks())
-            {
-                if (!tasks.Any(x => x.TaskId == task.Id))
-                {
-                    await _taskDirectory.RemoveTask(task.Id);
-                }
             }
 
             if (tasksToUpdate.Any())
@@ -174,14 +152,11 @@ namespace Tasks.Infrastructure.Client
             RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
         }
 
-        public Task TriggerNow(Guid taskId)
+        public async Task TriggerNow(Guid taskId)
         {
-            if (Tasks.TryGetValue(taskId, out var info))
-            {
-                return info.Item1.TriggerNow();
-            }
-
-            return Task.CompletedTask;
+            var task = (await _taskDirectory.LoadTasks()).First(x => x.Id == taskId);
+            var taskRunner = new TaskRunner(task, _serviceProvider);
+            await taskRunner.TriggerNow();
         }
 
         private async Task RunTask(TaskRunner taskRunner, CancellationToken cancellationToken)
@@ -211,7 +186,6 @@ namespace Tasks.Infrastructure.Client
             }
             
             //the task is marked as finished in the task runner
-            await _taskDirectory.RemoveTask(taskRunner.OrcusTask.Id);
 
             await TryUpdateTaskMachineStatus();
         }
@@ -237,7 +211,14 @@ namespace Tasks.Infrastructure.Client
 
         private async Task UpdateTaskMachineStatus(IRestClient restClient)
         {
-            var tasks = Tasks.Select(x => new ActiveClientTaskDto { TaskId = x.Key, NextTrigger = x.Value.Item1.NextTrigger }).ToList();
+            var tasks = (await _taskDirectory.LoadTasks()).Select(x =>
+            {
+                if (Tasks.TryGetValue(x.Id, out var info))
+                    return new ClientTaskDto {TaskId = x.Id, NextTrigger = info.Item1.NextTrigger, IsActive = true};
+
+                return new ClientTaskDto {TaskId = x.Id};
+            }).ToList();
+
             try
             {
                 await TasksResource.UpdateMachineStatus(tasks, restClient);

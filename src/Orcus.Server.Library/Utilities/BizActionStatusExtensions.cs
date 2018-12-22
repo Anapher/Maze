@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Net;
 using CodeElements.BizRunner;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Error;
@@ -21,8 +23,8 @@ namespace Orcus.Server.Library.Utilities
                 return new OkResult();
 
             var errors = status.Errors.OfType<RestErrorValidationResult>().Select(x => x.Error).ToArray();
-            var firstError = errors[0];
-            var httpCode = (int) ErrorTypes.ErrorStatusCodes[firstError.Type];
+            var firstError = errors.FirstOrDefault();
+            var httpCode = firstError == null ? StatusCodes.Status400BadRequest : (int) ErrorTypes.ErrorStatusCodes[firstError.Type];
             return new JsonResult(errors) {StatusCode = httpCode};
         }
 

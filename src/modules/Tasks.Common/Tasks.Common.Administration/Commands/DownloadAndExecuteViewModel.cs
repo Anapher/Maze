@@ -29,9 +29,9 @@ namespace Tasks.Common.Administration.Commands
 
         public override void Initialize(DownloadAndExecuteCommandInfo model)
         {
-            base.Initialize(model);
-
             FileSource.Initialize(model.FileSource);
+
+            base.Initialize(model);
         }
 
         public override ValidationResult ValidateInput()

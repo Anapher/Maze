@@ -63,7 +63,15 @@ namespace Orcus.Sockets.Internal.Http
             textWriter.Write(request.Method);
             textWriter.Write(" ");
 
-            textWriter.WriteLine(request.RequestUri.PathAndQuery);
+            if (request.RequestUri.IsAbsoluteUri)
+                textWriter.WriteLine(request.RequestUri.PathAndQuery);
+            else
+            {
+                var relativeUri = request.RequestUri.ToString();
+                if (!relativeUri.StartsWith("/"))
+                    relativeUri = "/" + relativeUri;
+                textWriter.WriteLine(relativeUri);
+            }
 
             EncodeHeaders(request.Headers.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToArray())),
                 textWriter);

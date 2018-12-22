@@ -26,6 +26,7 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
         Task<IList<CommandResult>> GetCommandResults(Guid taskId);
 
         Task<IDictionary<Guid, TaskInfoDto>> GetTasks();
+        Task<TaskInfoDto> GetTaskInfo(Guid taskId);
     }
 
     public class TaskReferenceDbAccess : SqliteDbAccess, ITaskReferenceDbAccess
@@ -39,7 +40,7 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
             using (var connection = await OpenConnection())
             {
                 return await connection.QueryFirstOrDefaultAsync<TaskReference>(
-                    "SELECT TaskId, IsCompleted, AddedOn FROM TaskReference WHERE TaskId = @taskId", new {taskId});
+                    "SELECT TaskId, IsEnabled, IsCompleted, AddedOn FROM TaskReference WHERE TaskId = @taskId", new {taskId});
                 //return await connection.GetAsync<TaskReference>(taskId);
             }
         }
@@ -57,7 +58,7 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
             using (var connection = await OpenConnection())
             {
                 await connection.ExecuteAsync(
-                    "DELETE FROM CommandResult INNER JOIN TaskExecution ON CommandResult.TaskExecutionId = TaskExecution.TaskExecutionId WHERE TaskExecution.TaskReferenceId = @taskId",
+                    "DELETE CommandResult FROM CommandResult INNER JOIN TaskExecution ON CommandResult.TaskExecutionId = TaskExecution.TaskExecutionId WHERE TaskExecution.TaskReferenceId = @taskId",
                     new {taskId});
                 await connection.ExecuteAsync("DELETE FROM TaskExecution WHERE TaskReferenceId = @taskId", new {taskId});
                 await connection.ExecuteAsync("DELETE FROM TaskSession WHERE TaskReferenceId = @taskId", new {taskId});
@@ -168,6 +169,31 @@ namespace Tasks.Infrastructure.Server.BusinessDataAccess
                     tasks[lastExecution.Id].LastExecution = lastExecution.LastExecution;
 
                 return tasks;
+            }
+        }
+
+        public async Task<TaskInfoDto> GetTaskInfo(Guid taskId)
+        {
+            using (var connection = await OpenConnection())
+            {
+                var taskInfo = await connection.QueryFirstOrDefaultAsync<TaskInfoDto>(
+                    "SELECT TaskId AS Id, IsEnabled, AddedOn FROM TaskReference WHERE TaskId = @taskId", new {taskId});
+
+                var executions = await connection.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM TaskExecution WHERE TaskReferenceId = @taskId", new {taskId});
+
+                taskInfo.TotalExecutions = executions;
+
+                var sessions = await connection.QueryAsync<TaskSession>("SELECT TaskSessionId FROM TaskSession WHERE TaskReferenceId = @taskId",
+                    new {taskId});
+                taskInfo.Sessions = sessions.Select(x => x.TaskSessionId).ToList();
+
+                var lastExecutions =
+                    await connection.ExecuteScalarAsync<DateTimeOffset?>("SELECT MAX(CreatedOn) FROM TaskExecution WHERE TaskReferenceId = @taskId",
+                        new {taskId});
+                taskInfo.LastExecution = lastExecutions;
+
+                return taskInfo;
             }
         }
     }

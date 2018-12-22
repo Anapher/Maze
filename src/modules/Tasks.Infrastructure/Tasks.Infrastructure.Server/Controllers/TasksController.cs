@@ -7,9 +7,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Library.Controllers;
+using Orcus.Server.Library.Hubs;
 using Orcus.Server.Library.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
@@ -29,51 +31,75 @@ namespace Tasks.Infrastructure.Server.Controllers
         [HttpPost]
         [Authorize("admin")]
         public async Task<IActionResult> CreateTask([FromServices] ITaskComponentResolver taskComponentResolver,
-            [FromServices] IXmlSerializerCache serializerCache, [FromServices] ICreateTaskAction createTaskAction)
+            [FromServices] IXmlSerializerCache serializerCache, [FromServices] ICreateTaskAction createTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
             var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
             var task = orcusTask.ReadTask();
 
             await createTaskAction.BizActionAsync(task);
-            return BizActionStatus(createTaskAction);
+
+            return await BizActionStatus(createTaskAction, async () =>
+            {
+                await hubContext.Clients.All.SendAsync(HubEventNames.TaskCreated, task.Id);
+                return Ok();
+            });
         }
 
         [HttpDelete("{taskId}")]
         [Authorize("admin")]
-        public async Task<IActionResult> RemoveTask(Guid taskId, [FromServices] IDeleteTaskAction deleteTaskAction)
+        public async Task<IActionResult> RemoveTask(Guid taskId, [FromServices] IDeleteTaskAction deleteTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
             await deleteTaskAction.BizActionAsync(taskId);
 
-            return BizActionStatus(deleteTaskAction);
+            return await BizActionStatus(deleteTaskAction, async () =>
+            {
+                await hubContext.Clients.All.SendAsync(HubEventNames.TaskRemoved, taskId);
+                return Ok();
+            });
         }
 
         [HttpPut("{taskId}")]
         [Authorize("admin")]
         public async Task<IActionResult> UpdateTask(Guid taskId, [FromServices] ITaskComponentResolver taskComponentResolver,
-        [FromServices] IXmlSerializerCache serializerCache, [FromServices] IUpdateTaskAction updateTaskAction)
+            [FromServices] IXmlSerializerCache serializerCache, [FromServices] IUpdateTaskAction updateTaskAction,
+            [FromServices] IHubContext<AdministrationHub> hubContext)
         {
             var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
             var task = orcusTask.ReadTask();
 
             await updateTaskAction.BizActionAsync(task);
 
-            return BizActionStatus(updateTaskAction);
+            return await BizActionStatus(updateTaskAction, async () =>
+            {
+                await hubContext.Clients.All.SendAsync(HubEventNames.TaskUpdated, taskId);
+                return Ok();
+            });
         }
 
         [HttpPost("{taskId}/enable")]
         [Authorize("admin")]
-        public async Task<IActionResult> EnableTask(Guid taskId, [FromServices] IEnableTaskAction enableTaskAction)
+        public async Task<IActionResult> EnableTask(Guid taskId, [FromServices] IEnableTaskAction enableTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
             await enableTaskAction.BizActionAsync(taskId);
-            return BizActionStatus(enableTaskAction);
+
+            return await BizActionStatus(enableTaskAction, async () =>
+            {
+                await hubContext.Clients.All.SendAsync(HubEventNames.TaskUpdated, taskId);
+                return Ok();
+            });
         }
 
         [HttpPost("{taskId}/disable")]
         [Authorize("admin")]
-        public async Task<IActionResult> DisableTask(Guid taskId, [FromServices] IDisableTaskAction disableTaskAction)
+        public async Task<IActionResult> DisableTask(Guid taskId, [FromServices] IDisableTaskAction disableTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
             await disableTaskAction.BizActionAsync(taskId);
-            return BizActionStatus(disableTaskAction);
+
+            return await BizActionStatus(disableTaskAction, async () =>
+            {
+                await hubContext.Clients.All.SendAsync(HubEventNames.TaskUpdated, taskId);
+                return Ok();
+            });
         }
 
         [HttpGet("{taskId}/trigger")]
@@ -95,7 +121,7 @@ namespace Tasks.Infrastructure.Server.Controllers
         }
 
         [HttpPost("status")]
-        public async Task<IActionResult> UpdateMachineStatus([FromBody] IList<ActiveClientTaskDto> tasks, [FromServices] ActiveTasksManager activeTasksManager)
+        public async Task<IActionResult> UpdateMachineStatus([FromBody] IList<ClientTaskDto> tasks, [FromServices] ActiveTasksManager activeTasksManager)
         {
             if (User.IsAdministrator())
                 return BadRequest();
@@ -103,13 +129,14 @@ namespace Tasks.Infrastructure.Server.Controllers
             var clientId = User.GetClientId();
 
             var status = activeTasksManager.ActiveCommands.GetOrAdd(new TargetId(clientId), _ => new TasksMachineStatus());
-            status.ActiveTasks = tasks.ToImmutableList();
+            status.Tasks = tasks.ToImmutableList();
 
             return Ok();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks([FromServices] ITaskDirectory taskDirectory, [FromServices] IOrcusTaskManager taskManager, [FromServices]ITaskReferenceDbAccess dbAccess)
+        [Authorize("admin")]
+        public async Task<IActionResult> GetTasks([FromServices] ITaskDirectory taskDirectory, [FromServices] IOrcusTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
         {
             var tasks = await taskDirectory.LoadTasks();
             var taskInfos = await dbAccess.GetTasks();
@@ -128,6 +155,26 @@ namespace Tasks.Infrastructure.Server.Controllers
             });
 
             return Ok(infos);
+        }
+
+        [HttpGet("{taskId}/info")]
+        [Authorize("admin")]
+        public async Task<IActionResult> GetTaskInfo(Guid taskId, [FromServices] ITaskDirectory taskDirectory, [FromServices] IOrcusTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
+        {
+            var tasks = await taskDirectory.LoadTasks();
+            var task = tasks.FirstOrDefault(x => x.Id == taskId);
+            if (task == null)
+                return NotFound();
+
+            var localActiveTask = taskManager.LocalActiveTasks.FirstOrDefault(x => x.OrcusTask.Id == taskId);
+
+            var taskInfo = await dbAccess.GetTaskInfo(taskId);
+            taskInfo.Name = task.Name;
+            taskInfo.Commands = task.Commands.Count;
+            taskInfo.IsCompletedOnServer = localActiveTask == null;
+            taskInfo.NextExecution = localActiveTask?.NextExecution;
+
+            return Ok(taskInfo);
         }
 
         [HttpGet("{taskId}")]

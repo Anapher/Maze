@@ -8,7 +8,7 @@ using Tasks.Infrastructure.Core;
 
 namespace Tasks.Infrastructure.Client.Controllers
 {
-    [Route("tasks")]
+    [Route("v1/tasks")]
     public class TasksController : OrcusController
     {
         private readonly IClientTaskManager _clientTaskManager;

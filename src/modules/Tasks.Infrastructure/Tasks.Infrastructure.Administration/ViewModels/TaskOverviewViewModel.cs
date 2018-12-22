@@ -7,16 +7,18 @@ using System.Windows.Data;
 using Microsoft.AspNetCore.SignalR.Client;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Services;
+using Orcus.Server.Connection.Utilities;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Core;
 using Tasks.Infrastructure.Administration.ViewModels.Overview;
 using Tasks.Infrastructure.Administration.ViewModels.TaskOverview;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
-    public class TaskOverviewViewModel : BindableBase
+    public class TaskOverviewViewModel : BindableBase, IDisposable
     {
         private readonly IAppDispatcher _dispatcher;
         private readonly ICommandResultViewFactory _commandResultViewFactory;
@@ -25,21 +27,27 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private Dictionary<Guid, TaskExecutionViewModel> _executions;
         private Dictionary<Guid, ICommandStatusViewModel> _results;
         private object _selectedItem;
+        private readonly Stack<IDisposable> _disposables = new Stack<IDisposable>();
 
         public TaskOverviewViewModel(IOrcusRestClient restClient, IAppDispatcher dispatcher, ICommandResultViewFactory commandResultViewFactory)
         {
             _dispatcher = dispatcher;
             _commandResultViewFactory = commandResultViewFactory;
 
-            restClient.HubConnection.On<TaskSessionDto>("TaskSessionCreated", OnTaskSessionCreated);
-            restClient.HubConnection.On<TaskExecutionDto>("TaskExecutionCreated", OnTaskExecutionCreated);
-            restClient.HubConnection.On<CommandResultDto>("TaskCommandResultCreated", OnTaskCommandResultCreated);
-            restClient.HubConnection.On<CommandProcessDto>("TaskCommandProcess", OnTaskCommandProcess);
+            restClient.HubConnection.On<TaskSessionDto>(HubEventNames.TaskSessionCreated, OnTaskSessionCreated).DisposeWith(_disposables);
+            restClient.HubConnection.On<TaskExecutionDto>(HubEventNames.TaskExecutionCreated, OnTaskExecutionCreated).DisposeWith(_disposables);
+            restClient.HubConnection.On<CommandResultDto>(HubEventNames.TaskCommandResultCreated, OnTaskCommandResultCreated).DisposeWith(_disposables);
+            restClient.HubConnection.On<CommandProcessDto>(HubEventNames.TaskCommandProcess, OnTaskCommandProcess).DisposeWith(_disposables);
+        }
+
+        public void Dispose()
+        {
+            _disposables.Dispose();
         }
 
         public string Title { get; private set; }
 
-        public ICollectionView Sessions { get; private set; }
+        public ListCollectionView Sessions { get; private set; }
 
         public object SelectedItem
         {

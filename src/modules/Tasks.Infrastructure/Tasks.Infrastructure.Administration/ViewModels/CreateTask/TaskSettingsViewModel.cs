@@ -13,6 +13,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private bool _executeOnce;
         private string _name;
+        private Guid? _taskId;
 
         public string Name
         {
@@ -33,6 +34,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         {
             Name = orcusTask.Name;
             ExecuteOnce = orcusTask.ExecuteOnce;
+            _taskId = orcusTask.Id;
         }
 
         public IEnumerable<ValidationResult> ValidateInput()
@@ -50,7 +52,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         {
             orcusTask.Name = Name;
             orcusTask.ExecuteOnce = ExecuteOnce;
-            orcusTask.Id = Guid.NewGuid();
+            orcusTask.Id = _taskId ?? Guid.NewGuid();
         }
     }
 }

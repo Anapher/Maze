@@ -68,5 +68,19 @@ namespace Tasks.Infrastructure.Administration.Rest.V1
 
         public static Task TriggerTask(Guid taskId, IRestClient restClient) =>
             CreateRequest(HttpVerb.Get, taskId + "/trigger").Execute(restClient);
+
+        public static Task<TaskInfoDto> GetTaskInfo(Guid taskId, IRestClient restClient) =>
+            CreateRequest(HttpVerb.Get, taskId + "/info").Execute(restClient).Return<TaskInfoDto>();
+
+        public static async Task<OrcusTask> FetchTaskAsync(Guid taskId, ITaskComponentResolver taskComponentResolver,
+            IXmlSerializerCache xmlSerializerCache, IRestClient restClient)
+        {
+            using (var response = await CreateRequest(HttpVerb.Get, taskId.ToString("N")).Execute(restClient))
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            {
+                var taskReader = new OrcusTaskReader(stream, taskComponentResolver, xmlSerializerCache);
+                return taskReader.ReadTask();
+            }
+        }
     }
 }

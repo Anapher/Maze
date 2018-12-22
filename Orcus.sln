@@ -26,6 +26,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Modules.Api", "src\Orcus.Modules.Api\Orcus.Modules.Api.csproj", "{F7BA3EC1-1583-4A93-97F8-3394954B5953}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{505B289B-B216-44A4-8234-12E31B16C230}"
+	ProjectSection(SolutionItems) = preProject
+		src\modules\Directory.Build.props = src\modules\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{0FEBA25D-6572-4DAA-AE3C-77CB2A42E6D4}"
 EndProject
@@ -298,7 +301,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{80E5F868
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Administration.Tests", "src\modules\Tasks.Infrastructure\tests\Tasks.Infrastructure.Administration.Tests\Tasks.Infrastructure.Administration.Tests.csproj", "{53B241B7-243D-498D-95E3-DD14C946E4D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.Common.Client.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Client.Tests\Tasks.Common.Client.Tests.csproj", "{79384309-BB57-46D8-8C94-971ADA143A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Common.Client.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Client.Tests\Tasks.Common.Client.Tests.csproj", "{79384309-BB57-46D8-8C94-971ADA143A84}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

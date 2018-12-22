@@ -18,7 +18,7 @@ namespace Tasks.Infrastructure.Client.Rest.V1
         public static Task<List<TaskSyncDto>> GetSyncInfo(IRestClient restClient) =>
             CreateRequest(HttpVerb.Get, "sync").Execute(restClient).Return<List<TaskSyncDto>>();
 
-        public static Task UpdateMachineStatus(IList<ActiveClientTaskDto> tasks, IRestClient restClient) =>
+        public static Task UpdateMachineStatus(IList<ClientTaskDto> tasks, IRestClient restClient) =>
             CreateRequest(HttpVerb.Post, "status", tasks).Execute(restClient);
 
         public static async Task<OrcusTask> FetchTaskAsync(Guid taskId, ITaskComponentResolver taskComponentResolver,

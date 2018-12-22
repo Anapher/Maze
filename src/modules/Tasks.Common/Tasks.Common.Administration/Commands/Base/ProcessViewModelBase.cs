@@ -43,6 +43,8 @@ namespace Tasks.Common.Administration.Commands.Base
             UseShellExecute = model.UseShellExecute;
             CreateNoWindow = model.CreateNoWindow;
             WaitForExit = model.WaitForExit;
+
+            OnPropertiesChanged();
         }
 
         protected void ApplyProcessProperties(TCommandInfo commandInfo)

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
+using Orcus.Server.Connection;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.BusinessDataAccess;
 
@@ -24,10 +24,10 @@ namespace Tasks.Infrastructure.Server.Business
         public async Task<TaskTransmission> BizActionAsync(TaskTransmission inputData)
         {
             if (inputData.TaskReferenceId == Guid.Empty)
-                return ReturnError<TaskTransmission>(new ValidationResult("The TaskReferenceId must not be empty"));
+                return ReturnError<TaskTransmission>(BusinessErrors.FieldNullOrEmpty("TaskReferenceId"));
 
             if (inputData.CreatedOn == default)
-                return ReturnError<TaskTransmission>(new ValidationResult("The CreatedOn must not be the default value"));
+                return ReturnError<TaskTransmission>(BusinessErrors.FieldNullOrEmpty("CreatedOn"));
 
             await _dbAccess.CreateAsync(inputData);
             return inputData;

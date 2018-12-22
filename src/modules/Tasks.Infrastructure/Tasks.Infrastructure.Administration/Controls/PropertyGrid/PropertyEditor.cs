@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using Tasks.Infrastructure.Administration.PropertyGrid;
 
 namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
 {
@@ -34,7 +35,7 @@ namespace Tasks.Infrastructure.Administration.Controls.PropertyGrid
 
         protected virtual void ResolveValueBinding(PropertyEditorContext<TEditor> context)
         {
-            var binding = new Binding("Value")
+            var binding = new Binding(nameof(IProperty.Value))
             {
                 Source = context.PropertyItem,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,

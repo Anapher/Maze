@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
+using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Server.BusinessDataAccess;
 using Tasks.Infrastructure.Management.Data;
@@ -34,7 +34,7 @@ namespace Tasks.Infrastructure.Server.Business
             {
                 var taskReference = await _tasksDbAccess.FindAsync(inputData.TaskReferenceId);
                 if (taskReference == null)
-                    return ReturnError<TaskSession>(new ValidationResult("The task was not found."));
+                    return ReturnError<TaskSession>(TaskErrors.TaskNotFound);
 
                 taskSession = Mapper.Map<TaskSession>(inputData);
                 await _dbAccess.CreateAsync(taskSession);

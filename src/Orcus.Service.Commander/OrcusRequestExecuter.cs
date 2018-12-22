@@ -112,7 +112,7 @@ namespace Orcus.Service.Commander
         private Task WriteError(OrcusContext context, RestError error, int statusCode)
         {
             var actionContext = new DefaultActionContext(context, null, ImmutableDictionary<string, object>.Empty);
-            return new ObjectResult(error) {StatusCode = statusCode}.ExecuteResultAsync(actionContext);
+            return new ObjectResult(new[] {error}) {StatusCode = statusCode}.ExecuteResultAsync(actionContext);
         }
     }
 }

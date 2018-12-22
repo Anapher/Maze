@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Services;
 using Orcus.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Trigger;
@@ -50,6 +49,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, triggerInfo);
                 AddChild(view);
+
+                if (orcusTask.Triggers.Count == 1)
+                {
+                    SetProperty(ref _selectedService, description, nameof(SelectedService));
+                    SetProperty(ref _selectedChild, view, nameof(SelectedChild));
+                }
             }
         }
 

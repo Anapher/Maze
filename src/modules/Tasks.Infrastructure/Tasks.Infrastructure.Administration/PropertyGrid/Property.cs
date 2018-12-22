@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Tasks.Infrastructure.Administration.PropertyGrid
 {
@@ -9,7 +11,7 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
     ///     Generic implementation of <see cref="IProperty" />
     /// </summary>
     /// <typeparam name="T">The type of the property</typeparam>
-    public class Property<T> : IProperty
+    public class Property<T> : IProperty, INotifyPropertyChanged
     {
         private readonly IProvideEditableProperties _provideEditableProperties;
         private readonly PropertyInfo _propertyInfo;
@@ -103,6 +105,18 @@ namespace Tasks.Infrastructure.Administration.PropertyGrid
 
         PropertyInfo IProperty.PropertyInfo => _propertyInfo;
         Type IProperty.PropertyType => typeof (T);
+
+        public void OnPropertyChanged()
+        {
+            OnPropertyChanged(nameof(Value));
+        }
+
         string IProperty.PropertyName => _propertyInfo.Name;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

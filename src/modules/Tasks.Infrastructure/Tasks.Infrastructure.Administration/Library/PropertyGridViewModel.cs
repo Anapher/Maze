@@ -21,5 +21,11 @@ namespace Tasks.Infrastructure.Administration.Library
         ///     The properties for the service
         /// </summary>
         public List<IProperty> Properties { get; }
+
+        public void OnPropertiesChanged()
+        {
+            foreach (var property in Properties)
+                property.OnPropertyChanged();
+        }
     }
 }

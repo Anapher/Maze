@@ -44,8 +44,11 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task Run(CancellationToken cancellationToken)
+        private void InitializeFilter()
         {
+            if (_aggregatedClientFilter != null)
+                return;
+
             var loggerFactory = Services.GetRequiredService<ILoggerFactory>();
 
             var filters = new AggregatedClientFilter(loggerFactory.CreateLogger<AggregatedClientFilter>());
@@ -58,6 +61,11 @@ namespace Tasks.Infrastructure.Server.Core
             }
 
             _aggregatedClientFilter = filters;
+        }
+
+        public async Task Run(CancellationToken cancellationToken)
+        {
+            InitializeFilter();
 
             using (var triggerScope = Services.CreateScope())
             {
@@ -107,6 +115,8 @@ namespace Tasks.Infrastructure.Server.Core
 
         public async Task TriggerNow()
         {
+            InitializeFilter();
+
             var context = new TaskTriggerContext(this, "Manually Triggered", _aggregatedClientFilter);
             var session = await context.CreateSession(SessionKey.Create("ManualTrigger", DateTimeOffset.UtcNow));
             await session.Invoke();

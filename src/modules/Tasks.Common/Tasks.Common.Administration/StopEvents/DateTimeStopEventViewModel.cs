@@ -24,6 +24,8 @@ namespace Tasks.Common.Administration.StopEvents
         public void Initialize(DateTimeStopEventInfo model)
         {
             DateTime = model.DateTime.LocalDateTime;
+
+            OnPropertiesChanged();
         }
 
         public ValidationResult ValidateInput()

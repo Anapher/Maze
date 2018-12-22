@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
 using Tasks.Infrastructure.Core;
@@ -32,7 +31,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
             var taskReference = await _dbAccess.FindAsync(inputData.Id);
             if (taskReference == null)
             {
-                AddValidationResult(new ValidationResult("The task doesn't exist."));
+                AddValidationResult(TaskErrors.TaskNotFound);
                 return;
             }
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using Anapher.Wpf.Swan;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Core.Dtos;
 
@@ -12,25 +12,27 @@ namespace Tasks.Infrastructure.Administration.ViewModels.Overview
         private int _totalExecutions;
         private bool _isEnabled;
         private bool _isCompletedOnServer;
+        private int _commands;
 
         public TaskViewModel(TaskInfoDto taskInfo)
         {
             Name = taskInfo.Name;
             Id = taskInfo.Id;
-            Commands = taskInfo.Commands;
-            TotalExecutions = taskInfo.TotalExecutions;
-            IsEnabled = taskInfo.IsEnabled;
-            IsCompletedOnServer = taskInfo.IsCompletedOnServer;
-            Sessions = new ObservableCollection<string>(taskInfo.Sessions);
-            LastExecution = taskInfo.LastExecution;
             AddedOn = taskInfo.AddedOn;
+            Sessions = new TransactionalObservableCollection<string>();
+
+            Update(taskInfo);
         }
 
         public string Name { get; }
         public Guid Id { get; }
-        public int Commands { get; set; }
-        public bool IsActive { get; set; }
         public DateTimeOffset AddedOn { get; }
+
+        public int Commands
+        {
+            get => _commands;
+            set => SetProperty(ref _commands, value);
+        }
 
         public bool IsEnabled
         {
@@ -62,6 +64,20 @@ namespace Tasks.Infrastructure.Administration.ViewModels.Overview
             set => SetProperty(ref _lastExecution, value);
         }
 
-        public ObservableCollection<string> Sessions { get; }
+        public TransactionalObservableCollection<string> Sessions { get; }
+
+        public void Update(TaskInfoDto taskInfo)
+        {
+            Commands = taskInfo.Commands;
+            TotalExecutions = taskInfo.TotalExecutions;
+            IsEnabled = taskInfo.IsEnabled;
+            IsCompletedOnServer = taskInfo.IsCompletedOnServer;
+
+            Sessions.Clear();
+            if (taskInfo.Sessions != null)
+                Sessions.AddRange(taskInfo.Sessions);
+
+            LastExecution = taskInfo.LastExecution;
+        }
     }
 }
