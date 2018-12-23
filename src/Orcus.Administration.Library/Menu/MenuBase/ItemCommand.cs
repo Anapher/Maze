@@ -50,7 +50,7 @@ namespace Orcus.Administration.Library.Menu.MenuBase
                         else
                             return MultipleCommand.CanExecute(list.Cast<TItem>().ToList());
 
-                    return false;
+                    return true;
                 });
 
                 Command.CanExecuteChanged += (sender, args) => command.RaiseCanExecuteChanged();

@@ -71,9 +71,6 @@ namespace Tasks.Infrastructure.Core
             if (!Audience.IncludesServer && !Audience.IsAll && !Audience.Any())
                 yield return TaskErrors.NoAudienceGiven;
 
-            if (!Triggers.Any())
-                yield return TaskErrors.NoTriggersGiven;
-
             if (!Commands.Any())
                 yield return TaskErrors.NoCommandsGiven;
         }

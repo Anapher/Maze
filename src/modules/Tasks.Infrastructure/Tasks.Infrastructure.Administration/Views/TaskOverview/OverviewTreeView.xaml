@@ -43,6 +43,15 @@
                             Margin="3,0,0,0"
                             FontStyle="Italic"
                             Opacity=".8">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Executions}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                             <Run Text="(" /><Run Text="{Binding Executions.Count, Mode=OneWay}" />
                             <Run Text="{tx:T TasksInfrastructure:TaskOverview.Executions, CountBinding={Binding Executions.Count, Mode=OneWay}}" /><Run Text=")" />
                         </TextBlock>
@@ -93,6 +102,15 @@
                             Margin="3,0,0,0"
                             FontStyle="Italic"
                             Opacity=".8">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Results}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                             <Run Text="(" /><Run Text="{Binding Results.Count, Mode=OneWay}" />
                             <Run Text="{tx:T TasksInfrastructure:CreateTask.Commands, CountBinding={Binding Results.Count, Mode=OneWay}}" /><Run Text=")" />
                         </TextBlock>

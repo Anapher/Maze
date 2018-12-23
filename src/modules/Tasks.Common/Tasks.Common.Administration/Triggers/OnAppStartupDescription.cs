@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Triggers
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Triggers.OnAppStartup");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.OnAppStartup.Summary");
         public UIElement Icon => _icons.VBWindowsService;
         public Type DtoType { get; } = typeof(OnAppStartupTriggerInfo);

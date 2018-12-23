@@ -20,11 +20,16 @@ namespace Tasks.Infrastructure.Server.Filter
 
         public Task<bool> Invoke(int clientId, IServiceProvider serviceProvider)
         {
+            return Task.FromResult(Invoke(clientId));
+        }
+
+        public bool Invoke(int clientId)
+        {
             if (_audienceCollection.IsAll)
-                return Task.FromResult(true);
+                return true;
 
             if (_audienceCollection.Any(x => x.Type == CommandTargetType.Client && clientId >= x.From && clientId <= x.To))
-                return Task.FromResult(true);
+                return true;
 
             //check group
             throw new NotImplementedException();

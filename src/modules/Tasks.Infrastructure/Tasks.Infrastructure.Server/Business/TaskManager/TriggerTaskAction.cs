@@ -7,6 +7,8 @@ using Orcus.Server.Library.Services;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Core;
+using Tasks.Infrastructure.Server.Core.Storage;
+using Tasks.Infrastructure.Server.Library;
 using Tasks.Infrastructure.Server.Rest.V1;
 
 namespace Tasks.Infrastructure.Server.Business.TaskManager
@@ -18,16 +20,19 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
     public class TriggerTaskAction : BusinessActionErrors, ITriggerTaskAction
     {
         private readonly ActiveTasksManager _activeTasksManager;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IConnectionManager _connectionManager;
         private readonly IOrcusTaskManagerManagement _management;
         private readonly ITaskDirectory _taskDirectory;
 
-        public TriggerTaskAction(IOrcusTaskManagerManagement management, ITaskDirectory taskDirectory, IConnectionManager connectionManager, ActiveTasksManager activeTasksManager)
+        public TriggerTaskAction(IOrcusTaskManagerManagement management, ITaskDirectory taskDirectory, IConnectionManager connectionManager,
+            ActiveTasksManager activeTasksManager, IServiceProvider serviceProvider)
         {
             _management = management;
             _taskDirectory = taskDirectory;
             _connectionManager = connectionManager;
             _activeTasksManager = activeTasksManager;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task BizActionAsync(Guid inputData)
@@ -38,13 +43,14 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
                 AddValidationResult(TaskErrors.TaskNotFound);
                 return;
             }
-
-            await _management.TriggerNow(task);
+            
+            var sessionKey = SessionKey.CreateUtcNow("ManualTrigger");
+            await _management.TriggerNow(task, sessionKey, new DatabaseTaskResultStorage(_serviceProvider));
 
             foreach (var status in _activeTasksManager.ActiveCommands.Where(x => !x.Key.IsServer))
                 if (status.Value.Tasks.Any(x => x.TaskId == inputData))
                     if (_connectionManager.ClientConnections.TryGetValue(status.Key.ClientId, out var connection))
-                        await TasksResource.TriggerTask(inputData, connection);
+                        await TasksResource.TriggerTask(inputData, sessionKey, connection);
         }
     }
 }

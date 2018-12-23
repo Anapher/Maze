@@ -2,6 +2,7 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="TasksInfrastructure:CreateTask">Neue Aufgabe erstellen</text>
 		<text key="TasksInfrastructure:CreateTask.AddAnother">Weiteren {entry} hinzufügen</text>
 		<text key="TasksInfrastructure:CreateTask.Audience">Unterstehende</text>
 		<text key="TasksInfrastructure:CreateTask.Commands">Befehle</text>
@@ -17,12 +18,13 @@
 		<text key="TasksInfrastructure:CreateTask.Search">Suchen...</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents">Stoppen</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stopp</text>
-		<text key="TasksInfrastructure:CreateTask.Title">Neue Aufgabe erstellen</text>
-		<text key="TasksInfrastructure:CreateTask.Title.Update">Aufgabe bearbeiten</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers">Auslöser</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Auslöser</text>
+		<text key="TasksInfrastructure:CreateTask.Update">Aufgabe bearbeiten</text>
 		<text key="TasksInfrastructure:CreateTask.UpdateTask">Aufgabe aktualisieren</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">Der Name der Aufgabe darf nicht leer sein.</text>
+		<text key="TasksInfrastructure:ExecuteCommand">Befehl "{name}" ausführen</text>
+		<text key="TasksInfrastructure:ExecuteCommand.Execute">Ausführen</text>
 		<text key="TasksInfrastructure:TaskOverview.CompletedOnServer">Beendet auf Server</text>
 		<text key="TasksInfrastructure:TaskOverview.Created">Erstellt</text>
 		<text key="TasksInfrastructure:TaskOverview.Disable">Deaktivieren</text>
@@ -43,8 +45,10 @@
 		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Deaktiviert</text>
 		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Aktiviert</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Aufgabe '{name}' Übersicht</text>
+		<text key="TasksInfrastructure:Tasks.RecentCommands">Letzte Befehle</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="TasksInfrastructure:CreateTask">Create new task</text>
 		<text key="TasksInfrastructure:CreateTask.AddAnother">Add another {entry}</text>
 		<text key="TasksInfrastructure:CreateTask.Audience">Audience</text>
 		<text key="TasksInfrastructure:CreateTask.Commands">Commands</text>
@@ -60,12 +64,13 @@
 		<text key="TasksInfrastructure:CreateTask.Search">Search...</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents">Stop</text>
 		<text key="TasksInfrastructure:CreateTask.StopEvents" count="1">Stop</text>
-		<text key="TasksInfrastructure:CreateTask.Title">Create new task</text>
-		<text key="TasksInfrastructure:CreateTask.Title.Update">Edit task</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers">Triggers</text>
 		<text key="TasksInfrastructure:CreateTask.Triggers" count="1">Trigger</text>
+		<text key="TasksInfrastructure:CreateTask.Update">Edit task</text>
 		<text key="TasksInfrastructure:CreateTask.UpdateTask">Update Task</text>
 		<text key="TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty">The name of the task cannot be empty.</text>
+		<text key="TasksInfrastructure:ExecuteCommand">Execute command "{name}"</text>
+		<text key="TasksInfrastructure:ExecuteCommand.Execute">Execute</text>
 		<text key="TasksInfrastructure:TaskOverview.CompletedOnServer">Completed on Server</text>
 		<text key="TasksInfrastructure:TaskOverview.Created">Created</text>
 		<text key="TasksInfrastructure:TaskOverview.Disable">Disable</text>
@@ -86,5 +91,6 @@
 		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Disabled</text>
 		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Enabled</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Task '{name}' overview</text>
+		<text key="TasksInfrastructure:Tasks.RecentCommands">Recent Commands</text>
 	</culture>
 </translation>

@@ -13,6 +13,7 @@ using Orcus.Server.Connection.Extensions;
 using Orcus.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
+using Tasks.Infrastructure.Server.Core.Storage;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 
@@ -20,11 +21,13 @@ namespace Tasks.Infrastructure.Server.Core
 {
     public class OrcusTaskService : INotifyPropertyChanged
     {
+        private readonly ITaskResultStorage _taskResultStorage;
         private AggregatedClientFilter _aggregatedClientFilter;
         private DateTimeOffset _nextExecution;
 
-        public OrcusTaskService(OrcusTask orcusTask, IServiceProvider services)
+        public OrcusTaskService(OrcusTask orcusTask, ITaskResultStorage taskResultStorage, IServiceProvider services)
         {
+            _taskResultStorage = taskResultStorage;
             OrcusTask = orcusTask;
             Services = services;
             Logger = services.GetRequiredService<ILogger<OrcusTaskService>>();
@@ -83,7 +86,7 @@ namespace Tasks.Infrastructure.Server.Core
                     }
 
                     var triggerContext = new TaskTriggerContext(this, service.GetType().Name.TrimEnd("TriggerService", StringComparison.Ordinal),
-                        _aggregatedClientFilter);
+                        _aggregatedClientFilter, _taskResultStorage);
                     var methodInfo = serviceType.GetMethod("InvokeAsync", BindingFlags.Instance | BindingFlags.Public);
 
                     try
@@ -113,12 +116,12 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task TriggerNow()
+        public async Task TriggerNow(SessionKey sessionKey)
         {
             InitializeFilter();
 
-            var context = new TaskTriggerContext(this, "Manually Triggered", _aggregatedClientFilter);
-            var session = await context.CreateSession(SessionKey.Create("ManualTrigger", DateTimeOffset.UtcNow));
+            var context = new TaskTriggerContext(this, "Manually Triggered", _aggregatedClientFilter, _taskResultStorage);
+            var session = await context.CreateSession(sessionKey);
             await session.Invoke();
         }
 
@@ -145,7 +148,7 @@ namespace Tasks.Infrastructure.Server.Core
                     return false;
                 }, cancellationToken);
 
-                var executor = new TaskExecutor(OrcusTask, taskSession, Services);
+                var executor = new TaskExecutor(OrcusTask, taskSession, _taskResultStorage, Services);
                 await executor.Execute(attenders, attenderScopes, cancellationToken);
             }
         }

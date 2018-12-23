@@ -22,20 +22,21 @@ using Orcus.Server.Connection.Extensions;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Tasks.Infrastructure.Client.Storage;
 
 namespace Tasks.Infrastructure.Client
 {
     public class TaskRunner : INotifyPropertyChanged
     {
-        private readonly ITaskSessionManager _sessionManager;
+        private readonly ITaskStorage _storage;
         private DateTimeOffset? _nextTrigger;
 
-        public TaskRunner(OrcusTask orcusTask, IServiceProvider services)
+        public TaskRunner(OrcusTask orcusTask, ITaskStorage taskStorage, IServiceProvider services)
         {
             OrcusTask = orcusTask;
             Services = services;
             Logger = services.GetRequiredService<ILogger<TaskRunner>>();
-            _sessionManager = Services.GetRequiredService<ITaskSessionManager>();
+            _storage = taskStorage;
         }
 
         public OrcusTask OrcusTask { get; }
@@ -124,7 +125,8 @@ namespace Tasks.Infrastructure.Client
                                 continue;
                             }
 
-                            var triggerContext = new TaskTriggerContext(this, service.GetType().Name.TrimEnd("TriggerService", StringComparison.Ordinal));
+                            var triggerContext = new TaskTriggerContext(this,
+                                service.GetType().Name.TrimEnd("TriggerService", StringComparison.Ordinal), _storage);
                             var methodInfo = serviceType.GetMethod("InvokeAsync");
 
                             try
@@ -164,15 +166,15 @@ namespace Tasks.Infrastructure.Client
                     if (!cancellationToken.IsCancellationRequested)
                     {
                         //the task finished
-                        await _sessionManager.MarkTaskFinished(OrcusTask);
+                        await _storage.MarkTaskFinished(OrcusTask);
                     }
                 }
         }
 
-        public async Task TriggerNow()
+        public async Task TriggerNow(SessionKey sessionKey)
         {
-            var context = new TaskTriggerContext(this, "Manually Triggered");
-            var session = await context.CreateSession(SessionKey.Create("ManualTrigger", DateTimeOffset.UtcNow));
+            var context = new TaskTriggerContext(this, "Manually Triggered", _storage);
+            var session = await context.CreateSession(sessionKey);
             await session.Invoke();
         }
 
@@ -190,7 +192,7 @@ namespace Tasks.Infrastructure.Client
                     TaskExecutionId = Guid.NewGuid()
                 };
 
-                _sessionManager.StartExecution(OrcusTask, taskSession, execution).Forget();
+                _storage.StartExecution(OrcusTask, taskSession, execution).Forget();
 
                 var afterExecutionTasks = new ConcurrentQueue<Func<Task>>();
 
@@ -256,7 +258,7 @@ namespace Tasks.Infrastructure.Client
                             }
 
                         commandResult.FinishedAt = DateTimeOffset.UtcNow;
-                        await _sessionManager.AppendCommandResult(OrcusTask, commandResult);
+                        await _storage.AppendCommandResult(OrcusTask, commandResult);
                     }
                 }, cancellationToken);
 

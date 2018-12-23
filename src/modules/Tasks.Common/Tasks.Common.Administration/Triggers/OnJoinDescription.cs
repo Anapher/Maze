@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Triggers
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Triggers.OnJoin");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.OnJoin.Summary");
         public UIElement Icon => _icons.CloudConnectedServices;
         public Type DtoType { get; } = typeof(OnJoinTriggerInfo);

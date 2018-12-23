@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Commands
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Commands.WakeOnLan");
+        public string Namespace { get; } = "Computer";
         public string Summary { get; } = Tx.T("TasksCommon:Commands.WakeOnLan.Summary");
         public UIElement Icon => _icons.ServerRunTest;
         public Type DtoType { get; } = typeof(WakeOnLanCommandInfo);

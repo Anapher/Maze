@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Commands
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Commands.Shutdown");
+        public string Namespace { get; } = "Computer";
         public string Summary { get; } = Tx.T("TasksCommon:Commands.Shutdown.Summary");
         public UIElement Icon => _icons.ShutDown;
         public Type DtoType { get; } = typeof(ShutdownCommandInfo);

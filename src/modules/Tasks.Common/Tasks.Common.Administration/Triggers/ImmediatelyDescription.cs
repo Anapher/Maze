@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Triggers
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Triggers.Immediately");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.Immediately.Summary");
         public UIElement Icon => _icons.Event;
         public Type DtoType { get; } = typeof(ImmediatelyTriggerInfo);

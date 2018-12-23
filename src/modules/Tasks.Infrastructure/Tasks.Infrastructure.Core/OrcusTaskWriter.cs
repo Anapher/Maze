@@ -98,7 +98,7 @@ namespace Tasks.Infrastructure.Core
 
         private void WriteElements<T>(IList<T> elements, string section)
         {
-            if (!elements.Any())
+            if (elements?.Any() != true)
                 return;
 
             _xmlWriter.WriteStartElement(section);

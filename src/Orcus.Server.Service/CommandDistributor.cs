@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Orcus.Modules.Api.Request;
 using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Library.Services;
-using Orcus.Server.Service.Channels;
 
 namespace Orcus.Server.Service
 {

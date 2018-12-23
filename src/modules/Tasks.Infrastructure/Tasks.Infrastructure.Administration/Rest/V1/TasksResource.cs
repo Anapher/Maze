@@ -52,6 +52,23 @@ namespace Tasks.Infrastructure.Administration.Rest.V1
             }
         }
 
+        public static async Task<TaskSessionsInfo> Execute(OrcusTask orcusTask, ITaskComponentResolver componentResolver,
+            IXmlSerializerCache xmlCache, IRestClient restClient)
+        {
+            using (var taskMemoryStream = new MemoryStream())
+            {
+                var taskWriter = new OrcusTaskWriter(taskMemoryStream, componentResolver, xmlCache);
+                taskWriter.Write(orcusTask, TaskDetails.Server);
+
+                taskMemoryStream.Position = 0;
+
+                var stream = new StreamContent(taskMemoryStream);
+                stream.Headers.ContentEncoding.Add("xml");
+
+                return await CreateRequest(HttpVerb.Post, "execute", stream).Execute(restClient).Return<TaskSessionsInfo>();
+            }
+        }
+
         public static Task<List<TaskInfoDto>> GetTasks(IRestClient restClient) => CreateRequest().Execute(restClient).Return<List<TaskInfoDto>>();
 
         public static Task<TaskSessionsInfo> GetTaskSessions(Guid taskId, IRestClient restClient) =>

@@ -29,7 +29,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             _container = container;
             TreeViewModels = new List<ITaskConfiguringViewModel>
             {
-                new TaskSettingsViewModel{IsSelected = true},
+                new TaskSettingsViewModel {IsSelected = true},
                 new CommandsViewModel(windowService, container),
                 new AudienceViewModel(),
                 new TriggersViewModel(windowService, container),

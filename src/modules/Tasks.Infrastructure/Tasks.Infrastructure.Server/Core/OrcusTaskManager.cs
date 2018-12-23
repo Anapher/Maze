@@ -16,6 +16,7 @@ using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Business;
 using Tasks.Infrastructure.Server.Business.TaskManager;
+using Tasks.Infrastructure.Server.Core.Storage;
 using Tasks.Infrastructure.Server.Filter;
 using Tasks.Infrastructure.Server.Library;
 using Tasks.Infrastructure.Server.Rest.V1;
@@ -44,7 +45,7 @@ namespace Tasks.Infrastructure.Server.Core
     {
         Task<TaskInfo> CancelTask(Guid taskId);
         Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally);
-        Task TriggerNow(OrcusTask task);
+        Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage);
     }
 
     public class OrcusTaskManager : IOrcusTaskManager, IOrcusTaskManagerManagement
@@ -116,10 +117,10 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task TriggerNow(OrcusTask task)
+        public async Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage)
         {
-            var service = new OrcusTaskService(task, _serviceProvider);
-            await service.TriggerNow();
+            var service = new OrcusTaskService(task, taskResultStorage, _serviceProvider);
+            await service.TriggerNow(sessionKey);
         }
 
         public async Task<TaskInfo> CancelTask(Guid taskId)
@@ -170,7 +171,7 @@ namespace Tasks.Infrastructure.Server.Core
             var executionTasks = new List<Task>();
             if (executeOnServer && executeLocally)
             {
-                var taskService = new OrcusTaskService(orcusTask, _serviceProvider);
+                var taskService = new OrcusTaskService(orcusTask, new DatabaseTaskResultStorage(_serviceProvider), _serviceProvider);
                 taskService.PropertyChanged += (sender, args) =>
                 {
                     if (args.PropertyName == nameof(OrcusTaskService.NextExecution))

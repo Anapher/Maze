@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.Library
 {
@@ -9,6 +10,11 @@ namespace Tasks.Infrastructure.Administration.Library
         ///     The name
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        ///     The service namespace, separated by the '.' (dot). The segments will be translated by <see cref="Tx"/> using the key template "Tasks.Namespace.{segment}"
+        /// </summary>
+        string Namespace { get; }
 
         /// <summary>
         ///     A short summary about the functionality

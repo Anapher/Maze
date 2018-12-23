@@ -11,7 +11,9 @@ using Orcus.Client.Library.Clients;
 using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
+using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Rest.V1;
+using Tasks.Infrastructure.Client.Storage;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
@@ -25,7 +27,7 @@ namespace Tasks.Infrastructure.Client
         Task RemoveTask(Guid taskId);
         Task Synchronize(List<TaskSyncDto> tasks, IRestClient restClient);
         Task AddOrUpdateTask(OrcusTask orcusTask);
-        Task TriggerNow(Guid taskId);
+        Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskStorage taskStorage);
     }
 
     public class ClientTaskManager : IClientTaskManager
@@ -34,10 +36,12 @@ namespace Tasks.Infrastructure.Client
         private readonly ITaskDirectory _taskDirectory;
         private readonly ILogger<ClientTaskManager> _logger;
         private readonly object _taskUpdateLock = new object();
+        private readonly IDatabaseTaskStorage _taskStorage;
 
-        public ClientTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider, ILogger<ClientTaskManager> logger)
+        public ClientTaskManager(ITaskDirectory taskDirectory, IDatabaseTaskStorage taskStorage, IServiceProvider serviceProvider, ILogger<ClientTaskManager> logger)
         {
             _taskDirectory = taskDirectory;
+            _taskStorage = taskStorage;
             _serviceProvider = serviceProvider;
             _logger = logger;
 
@@ -49,16 +53,14 @@ namespace Tasks.Infrastructure.Client
         public async Task Initialize()
         {
             _logger.LogDebug("Initialize tasks");
-
-            var sessionManager = _serviceProvider.GetRequiredService<ITaskSessionManager>();
-
+            
             var tasks = await _taskDirectory.LoadTasksRefresh();
             foreach (var orcusTask in tasks)
             {
-                if (await sessionManager.CheckTaskFinished(orcusTask))
+                if (await _taskStorage.CheckTaskFinished(orcusTask))
                     continue;
 
-                var taskRunner = new TaskRunner(orcusTask, _serviceProvider);
+                var taskRunner = new TaskRunner(orcusTask, _taskStorage, _serviceProvider);
                 var cancellationTokenSource = new CancellationTokenSource();
 
                 Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
@@ -140,7 +142,7 @@ namespace Tasks.Infrastructure.Client
                 Tasks.TryRemove(orcusTask.Id, out _);
             }
 
-            var taskRunner = new TaskRunner(orcusTask, _serviceProvider);
+            var taskRunner = new TaskRunner(orcusTask, _taskStorage, _serviceProvider);
             var cancellationTokenSource = new CancellationTokenSource();
 
             lock (_taskUpdateLock)
@@ -152,11 +154,10 @@ namespace Tasks.Infrastructure.Client
             RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
         }
 
-        public async Task TriggerNow(Guid taskId)
+        public async Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskStorage taskStorage)
         {
-            var task = (await _taskDirectory.LoadTasks()).First(x => x.Id == taskId);
-            var taskRunner = new TaskRunner(task, _serviceProvider);
-            await taskRunner.TriggerNow();
+            var taskRunner = new TaskRunner(task, taskStorage, _serviceProvider);
+            await taskRunner.TriggerNow(sessionKey);
         }
 
         private async Task RunTask(TaskRunner taskRunner, CancellationToken cancellationToken)

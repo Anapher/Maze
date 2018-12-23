@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Commands
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Commands.DownloadAndExecute");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Commands.DownloadAndExecute.Summary");
         public UIElement Icon => _icons.CloudRun;
         public Type DtoType { get; } = typeof(DownloadAndExecuteCommandInfo);

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Orcus.Server.Connection.Commanding;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Library.Controllers;
 using Orcus.Server.Library.Hubs;
@@ -33,8 +34,8 @@ namespace Tasks.Infrastructure.Server.Controllers
         public async Task<IActionResult> CreateTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache, [FromServices] ICreateTaskAction createTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
-            var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
-            var task = orcusTask.ReadTask();
+            var reader = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var task = reader.ReadTask();
 
             await createTaskAction.BizActionAsync(task);
 
@@ -108,6 +109,18 @@ namespace Tasks.Infrastructure.Server.Controllers
         {
             await triggerTaskAction.BizActionAsync(taskId);
             return BizActionStatus(triggerTaskAction);
+        }
+
+        [HttpPost("execute")]
+        [Authorize("admin")]
+        public async Task<IActionResult> ExecuteTask([FromServices] ITaskComponentResolver taskComponentResolver,
+            [FromServices] IXmlSerializerCache serializerCache,[FromServices] IExecuteTaskAction executeTaskAction)
+        {
+            var reader = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var task = reader.ReadTask();
+
+            var result = await executeTaskAction.BizActionAsync(task);
+            return BizActionStatus(executeTaskAction, () => Ok(result));
         }
 
         [HttpGet("sync")]

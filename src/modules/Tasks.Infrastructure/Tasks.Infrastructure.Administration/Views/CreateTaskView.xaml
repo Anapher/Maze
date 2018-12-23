@@ -16,18 +16,6 @@
     WindowHeight="450"
     WindowWidth="800"
     mc:Ignorable="d">
-    <views:WindowUserControl.Style>
-        <Style TargetType="views:WindowUserControl">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Update}" Value="true">
-                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask.Title.Update}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Update}" Value="false">
-                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask.Title}" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </views:WindowUserControl.Style>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -36,6 +24,20 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    <views:WindowUserControl.Style>
+        <Style TargetType="views:WindowUserControl">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Update}" Value="true">
+                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask.Update}" />
+                    <Setter Property="Icon" Value="{StaticResource CatalogPolulationIcon}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Update}" Value="false">
+                    <Setter Property="Title" Value="{tx:T TasksInfrastructure:CreateTask}" />
+                    <Setter Property="Icon" Value="{StaticResource NewCatalogIcon}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </views:WindowUserControl.Style>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

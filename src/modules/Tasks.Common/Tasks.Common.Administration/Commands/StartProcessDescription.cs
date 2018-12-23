@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Commands
         }
 
         public string Name => Tx.T("TasksCommon:Commands.StartProcess");
+        public string Namespace { get; } = null;
         public string Summary => Tx.T("TasksCommon:Commands.StartProcess.Summary");
         public UIElement Icon => _icons.StartupProject;
         public Type DtoType => typeof(StartProcessCommandInfo);

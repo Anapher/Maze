@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using CodeElements.BizRunner;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,7 +18,7 @@ using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
-using Tasks.Infrastructure.Server.Business;
+using Tasks.Infrastructure.Server.Core.Storage;
 using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Infrastructure.Server.Core
@@ -28,6 +27,7 @@ namespace Tasks.Infrastructure.Server.Core
     {
         private readonly OrcusTask _orcusTask;
         private readonly TaskSession _taskSession;
+        private readonly ITaskResultStorage _taskResultStorage;
         private readonly IServiceProvider _services;
         private readonly ILogger<TaskExecutor> _logger;
         private readonly ActiveTasksManager _activeTasksManager;
@@ -36,10 +36,11 @@ namespace Tasks.Infrastructure.Server.Core
         private readonly IReadOnlyDictionary<CommandInfo, Type> _executorTypes;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _executionMethods;
 
-        public TaskExecutor(OrcusTask orcusTask, TaskSession taskSession, IServiceProvider services)
+        public TaskExecutor(OrcusTask orcusTask, TaskSession taskSession, ITaskResultStorage taskResultStorage, IServiceProvider services)
         {
             _orcusTask = orcusTask;
             _taskSession = taskSession;
+            _taskResultStorage = taskResultStorage;
             _services = services;
 
             _logger = services.GetRequiredService<ILogger<TaskExecutor>>();
@@ -75,10 +76,7 @@ namespace Tasks.Infrastructure.Server.Core
                 TaskReferenceId = _orcusTask.Id
             };
 
-            var action = services.GetRequiredService<ICreateTaskExecutionAction>();
-            await action.BizActionAsync(execution);
-
-            if (!BusinessActionSucceeded(action))
+            if (!await _taskResultStorage.CreateTaskExecution(execution))
                 return;
 
             await _hubContext.Clients.All.SendAsync(HubEventNames.TaskExecutionCreated, execution, cancellationToken);
@@ -154,30 +152,17 @@ namespace Tasks.Infrastructure.Server.Core
             }
 
             commandResult.FinishedAt = DateTimeOffset.UtcNow;
-
-            var action = services.GetRequiredService<ICreateTaskCommandResultAction>();
+            
             try
             {
-                await action.BizActionAsync(commandResult);
+                await _taskResultStorage.CreateCommandResult(commandResult);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Executing ICreateTaskCommandResultAction failed.");
+                _logger.LogError(e, "Executing CreateCommandResult failed.");
             }
 
             await _hubContext.Clients.All.SendAsync(HubEventNames.TaskCommandResultCreated, commandResult);
-        }
-
-        private bool BusinessActionSucceeded(IBizActionStatus status)
-        {
-            if (status.HasErrors)
-            {
-                _logger.LogError("An error occurred when trying to execute {action}: {error}", status.GetType().Name,
-                    status.Errors.First().ErrorMessage);
-                return false;
-            }
-
-            return true;
         }
     }
 }

@@ -321,4 +321,100 @@
             </Rectangle.Fill>
         </Rectangle>
     </Viewbox>
+
+    <Viewbox
+        x:Key="SelectCommandColumnIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M3,16L13,16 13,0 3,0z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M4,6L4,1 12,1 12,6 11,6 11,3 5,3 5,6z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M11,11L11,14 5,14 5,11 4,11 4,15 12,15 12,11z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M11,7L5,7 5,10 11,10z" />
+                                <GeometryDrawing Brush="{DynamicResource LightBrush1}" Geometry="F1M11,11L5,11 5,14 11,14z M11,6L5,6 5,3 11,3z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="NewCatalogIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M2.9997,-0.000199999999999534L2.9997,0.8778 2.3787,0.2568 0.2577,2.3788 0.8787,3.0008 -0.000300000000000189,3.0008 -0.000300000000000189,5.9998 0.8787,5.9998 0.2567,6.6208 1.9997,8.3638 1.9997,15.9998 16.0007,15.9998 16.0007,0.9998 7.3637,0.9998 6.6217,0.2568 6.0007,0.8778 6.0007,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M10,2L9,2 8.363,2 8.742,2.379 8.121,3 9,3 10,3 14,3 14,14 5,14 5,9 4,9 4,10 3,10 3,11 4,11 4,12 3,12 3,13 4,13 4,14 3,14 3,15 15,15 15,2z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush2}" Geometry="F1M10,7L12,7 12,5 10,5 9,5 9,6 8.121,6 8.742,6.621 8.363,7 9,7z" />
+                                <GeometryDrawing Brush="#FFC27C19" Geometry="F1M5,5L4,5 4,4 5,4z M8,4L5.707,4 7.328,2.379 6.621,1.671 5,3.292 5,1 4,1 4,3.292 2.379,1.671 1.671,2.379 3.292,4 1,4 1,5 3.292,5 1.671,6.621 2.379,7.328 4,5.707 4,8 5,8 5,5.707 6.621,7.328 7.328,6.621 5.707,5 8,5z" />
+                                <GeometryDrawing Brush="{DynamicResource LightBrush1}" Geometry="F1M9,3L9,5 12,5 12,7 10,7 9,7 8.363,7 8,7.363 7.363,8 6.621,8.742 6,8.121 6,9 5,9 5,14 14,14 14,3z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="CatalogPolulationIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M0.9999,-0.000199999999999534L0.9999,9.6008 0.1109,10.4998 0.9999,11.3988 0.9999,14.9998 1.9999,14.9998 4.5859,14.9998 3.5859,15.9998 7.4119,15.9998 8.4219,14.9998 14.9999,14.9998 14.9999,-0.000199999999999534z" />
+                                <GeometryDrawing Brush="{DynamicResource DarkBrush1}" Geometry="F1M2,1L2,2 3,2 3,3 2,3 2,4 3,4 3,5 2,5 2,6 3,6 3,7 2,7 2,8 2.583,8 3,8 4,8 4,2 13,2 13,13 9.433,13 9.938,13.5 9.433,14 14,14 14,1z M6,4L6,5 6,6 11,6 11,5 11,4z M4,12L3,11 7,11 7,10 3,10 4,9 3,9 1.517,10.5 3,12z M8.517,13.5L7,15 6,15 7,14 3,14 3,13 7,13 6,12 7,12z" />
+                                <GeometryDrawing Brush="{DynamicResource LightBrush1}" Geometry="F1M11,5L11,6 6,6 6,5 6,4 11,4z M4,2L4,8 6.414,8 5.414,9 8,9 8,11.583 9.433,13 13,13 13,2z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <Viewbox
+        x:Key="StatusOKIcon"
+        Width="16"
+        Height="16"
+        x:Shared="False">
+        <Rectangle Width="16" Height="16">
+            <Rectangle.Fill>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup.Children>
+                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                <GeometryDrawing Brush="{DynamicResource HaloBrush}" Geometry="F1M8,16C3.589,16 0,12.411 0,8 0,3.589 3.589,0 8,0 12.411,0 16,3.589 16,8 16,12.411 12.411,16 8,16" />
+                                <GeometryDrawing Brush="#FF329932" Geometry="F1M6.2998,12.3887L3.0428,9.1317 4.4568,7.7177 6.2998,9.5607 11.5428,4.3177 12.9568,5.7317z M7.9998,0.999700000000001C4.1338,0.999700000000001 0.9998,4.1337 0.9998,7.9997 0.9998,11.8657 4.1338,14.9997 7.9998,14.9997 11.8658,14.9997 14.9998,11.8657 14.9998,7.9997 14.9998,4.1337 11.8658,0.999700000000001 7.9998,0.999700000000001" />
+                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M6.2998,12.3887L3.0428,9.1317 4.4568,7.7177 6.2998,9.5607 11.5428,4.3177 12.9568,5.7317z" />
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
 </ResourceDictionary>

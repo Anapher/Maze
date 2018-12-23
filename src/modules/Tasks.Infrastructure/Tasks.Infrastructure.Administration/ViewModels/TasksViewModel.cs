@@ -18,6 +18,7 @@ using Orcus.Administration.Library.Views;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
 using Prism.Commands;
+using Tasks.Infrastructure.Administration.Core;
 using Tasks.Infrastructure.Administration.Rest.V1;
 using Tasks.Infrastructure.Administration.ViewModels.Overview;
 using Tasks.Infrastructure.Core;
@@ -43,10 +44,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private DelegateCommand<TaskViewModel> _updateTaskCommand;
         private readonly Stack<IDisposable> _disposables = new Stack<IDisposable>();
         private bool _isEventsInitialized;
+        private DelegateCommand<PendingCommandViewModel> _openExecutionOverviewCommand;
 
-        public TasksViewModel(IWindowService windowService, IOrcusRestClient restClient, IAppDispatcher dispatcher, IComponentContext services) :
-            base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
+        public TasksViewModel(IWindowService windowService, IOrcusRestClient restClient, IAppDispatcher dispatcher, IComponentContext services,
+            CommandExecutionManager commandExecutionManager) : base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
         {
+            CommandExecutionManager = commandExecutionManager;
             _windowService = windowService;
             _restClient = restClient;
             _dispatcher = dispatcher;
@@ -58,6 +61,8 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             _disposables.Dispose();
         }
 
+        public CommandExecutionManager CommandExecutionManager { get; }
+
         public ICollectionView TasksView
         {
             get => _tasksView;
@@ -68,11 +73,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         {
             get
             {
-                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(() =>
-                {
-                    if (_windowService.ShowDialog<CreateTaskViewModel>() == true)
-                        UpdateTasks().Forget();
-                }));
+                return _createTaskCommand ?? (_createTaskCommand = new DelegateCommand(() => { _windowService.ShowDialog<CreateTaskViewModel>(); }));
             }
         }
 
@@ -83,7 +84,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 return _openTaskSessionsCommand ?? (_openTaskSessionsCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
                     var sessions = await TasksResource.GetTaskSessions(parameter.Id, _restClient);
-                    _windowService.ShowDialog<TaskOverviewViewModel>(x => x.Initialize(sessions, parameter));
+                    using (var watcher = _services.Resolve<TaskActivityWatcher>())
+                    {
+                        watcher.InitializeWatch(parameter.Id, sessions);
+
+                        _windowService.ShowDialog<TaskOverviewViewModel>(x => x.Initialize(watcher, parameter.Name));
+                    }
                 }));
             }
         }
@@ -142,8 +148,19 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                     var xmlCache = _services.Resolve<IXmlSerializerCache>();
 
                     var task = await TasksResource.FetchTaskAsync(parameter.Id, resolver, xmlCache, _restClient);
-                    if (_windowService.ShowDialog<CreateTaskViewModel>(vm => vm.UpdateTask(task)) == true)
-                        UpdateTasks().Forget();
+                    _windowService.ShowDialog<CreateTaskViewModel>(vm => vm.UpdateTask(task));
+                }));
+            }
+        }
+
+        public DelegateCommand<PendingCommandViewModel> OpenExecutionOverviewCommand
+        {
+            get
+            {
+                return _openExecutionOverviewCommand ?? (_openExecutionOverviewCommand = new DelegateCommand<PendingCommandViewModel>(parameter =>
+                {
+                    _windowService.ShowDialog<TaskOverviewViewModel>(vm =>
+                        vm.Initialize(parameter.TaskActivityWatcher, parameter.CommandDescription.Name));
                 }));
             }
         }

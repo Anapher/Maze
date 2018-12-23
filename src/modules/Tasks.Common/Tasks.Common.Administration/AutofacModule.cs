@@ -3,8 +3,8 @@ using Autofac;
 using Tasks.Common.Administration.Resources;
 using Tasks.Common.Administration.ViewProvider;
 using Tasks.Infrastructure.Administration.Library;
-using Tasks.Infrastructure.Administration.Utilities;
 using Tasks.Infrastructure.Core.Utilities;
+using Unclassified.TxLib;
 
 namespace Tasks.Common.Administration
 {
@@ -13,6 +13,8 @@ namespace Tasks.Common.Administration
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+
+            Tx.LoadFromEmbeddedResource("Tasks.Common.Administration.Resources.Tasks.Common.Translation.txd");
 
             builder.RegisterType<VisualStudioIcons>().SingleInstance();
             builder.RegisterAssemblyTypes(ThisAssembly).AssignableTo<ITaskServiceDescription>().AsImplementedInterfaces();

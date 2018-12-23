@@ -40,6 +40,7 @@
     <None Remove="Resources\VisualStudioIcons.xaml" />
     <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
     <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
+    <None Remove="Views\ExecuteCommandView.xaml" />
     <None Remove="Views\TaskOverviewView.xaml" />
     <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
     <None Remove="Views\TaskOverview\ResultView\ExceptionView.xaml" />
@@ -116,6 +117,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\CreateTask\TaskSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ExecuteCommandView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TaskOverviewView.xaml">

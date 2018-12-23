@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.StopEvents
         }
 
         public string Name { get; } = Tx.T("TasksCommon:StopEvents.DateTime");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:StopEvents.DateTime.Summary");
         public UIElement Icon => _icons.Calendar;
         public Type DtoType { get; } = typeof(DateTimeStopEventInfo);

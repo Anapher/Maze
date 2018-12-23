@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Orcus.Client.Library.Extensions;
 using Orcus.Client.Library.Interfaces;
 using Tasks.Infrastructure.Client.Options;
+using Tasks.Infrastructure.Client.Storage;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 
@@ -26,7 +27,7 @@ namespace Tasks.Infrastructure.Client.Hooks
             builder.RegisterType<TaskComponentResolver>().As<ITaskComponentResolver>().SingleInstance();
             builder.RegisterType<TaskDirectory>().As<ITaskDirectory>().SingleInstance();
             builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
-            builder.RegisterType<TaskSessionManager>().As<ITaskSessionManager>().SingleInstance();
+            builder.RegisterType<DatabaseTaskStorage>().As<IDatabaseTaskStorage>().SingleInstance();
             builder.RegisterType<ClientTaskManager>().As<IClientTaskManager>().SingleInstance();
 
             builder.RegisterType<OnConnectedAction>().As<IConnectedAction>();

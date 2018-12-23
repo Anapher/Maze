@@ -1,5 +1,4 @@
 ﻿using System;
-using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
@@ -40,7 +39,7 @@ namespace Orcus.Administration.Services
                         builder.RegisterInstance(model);
                         builder.Register(_ => _orcusRestClient.CreateTargeted(model.ClientId))
                             .SingleInstance();
-                    }, window => window.TitleBarIcon = iconFactory.Create(), null, out var _);
+                    }, window => window.TitleBarIcon = iconFactory.Create(), null, out _);
                 })
             });
         }

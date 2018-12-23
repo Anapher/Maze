@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Filters
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Filters.OperatingSystem");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Filters.OperatingSystem.Summary");
         public UIElement Icon => _icons.ComputerSystem;
         public Type DtoType { get; } = typeof(OperatingSystemFilterInfo);

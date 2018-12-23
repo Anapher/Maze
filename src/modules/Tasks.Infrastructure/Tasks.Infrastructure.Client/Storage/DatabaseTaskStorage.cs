@@ -18,25 +18,16 @@ using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
 using FileMode = System.IO.FileMode;
 
-namespace Tasks.Infrastructure.Client
+namespace Tasks.Infrastructure.Client.Storage
 {
-    public interface ITaskSessionManager
-    {
-        Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description);
-        Task<Guid> StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution);
-        Task AppendCommandResult(OrcusTask orcusTask, CommandResult commandResult);
-        Task MarkTaskFinished(OrcusTask orcusTask);
-        Task<bool> CheckTaskFinished(OrcusTask orcusTask);
-    }
-
-    public class TaskSessionManager : ITaskSessionManager
+    public class DatabaseTaskStorage : IDatabaseTaskStorage
     {
         private readonly IFileSystem _fileSystem;
         private readonly string _sessionsDirectory;
         private readonly AsyncReaderWriterLock _readerWriterLock;
         private readonly IRequestTransmitter _requestTransmitter;
 
-        public TaskSessionManager(IFileSystem fileSystem, IRequestTransmitter requestTransmitter, IOptions<TasksOptions> options)
+        public DatabaseTaskStorage(IFileSystem fileSystem, IRequestTransmitter requestTransmitter, IOptions<TasksOptions> options)
         {
             _fileSystem = fileSystem;
             _requestTransmitter = requestTransmitter;
@@ -78,7 +69,7 @@ namespace Tasks.Infrastructure.Client
             };
         }
 
-        public async Task<Guid> StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution)
+        public async Task StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution)
         {
             using (await _readerWriterLock.WriterLockAsync())
             {
@@ -104,6 +95,7 @@ namespace Tasks.Infrastructure.Client
                                 Description = taskSession.Description,
                                 CreatedOn = DateTimeOffset.UtcNow
                             };
+                            sessions.Insert(taskSessionEntity);
 
                             transmitterQueue.Enqueue(() => _requestTransmitter.Transmit(TaskSessionsResource.CreateSessionRequest(taskSessionEntity))).Forget();
                         }
@@ -111,11 +103,9 @@ namespace Tasks.Infrastructure.Client
                         taskExecution.TaskSessionId = taskSessionEntity.TaskSessionId;
 
                         var executions = db.GetCollection<TaskExecution>(nameof(TaskExecution));
-                        Guid executionId = executions.Insert(taskExecution);
+                        taskExecution.TaskExecutionId = executions.Insert(taskExecution);
 
                         transmitterQueue.Enqueue(() => _requestTransmitter.Transmit(TaskExecutionsResource.CreateExecutionRequest(taskExecution))).Forget();
-
-                        return executionId;
                     }
                 }
                 finally 

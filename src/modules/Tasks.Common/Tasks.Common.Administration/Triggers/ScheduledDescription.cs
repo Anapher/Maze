@@ -19,6 +19,7 @@ namespace Tasks.Common.Administration.Triggers
         public UIElement Icon => _icons.HistoryTable;
 
         public string Name { get; } = Tx.T("TasksCommon:Triggers.Scheduled");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Triggers.Scheduled.Summary");
         public Type DtoType { get; } = typeof(ScheduledTriggerInfo);
     }

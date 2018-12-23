@@ -17,6 +17,7 @@ namespace Tasks.Common.Administration.Commands
         }
 
         public string Name { get; } = Tx.T("TasksCommon:Commands.Download");
+        public string Namespace { get; } = null;
         public string Summary { get; } = Tx.T("TasksCommon:Commands.Download.Summary");
         public UIElement Icon => _icons.DownloadFile;
         public Type DtoType { get; } = typeof(DownloadCommandInfo);
