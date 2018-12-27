@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
+using Anapher.Wpf.Swan.Extensions;
 using MahApps.Metro.IconPacks;
 using Orcus.Administration.Library.Clients;
 using Orcus.Administration.Library.Extensions;
@@ -12,6 +14,7 @@ using Orcus.Administration.Library.ViewModels;
 using Orcus.Administration.Library.Views;
 using Orcus.Administration.ViewModels.Overview.Groups;
 using Orcus.Server.Connection.Clients;
+using Orcus.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 
@@ -25,6 +28,8 @@ namespace Orcus.Administration.ViewModels.Overview
         private DelegateCommand _createNewGroupCommand;
         private ListCollectionView _groupsView;
         private string _newGroupName;
+        private DelegateCommand<GroupPresenterViewModel> _removeGroupCommand;
+        private DelegateCommand<GroupPresenterViewModel> _changeNameCommand;
 
         public GroupsViewModel(IClientManager clientManager, IRestClient restClient, IWindowService windowService) : base(Tx.T("Groups"),
             PackIconFontAwesomeKind.ThLargeSolid)
@@ -61,8 +66,35 @@ namespace Orcus.Administration.ViewModels.Overview
                         return;
                     }
 
-                    ClientGroupsResource.CreateAsync(new ClientGroupDto {Name = NewGroupName}, _restClient);
+                    ClientGroupsResource.CreateAsync(new ClientGroupDto {Name = NewGroupName}, _restClient).OnErrorShowMessageBox(_windowService)
+                        .Forget();
                     NewGroupName = null;
+                }));
+            }
+        }
+
+        public DelegateCommand<GroupPresenterViewModel> RemoveGroupCommand
+        {
+            get
+            {
+                return _removeGroupCommand ?? (_removeGroupCommand = new DelegateCommand<GroupPresenterViewModel>(parameter =>
+                {
+                    if (_windowService.ShowMessage(Tx.T("GroupsView:Warning.SureRemoveGroup", "name", parameter.Group.Name), Tx.T("Warning"),
+                            MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel) != MessageBoxResult.OK)
+                        return;
+
+                    ClientGroupsResource.DeleteAsync(parameter.Group.ClientGroupId, _restClient).OnErrorShowMessageBox(_windowService).Forget();
+                }));
+            }
+        }
+
+        public DelegateCommand<GroupPresenterViewModel> ChangeNameCommand
+        {
+            get
+            {
+                return _changeNameCommand ?? (_changeNameCommand = new DelegateCommand<GroupPresenterViewModel>(parameter =>
+                {
+                    _windowService.ShowDialog<ChangeGroupNameViewModel>(vm => vm.Initialize(parameter.Group));
                 }));
             }
         }

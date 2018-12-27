@@ -4,9 +4,11 @@ using System.Linq;
 using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
 using Orcus.Administration.Library.Clients;
+using Orcus.Administration.Library.Extensions;
 using Orcus.Administration.Library.Models;
 using Orcus.Administration.Library.Rest.ClientGroups.V1;
 using Orcus.Administration.Library.Views;
+using Orcus.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 
@@ -45,7 +47,8 @@ namespace Orcus.Administration.ViewModels.Overview.Groups
 
                     if (!clientsNotInGroup.Any())
                     {
-                        ClientGroupsResource.RemoveClientsAsync(groupViewModel.ClientGroupId, clientsInGroup.Select(x => x.ClientId), _restClient);
+                        ClientGroupsResource.RemoveClientsAsync(groupViewModel.ClientGroupId, clientsInGroup.Select(x => x.ClientId), _restClient)
+                            .OnErrorShowMessageBox(_windowService).Forget();
                     }
                     else
                     {
@@ -56,7 +59,8 @@ namespace Orcus.Administration.ViewModels.Overview.Groups
                                 return;
                         }
 
-                        ClientGroupsResource.AddClientsAsync(groupViewModel.ClientGroupId, clientsNotInGroup.Select(x => x.ClientId), _restClient);
+                        ClientGroupsResource.AddClientsAsync(groupViewModel.ClientGroupId, clientsNotInGroup.Select(x => x.ClientId), _restClient)
+                            .OnErrorShowMessageBox(_windowService).Forget();
                     }
                 }));
             }

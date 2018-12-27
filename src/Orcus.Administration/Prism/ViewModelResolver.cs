@@ -15,14 +15,18 @@ namespace Orcus.Administration.Prism
     public class ViewModelResolver : IViewModelResolver
     {
         private readonly IReadOnlyDictionary<string, Type> _viewModelMap;
+        private readonly IReadOnlyDictionary<string, Type> _viewMap;
         private readonly Assembly _viewAssembly;
 
         public ViewModelResolver(Assembly viewModelsAssembly, Assembly viewAssembly)
         {
             _viewAssembly = viewAssembly;
-            var types = viewModelsAssembly.GetExportedTypes();
 
+            var types = viewModelsAssembly.GetExportedTypes();
             _viewModelMap = types.Where(x => x.Name.EndsWith("ViewModel")).ToDictionary(ExtractViewModelName, x => x);
+
+            types = viewAssembly.GetExportedTypes();
+            _viewMap = types.Where(x => x.Name.EndsWith("View")).ToDictionary(ExtractViewName, x => x);
         }
 
         public Type ResolveViewModelType(Type viewType)
@@ -41,7 +45,15 @@ namespace Orcus.Administration.Prism
             viewName = viewName.Replace(".ViewModels.", ".Views.");
 
             var viewModelName = String.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelType.Assembly.FullName);
-            return Type.GetType(viewModelName);
+            var viewType = Type.GetType(viewModelName);
+            if (viewType != null)
+                return viewType;
+
+            var name = ExtractViewModelName(viewModelType);
+            if (_viewMap.TryGetValue(name, out viewType))
+                return viewType;
+
+            throw new ArgumentException($"There is no view related to {viewModelType.FullName}");
         }
 
         private static Type DefaultResolve(Type viewType)

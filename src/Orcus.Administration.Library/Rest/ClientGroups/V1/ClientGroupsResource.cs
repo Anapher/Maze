@@ -25,7 +25,7 @@ namespace Orcus.Administration.Library.Rest.ClientGroups.V1
             });
 
         public static Task UpdateAsync(ClientGroupDto clientGroupDto, IRestClient client) =>
-            CreateRequest(HttpVerb.Post, clientGroupDto.ClientGroupId, clientGroupDto).Execute(client);
+            CreateRequest(HttpVerb.Put, clientGroupDto.ClientGroupId, clientGroupDto).Execute(client);
 
         public static Task DeleteAsync(int clientGroupId, IRestClient client) => CreateRequest(HttpVerb.Delete, clientGroupId).Execute(client);
 

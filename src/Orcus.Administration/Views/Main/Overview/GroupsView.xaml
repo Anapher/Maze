@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:groups="clr-namespace:Orcus.Administration.ViewModels.Overview.Groups;assembly=Orcus.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:Orcus.Administration.Library.Models;assembly=Orcus.Administration.Library"
     xmlns:mvvm="http://prismlibrary.com/"
     xmlns:overview="clr-namespace:Orcus.Administration.ViewModels.Overview;assembly=Orcus.Administration.ViewModels"
     xmlns:tx="http://unclassified.software/source/txtranslation"
@@ -46,7 +45,7 @@
             <ItemsControl Margin="5,0" ItemsSource="{Binding GroupsView}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemHeight="150" ItemWidth="300" />
+                        <WrapPanel ItemHeight="160" ItemWidth="300" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -56,26 +55,43 @@
                             BorderBrush="{StaticResource GrayBrush7}"
                             BorderThickness="1"
                             CornerRadius="4">
-                            <StackPanel Margin="10" Orientation="Vertical">
-                                <TextBlock
-                                    FontSize="14"
-                                    FontWeight="SemiBold"
-                                    Foreground="#2980b9"
-                                    Text="{Binding Group.Name}" />
-                                <TextBlock>
-                                    <Run Text="{Binding Group.Clients.Count, Mode=OneWay}" />
-                                    <Run Text="{tx:T Clients, CountBinding={Binding Group.Clients.Count, Mode=OneWay}}" />
-                                    <Run Text="(" /><Run Text="{tx:T GroupsView:ClientsOnline, CountBinding={Binding OnlineClients.Count, Mode=OneWay}}" /><Run Text=")" />
-                                </TextBlock>
-                                <TextBlock Margin="0,10,0,0">
-                                    <Run Text="{tx:TC GroupsView:ActiveClients24h}" />
-                                    <Run FontWeight="SemiBold" Text="{Binding ActiveClients24H.Count, Mode=OneWay}" />
-                                </TextBlock>
-                                <TextBlock Margin="0,1,0,0">
-                                    <Run Text="{tx:TC GroupsView:ActiveClients7Days}" />
-                                    <Run FontWeight="SemiBold" Text="{Binding ActiveClients7Days.Count, Mode=OneWay}" />
-                                </TextBlock>
-                            </StackPanel>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#2980b9"
+                                        Text="{Binding Group.Name}" />
+                                    <TextBlock>
+                                        <Run Text="{Binding Group.Clients.Count, Mode=OneWay}" />
+                                        <Run Text="{tx:T Clients, CountBinding={Binding Group.Clients.Count, Mode=OneWay}}" />
+                                        <Run Text="(" /><Run Text="{tx:T GroupsView:ClientsOnline, CountBinding={Binding OnlineClients.Count, Mode=OneWay}}" /><Run Text=")" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,10,0,0">
+                                        <Run Text="{tx:TC GroupsView:ActiveClients24h}" />
+                                        <Run FontWeight="SemiBold" Text="{Binding ActiveClients24H.Count, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,1,0,0">
+                                        <Run Text="{tx:TC GroupsView:ActiveClients7Days}" />
+                                        <Run FontWeight="SemiBold" Text="{Binding ActiveClients7Days.Count, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <Button
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.ChangeNameCommand}"
+                                        CommandParameter="{Binding}"
+                                        Content="{tx:T GroupsView:ChangeName}" />
+                                    <Button Margin="5,0" Content="{tx:T GroupsView:Configuration}" />
+                                    <Button
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveGroupCommand}"
+                                        CommandParameter="{Binding}"
+                                        Content="{tx:T Remove}" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
