@@ -1,6 +1,6 @@
 ﻿using Autofac;
+using Orcus.Administration.Core.Clients;
 using Orcus.Administration.Library.Services;
-using Orcus.Administration.ViewModels.Overview.Clients;
 using Orcus.Server.Connection.Utilities;
 
 namespace Orcus.Administration.ViewModels
@@ -11,7 +11,7 @@ namespace Orcus.Administration.ViewModels
         {
             base.Load(builder);
 
-            builder.RegisterType<ClientManager>().As<IClientManager>();
+            builder.RegisterType<ClientManager>().As<IClientManager>().SingleInstance();
             builder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
         }
     }

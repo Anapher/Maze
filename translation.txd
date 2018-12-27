@@ -19,6 +19,13 @@
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Failed">Fehlgeschlagen</text>
+		<text key="Groups">Groups</text>
+		<text key="GroupsView:ActiveClients24h">Aktive Clients (24h)</text>
+		<text key="GroupsView:ActiveClients7Days">Aktive Clients (7 Tage)</text>
+		<text key="GroupsView:ClientsOnline">{#} Clients online</text>
+		<text key="GroupsView:ClientsOnline" count="1">Ein Client online</text>
+		<text key="GroupsView:Error.GroupNameExists">Eine Gruppe mit dem Namen '{name}' existiert bereits.</text>
+		<text key="GroupsView:Warning.ClientsAreAlreadyInGroup">Manche Clients sind bereits in der Gruppe '{name}'. Möchsten Sie die ausgewählten Clients hinzufügen, die noch nicht in der Gruppe sind?</text>
 		<text key="Help">Hilfe</text>
 		<text key="ID">ID</text>
 		<text key="Information">Information</text>
@@ -271,6 +278,13 @@
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Failed">Failed</text>
+		<text key="Groups">Groups</text>
+		<text key="GroupsView:ActiveClients24h">Active clients (24h)</text>
+		<text key="GroupsView:ActiveClients7Days">Active clients (7 days)</text>
+		<text key="GroupsView:ClientsOnline">{#} clients online</text>
+		<text key="GroupsView:ClientsOnline" count="1">One client online</text>
+		<text key="GroupsView:Error.GroupNameExists">A group with the name '{name}' already exists.</text>
+		<text key="GroupsView:Warning.ClientsAreAlreadyInGroup">Some selected clients are already in the group '{name}'. Do you want to add the selected clients that are not yet in the group?</text>
 		<text key="Help">Help</text>
 		<text key="ID">ID</text>
 		<text key="Information">Information</text>

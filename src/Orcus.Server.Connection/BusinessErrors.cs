@@ -45,7 +45,7 @@ namespace Orcus.Server.Connection
         public static class Commander
         {
             public static RestError ClientNotFound =>
-                CreateInvalidOperationError("The client was not found.", ErrorCode.Commander_ClientNotFound);
+                CreateNotFoundError("The client was not found.", ErrorCode.Commander_ClientNotFound);
 
             public static RestError SingleCommandTargetRequired =>
                 CreateValidationError("A single command target is required for this operation.",
@@ -65,6 +65,11 @@ namespace Orcus.Server.Connection
             public static RestError ResultExecutionError(string exception, string name, string message) =>
                 CreateNotFoundError($"An {exception} occurred on executing result {name}: {message}",
                     ErrorCode.Commander_ResultError);
+        }
+
+        public static class ClientGroups
+        {
+            public static RestError GroupNotFound => CreateNotFoundError("The client group was not found.", ErrorCode.ClientGroups_NotFound);
         }
 
         private static RestError CreateValidationError(string message, ErrorCode code) =>

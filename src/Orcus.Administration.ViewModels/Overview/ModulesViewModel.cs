@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
-using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.IconPacks;
 using Microsoft.AspNetCore.SignalR.Client;
 using NuGet.Common;
@@ -21,6 +20,7 @@ using Orcus.Administration.Library.Rest.Modules.V1;
 using Orcus.Administration.Library.ViewModels;
 using Orcus.Administration.Library.Views;
 using Orcus.Administration.ViewModels.Overview.Modules;
+using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Utilities;
 using Prism.Commands;
@@ -213,8 +213,8 @@ namespace Orcus.Administration.ViewModels.Overview
             base.OnInitialize();
 
             var modules = await ModulesResource.GetInstalledModules(_restClient);
-            _restClient.HubConnection.On<string>("ModuleInstalled", OnModuleInstalled);
-            _restClient.HubConnection.On<string>("ModuleUninstalled", OnModuleUninstalled);
+            _restClient.HubConnection.On<string>(HubEventNames.ModuleInstalled, OnModuleInstalled);
+            _restClient.HubConnection.On<string>(HubEventNames.ModuleUninstalled, OnModuleUninstalled);
 
             var sources = ModulesResource.FetchRepositorySources(_restClient);
 

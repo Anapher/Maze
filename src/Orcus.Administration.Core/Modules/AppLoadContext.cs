@@ -1,4 +1,4 @@
-﻿using Orcus.Administration.Core.Clients;
+﻿using Orcus.Administration.Core.Rest;
 
 namespace Orcus.Administration.Core.Modules
 {

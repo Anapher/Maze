@@ -10,6 +10,7 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using Orcus.Server.Connection;
 using Orcus.Server.Connection.Utilities;
 using Orcus.Server.Library.Hubs;
 using Orcus.Server.Service.Modules;
@@ -51,7 +52,7 @@ namespace Orcus.Server.Controllers
 
             moduleManager.InstallPackage(packageIdentity);
 
-            await _hubContext.Clients.All.SendAsync("ModuleInstalled", PackageIdentityConvert.ToString(packageIdentity));
+            await _hubContext.Clients.All.SendAsync(HubEventNames.ModuleInstalled, PackageIdentityConvert.ToString(packageIdentity));
             return Ok();
         }
 
@@ -64,7 +65,7 @@ namespace Orcus.Server.Controllers
 
             moduleManager.UninstallPackage(packageIdentity);
 
-            await _hubContext.Clients.All.SendAsync("ModuleUninstalled", package);
+            await _hubContext.Clients.All.SendAsync(HubEventNames.ModuleUninstalled, package);
             return Ok();
         }
 

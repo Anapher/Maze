@@ -6,7 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="LibLog" Version="5.0.2" />
+    <PackageReference Include="LibLog" Version="5.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Orcus.NuGet.Commands" Version="1.0.0" />
     <PackageReference Include="Orcus.NuGet.Resolver" Version="1.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />

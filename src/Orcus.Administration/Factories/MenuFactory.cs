@@ -50,6 +50,10 @@ namespace Orcus.Administration.Factories
                 {
                     result.Add(CreateCommandMenuItem(commandWrapper.CommandEntry, context));
                 }
+                else if (menuEntry is MenuItemEntry<TCommand> menuItemEntry)
+                {
+                    result.Add(menuItemEntry.MenuItem);
+                }
 
             //dont finish with separator
             if (result.Any() && result.Last() is Separator)
@@ -136,6 +140,15 @@ namespace Orcus.Administration.Factories
                         forMultipleItems = true;
 
                     result.Add(CreateCommandMenuItem(commandWrapper.CommandEntry, context));
+                }
+                else if (menuEntry is MenuItemEntry<TCommand> menuItemEntry)
+                {
+                    if (menuItemEntry.VisibleForSingle)
+                        forSingleItem = true;
+                    if (menuItemEntry.VisibleForMultiple)
+                        forMultipleItems = true;
+
+                    result.Add(menuItemEntry.MenuItem);
                 }
 
             //dont finish with separator

@@ -14,7 +14,6 @@ using Orcus.Administration.Library.Menu;
 using Orcus.Administration.Library.Menus;
 using Orcus.Administration.Library.Resources;
 using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Views;
 using Orcus.Administration.Prism;
 using Orcus.Administration.Services;
 using Orcus.Administration.ViewModels;

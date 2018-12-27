@@ -49,7 +49,7 @@ namespace Orcus.Server.Controllers
             });
         }
 
-        [HttpGet]
+        [HttpGet, Authorize("admin")]
         public async Task<IActionResult> GetAll([FromServices] IConnectionManager connectionManager)
         {
             var clients = await _context.Clients.ProjectTo<ClientDto>().ToListAsync();

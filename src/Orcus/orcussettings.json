@@ -1,13 +1,10 @@
 ﻿{
   "Modules": {
     "LocalPath": "%appdata%/Orcus/modules",
-    "TempPath": "%appdata%/Orcus/tmp"
-    //"PrimaryModules": [
-    //  "Orcus.TrayIcon/1.0.1"
-    //],
-    //"PackagesLock": {
-    //  "Orcus.TryIcon/1.0.1": [ "Json.Net/1.0", "WinForms.Metro/23.5" ]
-    //}
+    "TempPath": "%appdata%/Orcus/tmp",
+    "OnStartup": [
+      "Tasks.Infrastructure"
+    ]
   },
   "Connection": {
     "ServerUris": [ "http://localhost:50485/" ],

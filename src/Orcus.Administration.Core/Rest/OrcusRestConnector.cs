@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace Orcus.Administration.Core.Clients
+namespace Orcus.Administration.Core.Rest
 {
     public static class OrcusRestConnector
     {

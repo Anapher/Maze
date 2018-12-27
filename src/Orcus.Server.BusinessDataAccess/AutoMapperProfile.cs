@@ -14,6 +14,8 @@ namespace Orcus.Server.BusinessDataAccess
                     expression.MapFrom(client => client.ClientSessions.OrderByDescending(x => x.CreatedOn).First()));
 
             CreateMap<ClientSession, ClientSessionDto>();
+            CreateMap<ClientGroup, ClientGroupDto>().ForMember(x => x.Clients,
+                expression => expression.MapFrom(g => g.ClientGroupMemberships.Select(x => x.ClientId).ToList()));
         }
     }
 }

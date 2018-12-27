@@ -28,7 +28,7 @@ using Orcus.Sockets;
 using Orcus.Sockets.Client;
 using Orcus.Utilities;
 
-namespace Orcus.Administration.Core.Clients
+namespace Orcus.Administration.Core.Rest
 {
     public class OrcusRestClient : IOrcusRestClient
     {

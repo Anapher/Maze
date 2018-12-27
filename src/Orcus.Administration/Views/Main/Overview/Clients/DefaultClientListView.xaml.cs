@@ -17,6 +17,8 @@ namespace Orcus.Administration.Views.Main.Overview.Clients
             var items = menuFactory.Create(clientsContextMenu, null);
             foreach (var item in items)
                 contextMenu.Items.Add(item);
+
+            ContextMenuExtensions.SetSelectedItems(contextMenu, ClientsDataGrid.SelectedItems);
         }
     }
 }

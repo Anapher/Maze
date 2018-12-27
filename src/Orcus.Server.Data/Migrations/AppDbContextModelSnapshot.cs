@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orcus.Server.Data.EfCode;
 
 namespace Orcus.Server.Data.Migrations
@@ -13,7 +14,7 @@ namespace Orcus.Server.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799");
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
 
             modelBuilder.Entity("Orcus.Server.Data.EfClasses.Account", b =>
                 {
@@ -76,6 +77,57 @@ namespace Orcus.Server.Data.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientConfiguration", b =>
+                {
+                    b.Property<int>("ClientConfigurationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ClientGroupId");
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<long>("ContentHash");
+
+                    b.Property<DateTimeOffset>("UpdatedOn");
+
+                    b.HasKey("ClientConfigurationId");
+
+                    b.HasIndex("ClientGroupId")
+                        .IsUnique();
+
+                    b.ToTable("ClientConfiguration");
+                });
+
+            modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientGroup", b =>
+                {
+                    b.Property<int>("ClientGroupId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("ClientGroupId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientGroupMembership", b =>
+                {
+                    b.Property<int>("ClientId");
+
+                    b.Property<int>("ClientGroupId");
+
+                    b.HasKey("ClientId", "ClientGroupId");
+
+                    b.HasIndex("ClientGroupId");
+
+                    b.ToTable("ClientGroupMembership");
+                });
+
             modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientSession", b =>
                 {
                     b.Property<int>("ClientSessionId")
@@ -100,6 +152,26 @@ namespace Orcus.Server.Data.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("ClientSession");
+                });
+
+            modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientConfiguration", b =>
+                {
+                    b.HasOne("Orcus.Server.Data.EfClasses.ClientGroup", "ClientGroup")
+                        .WithMany()
+                        .HasForeignKey("ClientGroupId");
+                });
+
+            modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientGroupMembership", b =>
+                {
+                    b.HasOne("Orcus.Server.Data.EfClasses.ClientGroup", "ClientGroup")
+                        .WithMany("ClientGroupMemberships")
+                        .HasForeignKey("ClientGroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Orcus.Server.Data.EfClasses.Client", "Client")
+                        .WithMany("ClientGroupMemberships")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Orcus.Server.Data.EfClasses.ClientSession", b =>

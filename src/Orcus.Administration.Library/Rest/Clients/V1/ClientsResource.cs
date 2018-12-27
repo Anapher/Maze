@@ -12,6 +12,6 @@ namespace Orcus.Administration.Library.Rest.Clients.V1
         {
         }
 
-        public static Task<List<ClientDto>> FetchAsync(IOrcusRestClient client) => CreateRequest().Execute(client).Return<List<ClientDto>>();
+        public static Task<List<ClientDto>> FetchAsync(IRestClient client) => CreateRequest().Execute(client).Return<List<ClientDto>>();
     }
 }

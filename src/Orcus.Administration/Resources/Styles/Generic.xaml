@@ -3,9 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Orcus.Administration.Controls"
     xmlns:converter="clr-namespace:Orcus.Administration.Converter"
+    xmlns:converter1="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:menu="clr-namespace:Orcus.Administration.Library.Menu;assembly=Orcus.Administration.Library"
     xmlns:statusBar="clr-namespace:Orcus.Administration.Library.StatusBar;assembly=Orcus.Administration.Library"
     xmlns:tx="http://unclassified.software/source/txtranslation">
+
+    <converter1:CloneConverter x:Key="CloneConverter" />
 
     <!--#region HeadFooterTabControl-->
     <SolidColorBrush x:Key="TabControlBackgroundBrush" Color="#2b579a" />
@@ -148,16 +152,13 @@
 
     <!--#region ContextMenu-->
 
-    <converter:SelectedItemsCountFromChildConverter x:Key="SelectedItemsCountFromChildConverter" />
-    <converter:SelectedItemsFromChildConverter x:Key="SelectedItemsFromChildConverter" />
-
     <Style
         x:Key="SeparatorVisibleForSingleSelection"
         BasedOn="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}"
         TargetType="Separator">
         <Setter Property="Visibility" Value="Collapsed" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems).Count}" Value="1">
                 <Setter Property="Visibility" Value="Visible" />
             </DataTrigger>
         </Style.Triggers>
@@ -169,7 +170,7 @@
         TargetType="Separator">
         <Setter Property="Visibility" Value="Visible" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems).Count}" Value="1">
                 <Setter Property="Visibility" Value="Collapsed" />
             </DataTrigger>
         </Style.Triggers>
@@ -182,7 +183,7 @@
         <Setter Property="Visibility" Value="Collapsed" />
         <Setter Property="CommandParameter" Value="{Binding}" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems).Count}" Value="1">
                 <Setter Property="Visibility" Value="Visible" />
             </DataTrigger>
         </Style.Triggers>
@@ -193,9 +194,9 @@
         BasedOn="{StaticResource MetroMenuItem}"
         TargetType="MenuItem">
         <Setter Property="Visibility" Value="Visible" />
-        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsFromChildConverter}}" />
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems)}" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsCountFromChildConverter}}" Value="1">
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems).Count}" Value="1">
                 <Setter Property="Visibility" Value="Collapsed" />
             </DataTrigger>
         </Style.Triggers>
@@ -205,7 +206,7 @@
         x:Key="MenuItemVisibleEverything"
         BasedOn="{StaticResource MetroMenuItem}"
         TargetType="MenuItem">
-        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget, Converter={StaticResource SelectedItemsFromChildConverter}}" />
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=(menu:ContextMenuExtensions.SelectedItems)}" />
     </Style>
 
     <!--#endregion-->
@@ -668,4 +669,94 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource Windows10TabItem}" />
     </Style>
     <!--#endregion Windows10TabControl-->
+
+    <!--#region GroupsMenu-->
+
+
+    <converter:GetGroupCheckedObserverConverter x:Key="GetGroupCheckedObserverConverter" />
+
+    <ContentControl x:Key="ClientGroupsMenuItemIcon" x:Shared="False">
+        <ContentControl.Style>
+            <Style TargetType="ContentControl">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <MultiBinding Converter="{StaticResource GetGroupCheckedObserverConverter}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="." />
+                                <Binding Path="(menu:ContextMenuExtensions.SelectedItems)" RelativeSource="{RelativeSource AncestorType=ContextMenu}" />
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="{x:Type converter:GroupCheckedObserver}">
+                            <CheckBox
+                                Margin="4,0,0,0"
+                                IsChecked="{Binding IsChecked}"
+                                IsEnabled="False"
+                                IsThreeState="True" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+
+    <Style
+        x:Key="ClientGroupsMenuItem"
+        BasedOn="{StaticResource MetroMenuItem}"
+        TargetType="MenuItem">
+        <Setter Property="Header" Value="{tx:T Groups}" />
+        <Setter Property="Icon">
+            <Setter.Value>
+                <Grid Width="13" Height="13">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Fill="{StaticResource GrayBrush2}" />
+                    <Rectangle
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Fill="{StaticResource GrayBrush2}" />
+                    <Rectangle
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Fill="{StaticResource GrayBrush2}" />
+                    <Rectangle
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Fill="{StaticResource GrayBrush2}" />
+                </Grid>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="MenuItem">
+                    <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=MenuItem}, Path=Tag.ToggleAddCommand}" />
+                    <Setter Property="CommandParameter">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource CloneConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="." />
+                                    <Binding Path="(menu:ContextMenuExtensions.SelectedItems)" RelativeSource="{RelativeSource AncestorType=ContextMenu}" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Header" Value="{Binding Name}" />
+                    <Setter Property="Icon" Value="{StaticResource ClientGroupsMenuItemIcon}" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion-->
 </ResourceDictionary>

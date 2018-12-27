@@ -17,6 +17,8 @@ namespace Orcus.Server.Connection.Error
         Commander_CommandTransmissionFailed,
         Commander_RouteNotFound,
         Commander_ActionError,
-        Commander_ResultError
+        Commander_ResultError,
+
+        ClientGroups_NotFound = 3000
     }
 }

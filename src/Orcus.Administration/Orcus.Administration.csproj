@@ -62,9 +62,8 @@
     <Compile Include="Controls\FrameAnimationControl.cs" />
     <Compile Include="Controls\StatusBar.cs" />
     <Compile Include="Controls\TextBlockExtensions.cs" />
+    <Compile Include="Converter\GetGroupCheckedObserverConverter.cs" />
     <Compile Include="Converter\NoNewLinesConverter.cs" />
-    <Compile Include="Converter\SelectedItemsCountFromChildConverter.cs" />
-    <Compile Include="Converter\SelectedItemsFromChildConverter.cs" />
     <Compile Include="Converter\VersionRangeFormatterConverter.cs" />
     <Compile Include="Extensions\HyperlinkExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -75,6 +74,9 @@
     <Compile Include="Services\ShellWindowFactory.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModule.cs" />
+    <Compile Include="Views\Main\Overview\GroupsView.xaml.cs">
+      <DependentUpon>GroupsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellWindow.xaml.cs">
       <DependentUpon>ShellWindow.xaml</DependentUpon>
     </Compile>
@@ -120,6 +122,10 @@
     <Page Include="Resources\VisualStudioIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\Overview\GroupsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellWindow.xaml">
       <SubType>Designer</SubType>
