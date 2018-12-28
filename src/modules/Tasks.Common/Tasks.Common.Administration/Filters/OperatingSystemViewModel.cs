@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Tasks.Common.Server.Filters;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Filter;
@@ -65,7 +65,7 @@ namespace Tasks.Common.Administration.Filters
             return new ValidationResult(Tx.T("TasksCommon:Filters.OperatingSystem.Errors.NoSystemSelected"));
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
 
         public OperatingSystemFilterInfo Build() =>
             new OperatingSystemFilterInfo

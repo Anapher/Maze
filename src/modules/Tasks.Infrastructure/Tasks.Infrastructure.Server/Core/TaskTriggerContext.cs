@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Tasks.Infrastructure.Core.Dtos;
@@ -10,12 +10,12 @@ namespace Tasks.Infrastructure.Server.Core
 {
     public class TaskTriggerContext : TriggerContext
     {
-        private readonly OrcusTaskService _taskService;
+        private readonly MazeTaskService _taskService;
         private readonly string _sourceTrigger;
         private readonly AggregatedClientFilter _aggregatedClientFilter;
         private readonly ITaskResultStorage _taskResultStorage;
 
-        public TaskTriggerContext(OrcusTaskService taskService, string sourceTrigger, AggregatedClientFilter aggregatedClientFilter,
+        public TaskTriggerContext(MazeTaskService taskService, string sourceTrigger, AggregatedClientFilter aggregatedClientFilter,
             ITaskResultStorage taskResultStorage)
         {
             _taskService = taskService;
@@ -35,7 +35,7 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 TaskSessionId = sessionKey.Hash,
                 Description = description,
-                TaskReferenceId = _taskService.OrcusTask.Id,
+                TaskReferenceId = _taskService.MazeTask.Id,
                 CreatedOn = DateTimeOffset.UtcNow
             });
 
@@ -52,7 +52,7 @@ namespace Tasks.Infrastructure.Server.Core
 
         public override bool IsServerIncluded()
         {
-            return _taskService.OrcusTask.Audience.IncludesServer;
+            return _taskService.MazeTask.Audience.IncludesServer;
         }
 
         public override void ReportNextTrigger(DateTimeOffset dateTimeOffset)

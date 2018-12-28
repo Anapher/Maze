@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Tasks.Infrastructure.Core.StopEvents;
 
@@ -16,7 +16,7 @@ namespace Tasks.Infrastructure.Client.Library
         /// <param name="stopEventInfo">The information for this stop event to configure the behavior.</param>
         /// <param name="context">The context that provides the needed information and methods for the service.</param>
         /// <param name="cancellationToken">The cancellation token that will be triggered if the task executed, was stopped or if the application shuts down.</param>
-        /// <returns>Return a task that once it completed, the orcus task will be stopped.</returns>
+        /// <returns>Return a task that once it completed, the maze task will be stopped.</returns>
         Task InvokeAsync(TStopEventInfo stopEventInfo, StopContext context, CancellationToken cancellationToken);
     }
 

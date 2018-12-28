@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Orcus.Administration.ControllerExtensions;
-using Orcus.Administration.Library.Clients;
-using Orcus.Utilities;
+using Maze.Administration.ControllerExtensions;
+using Maze.Administration.Library.Clients;
+using Maze.Utilities;
 using Prism.Mvvm;
 using TaskManager.Administration.Rest;
 using TaskManager.Administration.Utilities;

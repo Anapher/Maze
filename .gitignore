@@ -329,9 +329,9 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-# Orcus specific
-src/Orcus.Server/modules/
-src/Orcus.Server/tmp/
-src/Orcus.Server/modules.json
-src/Orcus.Server/modules.lock
+# Maze specific
+src/Maze.Server/modules/
+src/Maze.Server/tmp/
+src/Maze.Server/modules.json
+src/Maze.Server/modules.lock
 *.sqlite

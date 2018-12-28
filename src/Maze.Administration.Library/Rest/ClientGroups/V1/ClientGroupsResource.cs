@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
-using Orcus.Server.Connection.Clients;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
+using Maze.Server.Connection.Clients;
 
-namespace Orcus.Administration.Library.Rest.ClientGroups.V1
+namespace Maze.Administration.Library.Rest.ClientGroups.V1
 {
     public class ClientGroupsResource : VersionedResource<ClientGroupsResource>
     {

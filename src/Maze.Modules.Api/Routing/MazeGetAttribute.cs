@@ -1,14 +1,14 @@
-﻿namespace Orcus.Modules.Api.Routing
+namespace Maze.Modules.Api.Routing
 {
-    public class OrcusGetAttribute : OrcusMethodAttribute
+    public class MazeGetAttribute : MazeMethodAttribute
     {
         private const string _method = "GET";
 
-        public OrcusGetAttribute(string path) : base(_method, path)
+        public MazeGetAttribute(string path) : base(_method, path)
         {
         }
 
-        public OrcusGetAttribute() : base(_method)
+        public MazeGetAttribute() : base(_method)
         {
         }
     }

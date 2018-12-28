@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,20 +11,20 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
-using Orcus.Sockets.Internal;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
+using Maze.Sockets.Internal;
 using HttpHeaders = System.Net.Http.Headers.HttpHeaders;
 using HttpMethod = System.Net.Http.HttpMethod;
 
-namespace Orcus.Server.Service.Extensions
+namespace Maze.Server.Service.Extensions
 {
-    public static class OrcusHttpExtensions
+    public static class MazeHttpExtensions
     {
         private static readonly Uri DummyBaseUri = new Uri("http://localhost/", UriKind.Absolute);
 
-        public static HttpRequestMessage ToHttpRequestMessage(this OrcusRequest request)
+        public static HttpRequestMessage ToHttpRequestMessage(this MazeRequest request)
         {
             var builder = new UriBuilder {Path = request.Path, Query = request.QueryString.Value};
 
@@ -39,9 +39,9 @@ namespace Orcus.Server.Service.Extensions
             return message;
         }
 
-        public static MessageOrcusRequest ToOrcusRequest(this HttpRequestMessage message) => new MessageOrcusRequest(message);
+        public static MessageMazeRequest ToMazeRequest(this HttpRequestMessage message) => new MessageMazeRequest(message);
 
-        public static HttpResponseMessage ToHttpResponseMessage(this OrcusResponse response)
+        public static HttpResponseMessage ToHttpResponseMessage(this MazeResponse response)
         {
             var message =
                 new HttpResponseMessage((HttpStatusCode) response.StatusCode)
@@ -110,11 +110,11 @@ namespace Orcus.Server.Service.Extensions
         }
     }
 
-    public class MessageOrcusRequest : OrcusRequest
+    public class MessageMazeRequest : MazeRequest
     {
         private readonly HttpRequestMessage _requestMessage;
 
-        public MessageOrcusRequest(HttpRequestMessage requestMessage)
+        public MessageMazeRequest(HttpRequestMessage requestMessage)
         {
             _requestMessage = requestMessage;
             Method = requestMessage.Method.Method;
@@ -129,7 +129,7 @@ namespace Orcus.Server.Service.Extensions
                 x => new StringValues(queryCollection.GetValues(x))));
         }
 
-        public override OrcusContext Context { get; set; }
+        public override MazeContext Context { get; set; }
         public override string Method { get; set; }
         public override PathString Path { get; set; }
         public override QueryString QueryString { get; set; }

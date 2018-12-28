@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,9 +7,9 @@ using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-using Orcus.Administration.Library.StatusBar;
+using Maze.Administration.Library.StatusBar;
 
-namespace Orcus.Administration.Library.Views
+namespace Maze.Administration.Library.Views
 {
     public class WindowUserControl : UserControl
     {

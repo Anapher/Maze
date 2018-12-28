@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     /// <summary>
     ///     A status message that represents progress

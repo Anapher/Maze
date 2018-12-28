@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     public class WebSocketWrapper : IDataSocket
     {
@@ -62,7 +62,7 @@ namespace Orcus.Sockets
                         continue;
                     }
 
-                    var opCode = (OrcusSocket.MessageOpcode) buffer[0];
+                    var opCode = (MazeSocket.MessageOpcode) buffer[0];
                     var payload = new BufferSegment(buffer, 1, dataRead - 1, BufferPool);
 
                     DataReceivedEventArgs?.Invoke(this, new DataReceivedEventArgs(payload, opCode));
@@ -71,13 +71,13 @@ namespace Orcus.Sockets
             }
         }
 
-        public Task SendFrameAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
+        public Task SendFrameAsync(MazeSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
             bool bufferHasRequiredLength, CancellationToken cancellationToken) =>
             !_sendFrameAsyncLock.Wait(0)
                 ? SendFrameFallbackAsync(opcode, payloadBuffer, bufferHasRequiredLength, cancellationToken)
                 : SendFrameLockAcquiredNonCancelableAsync(opcode, payloadBuffer, bufferHasRequiredLength, cancellationToken);
 
-        private Task SendFrameLockAcquiredNonCancelableAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength, CancellationToken cancellationToken)
+        private Task SendFrameLockAcquiredNonCancelableAsync(MazeSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength, CancellationToken cancellationToken)
         {
             // If we get here, the cancellation token is not cancelable so we don't have to worry about it,
             // and we own the semaphore, so we don't need to asynchronously wait for it.
@@ -122,7 +122,7 @@ namespace Orcus.Sockets
             }, this, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
-        private async Task SendFrameFallbackAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength,
+        private async Task SendFrameFallbackAsync(MazeSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength,
             CancellationToken cancellationToken)
         {
             var sendBuffer = WriteFrameToSendBuffer(opcode, payloadBuffer, bufferHasRequiredLength);
@@ -147,7 +147,7 @@ namespace Orcus.Sockets
         }
 
         /// <summary>Writes a frame into the send buffer, which can then be sent over the network.</summary>
-        private ArraySegment<byte> WriteFrameToSendBuffer(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength)
+        private ArraySegment<byte> WriteFrameToSendBuffer(MazeSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer, bool bufferHasRequiredLength)
         {
             if (bufferHasRequiredLength)
             {

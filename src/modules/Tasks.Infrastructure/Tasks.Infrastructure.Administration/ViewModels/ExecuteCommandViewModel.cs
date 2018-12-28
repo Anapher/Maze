@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Library;
@@ -42,7 +42,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         }
         public string Title { get; private set; }
 
-        public OrcusTask OrcusTask { get; private set; }
+        public MazeTask MazeTask { get; private set; }
 
         public bool? DialogResult
         {
@@ -63,7 +63,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                         return;
                     }
 
-                    OrcusTask = new OrcusTask
+                    MazeTask = new MazeTask
                     {
                         Name = "<CommandExecution>",
                         Id = Guid.NewGuid(),

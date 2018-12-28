@@ -8,10 +8,10 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
+using Maze.Modules.Api.Formatters;
+using Maze.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json
+namespace Maze.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     ///     A <see cref="TextOutputFormatter" /> for JSON content.
@@ -120,7 +120,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (selectedEncoding == null) throw new ArgumentNullException(nameof(selectedEncoding));
 
-            var response = context.OrcusContext.Response;
+            var response = context.MazeContext.Response;
             using (var writer = context.WriterFactory(response.Body, selectedEncoding))
             {
                 WriteObject(writer, context.Object);

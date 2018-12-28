@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Sockets.Internal.Infrastructure;
+using Maze.Sockets.Internal.Infrastructure;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     /// <summary>
     ///     A stream that buffers data up to a given size and writes the package all at once

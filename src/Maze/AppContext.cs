@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -7,15 +7,15 @@ using Autofac;
 using Microsoft.Extensions.Options;
 using NuGet.Frameworks;
 using NuGet.Versioning;
-using Orcus.Client.Library.Interfaces;
-using Orcus.Client.Library.Services;
-using Orcus.Core;
-using Orcus.Core.Connection;
-using Orcus.Core.Modules;
-using Orcus.ModuleManagement;
-using Orcus.Options;
+using Maze.Client.Library.Interfaces;
+using Maze.Client.Library.Services;
+using Maze.Core;
+using Maze.Core.Connection;
+using Maze.Core.Modules;
+using Maze.ModuleManagement;
+using Maze.Options;
 
-namespace Orcus
+namespace Maze
 {
     public class AppContext : ApplicationContext, IApplicationInfo, IStaSynchronizationContext
     {
@@ -39,7 +39,7 @@ namespace Orcus
         public SynchronizationContext Current { get; private set; }
 
         /// <summary>
-        ///     The root container that contains all services of Orcus
+        ///     The root container that contains all services of Maze
         /// </summary>
         private IContainer RootContainer { get; }
 
@@ -48,7 +48,7 @@ namespace Orcus
         /// </summary>
         public ILifetimeScope Container { get; }
 
-        public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusClient10;
+        public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.MazeClient10;
         public NuGetVersion Version { get; } = NuGetVersion.Parse("1.0");
 
         private ILifetimeScope LoadModules()

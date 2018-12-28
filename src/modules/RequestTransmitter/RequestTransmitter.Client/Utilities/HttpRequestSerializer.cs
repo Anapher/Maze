@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Orcus.Sockets.Internal;
-using Orcus.Sockets.Internal.Http;
+using Maze.Sockets.Internal;
+using Maze.Sockets.Internal.Http;
 
 namespace RequestTransmitter.Client.Utilities
 {

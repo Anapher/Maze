@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Orcus.Sockets.Internal.Http;
+using Maze.Sockets.Internal.Http;
 
 namespace Tasks.Infrastructure.Administration.Utilities
 {

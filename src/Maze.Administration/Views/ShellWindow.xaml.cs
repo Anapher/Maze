@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -7,11 +7,11 @@ using Anapher.Wpf.Swan.Extensions;
 using Anapher.Wpf.Swan.ViewInterface;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-using Orcus.Administration.Controls;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Controls;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Views;
 
-namespace Orcus.Administration.Views
+namespace Maze.Administration.Views
 {
     /// <summary>
     ///     Interaction logic for ShellWindow.xaml

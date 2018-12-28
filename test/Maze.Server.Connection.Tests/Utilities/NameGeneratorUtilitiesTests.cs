@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Utilities;
 using Xunit;
 
-namespace Orcus.Server.Connection.Tests.Utilities
+namespace Maze.Server.Connection.Tests.Utilities
 {
     public class NameGeneratorUtilitiesTests
     {

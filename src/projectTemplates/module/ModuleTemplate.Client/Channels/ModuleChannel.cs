@@ -1,6 +1,6 @@
-﻿using ModuleTemplate.Shared.Channels;
-using Orcus.ControllerExtensions;
-using Orcus.Modules.Api.Routing;
+using ModuleTemplate.Shared.Channels;
+using Maze.ControllerExtensions;
+using Maze.Modules.Api.Routing;
 
 namespace ModuleTemplate.Client.Channels
 {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Connection.Extensions;
-using Orcus.Utilities;
+using Maze.Server.Connection.Extensions;
+using Maze.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Core.Storage;
@@ -19,21 +19,21 @@ using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Infrastructure.Server.Core
 {
-    public class OrcusTaskService : INotifyPropertyChanged
+    public class MazeTaskService : INotifyPropertyChanged
     {
         private readonly ITaskResultStorage _taskResultStorage;
         private AggregatedClientFilter _aggregatedClientFilter;
         private DateTimeOffset _nextExecution;
 
-        public OrcusTaskService(OrcusTask orcusTask, ITaskResultStorage taskResultStorage, IServiceProvider services)
+        public MazeTaskService(MazeTask mazeTask, ITaskResultStorage taskResultStorage, IServiceProvider services)
         {
             _taskResultStorage = taskResultStorage;
-            OrcusTask = orcusTask;
+            MazeTask = mazeTask;
             Services = services;
-            Logger = services.GetRequiredService<ILogger<OrcusTaskService>>();
+            Logger = services.GetRequiredService<ILogger<MazeTaskService>>();
         }
 
-        public OrcusTask OrcusTask { get; }
+        public MazeTask MazeTask { get; }
         public ILogger Logger { get; }
         public IServiceProvider Services { get; }
 
@@ -56,8 +56,8 @@ namespace Tasks.Infrastructure.Server.Core
 
             var filters = new AggregatedClientFilter(loggerFactory.CreateLogger<AggregatedClientFilter>());
 
-            filters.Add(new AudienceFilter(OrcusTask.Audience));
-            foreach (var filterInfo in OrcusTask.Filters)
+            filters.Add(new AudienceFilter(MazeTask.Audience));
+            foreach (var filterInfo in MazeTask.Filters)
             {
                 var filterType = typeof(IFilterService<>).MakeGenericType(filterInfo.GetType());
                 filters.Add(new CustomFilterFactory(filterType, filterInfo, loggerFactory.CreateLogger<CustomFilterFactory>()));
@@ -74,7 +74,7 @@ namespace Tasks.Infrastructure.Server.Core
             {
                 var tasks = new Dictionary<Task, Type>();
 
-                foreach (var triggerInfo in OrcusTask.Triggers)
+                foreach (var triggerInfo in MazeTask.Triggers)
                 {
                     var serviceType = typeof(ITriggerService<>).MakeGenericType(triggerInfo.GetType());
                     var service = triggerScope.ServiceProvider.GetService(serviceType);
@@ -133,7 +133,7 @@ namespace Tasks.Infrastructure.Server.Core
                 var attenders = await TaskCombinators.ThrottledFilterItems(targetIds, async (targetId, token) =>
                 {
                     if (targetId.IsServer)
-                        return OrcusTask.Audience.IncludesServer;
+                        return MazeTask.Audience.IncludesServer;
 
                     var scope = executionScope.ServiceProvider.CreateScope();
                     if (await _aggregatedClientFilter.IsClientIncluded(targetId.ClientId, scope.ServiceProvider))
@@ -148,7 +148,7 @@ namespace Tasks.Infrastructure.Server.Core
                     return false;
                 }, cancellationToken);
 
-                var executor = new TaskExecutor(OrcusTask, taskSession, _taskResultStorage, Services);
+                var executor = new TaskExecutor(MazeTask, taskSession, _taskResultStorage, Services);
                 await executor.Execute(attenders, attenderScopes, cancellationToken);
             }
         }

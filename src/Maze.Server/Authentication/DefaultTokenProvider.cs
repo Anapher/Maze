@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Orcus.Server.Data.EfClasses;
-using Orcus.Server.Options;
+using Maze.Server.Data.EfClasses;
+using Maze.Server.Options;
 
-namespace Orcus.Server.Authentication
+namespace Maze.Server.Authentication
 {
     public class DefaultTokenProvider : ITokenProvider
     {

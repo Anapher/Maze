@@ -1,4 +1,4 @@
-﻿namespace Orcus.Service.Commander.Routing.Trie.Nodes
+namespace Maze.Service.Commander.Routing.Trie.Nodes
 {
     public class CaptureNode : TrieNode
     {

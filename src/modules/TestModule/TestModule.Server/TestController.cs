@@ -1,14 +1,14 @@
-﻿using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
 
 namespace TestModule.Server
 {
-    public class TestController : OrcusController
+    public class TestController : MazeController
     {
-        [OrcusGet]
+        [MazeGet]
         public IActionResult Test() => Ok("Hello World");
 
-        [OrcusGet("core/wtf/{id}")]
+        [MazeGet("core/wtf/{id}")]
         public IActionResult HelloWorld(int id)
         {
             return Ok(new TestData {Data = new[] {"Hey", "wtf", "this shit is fucking shit"}, Id = id });

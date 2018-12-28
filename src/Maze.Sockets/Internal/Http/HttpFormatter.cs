@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Sockets.Internal.Http
+namespace Maze.Sockets.Internal.Http
 {
     //GET /wiki/Spezial:Search? search = Katzen & go = Artikel HTTP/1.1
     //Host: de.wikipedia.org
@@ -30,7 +30,7 @@ namespace Orcus.Sockets.Internal.Http
             return (int) memoryStream.Position;
         }
 
-        public static int ParseRequest(ArraySegment<byte> buffer, out OrcusRequest request)
+        public static int ParseRequest(ArraySegment<byte> buffer, out MazeRequest request)
         {
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, false);
             var streamReader = new StreamReader(memoryStream, Encoding);
@@ -39,12 +39,12 @@ namespace Orcus.Sockets.Internal.Http
             return GetBodyPosition(buffer) - buffer.Offset;
         }
 
-        public static int FormatResponse(OrcusResponse orcusResponse, ArraySegment<byte> buffer)
+        public static int FormatResponse(MazeResponse mazeResponse, ArraySegment<byte> buffer)
         {
             var memoryStream = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count, true);
 
             using (var streamWriter = new StreamWriter(memoryStream, Encoding, 8192, true))
-                EncodeResponse(orcusResponse, streamWriter);
+                EncodeResponse(mazeResponse, streamWriter);
 
             return (int) memoryStream.Position;
         }
@@ -84,15 +84,15 @@ namespace Orcus.Sockets.Internal.Http
             textWriter.WriteLine(); //finish
         }
 
-        private static OrcusRequest DecodeRequest(TextReader textReader)
+        private static MazeRequest DecodeRequest(TextReader textReader)
         {
-            var request = new DecodedOrcusRequest();
+            var request = new DecodedMazeRequest();
 
             var requestLine = textReader.ReadLine();
             var delimiterIndex = requestLine.IndexOf(' ');
 
             request.Method = requestLine.Substring(0, delimiterIndex);
-            var uri = new Uri("orcus://localhost" + requestLine.Substring(delimiterIndex + 1, requestLine.Length - delimiterIndex - 1), UriKind.Absolute);
+            var uri = new Uri("maze://localhost" + requestLine.Substring(delimiterIndex + 1, requestLine.Length - delimiterIndex - 1), UriKind.Absolute);
             request.Path = PathString.FromUriComponent(uri.LocalPath);
             request.QueryString = QueryString.FromUriComponent(uri);
             request.Query = new QueryCollection(QueryHelpers.ParseNullableQuery(uri.Query));
@@ -128,7 +128,7 @@ namespace Orcus.Sockets.Internal.Http
             }
         }
 
-        private static void EncodeResponse(OrcusResponse response, TextWriter textWriter)
+        private static void EncodeResponse(MazeResponse response, TextWriter textWriter)
         {
             textWriter.WriteLine(response.StatusCode);
 

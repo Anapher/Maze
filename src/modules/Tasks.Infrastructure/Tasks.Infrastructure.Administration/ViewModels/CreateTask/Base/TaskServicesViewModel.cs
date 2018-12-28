@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -23,10 +23,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         public object NodeViewModel => this;
         public abstract string EntryName { get; }
 
-        public abstract void Initialize(OrcusTask orcusTask);
+        public abstract void Initialize(MazeTask mazeTask);
         public abstract IEnumerable<ValidationResult> ValidateInput();
-        public abstract IEnumerable<ValidationResult> ValidateContext(OrcusTask orcusTask);
+        public abstract IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask);
 
-        public abstract void Apply(OrcusTask orcusTask);
+        public abstract void Apply(MazeTask mazeTask);
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Channels;
-using Orcus.Administration.Library.Clients.Helpers;
-using Orcus.Modules.Api;
+using Maze.Administration.Library.Channels;
+using Maze.Administration.Library.Clients.Helpers;
+using Maze.Modules.Api;
 
-namespace Orcus.Administration.Library.Clients
+namespace Maze.Administration.Library.Clients
 {
     public static class ChannelExtensions
     {

@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using CodeElements.BizRunner.Generic;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.BusinessDataAccess.Accounts;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Authentication;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.BusinessDataAccess.Accounts;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Authentication;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.BusinessLogic.Authentication
+namespace Maze.Server.BusinessLogic.Authentication
 {
     public interface IAuthenticateAdministrationAction : IGenericActionAsync<LoginInfo, Account> { }
 

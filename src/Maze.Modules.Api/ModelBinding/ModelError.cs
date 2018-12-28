@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.ModelBinding
+namespace Maze.Modules.Api.ModelBinding
 {
     public class ModelError
     {

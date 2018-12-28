@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Views;
-using Orcus.Server.Connection.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Views;
+using Maze.Server.Connection.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Rest.V1;
@@ -65,7 +65,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                         return;
                     }
 
-                    var task = new OrcusTask();
+                    var task = new MazeTask();
                     foreach (var viewModel in TreeViewModels)
                         viewModel.Apply(task);
 
@@ -101,11 +101,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             }
         }
 
-        public void UpdateTask(OrcusTask orcusTask)
+        public void UpdateTask(MazeTask mazeTask)
         {
             foreach (var taskConfiguringViewModel in TreeViewModels)
             {
-                taskConfiguringViewModel.Initialize(orcusTask);
+                taskConfiguringViewModel.Initialize(mazeTask);
             }
 
             Update = true;

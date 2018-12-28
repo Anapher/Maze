@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.ModelBinding
+namespace Maze.Modules.Api.ModelBinding
 {
     /// <summary>
     ///     The <see cref="Exception" /> that is thrown when too many model errors are encountered.

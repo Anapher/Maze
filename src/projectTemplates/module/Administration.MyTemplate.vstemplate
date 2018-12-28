@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
     <Name>ModuleTemplate.Administration</Name>
-    <Description>A basic Orcus Administration Module</Description>
+    <Description>A basic Maze Administration Module</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>

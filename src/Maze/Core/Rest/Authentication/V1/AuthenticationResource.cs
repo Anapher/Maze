@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NuGet.Protocol;
-using Orcus.Client.Library.Clients;
-using Orcus.Client.Library.Clients.Helpers;
-using Orcus.Server.Connection.Authentication.Client;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Client.Library.Clients;
+using Maze.Client.Library.Clients.Helpers;
+using Maze.Server.Connection.Authentication.Client;
+using Maze.Server.Connection.JsonConverters;
 
-namespace Orcus.Core.Rest.Authentication.V1
+namespace Maze.Core.Rest.Authentication.V1
 {
     public class AuthenticationResource : VersionedResource<AuthenticationResource>
     {

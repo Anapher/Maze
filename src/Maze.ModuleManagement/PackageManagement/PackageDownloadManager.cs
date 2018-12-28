@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.ModuleManagement.PackageManagement
+namespace Maze.ModuleManagement.PackageManagement
 {
     public class PackageDownloadManager
     {

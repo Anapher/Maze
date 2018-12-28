@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Connection;
+using Maze.Server.Connection;
 
-namespace Orcus.Administration.Library.Exceptions
+namespace Maze.Administration.Library.Exceptions
 {
     public class RestArgumentException : RestException
     {

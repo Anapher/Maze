@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
@@ -18,12 +18,12 @@ namespace Tasks.Infrastructure.Server.Business
 
     public class GetTaskSyncInfo : BusinessActionErrors, IGetTaskSyncInfo
     {
-        private readonly IOrcusTaskManager _orcusTaskManager;
+        private readonly IMazeTaskManager _mazeTaskManager;
         private readonly IServiceProvider _services;
 
-        public GetTaskSyncInfo(IOrcusTaskManager orcusTaskManager, IServiceProvider services)
+        public GetTaskSyncInfo(IMazeTaskManager mazeTaskManager, IServiceProvider services)
         {
-            _orcusTaskManager = orcusTaskManager;
+            _mazeTaskManager = mazeTaskManager;
             _services = services;
         }
 
@@ -31,12 +31,12 @@ namespace Tasks.Infrastructure.Server.Business
         {
             var tasks = new List<TaskSyncDto>();
 
-            foreach (var taskInfo in _orcusTaskManager.ClientTasks)
+            foreach (var taskInfo in _mazeTaskManager.ClientTasks)
             {
                 var filters = new AggregatedClientFilter(_services.GetRequiredService<ILogger<AggregatedClientFilter>>());
 
-                filters.Add(new AudienceFilter(taskInfo.OrcusTask.Audience));
-                foreach (var filterInfo in taskInfo.OrcusTask.Filters)
+                filters.Add(new AudienceFilter(taskInfo.MazeTask.Audience));
+                foreach (var filterInfo in taskInfo.MazeTask.Filters)
                 {
                     var filterType = typeof(IFilterService<>).MakeGenericType(filterInfo.GetType());
                     filters.Add(new CustomFilterFactory(filterType, filterInfo, _services.GetRequiredService<ILogger<CustomFilterFactory>>()));
@@ -45,7 +45,7 @@ namespace Tasks.Infrastructure.Server.Business
                 if (!await filters.IsClientIncluded(inputData, _services))
                     continue;
 
-                tasks.Add(new TaskSyncDto { TaskId = taskInfo.OrcusTask.Id, Hash = taskInfo.Hash.ToString()});
+                tasks.Add(new TaskSyncDto { TaskId = taskInfo.MazeTask.Id, Hash = taskInfo.Hash.ToString()});
             }
 
             return tasks;

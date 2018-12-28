@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Connection.Error;
+using Maze.Server.Connection.Error;
 
-namespace Orcus.Server.Connection
+namespace Maze.Server.Connection
 {
     public static class BusinessErrors
     {

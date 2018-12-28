@@ -1,13 +1,13 @@
-﻿using System.Security;
+using System.Security;
 using Anapher.Wpf.Swan.ViewInterface;
-using Orcus.Administration.Core.Modules;
-using Orcus.Administration.ViewModels;
-using Orcus.Administration.ViewModels.Main;
-using Orcus.Administration.Views.Main;
+using Maze.Administration.Core.Modules;
+using Maze.Administration.ViewModels;
+using Maze.Administration.ViewModels.Main;
+using Maze.Administration.Views.Main;
 using Prism.Mvvm;
 using Prism.Regions;
 
-namespace Orcus.Administration.Views
+namespace Maze.Administration.Views
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Orcus.Administration.Library;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Views;
-using Orcus.Server.Connection.Commanding;
+using Maze.Administration.Library;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Views;
+using Maze.Server.Connection.Commanding;
 using Prism.Commands;
 using Prism.Modularity;
 using Prism.Regions;
@@ -114,7 +114,7 @@ namespace Tasks.Infrastructure.Administration.Hooks
 
             if (_windowService.ShowDialog<ExecuteCommandViewModel>(vm => vm.Initialize(commandDescription, audienceCollection), out var viewModel) == true)
             {
-                var watcher = _commandExecutionManager.Execute(viewModel.OrcusTask, commandDescription);
+                var watcher = _commandExecutionManager.Execute(viewModel.MazeTask, commandDescription);
 
                 _windowService.ShowDialog<TaskOverviewViewModel>(vm =>
                     vm.Initialize(watcher, commandDescription.Name));

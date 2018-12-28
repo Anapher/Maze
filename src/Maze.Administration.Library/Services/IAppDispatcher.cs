@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
-namespace Orcus.Administration.Library.Services
+namespace Maze.Administration.Library.Services
 {
     /// <summary>
     ///     Provides the current application dispatcher for UI operationgs

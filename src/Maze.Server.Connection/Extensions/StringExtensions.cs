@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Connection.Extensions
+namespace Maze.Server.Connection.Extensions
 {
     /// <summary>
     ///     Extensions for <see cref="string" />

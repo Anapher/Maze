@@ -1,10 +1,10 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using Orcus.Modules.Api.Parameters;
+using Maze.Modules.Api.Parameters;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
+namespace Maze.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinderProvider" /> for binding from the <see cref="IServiceProvider" />.

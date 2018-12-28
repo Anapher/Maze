@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using CodeElements.BizRunner;
 using Microsoft.Extensions.Logging;
 
-namespace Orcus.Server.BusinessLogic
+namespace Maze.Server.BusinessLogic
 {
     public abstract class LoggingBusinessActionErrors : BusinessActionErrors
     {

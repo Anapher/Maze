@@ -1,27 +1,27 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     /// <summary>
-    ///     Encapsulates all information about an individual Orcus request.
+    ///     Encapsulates all information about an individual Maze request.
     /// </summary>
-    public abstract class OrcusContext
+    public abstract class MazeContext
     {
         public abstract object Caller { get; set; }
 
         /// <summary>
-        ///     Gets the <see cref="OrcusRequest" /> object for this request.
+        ///     Gets the <see cref="MazeRequest" /> object for this request.
         /// </summary>
-        public abstract OrcusRequest Request { get; set; }
+        public abstract MazeRequest Request { get; set; }
 
         /// <summary>
-        ///     Gets the <see cref="OrcusResponse" /> object for this request.
+        ///     Gets the <see cref="MazeResponse" /> object for this request.
         /// </summary>
-        public abstract OrcusResponse Response { get; set; }
+        public abstract MazeResponse Response { get; set; }
 
         /// <summary>
         ///     Gets information about the underlying connection for this request.

@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="FileExplorer.Administration.Views.EntriesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dtos="clr-namespace:FileExplorer.Shared.Dtos"
     xmlns:extensions="clr-namespace:FileExplorer.Administration.Extensions"
-    xmlns:extensions1="clr-namespace:Orcus.Administration.Library.Extensions;assembly=Orcus.Administration.Library"
+    xmlns:extensions1="clr-namespace:Maze.Administration.Library.Extensions;assembly=Maze.Administration.Library"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"

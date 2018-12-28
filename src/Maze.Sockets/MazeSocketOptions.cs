@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     /// <summary>
-    ///     Options for Orcus sockets
+    ///     Options for Maze sockets
     /// </summary>
-    public class OrcusSocketOptions
+    public class MazeSocketOptions
     {
-        public OrcusSocketOptions()
+        public MazeSocketOptions()
         {
             KeepAliveInterval = TimeSpan.FromMinutes(2);
             PackageBufferSize = 8192;

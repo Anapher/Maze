@@ -1,12 +1,12 @@
-﻿using Autofac;
+using Autofac;
 using ClientPanel.Administration.Resources;
 using ClientPanel.Administration.ViewModels;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Modularity;
 using Unclassified.TxLib;
@@ -17,10 +17,10 @@ namespace ClientPanel.Administration
     {
         private readonly ClientsContextMenu _clientsContextMenu;
         private readonly IWindowService _windowService;
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private readonly VisualStudioIcons _icons;
 
-        public PrismModule(ClientsContextMenu clientsContextMenu, IWindowService windowService, IOrcusRestClient restClient, VisualStudioIcons icons)
+        public PrismModule(ClientsContextMenu clientsContextMenu, IWindowService windowService, IMazeRestClient restClient, VisualStudioIcons icons)
         {
             _clientsContextMenu = clientsContextMenu;
             _windowService = windowService;

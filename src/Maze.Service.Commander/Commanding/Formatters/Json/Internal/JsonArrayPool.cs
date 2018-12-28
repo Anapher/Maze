@@ -5,7 +5,7 @@ using System;
 using System.Buffers;
 using Newtonsoft.Json;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Json.Internal
 {
     public class JsonArrayPool<T> : IArrayPool<T>
     {

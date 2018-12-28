@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace Orcus.Administration.Views.Main
+namespace Maze.Administration.Views.Main
 {
     /// <summary>
     /// Interaction logic for LoginView.xaml

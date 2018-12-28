@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -12,19 +12,19 @@ using FileExplorer.Shared.Dtos;
 using FileExplorer.Shared.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using Orcus.Client.Library.Services;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
-using Orcus.Server.Connection;
-using Orcus.Utilities;
+using Maze.Client.Library.Services;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
+using Maze.Server.Connection;
+using Maze.Utilities;
 
 namespace FileExplorer.Client.Controllers
 {
     [Route("")]
-    public class FileExplorerController : OrcusController
+    public class FileExplorerController : MazeController
     {
-        [OrcusGet("root")]
+        [MazeGet("root")]
         public async Task<IActionResult> GetRootElements(CancellationToken cancellationToken)
         {
             var result = new RootElementsDto();
@@ -45,7 +45,7 @@ namespace FileExplorer.Client.Controllers
             return Ok(result);
         }
 
-        [OrcusPost("pathTree")]
+        [MazePost("pathTree")]
         public async Task<IActionResult> GetPathTree([FromBody] PathTreeRequestDto request, [FromQuery] bool keepOrder,
             CancellationToken cancellationToken)
         {
@@ -81,7 +81,7 @@ namespace FileExplorer.Client.Controllers
             return Ok(response);
         }
 
-        [OrcusPost("upload")]
+        [MazePost("upload")]
         public async Task<IActionResult> UploadFile([FromQuery] string path, CancellationToken cancellationToken)
         {
             //var sha = SHA256.Create();
@@ -123,7 +123,7 @@ namespace FileExplorer.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("download")]
+        [MazeGet("download")]
         public IActionResult DownloadFile([FromQuery] string path, CancellationToken cancellationToken)
         {
             var file = new FileInfo(path);
@@ -140,7 +140,7 @@ namespace FileExplorer.Client.Controllers
             return NotFound();
         }
 
-        [OrcusGet("downloadDirectory")]
+        [MazeGet("downloadDirectory")]
         public async Task DownloadDirectory([FromQuery] string path, CancellationToken cancellationToken)
         {
             var directory = new DirectoryInfo(path);
@@ -170,7 +170,7 @@ namespace FileExplorer.Client.Controllers
             }
         }
 
-        [OrcusPost("clipboard")]
+        [MazePost("clipboard")]
         public IActionResult CopyPathToClipboard([FromQuery] string path, [FromServices] IStaSynchronizationContext context )
         {
             context.Current.Post(state => Clipboard.SetText((string) state, TextDataFormat.UnicodeText), path);

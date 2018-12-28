@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
-using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.Server.Service.Modules.Config
+namespace Maze.Server.Service.Modules.Config
 {
     /// <summary>
     ///     Provides all required modules including their dependencies

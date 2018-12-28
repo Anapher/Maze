@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
   </ItemGroup>
 
 </Project>

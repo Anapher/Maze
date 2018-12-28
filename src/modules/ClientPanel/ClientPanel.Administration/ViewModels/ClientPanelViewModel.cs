@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,12 +10,12 @@ using ClientPanel.Administration.Rest;
 using ClipboardManager.Administration.Utilities;
 using Console.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.ViewModels;
-using Orcus.Administration.Library.Views;
-using Orcus.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
+using Maze.Utilities;
 using Prism.Commands;
 using Prism.Regions;
 using RegistryEditor.Administration.ViewModels;
@@ -30,7 +30,7 @@ namespace ClientPanel.Administration.ViewModels
     public class ClientPanelViewModel : ViewModelBase
     {
         private readonly ClientViewModel _clientViewModel;
-        private readonly IOrcusRestClient _orcusRestClient;
+        private readonly IMazeRestClient _mazeRestClient;
         private readonly ITargetedRestClient _restClient;
         private readonly IWindowService _windowService;
         private readonly ClipboardSynchronizer _clipboardSynchronizer;
@@ -46,10 +46,10 @@ namespace ClientPanel.Administration.ViewModels
         private WriteableBitmap _remoteImage;
         private string _title;
 
-        public ClientPanelViewModel(ITargetedRestClient restClient, IOrcusRestClient orcusRestClient, ClientViewModel clientViewModel,
+        public ClientPanelViewModel(ITargetedRestClient restClient, IMazeRestClient mazeRestClient, ClientViewModel clientViewModel,
             IWindowService windowService, ClipboardSynchronizer clipboardSynchronizer)
         {
-            _orcusRestClient = orcusRestClient;
+            _mazeRestClient = mazeRestClient;
             _windowService = windowService;
             _clipboardSynchronizer = clipboardSynchronizer;
             _clientViewModel = clientViewModel;
@@ -195,7 +195,7 @@ namespace ClientPanel.Administration.ViewModels
             _windowService.Show(viewModelType, builder =>
             {
                 builder.RegisterInstance(_clientViewModel);
-                builder.RegisterInstance(_orcusRestClient.CreateTargeted(_clientViewModel));
+                builder.RegisterInstance(_mazeRestClient.CreateTargeted(_clientViewModel));
             }, null, null, out _);
         }
 

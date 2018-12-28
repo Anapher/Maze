@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Orcus.Administration.Library.Models
+namespace Maze.Administration.Library.Models
 {
     /// <summary>
     ///     A factory class that can create multiple instances of the same icon

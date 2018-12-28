@@ -1,7 +1,7 @@
-﻿using Prism.Mvvm;
+using Prism.Mvvm;
 using Prism.Regions;
 
-namespace Orcus.Administration.Library.ViewModels
+namespace Maze.Administration.Library.ViewModels
 {
     public abstract class ViewModelBase : BindableBase, INavigationAware
     {

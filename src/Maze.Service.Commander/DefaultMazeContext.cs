@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Service.Commander
+namespace Maze.Service.Commander
 {
-    public class DefaultOrcusContext : OrcusContext
+    public class DefaultMazeContext : MazeContext
     {
         private readonly CancellationTokenSource _requestCancellationTokenSource;
 
-        public DefaultOrcusContext(OrcusRequest request, OrcusResponse response, IServiceProvider serviceProvider)
+        public DefaultMazeContext(MazeRequest request, MazeResponse response, IServiceProvider serviceProvider)
         {
             Request = request;
             Response = response;
@@ -26,8 +26,8 @@ namespace Orcus.Service.Commander
 
         public override object Caller { get; set; }
 
-        public override OrcusResponse Response { get; set; }
-        public override OrcusRequest Request { get; set; }
+        public override MazeResponse Response { get; set; }
+        public override MazeRequest Request { get; set; }
         public override ConnectionInfo Connection { get; set; }
         public override IServiceProvider RequestServices { get; set; }
         public override CancellationToken RequestAborted { get; set; }

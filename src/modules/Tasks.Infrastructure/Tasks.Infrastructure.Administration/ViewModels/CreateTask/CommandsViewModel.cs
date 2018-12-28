@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Command;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -39,9 +39,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override string EntryName { get; } = Tx.T("TasksInfrastructure:CreateTask.Commands", 1);
 
-        public override void Initialize(OrcusTask orcusTask)
+        public override void Initialize(MazeTask mazeTask)
         {
-            foreach (var commandInfo in orcusTask.Commands)
+            foreach (var commandInfo in mazeTask.Commands)
             {
                 var commandInfoType = commandInfo.GetType();
                 var description = AvailableServices.First(x => x.DtoType == commandInfoType);
@@ -50,7 +50,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, commandInfo);
                 AddChild(view);
 
-                if (orcusTask.Commands.Count == 1)
+                if (mazeTask.Commands.Count == 1)
                 {
                     SetProperty(ref _selectedService, description, nameof(SelectedService));
                     SetProperty(ref _selectedChild, view, nameof(SelectedChild));
@@ -58,13 +58,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
-        public override void Apply(OrcusTask orcusTask)
+        public override void Apply(MazeTask mazeTask)
         {
-            orcusTask.Commands = new List<CommandInfo>();
+            mazeTask.Commands = new List<CommandInfo>();
             foreach (var taskView in _childs)
             {
                 var dto = TaskServiceViewModelUtils.Build<CommandInfo>(taskView.ViewModel);
-                orcusTask.Commands.Add(dto);
+                mazeTask.Commands.Add(dto);
             }
         }
     }

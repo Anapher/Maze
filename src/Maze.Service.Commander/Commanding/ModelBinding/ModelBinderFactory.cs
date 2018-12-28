@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
-using Orcus.Modules.Api.ModelBinding;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Extensions;
+using Maze.Modules.Api.ModelBinding;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Extensions;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding
+namespace Maze.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     A factory for <see cref="IModelBinder" /> instances.
@@ -25,9 +25,9 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding
         /// <summary>
         ///     Creates a new <see cref="ModelBinderFactory" />.
         /// </summary>
-        /// <param name="options">The <see cref="IOptions{TOptions}" /> for <see cref="Orcus.Service.Commander.OrcusServerOptions" />.</param>
+        /// <param name="options">The <see cref="IOptions{TOptions}" /> for <see cref="Maze.Service.Commander.MazeServerOptions" />.</param>
         /// <param name="serviceProvider">The <see cref="IServiceProvider" />.</param>
-        public ModelBinderFactory(IOptions<OrcusServerOptions> options, IServiceProvider serviceProvider)
+        public ModelBinderFactory(IOptions<MazeServerOptions> options, IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
 

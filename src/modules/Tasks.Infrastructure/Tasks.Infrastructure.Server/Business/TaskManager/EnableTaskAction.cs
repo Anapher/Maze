@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
@@ -14,11 +14,11 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
 
     public class EnableTaskAction : BusinessActionErrors, IEnableTaskAction
     {
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
         private readonly ITaskReferenceDbAccess _dbAccess;
         private readonly ITaskDirectory _taskDirectory;
 
-        public EnableTaskAction(IOrcusTaskManagerManagement management, ITaskReferenceDbAccess dbAccess, ITaskDirectory taskDirectory)
+        public EnableTaskAction(IMazeTaskManagerManagement management, ITaskReferenceDbAccess dbAccess, ITaskDirectory taskDirectory)
         {
             _management = management;
             _dbAccess = dbAccess;

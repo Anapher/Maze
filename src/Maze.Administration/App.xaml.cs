@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using Orcus.Administration.Views;
+using System.Windows;
+using Maze.Administration.Views;
 
-namespace Orcus.Administration
+namespace Maze.Administration
 {
     /// <summary>
     ///     Interaction logic for App.xaml

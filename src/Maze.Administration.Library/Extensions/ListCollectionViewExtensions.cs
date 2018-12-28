@@ -1,6 +1,6 @@
-﻿using System.Windows.Data;
+using System.Windows.Data;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     Extensions for <see cref="ListCollectionView"/>

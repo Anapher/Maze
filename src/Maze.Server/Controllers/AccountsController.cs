@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Orcus.Server.Authentication;
-using Orcus.Server.BusinessLogic.Authentication;
-using Orcus.Server.Connection.Authentication;
-using Orcus.Server.Library.Controllers;
+using Maze.Server.Authentication;
+using Maze.Server.BusinessLogic.Authentication;
+using Maze.Server.Connection.Authentication;
+using Maze.Server.Library.Controllers;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     [Route("v1/[controller]")]
     public class AccountsController : BusinessController

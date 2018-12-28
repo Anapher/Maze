@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Orcus.Server.Connection.Extensions;
+using System.ComponentModel.DataAnnotations;
+using Maze.Server.Connection.Extensions;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public static class BusinessErrorHelper
     {

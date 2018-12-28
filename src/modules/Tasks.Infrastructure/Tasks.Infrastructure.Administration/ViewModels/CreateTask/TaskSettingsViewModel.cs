@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,11 +30,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         public bool IsSelected { get; set; }
         public object NodeViewModel => this;
 
-        public void Initialize(OrcusTask orcusTask)
+        public void Initialize(MazeTask mazeTask)
         {
-            Name = orcusTask.Name;
-            ExecuteOnce = orcusTask.ExecuteOnce;
-            _taskId = orcusTask.Id;
+            Name = mazeTask.Name;
+            ExecuteOnce = mazeTask.ExecuteOnce;
+            _taskId = mazeTask.Id;
         }
 
         public IEnumerable<ValidationResult> ValidateInput()
@@ -43,16 +43,16 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 yield return new ValidationResult(Tx.T("TasksInfrastructure:CreateTask.Validation.NameCannotBeEmpty"));
         }
 
-        public IEnumerable<ValidationResult> ValidateContext(OrcusTask orcusTask)
+        public IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask)
         {
             return Enumerable.Empty<ValidationResult>();
         }
 
-        public void Apply(OrcusTask orcusTask)
+        public void Apply(MazeTask mazeTask)
         {
-            orcusTask.Name = Name;
-            orcusTask.ExecuteOnce = ExecuteOnce;
-            orcusTask.Id = _taskId ?? Guid.NewGuid();
+            mazeTask.Name = Name;
+            mazeTask.ExecuteOnce = ExecuteOnce;
+            mazeTask.Id = _taskId ?? Guid.NewGuid();
         }
     }
 }

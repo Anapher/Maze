@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     public static class MemoryCacheExtensions
     {

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using NuGet.Packaging.Core;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Utilities;
 
-namespace Orcus.Server.Connection.JsonConverters
+namespace Maze.Server.Connection.JsonConverters
 {
     public class PackageIdentityConverter : JsonConverter<PackageIdentity>
     {

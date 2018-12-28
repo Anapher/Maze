@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Utilities
+namespace Maze.Utilities
 {
     //https://stackoverflow.com/a/22078975
     public static class TaskExtensions

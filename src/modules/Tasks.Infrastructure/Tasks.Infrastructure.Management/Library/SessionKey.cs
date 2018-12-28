@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -73,7 +73,7 @@ namespace Tasks.Infrastructure.Client.Library
         /// <returns>Return the <see cref="SessionKey"/> of the hash.</returns>
         public static SessionKey FromHash(string hashString)
         {
-            var hash = Orcus.Server.Connection.Hash.Parse(hashString);
+            var hash = Maze.Server.Connection.Hash.Parse(hashString);
             if (hash.HashData.Length != 16)
                 throw new ArgumentException("A 128 bit hash is required.", nameof(hashString));
 

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Prism.Mvvm;
 using Prism.Regions;
 
-namespace Orcus.Administration.ViewModels
+namespace Maze.Administration.ViewModels
 {
     public class MainViewModel : BindableBase
     {

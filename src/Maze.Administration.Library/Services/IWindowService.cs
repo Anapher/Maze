@@ -1,8 +1,8 @@
-﻿using Anapher.Wpf.Swan.ViewInterface;
+using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using System;
 
-namespace Orcus.Administration.Library.Views
+namespace Maze.Administration.Library.Views
 {
     /// <summary>
     ///     Provides functions to interact with the user and show new windows.

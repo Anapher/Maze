@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     /// <summary>
     ///     The mode of the status bar when the message is displayed

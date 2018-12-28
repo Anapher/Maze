@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     public interface IDataChannel : IDisposable
     {

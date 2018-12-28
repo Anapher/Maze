@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.Server.Connection.Authentication.Client
+namespace Maze.Server.Connection.Authentication.Client
 {
     public class ClientAuthenticationResponse
     {

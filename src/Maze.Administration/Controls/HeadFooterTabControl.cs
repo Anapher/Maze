@@ -1,7 +1,7 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Controls
+namespace Maze.Administration.Controls
 {
     public class HeadFooterTabControl : TabControl
     {

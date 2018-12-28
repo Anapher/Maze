@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public interface IModulesDirectory
     {

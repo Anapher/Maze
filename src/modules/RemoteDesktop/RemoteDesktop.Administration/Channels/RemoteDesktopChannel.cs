@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -7,9 +7,9 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenH264Lib;
-using Orcus.Administration.Library.Channels;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Services;
+using Maze.Administration.Library.Channels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Services;
 using RemoteDesktop.Administration.Native;
 using RemoteDesktop.Administration.Rest;
 using RemoteDesktop.Administration.Utilities;

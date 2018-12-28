@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     /// <summary>
     ///     A base class for a status on a <see cref="IShellStatusBar"/>

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,13 +10,13 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Library.Hubs;
-using Orcus.Server.Service.Modules;
-using Orcus.Utilities;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Library.Hubs;
+using Maze.Server.Service.Modules;
+using Maze.Utilities;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     [Route("v1/[controller]")]
     [Authorize("admin")]

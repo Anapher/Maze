@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Orcus.Server.Service.Tests.Utils
+namespace Maze.Server.Service.Tests.Utils
 {
     public static class TestFileSystemUtility
     {

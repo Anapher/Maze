@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Orcus.Service.Commander.Commanding;
+using System.Threading.Tasks;
+using Maze.Service.Commander.Commanding;
 using Xunit;
 
-namespace Orcus.Server.Service.Tests.Commanding
+namespace Maze.Server.Service.Tests.Commanding
 {
     public class ActionMethodMetadataTests
     {

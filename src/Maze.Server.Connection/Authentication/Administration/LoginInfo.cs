@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orcus.Server.Connection.Authentication
+namespace Maze.Server.Connection.Authentication
 {
     public class LoginInfo : IValidatableObject
     {

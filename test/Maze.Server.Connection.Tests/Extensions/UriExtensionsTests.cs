@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Orcus.Server.Connection.Extensions;
+using Maze.Server.Connection.Extensions;
 using Xunit;
 
-namespace Orcus.Server.Connection.Tests.Extensions
+namespace Maze.Server.Connection.Tests.Extensions
 {
     public class UriExtensionsTests
     {

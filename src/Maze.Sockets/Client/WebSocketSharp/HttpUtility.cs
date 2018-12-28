@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 /*
  * HttpUtility.cs
  *
@@ -43,7 +43,7 @@
 using System;
 using System.Text;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     internal sealed class HttpUtility
     {

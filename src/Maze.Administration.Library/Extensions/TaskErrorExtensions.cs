@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
 using Anapher.Wpf.Swan.ViewInterface;
-using Orcus.Administration.Library.Exceptions;
-using Orcus.Server.Connection.Error;
+using Maze.Administration.Library.Exceptions;
+using Maze.Server.Connection.Error;
 using TaskDialogInterop;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     Extensions for <see cref="Task"/> that help to catch and report errors

@@ -1,9 +1,9 @@
-﻿//Source: https://github.com/poulfoged/UriExtend (MIT)
+//Source: https://github.com/poulfoged/UriExtend (MIT)
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Orcus.Server.Connection.Extensions
+namespace Maze.Server.Connection.Extensions
 {
     public static class UriExtensions
     {

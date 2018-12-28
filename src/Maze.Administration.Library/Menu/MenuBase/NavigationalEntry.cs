@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public class NavigationalEntry<TCommandEntry> : CommandCollection<TCommandEntry>, IVisibleMenuItem where TCommandEntry : ICommandMenuEntry
     {

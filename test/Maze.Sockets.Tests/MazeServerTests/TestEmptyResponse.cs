@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Sockets.Tests.OrcusServerTests
+namespace Maze.Sockets.Tests.MazeServerTests
 {
-    public class TestEmptyResponse : OrcusServerTestBase
+    public class TestEmptyResponse : MazeServerTestBase
     {
-        protected override Task WriteResponse(OrcusResponse response)
+        protected override Task WriteResponse(MazeResponse response)
         {
             response.StatusCode = StatusCodes.Status404NotFound;
             return Task.CompletedTask;

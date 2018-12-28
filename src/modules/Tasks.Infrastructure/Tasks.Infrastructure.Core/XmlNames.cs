@@ -1,7 +1,7 @@
-﻿namespace Tasks.Infrastructure.Core
+namespace Tasks.Infrastructure.Core
 {
     /// <summary>
-    ///     Important key words for XML serializing <see cref="OrcusTask"/>
+    ///     Important key words for XML serializing <see cref="MazeTask"/>
     /// </summary>
     public static class XmlNames
     {

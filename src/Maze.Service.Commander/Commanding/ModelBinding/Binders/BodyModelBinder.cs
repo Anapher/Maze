@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -7,13 +7,13 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
-using Orcus.Service.Commander.Infrastructure;
+using Maze.Modules.Api.Formatters;
+using Maze.Modules.Api.Parameters;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.ModelBinding.Abstract;
+using Maze.Service.Commander.Infrastructure;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
+namespace Maze.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinder" /> which binds models from the request body using an <see cref="IInputFormatter" />
@@ -57,7 +57,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
             // and be similar to the behavior for POCOs bound via traditional model binding.
             var modelBindingKey = bindingContext.ModelName;
 
-            var httpContext = bindingContext.OrcusContext;
+            var httpContext = bindingContext.MazeContext;
 
             var formatterContext = new InputFormatterContext(
                 httpContext,

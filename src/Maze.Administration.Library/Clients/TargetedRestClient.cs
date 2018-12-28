@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -6,25 +6,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.SignalR.Client;
-using Orcus.Administration.Library.Channels;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Modules.Api;
+using Maze.Administration.Library.Channels;
+using Maze.Administration.Library.Extensions;
+using Maze.Modules.Api;
 
-namespace Orcus.Administration.Library.Clients
+namespace Maze.Administration.Library.Clients
 {
     public class TargetedRestClient : ITargetedRestClient
     {
         private static readonly Uri RelativeBaseUri = new Uri("v1/modules", UriKind.Relative);
         private readonly string _commandTargetHeader;
-        private readonly IOrcusRestClient _orcusRestClient;
+        private readonly IMazeRestClient _mazeRestClient;
         private readonly List<IDataChannel> _channels;
         private readonly object _channelsLock = new object();
         private readonly CancellationTokenSource _restClientTokenSource;
         private bool _isDisposed;
 
-        public TargetedRestClient(IOrcusRestClient orcusRestClient, int clientId)
+        public TargetedRestClient(IMazeRestClient mazeRestClient, int clientId)
         {
-            _orcusRestClient = orcusRestClient;
+            _mazeRestClient = mazeRestClient;
             _commandTargetHeader = "C" + clientId;
             _channels = new List<IDataChannel>();
             _restClientTokenSource = new CancellationTokenSource();
@@ -50,9 +50,9 @@ namespace Orcus.Administration.Library.Clients
             }
         }
 
-        public string Username => _orcusRestClient.Username;
-        public HubConnection HubConnection => _orcusRestClient.HubConnection;
-        public IComponentContext ServiceProvider => _orcusRestClient.ServiceProvider;
+        public string Username => _mazeRestClient.Username;
+        public HubConnection HubConnection => _mazeRestClient.HubConnection;
+        public IComponentContext ServiceProvider => _mazeRestClient.ServiceProvider;
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -63,12 +63,12 @@ namespace Orcus.Administration.Library.Clients
 
             if (!cancellationToken.CanBeCanceled)
             {
-                return await _orcusRestClient.SendMessage(request, _restClientTokenSource.Token);
+                return await _mazeRestClient.SendMessage(request, _restClientTokenSource.Token);
             }
 
             using (var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _restClientTokenSource.Token))
             {
-                return await _orcusRestClient.SendMessage(request, linkedTokenSource.Token);
+                return await _mazeRestClient.SendMessage(request, linkedTokenSource.Token);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Orcus.Administration.Library.Clients
                 throw new ObjectDisposedException(nameof(TargetedRestClient));
 
             PatchMessage(message);
-            var channel = await _orcusRestClient.OpenChannel<TChannel>(message, cancellationToken);
+            var channel = await _mazeRestClient.OpenChannel<TChannel>(message, cancellationToken);
             channel.CloseChannel += (sender, args) => ChannelOnCloseChannel(channel);
 
             lock (_channelsLock)
@@ -94,7 +94,7 @@ namespace Orcus.Administration.Library.Clients
                 throw new ObjectDisposedException(nameof(TargetedRestClient));
 
             PatchMessage(request);
-            return _orcusRestClient.SendChannelMessage(request, channel, cancellationToken);
+            return _mazeRestClient.SendChannelMessage(request, channel, cancellationToken);
         }
 
         private void ChannelOnCloseChannel(IDataChannel channel)

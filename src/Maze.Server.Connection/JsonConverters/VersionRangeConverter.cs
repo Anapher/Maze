@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Connection.JsonConverters
+namespace Maze.Server.Connection.JsonConverters
 {
     public class VersionRangeConverter : JsonConverter
     {

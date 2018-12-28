@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace Tasks.Infrastructure.Core
 {
     /// <summary>
-    ///     An exception that occurred while parsing an <see cref="OrcusTask"/>
+    ///     An exception that occurred while parsing an <see cref="MazeTask"/>
     /// </summary>
     public class TaskParsingException : Exception
     {

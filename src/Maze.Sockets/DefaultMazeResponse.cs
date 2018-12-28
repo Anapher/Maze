@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api.Response;
-using Orcus.Sockets.Internal.Http;
+using Maze.Modules.Api.Response;
+using Maze.Sockets.Internal.Http;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
-    public class DefaultOrcusResponse : OrcusResponse
+    public class DefaultMazeResponse : MazeResponse
     {
         private bool _hasStarted;
         private readonly List<(Func<object, Task> callback, object state)> _startingDelegates;
         private readonly List<(Func<object, Task> callback, object state)> _completedDelegates;
 
-        public DefaultOrcusResponse(int requestId)
+        public DefaultMazeResponse(int requestId)
         {
             RequestId = requestId;
             _startingDelegates = new List<(Func<object, Task> callback, object state)>();

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Trigger;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -39,9 +39,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override string EntryName { get; } = Tx.T("TasksInfrastructure:CreateTask.Triggers", 1);
 
-        public override void Initialize(OrcusTask orcusTask)
+        public override void Initialize(MazeTask mazeTask)
         {
-            foreach (var triggerInfo in orcusTask.Triggers)
+            foreach (var triggerInfo in mazeTask.Triggers)
             {
                 var triggerInfoType = triggerInfo.GetType();
                 var description = AvailableServices.First(x => x.DtoType == triggerInfoType);
@@ -50,7 +50,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, triggerInfo);
                 AddChild(view);
 
-                if (orcusTask.Triggers.Count == 1)
+                if (mazeTask.Triggers.Count == 1)
                 {
                     SetProperty(ref _selectedService, description, nameof(SelectedService));
                     SetProperty(ref _selectedChild, view, nameof(SelectedChild));
@@ -58,13 +58,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
-        public override void Apply(OrcusTask orcusTask)
+        public override void Apply(MazeTask mazeTask)
         {
-            orcusTask.Triggers = new List<TriggerInfo>();
+            mazeTask.Triggers = new List<TriggerInfo>();
             foreach (var taskView in _childs)
             {
                 var dto = TaskServiceViewModelUtils.Build<TriggerInfo>(taskView.ViewModel);
-                orcusTask.Triggers.Add(dto);
+                mazeTask.Triggers.Add(dto);
             }
         }
     }

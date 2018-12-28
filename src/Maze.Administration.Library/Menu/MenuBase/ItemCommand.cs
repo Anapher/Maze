@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
 
-namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public class ItemCommand<TItem> : IItemCommandMenuEntry
     {

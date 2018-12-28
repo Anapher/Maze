@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Console.Administration.Controls;
 using Console.Shared.Channels;
 using Console.Shared.Dtos;
-using Orcus.Administration.ControllerExtensions;
+using Maze.Administration.ControllerExtensions;
 
 namespace Console.Administration.Rest
 {

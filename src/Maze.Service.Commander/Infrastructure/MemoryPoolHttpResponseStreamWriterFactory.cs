@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     /// <summary>
     /// An <see cref="IHttpResponseStreamWriterFactory"/> that uses pooled buffers.

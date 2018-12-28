@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace Orcus.Server.BusinessLogic.Tests.Authentication
+namespace Maze.Server.BusinessLogic.Tests.Authentication
 {
     public abstract class BusinessLogicTestBase<TBusinessLogic>
     {

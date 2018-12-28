@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     /// <summary>
     ///     Context object for execution of action which has been selected as part of a request.
@@ -13,8 +13,8 @@ namespace Orcus.Modules.Api
         public abstract IReadOnlyDictionary<string, object> RouteData { get; }
 
         /// <summary>
-        ///     Gets or sets the <see cref="OrcusContext" /> for the current request.
+        ///     Gets or sets the <see cref="MazeContext" /> for the current request.
         /// </summary>
-        public abstract OrcusContext Context { get; }
+        public abstract MazeContext Context { get; }
     }
 }

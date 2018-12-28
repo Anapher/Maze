@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
+using Maze.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
+namespace Maze.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     <see cref="IModelBinder" /> implementation to bind models of type <see cref="CancellationToken" />.
@@ -19,7 +19,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
             // in both the ValidationState and ModelBindingResult.
             //
             // DO NOT simplify this code by removing the cast.
-            var model = (object) bindingContext.OrcusContext.RequestAborted;
+            var model = (object) bindingContext.MazeContext.RequestAborted;
             bindingContext.Result = ModelBindingResult.Success(model);
 
             return Task.CompletedTask;

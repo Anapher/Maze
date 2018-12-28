@@ -1,7 +1,7 @@
-﻿using FileExplorer.Administration.ViewModels;
+using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
-using Orcus.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menu.MenuBase;
 
 namespace FileExplorer.Administration
 {

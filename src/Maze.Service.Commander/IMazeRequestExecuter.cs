@@ -1,21 +1,21 @@
-﻿using System.Threading.Tasks;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using System.Threading.Tasks;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Service.Commander
+namespace Maze.Service.Commander
 {
     /// <summary>
-    ///     Take an <see cref="OrcusRequest" /> and execute it, responding with an <see cref="OrcusResponse" />
+    ///     Take an <see cref="MazeRequest" /> and execute it, responding with an <see cref="MazeResponse" />
     /// </summary>
-    public interface IOrcusRequestExecuter
+    public interface IMazeRequestExecuter
     {
         /// <summary>
-        ///     Execute the given <see cref="OrcusRequest" />
+        ///     Execute the given <see cref="MazeRequest" />
         /// </summary>
         /// <param name="context">The context</param>
         /// <param name="channelServer">The server that manages the active channel</param>
         /// <returns>Return the result of the request</returns>
-        Task Execute(OrcusContext context, IChannelServer channelServer);
+        Task Execute(MazeContext context, IChannelServer channelServer);
     }
 }

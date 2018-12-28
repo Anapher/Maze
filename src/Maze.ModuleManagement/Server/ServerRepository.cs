@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.ModuleManagement.Server
+namespace Maze.ModuleManagement.Server
 {
     public class ServerRepository : SourceRepository
     {

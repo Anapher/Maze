@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Orcus.Core.Rest.Authentication.V1;
-using Orcus.Core.Services;
-using Orcus.Sockets;
+using Maze.Core.Rest.Authentication.V1;
+using Maze.Core.Services;
+using Maze.Sockets;
 
-namespace Orcus.Core.Connection
+namespace Maze.Core.Connection
 {
     public interface IServerConnector
     {
@@ -15,11 +15,11 @@ namespace Orcus.Core.Connection
     public class ServerConnector : IServerConnector
     {
         private readonly IClientInfoProvider _clientInfoProvider;
-        private readonly OrcusSocketOptions _options;
-        private readonly IOrcusRestClientFactory _restClientFactory;
+        private readonly MazeSocketOptions _options;
+        private readonly IMazeRestClientFactory _restClientFactory;
 
-        public ServerConnector(IOrcusRestClientFactory restClientFactory, IClientInfoProvider clientInfoProvider,
-            IOptions<OrcusSocketOptions> options)
+        public ServerConnector(IMazeRestClientFactory restClientFactory, IClientInfoProvider clientInfoProvider,
+            IOptions<MazeSocketOptions> options)
         {
             _restClientFactory = restClientFactory;
             _clientInfoProvider = clientInfoProvider;

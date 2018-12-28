@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.Library.Models
+namespace Maze.Administration.Library.Models
 {
     public abstract class ClientGroupViewModel : BindableBase
     {

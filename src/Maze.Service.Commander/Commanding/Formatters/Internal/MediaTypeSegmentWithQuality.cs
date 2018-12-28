@@ -1,9 +1,9 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.Extensions.Primitives;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Internal
 {
     /// <summary>
     /// A media type with its associated quality.

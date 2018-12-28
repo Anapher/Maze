@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Orcus.Server.Connection;
+using Maze.Server.Connection;
 using Tasks.Infrastructure.Core.Audience;
 using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Filter;
@@ -12,9 +12,9 @@ using Tasks.Infrastructure.Core.Triggers;
 namespace Tasks.Infrastructure.Core
 {
     /// <summary>
-    ///     An Orcus Task
+    ///     An Maze Task
     /// </summary>
-    public class OrcusTask : IValidatableObject
+    public class MazeTask : IValidatableObject
     {
         /// <summary>
         ///     The name of the task. This value must not be unique and may only be used for displaying to the user

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Tasks.Infrastructure.Core;
 
 namespace Tasks.Infrastructure.Administration.Library
@@ -20,9 +20,9 @@ namespace Tasks.Infrastructure.Administration.Library
         /// <summary>
         ///     Validate the context of the task that should be created. This method is executed after <see cref="ValidateInput"/> of all serviced succeeded.
         /// </summary>
-        /// <param name="orcusTask">The complete orcus task that is about to be created.</param>
+        /// <param name="mazeTask">The complete maze task that is about to be created.</param>
         /// <returns>Return the validation result that carries possible errors</returns>
-        ValidationResult ValidateContext(OrcusTask orcusTask);
+        ValidationResult ValidateContext(MazeTask mazeTask);
 
         /// <summary>
         ///     Build the data transfer object based on the information that were validated in <see cref="ValidateInput"/>

@@ -1,4 +1,4 @@
-﻿//Taken from https://github.com/kobake/AspNetCore.RouteAnalyzer (MIT)
+//Taken from https://github.com/kobake/AspNetCore.RouteAnalyzer (MIT)
 
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     [Route("routes")]
     public class RouteAnalyzerController : Controller

@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Orcus.Server.Data.EfClasses;
-using Orcus.Server.Data.EfCode;
+using Maze.Server.Data.EfClasses;
+using Maze.Server.Data.EfCode;
 
-namespace Orcus.Server.BusinessDataAccess.ClientGroups
+namespace Maze.Server.BusinessDataAccess.ClientGroups
 {
     public interface IClientGroupsDbAccess
     {

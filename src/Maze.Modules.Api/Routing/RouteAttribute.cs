@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Routing
+namespace Maze.Modules.Api.Routing
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class RouteAttribute : Attribute, IRouteFragment

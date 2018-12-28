@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Xml.Linq;
 using Xunit;
 
 namespace Tasks.Infrastructure.Core.Tests
 {
-    public class OrcusTaskReaderBaseTests
+    public class MazeTaskReaderBaseTests
     {
-        private class ReaderImpl : OrcusTaskReaderBase
+        private class ReaderImpl : MazeTaskReaderBase
         {
             public ReaderImpl(XDocument xml) : base(xml)
             {

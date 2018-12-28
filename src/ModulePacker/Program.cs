@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -135,11 +135,11 @@ namespace ModulePacker
                     var id = reader.GetId();
                     if (framework == null)
                     {
-                        if (Enum.TryParse<OrcusFramework>(id.Split('.').Last(), out var fw))
+                        if (Enum.TryParse<MazeFramework>(id.Split('.').Last(), out var fw))
                             framework = fw;
                         else
                         {
-                            Console.WriteLine($"Package {id} could not be associated to an Orcus framework. It will be included as a reference.");
+                            Console.WriteLine($"Package {id} could not be associated to an Maze framework. It will be included as a reference.");
 
                             var tempFolder = Path.Combine(directory.FullName, reader.GetId());
                             ExtractPackage(tempFolder, sourceFile);
@@ -174,19 +174,19 @@ namespace ModulePacker
             }
         }
 
-        private static bool TryParseFrameworkFromName(string name, string moduleName, out OrcusFramework? orcusFramework)
+        private static bool TryParseFrameworkFromName(string name, string moduleName, out MazeFramework? mazeFramework)
         {
             var match = Regex.Match(name, $"{moduleName}.(?<framework>(.*?))\\.nuspec");
             if (match.Success)
             {
-                if (Enum.TryParse(match.Groups["framework"].Value, true, out OrcusFramework result))
+                if (Enum.TryParse(match.Groups["framework"].Value, true, out MazeFramework result))
                 {
-                    orcusFramework = result;
+                    mazeFramework = result;
                     return true;
                 }
             }
 
-            orcusFramework = null;
+            mazeFramework = null;
             return false;
         }
     }

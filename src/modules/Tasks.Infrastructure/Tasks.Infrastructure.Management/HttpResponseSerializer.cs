@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
-using Orcus.Sockets.Internal.Http;
+using Maze.Sockets.Internal.Http;
 
 namespace Tasks.Infrastructure.Management
 {

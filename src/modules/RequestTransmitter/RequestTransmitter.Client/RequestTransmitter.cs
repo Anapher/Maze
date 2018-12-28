@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Orcus.Client.Library.Services;
+using Maze.Client.Library.Services;
 using RequestTransmitter.Client.Options;
 using RequestTransmitter.Client.Storage;
 using RequestTransmitter.Client.Utilities;

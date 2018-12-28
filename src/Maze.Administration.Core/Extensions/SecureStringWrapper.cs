@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace Orcus.Administration.Core.Extensions
+namespace Maze.Administration.Core.Extensions
 {
     //https://codereview.stackexchange.com/questions/107860/converting-a-securestring-to-a-byte-array
     public sealed class SecureStringWrapper : IDisposable

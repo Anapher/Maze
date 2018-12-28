@@ -1,26 +1,26 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Server.Service.Commander
+namespace Maze.Server.Service.Commander
 {
-    public class HttpOrcusContextWrapper : OrcusContext
+    public class HttpMazeContextWrapper : MazeContext
     {
         private readonly HttpContext _httpContext;
 
-        public HttpOrcusContextWrapper(HttpContext httpContext)
+        public HttpMazeContextWrapper(HttpContext httpContext)
         {
             _httpContext = httpContext;
-            Request = new HttpOrcusRequestWrapper(httpContext.Request);
-            Response = new HttpOrcusResponseWrapper(httpContext.Response);
+            Request = new HttpMazeRequestWrapper(httpContext.Request);
+            Response = new HttpMazeResponseWrapper(httpContext.Response);
         }
 
         public override object Caller { get; set; }
-        public override OrcusRequest Request { get; set; }
-        public override OrcusResponse Response { get; set; }
+        public override MazeRequest Request { get; set; }
+        public override MazeResponse Response { get; set; }
         public override ConnectionInfo Connection { get; set; }
 
         public override IServiceProvider RequestServices

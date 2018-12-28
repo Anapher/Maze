@@ -1,7 +1,7 @@
-﻿using Orcus.Server.Library.Clients;
-using Orcus.Sockets;
+using Maze.Server.Library.Clients;
+using Maze.Sockets;
 
-namespace Orcus.Server.Library.Services
+namespace Maze.Server.Library.Services
 {
     /// <summary>
     ///     A client connection that is currently active.
@@ -16,6 +16,6 @@ namespace Orcus.Server.Library.Services
         /// <summary>
         ///     The connection server.
         /// </summary>
-        OrcusServer OrcusServer { get; }
+        MazeServer MazeServer { get; }
     }
 }

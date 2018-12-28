@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
-    ///     Represents the outgoing side of an individual Orcus request.
+    ///     Represents the outgoing side of an individual Maze request.
     /// </summary>
-    public abstract class OrcusResponse
+    public abstract class MazeResponse
     {
-        /// <summary>Gets or sets the Orcus response code.</summary>
+        /// <summary>Gets or sets the Maze response code.</summary>
         public abstract int StatusCode { get; set; }
 
         /// <summary>Gets the response headers.</summary>

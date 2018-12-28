@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Menus
+namespace Maze.Administration.Library.Menus
 {
     public enum CommandCategory
     {

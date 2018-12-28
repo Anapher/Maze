@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Orcus.Server.Service.Modules.Extensions;
+using Maze.Server.Service.Modules.Extensions;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public static class PrunePackageTreeExtensions
     {

@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Web;
-using Orcus.Modules.Api;
-using Orcus.Service.Commander.Routing.Trie;
+using Maze.Modules.Api;
+using Maze.Service.Commander.Routing.Trie;
 
-namespace Orcus.Service.Commander.Routing
+namespace Maze.Service.Commander.Routing
 {
     public class RouteResolver : IRouteResolver
     {
@@ -14,7 +14,7 @@ namespace Orcus.Service.Commander.Routing
             _routeResolverTrie = routeResolverTrie;
         }
 
-        public ResolveResult Resolve(OrcusContext context)
+        public ResolveResult Resolve(MazeContext context)
         {
             var pathDecoded = HttpUtility.UrlDecode(context.Request.Path);
 

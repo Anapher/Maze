@@ -4,7 +4,7 @@
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Json.Internal
 {
     /// <summary>
     /// <see cref="IPooledObjectPolicy{T}"/> for <see cref="JsonSerializer"/>.

@@ -1,10 +1,10 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public class ModulesDirectory : IModulesDirectory
     {

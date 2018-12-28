@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -11,26 +11,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Orcus.ModuleManagement;
-using Orcus.Server.AppStart;
-using Orcus.Server.Authentication;
-using Orcus.Server.Autofac;
-using Orcus.Server.BusinessDataAccess;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Data.EfCode;
-using Orcus.Server.Extensions;
-using Orcus.Server.Library.Hubs;
-using Orcus.Server.Library.Interfaces;
-using Orcus.Server.Library.Services;
-using Orcus.Server.Middleware;
-using Orcus.Server.Options;
-using Orcus.Server.Service;
-using Orcus.Server.Service.Connection;
-using Orcus.Server.Service.Modules;
-using Orcus.Sockets;
+using Maze.ModuleManagement;
+using Maze.Server.AppStart;
+using Maze.Server.Authentication;
+using Maze.Server.Autofac;
+using Maze.Server.BusinessDataAccess;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Data.EfCode;
+using Maze.Server.Extensions;
+using Maze.Server.Library.Hubs;
+using Maze.Server.Library.Interfaces;
+using Maze.Server.Library.Services;
+using Maze.Server.Middleware;
+using Maze.Server.Options;
+using Maze.Server.Service;
+using Maze.Server.Service.Connection;
+using Maze.Server.Service.Modules;
+using Maze.Sockets;
 using Serilog;
 
-namespace Orcus.Server
+namespace Maze.Server
 {
     public class Startup
     {
@@ -51,7 +51,7 @@ namespace Orcus.Server
 
             services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));
             services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
-            services.Configure<OrcusSocketOptions>(Configuration.GetSection("Socket"));
+            services.Configure<MazeSocketOptions>(Configuration.GetSection("Socket"));
             services.Configure<ModulePackageManagerOptions>(Configuration.GetSection("Modules.PackageManager"));
 
             services.AddSingleton<ITokenProvider, DefaultTokenProvider>();
@@ -128,7 +128,7 @@ namespace Orcus.Server
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => routes.MapHub<AdministrationHub>("/signalR"));
-            app.Map("/ws", builder => builder.UseWebSockets().UseMiddleware<OrcusSocketManagerMiddleware>());
+            app.Map("/ws", builder => builder.UseWebSockets().UseMiddleware<MazeSocketManagerMiddleware>());
 
             app.ApplicationServices.Execute<IConfigureServerPipelineAction, PipelineInfo>(new PipelineInfo(app, env))
                 .Wait();

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace Orcus.Server.Connection.Commanding
+namespace Maze.Server.Connection.Commanding
 {
     public class CommandTargetCollection : Collection<CommandTarget>
     {

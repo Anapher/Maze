@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.PackageManagement;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Modules.PackageManagement;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public interface IModulePackageManager
     {

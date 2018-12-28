@@ -1,6 +1,6 @@
-﻿using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
-namespace Orcus.Administration.Library.Services
+namespace Maze.Administration.Library.Services
 {
     /// <summary>
     ///     A factory that created <see cref="IShellWindow"/>s.

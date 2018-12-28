@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
 
-namespace Orcus.Service.Commander.Commanding.Formatters
+namespace Maze.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     ///     Reads an object from a request body with a text format.
@@ -39,7 +39,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
             if (selectedEncoding == null)
             {
                 var message = string.Format("Unsupported content type '{0}'.",
-                    context.OrcusContext.Request.ContentType);
+                    context.MazeContext.Request.ContentType);
 
                 var exception = new UnsupportedContentTypeException(message);
                 context.ModelState.AddModelError(context.ModelName, exception, context.Metadata);
@@ -80,7 +80,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
                 throw new InvalidOperationException(message);
             }
 
-            var requestContentType = context.OrcusContext.Request.ContentType;
+            var requestContentType = context.MazeContext.Request.ContentType;
             var requestMediaType = requestContentType == null ? default(MediaType) : new MediaType(requestContentType);
             if (requestMediaType.Charset.HasValue)
             {

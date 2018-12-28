@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.ModuleManagement.PackageManagement
+namespace Maze.ModuleManagement.PackageManagement
 {
     public static class PackageManagementConstants
     {

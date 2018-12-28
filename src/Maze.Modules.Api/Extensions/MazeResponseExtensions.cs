@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Modules.Api.Extensions
+namespace Maze.Modules.Api.Extensions
 {
-    public static class OrcusResponseExtensions
+    public static class MazeResponseExtensions
     {
         private static readonly Func<object, Task> DisposeDelegate = disposable =>
         {
@@ -17,9 +17,9 @@ namespace Orcus.Modules.Api.Extensions
         /// <summary>
         ///     Registers an object for disposal by the host once the request has finished processing.
         /// </summary>
-        /// <param name="response">The <see cref="OrcusResponse" /></param>
+        /// <param name="response">The <see cref="MazeResponse" /></param>
         /// <param name="disposable">The object to be disposed.</param>
-        public static void RegisterForDispose(this OrcusResponse response, IDisposable disposable)
+        public static void RegisterForDispose(this MazeResponse response, IDisposable disposable)
         {
             response.OnCompleted(DisposeDelegate, disposable);
         }
@@ -27,9 +27,9 @@ namespace Orcus.Modules.Api.Extensions
         /// <summary>
         ///     Adds a delegate to be invoked just before response headers will be sent to the client.
         /// </summary>
-        /// <param name="response">The <see cref="OrcusResponse" /></param>
+        /// <param name="response">The <see cref="MazeResponse" /></param>
         /// <param name="callback">The delegate to execute.</param>
-        public static void OnStarting(this OrcusResponse response, Func<Task> callback)
+        public static void OnStarting(this MazeResponse response, Func<Task> callback)
         {
             response.OnStarting(CallbackDelegate, callback);
         }

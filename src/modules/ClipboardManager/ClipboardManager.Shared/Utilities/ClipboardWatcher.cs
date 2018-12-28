@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using ClipboardManager.Shared.Native;
 using System.Windows.Forms;
 
 #if WPF
-using Orcus.Administration.Library.Services;
+using Maze.Administration.Library.Services;
 using IDataObject = System.Windows.IDataObject;
 using Clipboard = System.Windows.Clipboard;
 #else
-using Orcus.Client.Library.Services;
+using Maze.Client.Library.Services;
 #endif
 
 namespace ClipboardManager.Shared.Utilities

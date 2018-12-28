@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using NuGet.Packaging.Core;
-using Orcus.Modules.Api;
-using Orcus.Server.Connection.Modules;
-using Orcus.Utilities;
+using Maze.Modules.Api;
+using Maze.Server.Connection.Modules;
+using Maze.Utilities;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public interface IPackageLockLoader
     {
@@ -52,13 +52,13 @@ namespace Orcus.Core.Modules
         public async Task<IReadOnlyDictionary<PackageIdentity, List<Type>>> GetControllers()
         {
             var result = new ConcurrentDictionary<PackageIdentity, List<Type>>();
-            var orcusControllerType = typeof(OrcusController);
+            var mazeControllerType = typeof(MazeController);
 
             await TaskCombinators.ThrottledAsync(_catalog.Packages, (carrier, token) => Task.Run(() =>
             {
                 var types = carrier.Assembly.GetExportedTypes();
 
-                var controllers = types.Where(x => orcusControllerType.IsAssignableFrom(x)).ToList();
+                var controllers = types.Where(x => mazeControllerType.IsAssignableFrom(x)).ToList();
                 result.AddOrUpdate(carrier.Context.Package, controllers, (identity, list) =>
                 {
                     list.AddRange(controllers);

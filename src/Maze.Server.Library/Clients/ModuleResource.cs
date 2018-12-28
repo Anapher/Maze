@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Library.Clients.Helpers;
+using Maze.Server.Library.Clients.Helpers;
 
-namespace Orcus.Server.Library.Clients
+namespace Maze.Server.Library.Clients
 {
     public abstract class ModuleResource<TResource> : Resource<TResource> where TResource : IResourceId, new()
     {

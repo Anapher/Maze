@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClipboardManager.Client.Utilities;
@@ -6,9 +6,9 @@ using ClipboardManager.Shared.Channels;
 using ClipboardManager.Shared.Dtos;
 using ClipboardManager.Shared.Extensions;
 using ClipboardManager.Shared.Utilities;
-using Orcus.Client.Library.Services;
-using Orcus.ControllerExtensions;
-using Orcus.Modules.Api.Routing;
+using Maze.Client.Library.Services;
+using Maze.ControllerExtensions;
+using Maze.Modules.Api.Routing;
 
 namespace ClipboardManager.Client.Channels
 {

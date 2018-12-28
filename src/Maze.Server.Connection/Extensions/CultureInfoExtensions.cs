@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+using System.Globalization;
 
-namespace Orcus.Server.Connection.Extensions
+namespace Maze.Server.Connection.Extensions
 {
     public static class CultureInfoExtensions
     {

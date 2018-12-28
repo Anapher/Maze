@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     public interface IDataSocket : IDisposable
     {
@@ -37,7 +37,7 @@ namespace Orcus.Sockets
         ///     note that the <see cref="ArraySegment{T}.Offset" /> should still be the offset of the actual data
         /// </param>
         /// <param name="cancellationToken"></param>
-        Task SendFrameAsync(OrcusSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
+        Task SendFrameAsync(MazeSocket.MessageOpcode opcode, ArraySegment<byte> payloadBuffer,
             bool bufferHasRequiredLength, CancellationToken cancellationToken);
     }
 }

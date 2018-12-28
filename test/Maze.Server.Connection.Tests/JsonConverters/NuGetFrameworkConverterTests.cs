@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using NuGet.Frameworks;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Server.Connection.JsonConverters;
 using Xunit;
 
-namespace Orcus.Server.Connection.Tests.JsonConverters
+namespace Maze.Server.Connection.Tests.JsonConverters
 {
     public class NuGetFrameworkConverterTests
     {

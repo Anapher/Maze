@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     public class ExceptionResult : ObjectResult
     {
-        public ExceptionResult(Exception exception) : base(OrcusError.FromException(exception))
+        public ExceptionResult(Exception exception) : base(MazeError.FromException(exception))
         {
         }
     }

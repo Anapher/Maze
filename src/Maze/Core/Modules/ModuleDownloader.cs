@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,14 +8,15 @@ using NuGet.Packaging;
 using NuGet.Packaging.PackageExtraction;
 using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
-using Orcus.Core.Connection;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.PackageManagement;
-using Orcus.ModuleManagement.Server;
-using Orcus.Options;
-using Orcus.Server.Connection.Modules;
+using Maze.Core.Connection;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.PackageManagement;
+using Maze.ModuleManagement.Server;
+using Maze.Options;
+using Maze.Server.Connection.Modules;
+using NuGet.Configuration;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public interface IModuleDownloader
     {
@@ -53,13 +54,11 @@ namespace Orcus.Core.Modules
                             // use the version exactly as specified in the nuspec file
                             var packageIdentity = await downloadPackageResult.PackageReader.GetIdentityAsync(token);
 
-                            var signedPackageVerifier =
-                                new PackageSignatureVerifier(SignatureVerificationProviderFactory
-                                    .GetSignatureVerificationProviders());
-
-                            var packageExtractionContext = new PackageExtractionContext(PackageSaveMode.Defaultv3,
-                                PackageExtractionBehavior.XmlDocFileSaveMode, NullLogger.Instance,
-                                signedPackageVerifier, SignedPackageVerifierSettings.GetDefault());
+                            var packageExtractionContext = new PackageExtractionContext(
+                                PackageSaveMode.Defaultv3,
+                                PackageExtractionBehavior.XmlDocFileSaveMode,
+                                ClientPolicyContext.GetClientPolicy(new NullSettings(), new NullLogger()),
+                                new NullLogger());
 
                             downloadPackageResult.PackageStream.Position = 0;
 

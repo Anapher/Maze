@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.Server.Service.Tests.Utils
+namespace Maze.Server.Service.Tests.Utils
 {
     public class TestSourceRepositoryUtility
     {
@@ -45,6 +45,8 @@ namespace Orcus.Server.Service.Tests.Utils
 
         private IEnumerable<PackageSource> PackageSources { get; set; }
 
+        public bool IsPackageSourceEnabled(string name) => throw new NotImplementedException();
+
         public void DisablePackageSource(PackageSource source)
         {
             source.IsEnabled = false;
@@ -58,6 +60,35 @@ namespace Orcus.Server.Service.Tests.Utils
         public IEnumerable<PackageSource> LoadPackageSources()
         {
             return PackageSources;
+        }
+
+        public PackageSource GetPackageSourceByName(string name) => throw new NotImplementedException();
+
+        public PackageSource GetPackageSourceBySource(string source) => throw new NotImplementedException();
+
+        public void RemovePackageSource(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EnablePackageSource(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisablePackageSource(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdatePackageSource(PackageSource source, bool updateCredentials, bool updateEnabled)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddPackageSource(PackageSource source)
+        {
+            throw new NotImplementedException();
         }
 
         public event EventHandler PackageSourcesChanged;

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Connection.Modules
+namespace Maze.Server.Connection.Modules
 {
     public class InstalledModule : PackageIdentity
     {

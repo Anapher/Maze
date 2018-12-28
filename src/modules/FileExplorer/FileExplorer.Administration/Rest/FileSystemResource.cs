@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
 
 namespace FileExplorer.Administration.Rest
 {

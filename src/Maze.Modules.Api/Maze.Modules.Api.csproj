@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
-    <Description>The foundation of the Orcus module system. This library contains all fundamental classes that are used by the higher level interfaces of the server, administration and client.</Description>
+    <Description>The foundation of the Maze module system. This library contains all fundamental classes that are used by the higher level interfaces of the server, administration and client.</Description>
   </PropertyGroup>
 
   <ItemGroup>

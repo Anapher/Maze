@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -14,11 +14,11 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
 
     public class DeleteTaskAction : BusinessActionErrors, IDeleteTaskAction
     {
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
         private readonly ITaskReferenceDbAccess _dbAccess;
         private readonly ITaskDirectory _taskDirectory;
 
-        public DeleteTaskAction(IOrcusTaskManagerManagement management, ITaskReferenceDbAccess dbAccess, ITaskDirectory taskDirectory)
+        public DeleteTaskAction(IMazeTaskManagerManagement management, ITaskReferenceDbAccess dbAccess, ITaskDirectory taskDirectory)
         {
             _management = management;
             _dbAccess = dbAccess;

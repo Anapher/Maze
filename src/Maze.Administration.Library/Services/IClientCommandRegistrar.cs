@@ -1,8 +1,8 @@
-﻿using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Library.Services
+namespace Maze.Administration.Library.Services
 {
     /// <summary>
     ///     This class simplified the process of creating a context menu item and opening the window with the view model.

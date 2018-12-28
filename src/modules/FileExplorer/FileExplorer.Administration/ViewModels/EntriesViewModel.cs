@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,9 +16,9 @@ using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Utilities;
-using Orcus.Utilities;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Utilities;
+using Maze.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;

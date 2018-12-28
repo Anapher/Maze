@@ -1,13 +1,13 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
-    public abstract class OrcusChannel : OrcusController, IDataChannel
+    public abstract class MazeChannel : MazeController, IDataChannel
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        protected OrcusChannel()
+        protected MazeChannel()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken = _cancellationTokenSource.Token;

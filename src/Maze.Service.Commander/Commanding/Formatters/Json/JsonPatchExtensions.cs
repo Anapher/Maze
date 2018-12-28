@@ -3,9 +3,9 @@
 
 using System;
 using Microsoft.AspNetCore.JsonPatch;
-using Orcus.Modules.Api.ModelBinding;
+using Maze.Modules.Api.ModelBinding;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json
+namespace Maze.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// Extensions for <see cref="JsonPatchDocument{T}"/>

@@ -1,4 +1,4 @@
-﻿namespace Orcus.Service.Commander.Routing.Trie
+namespace Maze.Service.Commander.Routing.Trie
 {
     public interface IRouteResolverTrie
     {

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     public delegate Task OnSendPackageDelegate(ArraySegment<byte> data);
 }

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SystemInformation.Shared.Dtos;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
 
 namespace SystemInformation.Administration.Rest
 {

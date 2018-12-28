@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Microsoft.Extensions.Primitives;
-using Orcus.Sockets.Internal.Http;
+using Maze.Sockets.Internal.Http;
 using Xunit;
 
-namespace Orcus.Sockets.Tests
+namespace Maze.Sockets.Tests
 {
     public class HttpFormatterTest
     {

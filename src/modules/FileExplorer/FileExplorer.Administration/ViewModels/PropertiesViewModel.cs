@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Channels;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.Library.Clients;
+using Maze.Administration.Library.Clients;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;

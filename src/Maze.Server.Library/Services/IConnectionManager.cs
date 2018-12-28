@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 
-namespace Orcus.Server.Library.Services
+namespace Maze.Server.Library.Services
 {
     public interface IConnectionManager
     {

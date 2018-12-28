@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public class ConfigurationRootProvider : IConfigurationRootProvider
     {

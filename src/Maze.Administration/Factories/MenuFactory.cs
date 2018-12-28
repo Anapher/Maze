@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Orcus.Administration.Extensions;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menu.Internal;
-using Orcus.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Extensions;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Menu.Internal;
+using Maze.Administration.Library.Menu.MenuBase;
 
-namespace Orcus.Administration.Factories
+namespace Maze.Administration.Factories
 {
     public class DefaultMenuFactory : IMenuFactory
     {

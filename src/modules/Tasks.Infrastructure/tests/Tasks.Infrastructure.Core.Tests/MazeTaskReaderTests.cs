@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Xml.Linq;
 using Moq;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Connection.Utilities;
 using Xunit;
 
 namespace Tasks.Infrastructure.Core.Tests
 {
-    public class OrcusTaskReaderTests
+    public class MazeTaskReaderTests
     {
-        public OrcusTaskReaderTests()
+        public MazeTaskReaderTests()
         {
             _serializerCache = new XmlSerializerCache();
         }
@@ -33,7 +33,7 @@ namespace Tasks.Infrastructure.Core.Tests
 </task>";
 
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), null, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), null, _serializerCache);
 
             var audienceCollection = reader.GetAudience();
             Assert.True(audienceCollection.IsAll);
@@ -56,7 +56,7 @@ namespace Tasks.Infrastructure.Core.Tests
 </task>";
 
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), null, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), null, _serializerCache);
 
             var audienceCollection = reader.GetAudience();
             Assert.False(audienceCollection.IsAll);
@@ -90,7 +90,7 @@ namespace Tasks.Infrastructure.Core.Tests
 </task>";
 
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), null, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), null, _serializerCache);
 
             var audienceCollection = reader.GetAudience();
             Assert.False(audienceCollection.IsAll);
@@ -125,7 +125,7 @@ namespace Tasks.Infrastructure.Core.Tests
 </task>";
 
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), null, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), null, _serializerCache);
             var elements = reader.GetCommandMetadata().ToList();
             Assert.Collection(elements, command =>
             {
@@ -153,7 +153,7 @@ namespace Tasks.Infrastructure.Core.Tests
             var resolverMock = new Mock<ITaskComponentResolver>();
             resolverMock.Setup(x => x.ResolveCommand("Maze.WakeOnLan")).Returns(typeof(WakeOnLanCommand));
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
             var elements = reader.GetCommands().ToList();
             Assert.Collection(elements, command =>
             {
@@ -177,7 +177,7 @@ namespace Tasks.Infrastructure.Core.Tests
 </task>";
 
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), null, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), null, _serializerCache);
 
             var audienceCollection = reader.GetAudience();
             Assert.True(audienceCollection.IsAll);
@@ -202,7 +202,7 @@ namespace Tasks.Infrastructure.Core.Tests
             var resolverMock = new Mock<ITaskComponentResolver>();
             resolverMock.Setup(x => x.ResolveFilter("OperatingSystem")).Returns(typeof(OperatingSystemFilterInfo));
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
             var elements = reader.GetFilters().ToList();
             Assert.Collection(elements, info => Assert.Equal("Windows7", Assert.IsType<OperatingSystemFilterInfo>(info).Min));
         }
@@ -224,7 +224,7 @@ namespace Tasks.Infrastructure.Core.Tests
             var resolverMock = new Mock<ITaskComponentResolver>();
             resolverMock.Setup(x => x.ResolveTrigger("DateTime")).Returns(typeof(DateTimeTriggerInfo));
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
             var elements = reader.GetTriggers().ToList();
             Assert.Collection(elements,
                 info => Assert.Equal(DateTimeOffset.Parse("2018-10-05T18:21:07.8601530Z"), Assert.IsType<DateTimeTriggerInfo>(info).Date));
@@ -247,7 +247,7 @@ namespace Tasks.Infrastructure.Core.Tests
             var resolverMock = new Mock<ITaskComponentResolver>();
             resolverMock.Setup(x => x.ResolveStopEvent("Duration")).Returns(typeof(DurationStopEvent));
 
-            var reader = new OrcusTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
+            var reader = new MazeTaskReader(XDocument.Parse(test), resolverMock.Object, _serializerCache);
             var elements = reader.GetStopEvents().ToList();
             Assert.Collection(elements, info => Assert.Equal(TimeSpan.FromSeconds(60), Assert.IsType<DurationStopEvent>(info).Duration));
         }

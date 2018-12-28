@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
 namespace ModuleTemplate.Administration.Resources
 {

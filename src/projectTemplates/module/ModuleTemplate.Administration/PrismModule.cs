@@ -1,8 +1,8 @@
-﻿using ModuleTemplate.Administration.Resources;
+using ModuleTemplate.Administration.Resources;
 using ModuleTemplate.Administration.ViewModels;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Services;
 using Prism.Modularity;
 using Unclassified.TxLib;
 

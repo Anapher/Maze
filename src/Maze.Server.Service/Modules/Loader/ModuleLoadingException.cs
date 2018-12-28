@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Reflection;
 
-namespace Orcus.Server.Service.Modules.Loader
+namespace Maze.Server.Service.Modules.Loader
 {
     public class ModuleLoadingException : Exception
     {

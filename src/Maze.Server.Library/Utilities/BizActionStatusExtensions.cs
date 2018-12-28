@@ -1,12 +1,12 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Error;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Error;
 
-namespace Orcus.Server.Library.Utilities
+namespace Maze.Server.Library.Utilities
 {
     /// <summary>
     ///     Extensions for business actions

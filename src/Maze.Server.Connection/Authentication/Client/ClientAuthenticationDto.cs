@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NuGet.Frameworks;
 using NuGet.Versioning;
-using Orcus.Server.Connection.Extensions;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Extensions;
+using Maze.Server.Connection.Utilities;
 
-namespace Orcus.Server.Connection.Authentication.Client
+namespace Maze.Server.Connection.Authentication.Client
 {
     public class ClientAuthenticationDto : IValidatableObject
     {

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Orcus.Server.Library.Extensions
+namespace Maze.Server.Library.Extensions
 {
     /// <summary>
     ///     Extension methods for adding configuration related options services to the DI container.

@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Error;
-using Orcus.Server.Library.Utilities;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Error;
+using Maze.Server.Library.Utilities;
 
-namespace Orcus.Server.Library.Controllers
+namespace Maze.Server.Library.Controllers
 {
     /// <summary>
     ///     A <see cref="Controller"/> that provides methods to response <see cref="IBizActionStatus"/>.

@@ -1,6 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     /// <summary>
     ///     Binary utilities for writing data to byte arrays

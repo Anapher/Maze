@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Extensions;
-using Orcus.Modules.Api.Response;
-using Orcus.Service.Commander.Logging;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Extensions;
+using Maze.Modules.Api.Response;
+using Maze.Service.Commander.Logging;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     public class FileResultExecutorBase
     {
@@ -138,7 +138,7 @@ namespace Orcus.Service.Commander.Infrastructure
             }
         }
 
-        private static void SetLastModifiedAndEtagHeaders(OrcusResponse response, DateTimeOffset? lastModified, EntityTagHeaderValue etag)
+        private static void SetLastModifiedAndEtagHeaders(MazeResponse response, DateTimeOffset? lastModified, EntityTagHeaderValue etag)
         {
             var httpResponseHeaders = response.GetTypedHeaders();
             if (lastModified.HasValue)
@@ -151,7 +151,7 @@ namespace Orcus.Service.Commander.Infrastructure
             }
         }
 
-        private static void SetAcceptRangeHeader(OrcusResponse response)
+        private static void SetAcceptRangeHeader(MazeResponse response)
         {
             response.Headers[HeaderNames.AcceptRanges] = AcceptRangeHeaderValue;
         }
@@ -340,7 +340,7 @@ namespace Orcus.Service.Commander.Infrastructure
             return (range, rangeLength, serveBody);
         }
 
-        private static long SetContentLength(OrcusResponse response, RangeItemHeaderValue range)
+        private static long SetContentLength(MazeResponse response, RangeItemHeaderValue range)
         {
             var start = range.From.Value;
             var end = range.To.Value;
@@ -359,7 +359,7 @@ namespace Orcus.Service.Commander.Infrastructure
             return factory.CreateLogger<T>();
         }
 
-        protected static async Task WriteFileAsync(OrcusContext context, Stream fileStream, RangeItemHeaderValue range, long rangeLength)
+        protected static async Task WriteFileAsync(MazeContext context, Stream fileStream, RangeItemHeaderValue range, long rangeLength)
         {
             var outputStream = context.Response.Body;
             using (fileStream)

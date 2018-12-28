@@ -1,23 +1,23 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.IO;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.OrcusServerTests
+namespace Maze.Sockets.Tests.MazeServerTests
 {
-    public abstract class OrcusServerTestBase
+    public abstract class MazeServerTestBase
     {
         protected virtual int PackageSize { get; } = 1024;
         protected virtual int MaxHeaderSize { get; } = 1024;
 
         protected virtual HttpRequestMessage GetRequest() => new HttpRequestMessage(HttpMethod.Get, "http://localhost/test");
 
-        protected virtual Task AssertReceivedRequest(HttpRequestMessage requestMessage, OrcusRequest request)
+        protected virtual Task AssertReceivedRequest(HttpRequestMessage requestMessage, MazeRequest request)
         {
             Assert.Equal(requestMessage.Method.Method, request.Method);
             Assert.Equal(requestMessage.RequestUri.LocalPath, request.Path);
@@ -25,21 +25,21 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             return Task.CompletedTask;
         }
 
-        protected virtual Task AssertReceivedResponse(OrcusResponse response, HttpResponseMessage responseMessage)
+        protected virtual Task AssertReceivedResponse(MazeResponse response, HttpResponseMessage responseMessage)
         {
             Assert.Equal(response.StatusCode, (int) responseMessage.StatusCode);
 
             return Task.CompletedTask;
         }
 
-        protected abstract Task WriteResponse(OrcusResponse response);
+        protected abstract Task WriteResponse(MazeResponse response);
 
         [Fact]
         public async Task ExecuteTest()
         {
             var dataStream = new MemoryStream();
-            var requestSocket = new OrcusSocket(dataStream, keepAliveInterval: null);
-            var requestServer = new OrcusServer(requestSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
+            var requestSocket = new MazeSocket(dataStream, keepAliveInterval: null);
+            var requestServer = new MazeServer(requestSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
 
             var request = GetRequest();
             var requestTask = requestServer.SendRequest(request, CancellationToken.None); //will wait for a response
@@ -47,10 +47,10 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
 
             dataStream.Position = 0;
 
-            var receiverSocket = new OrcusSocket(dataStream, null);
-            var receiverServer = new OrcusServer(receiverSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
+            var receiverSocket = new MazeSocket(dataStream, null);
+            var receiverServer = new MazeServer(receiverSocket, PackageSize, MaxHeaderSize, ArrayPool<byte>.Shared);
 
-            var completionSource = new TaskCompletionSource<OrcusRequestReceivedEventArgs>();
+            var completionSource = new TaskCompletionSource<MazeRequestReceivedEventArgs>();
 
             receiverServer.RequestReceived += (sender, args) => completionSource.SetResult(args);
 

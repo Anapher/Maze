@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public interface IPackagesRegistrar
     {

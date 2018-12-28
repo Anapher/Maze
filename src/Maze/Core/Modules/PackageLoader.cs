@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.Loader;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.Loader;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public interface IPackageLoader
     {

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
+    <ProjectReference Include="..\..\src\Maze.Modules.Api\Maze.Modules.Api.csproj" />
   </ItemGroup>
 
 </Project>

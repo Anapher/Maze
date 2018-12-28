@@ -1,9 +1,9 @@
-﻿using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Service.Commander.Routing
+namespace Maze.Service.Commander.Routing
 {
     public interface IRouteResolver
     {
-        ResolveResult Resolve(OrcusContext context);
+        ResolveResult Resolve(MazeContext context);
     }
 }

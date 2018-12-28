@@ -1,28 +1,28 @@
-﻿using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
 using System;
 using System.Diagnostics;
 
 namespace Tasks.Common.Client.Controllers
 {
     [Route("system/power")]
-    public class SystemController : OrcusController
+    public class SystemController : MazeController
     {
-        [OrcusGet("shutdown")]
+        [MazeGet("shutdown")]
         public IActionResult Shutdown()
         {
             ExecuteShutdown("/s /t 0");
             return Ok();
         }
 
-        [OrcusGet("restart")]
+        [MazeGet("restart")]
         public IActionResult Restart()
         {
             ExecuteShutdown("/l /t 0");
             return Ok();
         }
 
-        [OrcusGet("logoff")]
+        [MazeGet("logoff")]
         public IActionResult LogOff()
         {
             ExecuteShutdown("/r /t 0");

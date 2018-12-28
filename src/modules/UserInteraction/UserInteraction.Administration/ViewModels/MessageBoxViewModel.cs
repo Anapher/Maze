@@ -1,9 +1,9 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using Anapher.Wpf.Swan.ViewInterface;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;

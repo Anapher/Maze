@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Orcus.Server.Connection.JsonConverters
+namespace Maze.Server.Connection.JsonConverters
 {
 	internal class HashConverter : JsonConverter
 	{

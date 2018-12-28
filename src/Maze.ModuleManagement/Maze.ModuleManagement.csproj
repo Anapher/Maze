@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -10,15 +10,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Orcus.NuGet.Commands" Version="1.0.0" />
-    <PackageReference Include="Orcus.NuGet.Resolver" Version="1.0.0" />
+    <PackageReference Include="Maze.NuGet.Commands" Version="1.0.0" />
+    <PackageReference Include="Maze.NuGet.Resolver" Version="1.0.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
-    <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
+    <ProjectReference Include="..\Maze.Modules.Api\Maze.Modules.Api.csproj" />
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
+    <ProjectReference Include="..\Maze.Utilities\Maze.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

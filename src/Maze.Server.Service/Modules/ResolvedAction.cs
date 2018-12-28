@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public class ResolvedAction
     {

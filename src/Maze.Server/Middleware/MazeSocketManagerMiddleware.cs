@@ -1,28 +1,28 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Orcus.ModuleManagement;
-using Orcus.Server.Library.Interfaces;
-using Orcus.Server.Library.Services;
-using Orcus.Server.Library.Utilities;
-using Orcus.Server.Service.Connection;
-using Orcus.Sockets;
-using Orcus.Utilities;
+using Maze.ModuleManagement;
+using Maze.Server.Library.Interfaces;
+using Maze.Server.Library.Services;
+using Maze.Server.Library.Utilities;
+using Maze.Server.Service.Connection;
+using Maze.Sockets;
+using Maze.Utilities;
 
-namespace Orcus.Server.Middleware
+namespace Maze.Server.Middleware
 {
-    public class OrcusSocketManagerMiddleware
+    public class MazeSocketManagerMiddleware
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IServiceProvider _serviceProvider;
         private readonly RequestDelegate _next;
-        private readonly OrcusSocketOptions _options;
+        private readonly MazeSocketOptions _options;
 
-        public OrcusSocketManagerMiddleware(RequestDelegate next, IConnectionManager connectionManager,
-            IOptions<OrcusSocketOptions> options, IServiceProvider serviceProvider)
+        public MazeSocketManagerMiddleware(RequestDelegate next, IConnectionManager connectionManager,
+            IOptions<MazeSocketOptions> options, IServiceProvider serviceProvider)
         {
             _next = next;
             _connectionManager = connectionManager;
@@ -46,7 +46,7 @@ namespace Orcus.Server.Middleware
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
             var wrapper = new WebSocketWrapper(socket, _options.PackageBufferSize);
-            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize, ArrayPool<byte>.Shared);
+            var server = new MazeServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize, ArrayPool<byte>.Shared);
 
             if (context.User.IsAdministrator())
             {

@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Console.Shared.Channels;
-using Orcus.Administration.ControllerExtensions;
-using Orcus.Administration.Library.Clients;
+using Maze.Administration.ControllerExtensions;
+using Maze.Administration.Library.Clients;
 
 namespace Console.Administration.Rest
 {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Windows;
 using Anapher.Wpf.Swan.ViewInterface;
 using TaskDialogInterop;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     Provide extensions for <see cref="IWindowInteractionService"/>
@@ -41,7 +41,7 @@ namespace Orcus.Administration.Library.Extensions
         /// <returns>Return the result of the <see cref="TaskDialog"/></returns>
         public static TaskDialogResult ShowTaskDialog(this IWindowInteractionService window, TaskDialogOptions options)
         {
-            options.Owner = (Window)window; //safe cast as Orcus doesn't use other windows
+            options.Owner = (Window)window; //safe cast as Maze doesn't use other windows
             return TaskDialog.Show(options);
         }
 

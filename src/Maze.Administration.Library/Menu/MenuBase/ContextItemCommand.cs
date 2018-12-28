@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Orcus.Administration.Library.Menu.Internal;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Menu.Internal;
+using Maze.Administration.Library.ViewModels;
 
-namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public class ContextItemCommand<TItem, TContext> : IItemCommandMenuEntry
     {

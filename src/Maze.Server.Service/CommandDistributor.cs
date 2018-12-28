@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Request;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Library.Services;
+using Maze.Modules.Api.Request;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Library.Services;
 
-namespace Orcus.Server.Service
+namespace Maze.Server.Service
 {
     public class CommandDistributor : ICommandDistributer
     {
@@ -18,7 +18,7 @@ namespace Orcus.Server.Service
             _connectionManager = connectionManager;
         }
 
-        public Task Execute(OrcusRequest request, CommandTargetCollection targets,
+        public Task Execute(MazeRequest request, CommandTargetCollection targets,
             CommandExecutionPolicy executionPolicy) =>
             throw new NotImplementedException();
 
@@ -33,8 +33,8 @@ namespace Orcus.Server.Service
                     {
                         var channelId = int.Parse(response.Headers.Location.AbsolutePath.Trim('/'));
 
-                        clientConnection.OrcusServer.AddChannelRedirect(channelId, administrationConnection.OrcusServer.DataSocket);
-                        administrationConnection.OrcusServer.AddChannelRedirect(channelId, clientConnection.OrcusServer.DataSocket);
+                        clientConnection.MazeServer.AddChannelRedirect(channelId, administrationConnection.MazeServer.DataSocket);
+                        administrationConnection.MazeServer.AddChannelRedirect(channelId, clientConnection.MazeServer.DataSocket);
                     }
                 }
                 return response;

@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.StatusBar;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.StatusBar;
 using Prism.Commands;
 using Prism.Mvvm;
 using RegistryEditor.Administration.Model;

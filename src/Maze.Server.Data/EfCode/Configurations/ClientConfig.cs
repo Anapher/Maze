@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.Data.EfCode.Configurations
+namespace Maze.Server.Data.EfCode.Configurations
 {
     internal class ClientConfig : IEntityTypeConfiguration<Client>
     {

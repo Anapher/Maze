@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Orcus.Server.Connection
+namespace Maze.Server.Connection
 {
     public class RestErrorValidationResult : ValidationResult
     {

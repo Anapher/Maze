@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orcus.Utilities
+namespace Maze.Utilities
 {
     public static class EnumerableExtensions
     {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.ViewModels;
 using Prism.Regions;
 using RemoteDesktop.Administration.Channels;
 using RemoteDesktop.Administration.Channels.Diagnostics;

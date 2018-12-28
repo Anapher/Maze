@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Orcus.Server.Data.EfClasses;
-using Orcus.Server.Data.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Maze.Server.Data.EfClasses;
+using Maze.Server.Data.Extensions;
 
-namespace Orcus.Server.Data.EfCode
+namespace Maze.Server.Data.EfCode
 {
     public class AppDbContext : DbContext
     {

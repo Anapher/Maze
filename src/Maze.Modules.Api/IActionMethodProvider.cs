@@ -1,4 +1,4 @@
-﻿namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     public interface IActionMethodProvider
     {

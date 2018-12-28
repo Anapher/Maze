@@ -1,14 +1,14 @@
-﻿using System.IO;
+using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Response;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.OrcusServerTests
+namespace Maze.Sockets.Tests.MazeServerTests
 {
-    public class TestAutomaticResponseCompression : OrcusServerTestBase
+    public class TestAutomaticResponseCompression : MazeServerTestBase
     {
         private readonly byte[] _testData;
 
@@ -28,12 +28,12 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             return request;
         }
 
-        protected override Task WriteResponse(OrcusResponse response)
+        protected override Task WriteResponse(MazeResponse response)
         {
             return response.Body.WriteAsync(_testData, 0, _testData.Length);
         }
 
-        protected override async Task AssertReceivedResponse(OrcusResponse response, HttpResponseMessage responseMessage)
+        protected override async Task AssertReceivedResponse(MazeResponse response, HttpResponseMessage responseMessage)
         {
             Assert.Contains(responseMessage.Content.Headers.ContentEncoding, s => s == "gzip");
 

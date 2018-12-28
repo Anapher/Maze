@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Reflection;
 using NuGet.Packaging.Core;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Server.Service.Modules.Loader
+namespace Maze.Server.Service.Modules.Loader
 {
     public class TypeDiscoveryService
     {
@@ -20,7 +20,7 @@ namespace Orcus.Server.Service.Modules.Loader
         {
             var types = _assembly.GetExportedTypes();
 
-            var controllers = types.Where(x => x.IsSubclassOf(typeof(OrcusController))).ToList();
+            var controllers = types.Where(x => x.IsSubclassOf(typeof(MazeController))).ToList();
             typeMap.Controllers.TryAdd(_packageIdentity, controllers);
 
             typeMap.Assemblies.Add(_assembly);

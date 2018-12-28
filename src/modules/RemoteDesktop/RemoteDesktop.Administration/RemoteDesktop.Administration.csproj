@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
@@ -28,8 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <ProjectReference Include="..\libraries\OpenH264net\OpenH264Lib.vcxproj" />
 
     <Reference Include="PresentationCore" />

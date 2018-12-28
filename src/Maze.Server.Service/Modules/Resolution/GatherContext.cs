@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NuGet.Common;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Service.Modules.PackageManagement;
+using Maze.Server.Service.Modules.PackageManagement;
 
-namespace Orcus.Server.Service.Modules.Resolution
+namespace Maze.Server.Service.Modules.Resolution
 {
     public class GatherContext
     {

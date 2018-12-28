@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Sockets.Internal.Infrastructure;
+using Maze.Sockets.Internal.Infrastructure;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     /// <summary>
     ///     A write-only stream that delegates write accesses

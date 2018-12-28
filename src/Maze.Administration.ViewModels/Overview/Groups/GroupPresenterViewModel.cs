@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Windows.Data;
-using Orcus.Administration.Library.Models;
+using Maze.Administration.Library.Models;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.ViewModels.Overview.Groups
+namespace Maze.Administration.ViewModels.Overview.Groups
 {
     public class GroupPresenterViewModel : BindableBase
     {

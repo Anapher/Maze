@@ -1,16 +1,16 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Modules.Api.Request
+namespace Maze.Modules.Api.Request
 {
     /// <summary>
-    ///     Represents the incoming side of an individual Orcus request.
+    ///     Represents the incoming side of an individual Maze request.
     /// </summary>
-    public abstract class OrcusRequest
+    public abstract class MazeRequest
     {
-        public abstract OrcusContext Context { get; set; }
+        public abstract MazeContext Context { get; set; }
 
-        /// <summary>Gets or sets the Orcus method.</summary>
+        /// <summary>Gets or sets the Maze method.</summary>
         /// <returns>The HTTP method.</returns>
         public abstract string Method { get; set; }
 

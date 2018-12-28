@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.Extensions.Logging;
@@ -6,18 +6,18 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Commanding.Formatters.Json;
-using Orcus.Service.Commander.Commanding.ModelBinding;
-using Orcus.Service.Commander.Commanding.ModelBinding.Binders;
-using Orcus.Service.Commander.Infrastructure;
+using Maze.Modules.Api.Formatters;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.Formatters.Json;
+using Maze.Service.Commander.Commanding.ModelBinding;
+using Maze.Service.Commander.Commanding.ModelBinding.Binders;
+using Maze.Service.Commander.Infrastructure;
 
-namespace Orcus.Service.Commander
+namespace Maze.Service.Commander
 {
-    public class OrcusServerOptions
+    public class MazeServerOptions
     {
-        public OrcusServerOptions()
+        public MazeServerOptions()
         {
             var loggerFactory = NullLoggerFactory.Instance;
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
-    <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
-    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj" />
+    <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
+    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj" />
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
+    <ProjectReference Include="..\Maze.Sockets\Maze.Sockets.csproj" />
   </ItemGroup>
 
 </Project>

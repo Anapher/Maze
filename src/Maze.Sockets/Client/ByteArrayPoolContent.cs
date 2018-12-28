@@ -1,7 +1,7 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Net.Http;
 
-namespace Orcus.Sockets.Client
+namespace Maze.Sockets.Client
 {
     public class ByteArrayPoolContent : ByteArrayContent
     {

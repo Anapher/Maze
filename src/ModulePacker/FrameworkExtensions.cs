@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using NuGet.Frameworks;
 
 namespace ModulePacker
 {
     public static class FrameworkExtensions
     {
-        public static NuGetFramework ToNuGetFramework(this OrcusFramework orcusFramework)
+        public static NuGetFramework ToNuGetFramework(this MazeFramework mazeFramework)
         {
-            switch (orcusFramework)
+            switch (mazeFramework)
             {
-                case OrcusFramework.Administration:
-                    return FrameworkConstants.CommonFrameworks.OrcusAdministration10;
-                case OrcusFramework.Server:
-                    return FrameworkConstants.CommonFrameworks.OrcusServer10;
-                case OrcusFramework.Client:
-                    return FrameworkConstants.CommonFrameworks.OrcusClient10;
+                case MazeFramework.Administration:
+                    return FrameworkConstants.CommonFrameworks.MazeAdministration10;
+                case MazeFramework.Server:
+                    return FrameworkConstants.CommonFrameworks.MazeServer10;
+                case MazeFramework.Client:
+                    return FrameworkConstants.CommonFrameworks.MazeClient10;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(orcusFramework), orcusFramework, null);
+                    throw new ArgumentOutOfRangeException(nameof(mazeFramework), mazeFramework, null);
             }
         }
     }

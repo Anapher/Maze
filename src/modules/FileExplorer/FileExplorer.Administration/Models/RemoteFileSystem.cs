@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -15,8 +15,8 @@ using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
 using FileExplorer.Shared.Utilities;
 
 namespace FileExplorer.Administration.Models

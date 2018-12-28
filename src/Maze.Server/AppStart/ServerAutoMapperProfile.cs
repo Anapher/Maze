@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using NuGet.Protocol;
 
-namespace Orcus.Server.AppStart
+namespace Maze.Server.AppStart
 {
     public class ServerAutoMapperProfile : Profile
     {

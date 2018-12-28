@@ -1,7 +1,7 @@
-﻿using System.Net;
-using Orcus.Server.Connection.Authentication.Client;
+using System.Net;
+using Maze.Server.Connection.Authentication.Client;
 
-namespace Orcus.Server.BusinessLogic.Authentication
+namespace Maze.Server.BusinessLogic.Authentication
 {
     public class ClientAuthenticationContext
     {

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Administration.Library.Channels
+namespace Maze.Administration.Library.Channels
 {
     /// <summary>
     ///     A base class for <see cref="IAwareDataChannel"/>

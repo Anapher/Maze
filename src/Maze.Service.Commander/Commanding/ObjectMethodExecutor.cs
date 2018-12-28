@@ -1,11 +1,11 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Orcus.Service.Commander.Commanding
+namespace Maze.Service.Commander.Commanding
 {
     /// <summary>
     ///     Provides the delegate for an action method

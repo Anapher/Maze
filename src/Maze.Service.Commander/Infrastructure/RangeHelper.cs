@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -8,20 +8,20 @@ using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     /// <summary>
-    ///     Provides a parser for the Range Header in an <see cref="OrcusContext.Request" />.
+    ///     Provides a parser for the Range Header in an <see cref="MazeContext.Request" />.
     /// </summary>
     internal static class RangeHelper
     {
         /// <summary>
-        ///     Returns the normalized form of the requested range if the Range Header in the <see cref="OrcusContext.Request" />
+        ///     Returns the normalized form of the requested range if the Range Header in the <see cref="MazeContext.Request" />
         ///     is valid.
         /// </summary>
-        /// <param name="context">The <see cref="OrcusContext" /> associated with the request.</param>
+        /// <param name="context">The <see cref="MazeContext" /> associated with the request.</param>
         /// <param name="requestHeaders">The <see cref="RequestHeaders" /> associated with the given <paramref name="context" />.</param>
         /// <param name="length">The total length of the file representation requested.</param>
         /// <param name="logger">The <see cref="ILogger" />.</param>
@@ -36,7 +36,7 @@ namespace Orcus.Service.Commander.Infrastructure
         ///     This results in (<c>true</c>,<c>null</c>) return values.
         /// </remark>
         public static (bool isRangeRequest, RangeItemHeaderValue range) ParseRange(
-            OrcusContext context,
+            MazeContext context,
             RequestHeaders requestHeaders,
             long length,
             ILogger logger)

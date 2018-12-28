@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     public interface IActionResult
     {

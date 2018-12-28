@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows.Threading;
 
-namespace Orcus.Administration.Library.Utilities
+namespace Maze.Administration.Library.Utilities
 {
     /// <summary>
     ///     Provide extensions for the <see cref="Dispatcher"/>

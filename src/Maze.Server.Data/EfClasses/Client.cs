@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orcus.Server.Data.EfClasses
+namespace Maze.Server.Data.EfClasses
 {
     public class Client
     {

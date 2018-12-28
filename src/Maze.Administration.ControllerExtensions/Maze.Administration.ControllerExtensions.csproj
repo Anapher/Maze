@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <ProjectReference Include="..\submodules\NetworkCallTransmission\CodeElements.NetworkCall\CodeElements.NetworkCall.csproj" />
     <ProjectReference Include="..\submodules\NetworkCallTransmission\NetSerializer\CodeElements.NetworkCall.NetSerializer\CodeElements.NetworkCall.NetSerializer.csproj" />
   </ItemGroup>

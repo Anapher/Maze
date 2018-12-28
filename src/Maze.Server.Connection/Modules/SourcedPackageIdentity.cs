@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Connection.Modules
+namespace Maze.Server.Connection.Modules
 {
     public class SourcedPackageIdentity : PackageIdentity
     {

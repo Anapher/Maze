@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Orcus.Sockets\Orcus.Sockets.csproj" />
+    <ProjectReference Include="..\..\src\Maze.Sockets\Maze.Sockets.csproj" />
   </ItemGroup>
 
 </Project>

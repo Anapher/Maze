@@ -1,8 +1,8 @@
-﻿using Autofac;
+using Autofac;
 using FileExplorer.Administration.Menus;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.Utilities;
-using Orcus.Administration.Library.Menu;
+using Maze.Administration.Library.Menu;
 
 namespace FileExplorer.Administration
 {

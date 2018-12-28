@@ -1,7 +1,7 @@
-﻿using Autofac;
+using Autofac;
 using Microsoft.Extensions.Configuration;
-using Orcus.Client.Library.Extensions;
-using Orcus.Client.Library.Interfaces;
+using Maze.Client.Library.Extensions;
+using Maze.Client.Library.Interfaces;
 using RequestTransmitter.Client.Options;
 using RequestTransmitter.Client.Storage;
 

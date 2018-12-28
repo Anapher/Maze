@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public class MenuItemEntry<TCommandEntry> : IMenuEntry<TCommandEntry> where TCommandEntry : ICommandMenuEntry
     {

@@ -1,5 +1,5 @@
-﻿<Application
-    x:Class="Orcus.Administration.App"
+<Application
+    x:Class="Maze.Administration.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan">

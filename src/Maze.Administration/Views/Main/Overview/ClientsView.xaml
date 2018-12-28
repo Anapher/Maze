@@ -1,12 +1,12 @@
-﻿<UserControl
-    x:Class="Orcus.Administration.Views.Main.Overview.ClientsView"
+<UserControl
+    x:Class="Maze.Administration.Views.Main.Overview.ClientsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:library="clr-namespace:Orcus.Administration.Library;assembly=Orcus.Administration.Library"
+    xmlns:library="clr-namespace:Maze.Administration.Library;assembly=Maze.Administration.Library"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:overview="clr-namespace:Orcus.Administration.ViewModels.Overview;assembly=Orcus.Administration.ViewModels"
+    xmlns:overview="clr-namespace:Maze.Administration.ViewModels.Overview;assembly=Maze.Administration.ViewModels"
     xmlns:prism="http://prismlibrary.com/"
     d:DataContext="{d:DesignInstance overview:ClientsViewModel}"
     d:DesignHeight="450"

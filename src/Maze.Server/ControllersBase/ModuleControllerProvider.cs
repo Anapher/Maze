@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using NuGet.Packaging.Core;
-using Orcus.Server.Service.Modules.Loader;
+using Maze.Server.Service.Modules.Loader;
 
-namespace Orcus.Server.ControllersBase
+namespace Maze.Server.ControllersBase
 {
     public interface IModuleControllerProvider
     {

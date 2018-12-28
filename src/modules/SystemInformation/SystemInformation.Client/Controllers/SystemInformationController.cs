@@ -1,16 +1,16 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SystemInformation.Shared.Dtos;
 using Microsoft.Extensions.Logging;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
-using Orcus.Utilities;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
+using Maze.Utilities;
 
 namespace SystemInformation.Client.Controllers
 {
-    public class SystemInformationController : OrcusController
+    public class SystemInformationController : MazeController
     {
         private readonly ILogger<SystemInformationController> _logger;
 
@@ -19,7 +19,7 @@ namespace SystemInformation.Client.Controllers
             _logger = logger;
         }
 
-        [OrcusGet]
+        [MazeGet]
         public async Task<IActionResult> GetSystemInfo([FromServices] IEnumerable<ISystemInfoProvider> systemInfoProviders)
         {
             var info = new ConcurrentBag<SystemInfoDto>();
@@ -27,7 +27,7 @@ namespace SystemInformation.Client.Controllers
             {
                 foreach (var systemInfoDto in provider.FetchInformation())
                     info.Add(systemInfoDto);
-            }), OrcusContext.RequestAborted);
+            }), MazeContext.RequestAborted);
 
             foreach (var error in result)
                 _logger.LogDebug(error.Value, "Exception occurrred when invoking {service}", error.Key.GetType().FullName);

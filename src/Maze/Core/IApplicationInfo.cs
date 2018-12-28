@@ -1,7 +1,7 @@
-﻿using NuGet.Frameworks;
+using NuGet.Frameworks;
 using NuGet.Versioning;
 
-namespace Orcus.Core
+namespace Maze.Core
 {
     public interface IApplicationInfo
     {

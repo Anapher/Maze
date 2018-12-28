@@ -1,9 +1,9 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Orcus.Modules.Api.ModelBinding;
+using Maze.Modules.Api.ModelBinding;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding
+namespace Maze.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     Defines the methods that are required for a value provider.

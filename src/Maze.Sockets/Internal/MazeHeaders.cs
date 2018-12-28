@@ -1,7 +1,7 @@
-﻿namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
-    internal static class OrcusHeaders
+    internal static class MazeHeaders
     {
-        public const string OrcusSocketRequestIdHeader = "orcussocket-requestid";
+        public const string MazeSocketRequestIdHeader = "mazesocket-requestid";
     }
 }

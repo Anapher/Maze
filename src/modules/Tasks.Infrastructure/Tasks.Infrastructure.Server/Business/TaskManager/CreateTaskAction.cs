@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -10,24 +10,24 @@ using Tasks.Infrastructure.Server.Core;
 
 namespace Tasks.Infrastructure.Server.Business.TaskManager
 {
-    public interface ICreateTaskAction : IGenericActionAsync<OrcusTask, TaskReference>
+    public interface ICreateTaskAction : IGenericActionAsync<MazeTask, TaskReference>
     {
     }
 
     public class CreateTaskAction : BusinessActionErrors, ICreateTaskAction
     {
         private readonly ITaskReferenceDbAccess _dbAccess;
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
         private readonly ITaskDirectory _taskDirectory;
 
-        public CreateTaskAction(ITaskReferenceDbAccess dbAccess, IOrcusTaskManagerManagement management, ITaskDirectory taskDirectory)
+        public CreateTaskAction(ITaskReferenceDbAccess dbAccess, IMazeTaskManagerManagement management, ITaskDirectory taskDirectory)
         {
             _dbAccess = dbAccess;
             _management = management;
             _taskDirectory = taskDirectory;
         }
         
-        public async Task<TaskReference> BizActionAsync(OrcusTask inputData)
+        public async Task<TaskReference> BizActionAsync(MazeTask inputData)
         {
             if (ValidateModelFailed(inputData))
                 return null;

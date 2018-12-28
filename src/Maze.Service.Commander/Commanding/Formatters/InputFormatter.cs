@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Modules.Api.Formatters;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
 
-namespace Orcus.Service.Commander.Commanding.Formatters
+namespace Maze.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// Reads an object from the request body.
@@ -46,7 +46,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
             if (!CanReadType(context.ModelType))
                 return false;
 
-            var contentType = context.OrcusContext.Request.ContentType;
+            var contentType = context.MazeContext.Request.ContentType;
             if (string.IsNullOrEmpty(contentType))
                 return false;
 
@@ -86,7 +86,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
                 throw new ArgumentNullException(nameof(context));
             }
 
-            var request = context.OrcusContext.Request;
+            var request = context.MazeContext.Request;
             if (request.ContentLength == 0)
             {
                 if (context.TreatEmptyInputAsDefaultValue)

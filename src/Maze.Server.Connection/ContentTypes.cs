@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Connection
+namespace Maze.Server.Connection
 {
     public static class ContentTypes
     {

@@ -1,8 +1,8 @@
-﻿using System;
-using Orcus.Sockets.Internal;
+using System;
+using Maze.Sockets.Internal;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.Internal
+namespace Maze.Sockets.Tests.Internal
 {
     public class BinaryUtilsTest
     {

@@ -1,19 +1,19 @@
-﻿using System;
-using Orcus.Modules.Api;
-using Orcus.Sockets;
-using Orcus.Utilities;
+using System;
+using Maze.Modules.Api;
+using Maze.Sockets;
+using Maze.Utilities;
 
-namespace Orcus.Server.Service.Channels
+namespace Maze.Server.Service.Channels
 {
     [SynchronizedChannel]
-    public class OrcusChannelRedirect : IDataChannel
+    public class MazeChannelRedirect : IDataChannel
     {
         private readonly int _channelId;
-        private readonly OrcusServer _server1;
-        private readonly OrcusServer _server2;
+        private readonly MazeServer _server1;
+        private readonly MazeServer _server2;
         private readonly Channel _channel;
 
-        public OrcusChannelRedirect(int channelId, OrcusServer server1, OrcusServer server2)
+        public MazeChannelRedirect(int channelId, MazeServer server1, MazeServer server2)
         {
             _channelId = channelId;
             _server1 = server1;

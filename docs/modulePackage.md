@@ -1,6 +1,6 @@
 # Target Frameworks
 
-| .Net  | Orcus   |
+| .Net  | Maze   |
 | ----- | ------- |
 | uap   | admin   |
 | net   | server  |

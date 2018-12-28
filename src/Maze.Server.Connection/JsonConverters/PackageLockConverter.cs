@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Newtonsoft.Json;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Connection.Utilities;
 
-namespace Orcus.Server.Connection.JsonConverters
+namespace Maze.Server.Connection.JsonConverters
 {
     public class PackageLockConverter : JsonConverter<PackagesLock>
     {

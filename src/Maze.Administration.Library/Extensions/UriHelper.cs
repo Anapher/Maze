@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     A helper class for <see cref="Uri"/>

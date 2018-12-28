@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.Loader;
-using Orcus.Server.Connection.Modules;
-using Orcus.Utilities;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.Loader;
+using Maze.Server.Connection.Modules;
+using Maze.Utilities;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public interface IModulesCatalog
     {

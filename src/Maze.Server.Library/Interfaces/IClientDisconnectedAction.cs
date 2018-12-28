@@ -1,6 +1,6 @@
-﻿using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Server.Library.Interfaces
+namespace Maze.Server.Library.Interfaces
 {
     /// <summary>
     ///     An action that will be invoked once a client disconnected from the server. The context is the

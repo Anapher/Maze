@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Models;
+using Maze.Administration.Library.Models;
 
-namespace Orcus.Administration.Library.Services
+namespace Maze.Administration.Library.Services
 {
     /// <summary>
     ///     Provides a shared management object for the clients of the server

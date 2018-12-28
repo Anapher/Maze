@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Storage;
@@ -22,7 +22,7 @@ namespace Tasks.Infrastructure.Client.Trigger
 
         public override async Task<TaskSessionTrigger> CreateSession(SessionKey sessionKey, string description)
         {
-            var session = await _taskStorage.OpenSession(sessionKey, _taskRunner.OrcusTask, description);
+            var session = await _taskStorage.OpenSession(sessionKey, _taskRunner.MazeTask, description);
             return new LocalTaskSessionTrigger(_taskRunner, session);
         }
 

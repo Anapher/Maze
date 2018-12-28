@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Threading;
-using Orcus.Server.Connection;
+using Maze.Server.Connection;
 using Tasks.Infrastructure.Core;
 
 namespace Tasks.Infrastructure.Server.Core
@@ -9,12 +9,12 @@ namespace Tasks.Infrastructure.Server.Core
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public TaskInfo(OrcusTask orcusTask, Hash hash, bool executeOnServer, bool executeOnClients)
+        public TaskInfo(MazeTask mazeTask, Hash hash, bool executeOnServer, bool executeOnClients)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             Token = _cancellationTokenSource.Token;
 
-            OrcusTask = orcusTask;
+            MazeTask = mazeTask;
             Hash = hash;
             ExecuteOnServer = executeOnServer;
             ExecuteOnClients = executeOnClients;
@@ -26,9 +26,9 @@ namespace Tasks.Infrastructure.Server.Core
         }
 
         /// <summary>
-        ///     The orcus task
+        ///     The maze task
         /// </summary>
-        public OrcusTask OrcusTask { get; }
+        public MazeTask MazeTask { get; }
 
         /// <summary>
         ///     The cancellation token that will cancel the local execution and transmission

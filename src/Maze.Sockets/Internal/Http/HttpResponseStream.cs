@@ -1,24 +1,24 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api.Extensions;
-using Orcus.Modules.Api.Request;
-using Orcus.Sockets.Internal.Extensions;
-using Orcus.Sockets.Internal.Infrastructure;
-using Orcus.Sockets.Logging;
+using Maze.Modules.Api.Extensions;
+using Maze.Modules.Api.Request;
+using Maze.Sockets.Internal.Extensions;
+using Maze.Sockets.Internal.Infrastructure;
+using Maze.Sockets.Logging;
 
-namespace Orcus.Sockets.Internal.Http
+namespace Maze.Sockets.Internal.Http
 {
     public class HttpResponseStream : WriteOnlyStream
     {
         private static readonly ILog Logger = LogProvider.For<HttpResponseStream>();
 
-        private readonly DefaultOrcusResponse _response;
-        private readonly OrcusRequest _request;
+        private readonly DefaultMazeResponse _response;
+        private readonly MazeRequest _request;
         private readonly IDataSocket _socket;
         private readonly int _packageBufferSize;
         private readonly int _maxHeaderSize;
@@ -32,7 +32,7 @@ namespace Orcus.Sockets.Internal.Http
         private bool _hasSentPackage;
         private readonly int _customOffset;
 
-        public HttpResponseStream(DefaultOrcusResponse response, OrcusRequest request, IDataSocket socket,
+        public HttpResponseStream(DefaultMazeResponse response, MazeRequest request, IDataSocket socket,
             int packageBufferSize, int maxHeaderSize, ArrayPool<byte> bufferPool, CancellationToken requestCancellationToken)
         {
             _response = response;
@@ -107,9 +107,9 @@ namespace Orcus.Sockets.Internal.Http
 
                     _response.StartResponse();
 
-                    if (!_response.Headers.ContainsKey(OrcusHeaders.OrcusSocketRequestIdHeader)) //automatically set
+                    if (!_response.Headers.ContainsKey(MazeHeaders.MazeSocketRequestIdHeader)) //automatically set
                         throw new InvalidOperationException(
-                            $"Response must have the header {OrcusHeaders.OrcusSocketRequestIdHeader}");
+                            $"Response must have the header {MazeHeaders.MazeSocketRequestIdHeader}");
 
                     var length = count + _maxHeaderSize + _customOffset;
                     var sendBuffer = _bufferPool.Rent(count + _maxHeaderSize + _customOffset);
@@ -152,15 +152,15 @@ namespace Orcus.Sockets.Internal.Http
             Logger.LogDataPackage("Send HTTP Response Continuation", latestBuffer.Array, latestBuffer.Offset,
                 latestBuffer.Count);
 
-            OrcusSocket.MessageOpcode opcode;
+            MazeSocket.MessageOpcode opcode;
             if (_hasSentPackage)
                 opcode = _isFinalPackage
-                    ? OrcusSocket.MessageOpcode.ResponseContinuationFinished
-                    : OrcusSocket.MessageOpcode.ResponseContinuation;
+                    ? MazeSocket.MessageOpcode.ResponseContinuationFinished
+                    : MazeSocket.MessageOpcode.ResponseContinuation;
             else
                 opcode = _isFinalPackage
-                    ? OrcusSocket.MessageOpcode.ResponseSinglePackage
-                    : OrcusSocket.MessageOpcode.Response;
+                    ? MazeSocket.MessageOpcode.ResponseSinglePackage
+                    : MazeSocket.MessageOpcode.Response;
             
             try
             {

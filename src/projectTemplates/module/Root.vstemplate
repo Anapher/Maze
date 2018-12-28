@@ -1,13 +1,13 @@
-﻿<VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+<VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>Orcus Module Template</Name>
-    <Description>An Orcus Module using Administration and Client project</Description>
+    <Name>Maze Module Template</Name>
+    <Description>An Maze Module using Administration and Client project</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>OrcusModule</DefaultName>
+    <DefaultName>MazeModule</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>

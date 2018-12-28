@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Library.Interfaces;
+using Maze.Server.Library.Interfaces;
 
 namespace TestModule.Server
 {

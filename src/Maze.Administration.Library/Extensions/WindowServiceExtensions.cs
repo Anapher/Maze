@@ -1,8 +1,8 @@
-﻿using Autofac;
-using Orcus.Administration.Library.Views;
+using Autofac;
+using Maze.Administration.Library.Views;
 using System;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     Extensions for <see cref="IWindowService"/>

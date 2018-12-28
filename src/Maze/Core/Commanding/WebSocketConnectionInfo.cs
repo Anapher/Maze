@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Orcus.Sockets.Client;
+using Maze.Sockets.Client;
 
-namespace Orcus.Core.Commanding
+namespace Maze.Core.Commanding
 {
     public class WebSocketConnectionInfo : ConnectionInfo
     {
-        public WebSocketConnectionInfo(OrcusSocketConnector connector)
+        public WebSocketConnectionInfo(MazeSocketConnector connector)
         {
             Id = "ServerConnection";
             if (connector.TcpClient.Client.RemoteEndPoint is IPEndPoint remoteEndpoint)

@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using NuGet.Protocol;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Server.Connection.JsonConverters;
 
-namespace Orcus.Server.Extensions
+namespace Maze.Server.Extensions
 {
     public static class JsonOptionsExtensions
     {

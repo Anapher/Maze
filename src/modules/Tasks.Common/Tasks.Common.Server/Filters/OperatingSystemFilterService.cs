@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Orcus.Server.Data.EfClasses;
-using Orcus.Server.Data.EfCode;
+using Maze.Server.Data.EfClasses;
+using Maze.Server.Data.EfCode;
 using Tasks.Infrastructure.Server.Library;
 
 namespace Tasks.Common.Server.Filters

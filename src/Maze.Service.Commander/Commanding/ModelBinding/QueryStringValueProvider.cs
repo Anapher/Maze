@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api.ModelBinding;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Service.Commander.Commanding.Internal;
+using Maze.Modules.Api.ModelBinding;
+using Maze.Modules.Api.Parameters;
+using Maze.Service.Commander.Commanding.Internal;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding
+namespace Maze.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     /// An <see cref="IValueProvider"/> adapter for data stored in an <see cref="IQueryCollection"/>.

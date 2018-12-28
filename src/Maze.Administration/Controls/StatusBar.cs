@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Utilities;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Utilities;
 
-namespace Orcus.Administration.Controls
+namespace Maze.Administration.Controls
 {
     public class StatusBar : Control
     {

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Orcus.Server.Connection;
+using Maze.Server.Connection;
 
 namespace Tasks.Infrastructure.Core.Dtos
 {

@@ -1,23 +1,23 @@
-﻿using System;
-using Orcus.Client.Library.Services;
-using Orcus.Core.Connection;
+using System;
+using Maze.Client.Library.Services;
+using Maze.Core.Connection;
 
-namespace Orcus.Core.Services
+namespace Maze.Core.Services
 {
-    public interface IOrcusRestClientFactory
+    public interface IMazeRestClientFactory
     {
-        OrcusRestClient Create(Uri baseUri);
+        MazeRestClient Create(Uri baseUri);
     }
 
-    public class OrcusRestClientFactory : IOrcusRestClientFactory
+    public class MazeRestClientFactory : IMazeRestClientFactory
     {
         private readonly IHttpClientService _httpClientService;
 
-        public OrcusRestClientFactory(IHttpClientService httpClientService)
+        public MazeRestClientFactory(IHttpClientService httpClientService)
         {
             _httpClientService = httpClientService;
         }
 
-        public OrcusRestClient Create(Uri baseUri) => new OrcusRestClient(_httpClientService.Client, baseUri);
+        public MazeRestClient Create(Uri baseUri) => new MazeRestClient(_httpClientService.Client, baseUri);
     }
 }

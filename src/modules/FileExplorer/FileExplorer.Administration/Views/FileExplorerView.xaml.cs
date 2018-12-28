@@ -1,10 +1,10 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Autofac;
 using FileExplorer.Administration.Menus;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Views;
 
 namespace FileExplorer.Administration.Views
 {

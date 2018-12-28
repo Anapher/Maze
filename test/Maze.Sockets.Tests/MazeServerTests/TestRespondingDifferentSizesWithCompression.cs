@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -6,22 +6,22 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Response;
-using Orcus.Sockets.Tests.Internal;
+using Maze.Modules.Api.Response;
+using Maze.Sockets.Tests.Internal;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.OrcusServerTests
+namespace Maze.Sockets.Tests.MazeServerTests
 {
     public class TestRespondingDifferentSizesWithCompression : StreamTestBase
     {
-        private class OrcusServerDataSendTest : OrcusServerTestBase
+        private class MazeServerDataSendTest : MazeServerTestBase
         {
             private readonly IReadOnlyList<byte[]> _packages;
 
             protected override int PackageSize => DataSize;
             protected override int MaxHeaderSize => DataSize - 50;
 
-            public OrcusServerDataSendTest(IEnumerable<byte[]> packages)
+            public MazeServerDataSendTest(IEnumerable<byte[]> packages)
             {
                 _packages = packages.ToList();
             }
@@ -33,7 +33,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
                 return request;
             }
 
-            protected override async Task WriteResponse(OrcusResponse response)
+            protected override async Task WriteResponse(MazeResponse response)
             {
                 foreach (var package in _packages)
                 {
@@ -41,7 +41,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
                 }
             }
 
-            protected override async Task AssertReceivedResponse(OrcusResponse response, HttpResponseMessage responseMessage)
+            protected override async Task AssertReceivedResponse(MazeResponse response, HttpResponseMessage responseMessage)
             {
                 var expected = Merge(_packages.Select(x => new ArraySegment<byte>(x)).ToList());
                 byte[] actual;
@@ -76,7 +76,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
         [MemberData(nameof(TestData))]
         public async Task TestWriteData(IEnumerable<byte[]> packages)
         {
-            var senderTest = new OrcusServerDataSendTest(packages);
+            var senderTest = new MazeServerDataSendTest(packages);
             await senderTest.ExecuteTest();
         }
     }

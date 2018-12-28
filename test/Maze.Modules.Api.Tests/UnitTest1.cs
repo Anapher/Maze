@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Orcus.Modules.Api.Tests
+namespace Maze.Modules.Api.Tests
 {
     public class UnitTest1
     {

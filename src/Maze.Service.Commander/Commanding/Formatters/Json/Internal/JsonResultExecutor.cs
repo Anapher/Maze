@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using Orcus.Modules.Api;
-using Orcus.Service.Commander.Infrastructure;
+using Maze.Modules.Api;
+using Maze.Service.Commander.Infrastructure;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Json.Internal
 {
     /// <summary>
     /// Executes a <see cref="JsonResult"/> to write to the response.
@@ -37,7 +37,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
             IHttpResponseStreamWriterFactory writerFactory,
             ILogger<JsonResultExecutor> logger,
             ArrayPool<char> charPool,
-            OrcusServerOptions options)
+            MazeServerOptions options)
         {
             if (writerFactory == null)
             {
@@ -73,7 +73,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
         /// <summary>
         /// Gets the <see cref="MvcJsonOptions"/>.
         /// </summary>
-        protected OrcusServerOptions Options { get; }
+        protected MazeServerOptions Options { get; }
 
         /// <summary>
         /// Gets the <see cref="IHttpResponseStreamWriterFactory"/>.

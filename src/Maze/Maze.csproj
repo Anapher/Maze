@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{860BFB06-4FCD-494F-B7C3-1D53683FA988}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Orcus</RootNamespace>
-    <AssemblyName>Orcus</AssemblyName>
+    <RootNamespace>Maze</RootNamespace>
+    <AssemblyName>Maze</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="Core\Commanding\ServerCommandListener.cs" />
     <Compile Include="Core\Commanding\WebSocketConnectionInfo.cs" />
-    <Compile Include="Core\Commanding\WebSocketOrcusContext.cs" />
+    <Compile Include="Core\Commanding\WebSocketMazeContext.cs" />
     <Compile Include="Core\Connection\ClientInfoProvider.cs" />
     <Compile Include="Core\Connection\CoreConnector.cs" />
     <Compile Include="Core\Connection\ServerConnection.cs" />
@@ -69,8 +69,8 @@
     <Compile Include="Core\Modules\PackagesRegistrar.cs" />
     <Compile Include="Core\Rest\Authentication\V1\AuthenticationResource.cs" />
     <Compile Include="Core\Services\HttpClientService.cs" />
-    <Compile Include="Core\Connection\OrcusRestClient.cs" />
-    <Compile Include="Core\Services\OrcusRestClientFactory.cs" />
+    <Compile Include="Core\Connection\MazeRestClient.cs" />
+    <Compile Include="Core\Services\MazeRestClientFactory.cs" />
     <Compile Include="Exceptions\RestAuthenticationException.cs" />
     <Compile Include="Exceptions\RestException.cs" />
     <Compile Include="Exceptions\RestNotFoundException.cs" />
@@ -90,7 +90,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="orcussettings.json">
+    <None Include="mazesettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -107,33 +107,33 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Client.Library\Orcus.Client.Library.csproj">
+    <ProjectReference Include="..\Maze.Client.Library\Maze.Client.Library.csproj">
       <Project>{f6268227-51aa-4c46-83e0-af2d77ff5868}</Project>
-      <Name>Orcus.Client.Library</Name>
+      <Name>Maze.Client.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj">
+    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj">
       <Project>{42d5467f-20db-4416-b673-0383304d098e}</Project>
-      <Name>Orcus.ModuleManagement</Name>
+      <Name>Maze.ModuleManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj">
+    <ProjectReference Include="..\Maze.Modules.Api\Maze.Modules.Api.csproj">
       <Project>{f7ba3ec1-1583-4a93-97f8-3394954b5953}</Project>
-      <Name>Orcus.Modules.Api</Name>
+      <Name>Maze.Modules.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj">
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj">
       <Project>{b0f87c73-910b-41dd-8f00-3a33a85a707c}</Project>
-      <Name>Orcus.Server.Connection</Name>
+      <Name>Maze.Server.Connection</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Service.Commander\Orcus.Service.Commander.csproj">
+    <ProjectReference Include="..\Maze.Service.Commander\Maze.Service.Commander.csproj">
       <Project>{a671f822-e1d1-491f-a31d-5c24f5482f74}</Project>
-      <Name>Orcus.Service.Commander</Name>
+      <Name>Maze.Service.Commander</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj">
+    <ProjectReference Include="..\Maze.Sockets\Maze.Sockets.csproj">
       <Project>{9c1c6607-7f2e-4f28-8629-2552d3bbfb38}</Project>
-      <Name>Orcus.Sockets</Name>
+      <Name>Maze.Sockets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj">
+    <ProjectReference Include="..\Maze.Utilities\Maze.Utilities.csproj">
       <Project>{28abf583-643f-488c-b5fc-b285e41ed342}</Project>
-      <Name>Orcus.Utilities</Name>
+      <Name>Maze.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +160,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions">
       <Version>2.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Orcus.NuGet.Frameworks">
+    <PackageReference Include="Maze.NuGet.Frameworks">
       <Version>1.0.0</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Extensions.Logging">

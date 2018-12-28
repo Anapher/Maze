@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 /*
  * HttpRequest.cs
@@ -46,9 +46,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Headers;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Internal;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     internal class HttpRequest
     {
@@ -56,14 +56,14 @@ namespace Orcus.Sockets.Client.WebSocketSharp
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri.PathAndQuery);
 
-            request.Headers.Upgrade.Add(new ProductHeaderValue(OrcusSocketHeaders.UpgradeSocket));
-            request.Headers.Connection.Add(OrcusSocketHeaders.Upgrade);
+            request.Headers.Upgrade.Add(new ProductHeaderValue(MazeSocketHeaders.UpgradeSocket));
+            request.Headers.Connection.Add(MazeSocketHeaders.Upgrade);
 
             if (uri.Port == 80 && uri.Scheme == "ws" || uri.Port == 443 && uri.Scheme == "wss")
                 request.Headers.Host = uri.DnsSafeHost;
             else request.Headers.Host = uri.Authority;
 
-            request.Headers.UserAgent.Add(new ProductInfoHeaderValue("Orcus.Socket", "1.0"));
+            request.Headers.UserAgent.Add(new ProductInfoHeaderValue("Maze.Socket", "1.0"));
 
             return request;
         }

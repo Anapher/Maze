@@ -1,28 +1,28 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Orcus.Server.Library.Services;
-using Orcus.Sockets;
+using Maze.Server.Library.Services;
+using Maze.Sockets;
 
-namespace Orcus.Server.Service.Connection
+namespace Maze.Server.Service.Connection
 {
     public class AdministrationConnection : IAdministrationConnection, IDisposable
     {
-        public AdministrationConnection(int accountId, WebSocketWrapper webSocket, OrcusServer orcusServer)
+        public AdministrationConnection(int accountId, WebSocketWrapper webSocket, MazeServer mazeServer)
         {
             AccountId = accountId;
             WebSocket = webSocket;
-            OrcusServer = orcusServer;
+            MazeServer = mazeServer;
         }
 
         public void Dispose()
         {
             WebSocket?.Dispose();
-            OrcusServer?.Dispose();
+            MazeServer?.Dispose();
         }
 
         public int AccountId { get; }
         public WebSocketWrapper WebSocket { get; }
-        public OrcusServer OrcusServer { get; }
+        public MazeServer MazeServer { get; }
 
         public Task BeginListen()
         {

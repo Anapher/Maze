@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,17 +7,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Modules.Api;
-using Orcus.Sockets.Internal;
-using Orcus.Sockets.Internal.Extensions;
-using Orcus.Sockets.Internal.Http;
-using Orcus.Sockets.Logging;
+using Maze.Modules.Api;
+using Maze.Sockets.Internal;
+using Maze.Sockets.Internal.Extensions;
+using Maze.Sockets.Internal.Http;
+using Maze.Sockets.Logging;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
-    public class OrcusServer : IChannelServer, IDisposable
+    public class MazeServer : IChannelServer, IDisposable
     {
-        private static readonly ILog Logger = LogProvider.For<OrcusServer>();
+        private static readonly ILog Logger = LogProvider.For<MazeServer>();
 
         private readonly int _packageBufferSize;
         private readonly int _maxHeaderSize;
@@ -35,11 +35,11 @@ namespace Orcus.Sockets
         private bool? _isRegisteringChannels;
         private int _channelCounter;
 
-        public OrcusServer(IDataSocket socket) : this(socket, 8192, 4096, ArrayPool<byte>.Shared)
+        public MazeServer(IDataSocket socket) : this(socket, 8192, 4096, ArrayPool<byte>.Shared)
         {
         }
 
-        public OrcusServer(IDataSocket socket, int packageBufferSize, int maxHeaderSize, ArrayPool<byte> bufferPool)
+        public MazeServer(IDataSocket socket, int packageBufferSize, int maxHeaderSize, ArrayPool<byte> bufferPool)
         {
             if (packageBufferSize < 6)
                 throw new ArgumentException("Package buffer size must be greater than 6", nameof(packageBufferSize));
@@ -86,7 +86,7 @@ namespace Orcus.Sockets
         }
 
         public IDataSocket DataSocket => _socket;
-        public event EventHandler<OrcusRequestReceivedEventArgs> RequestReceived;
+        public event EventHandler<MazeRequestReceivedEventArgs> RequestReceived;
 
         public void AddChannelRedirect(int channelId, IDataSocket targetSocket)
         {
@@ -131,7 +131,7 @@ namespace Orcus.Sockets
             using (var buffer = AllocateBuffer(4))
             {
                 BinaryUtils.WriteInt32(buffer.Buffer, buffer.Offset, channelId);
-                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CloseChannel, new ArraySegment<byte>(buffer.Buffer, buffer.Offset, 4),
+                await _socket.SendFrameAsync(MazeSocket.MessageOpcode.CloseChannel, new ArraySegment<byte>(buffer.Buffer, buffer.Offset, 4),
                     bufferHasRequiredLength: true, CancellationToken.None);
             }
         }
@@ -141,13 +141,13 @@ namespace Orcus.Sockets
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (requestMessage.Headers.Contains(OrcusHeaders.OrcusSocketRequestIdHeader))
+            if (requestMessage.Headers.Contains(MazeHeaders.MazeSocketRequestIdHeader))
                 throw new ArgumentException(
-                    $"The orcus request must not have a {OrcusHeaders.OrcusSocketRequestIdHeader} header.",
+                    $"The maze request must not have a {MazeHeaders.MazeSocketRequestIdHeader} header.",
                     nameof(requestMessage));
 
             var requestId = Interlocked.Increment(ref _requestCounter);
-            requestMessage.Headers.Add(OrcusHeaders.OrcusSocketRequestIdHeader, requestId.ToString());
+            requestMessage.Headers.Add(MazeHeaders.MazeSocketRequestIdHeader, requestId.ToString());
 
             var requestWaiter = new TaskCompletionSource<HttpResponseMessage>();
             _waitingRequests.TryAdd(requestId, requestWaiter);
@@ -156,7 +156,7 @@ namespace Orcus.Sockets
             {
                 var headerLength = HttpFormatter.FormatRequest(requestMessage, sendBuffer);
                 var maxReadLength = sendBuffer.Length - headerLength;
-                var opCode = OrcusSocket.MessageOpcode.Request;
+                var opCode = MazeSocket.MessageOpcode.Request;
 
                 Stream bodyStream;
                 if (requestMessage.Content != null)
@@ -169,7 +169,7 @@ namespace Orcus.Sockets
 
                     if (bodyStream == null) //no body, single package, easy
                     {
-                        opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                        opCode = MazeSocket.MessageOpcode.RequestSinglePackage;
                         read = 0;
                     }
                     else
@@ -183,7 +183,7 @@ namespace Orcus.Sockets
                             if (read == 0)
                             {
                                 //no data in the stream
-                                opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                                opCode = MazeSocket.MessageOpcode.RequestSinglePackage;
                             }
                             else
                             {
@@ -192,7 +192,7 @@ namespace Orcus.Sockets
                                 var read2 = await bodyStream.ReadAsync(sendBuffer.Buffer, readOffset,
                                     maxReadLength - read, cancellationToken);
                                 if (read2 == 0)
-                                    opCode = OrcusSocket.MessageOpcode.RequestSinglePackage;
+                                    opCode = MazeSocket.MessageOpcode.RequestSinglePackage;
                                 else
                                     read += read2;
                             }
@@ -208,10 +208,10 @@ namespace Orcus.Sockets
                             new ArraySegment<byte>(sendBuffer.Buffer, sendBuffer.Offset, read + headerLength),
                             bufferHasRequiredLength: true, cancellationToken);
 
-                        if (opCode == OrcusSocket.MessageOpcode.Request)
+                        if (opCode == MazeSocket.MessageOpcode.Request)
                         {
                             BinaryUtils.WriteInt32(sendBuffer.Buffer, sendBuffer.Offset, requestId);
-                            opCode = OrcusSocket.MessageOpcode.RequestContinuation;
+                            opCode = MazeSocket.MessageOpcode.RequestContinuation;
                             maxReadLength = sendBuffer.Length - 4;
 
                             while (true)
@@ -221,14 +221,14 @@ namespace Orcus.Sockets
                                     cancellationToken);
                                 if (read == 0)
                                 {
-                                    opCode = OrcusSocket.MessageOpcode.RequestContinuationFinished;
+                                    opCode = MazeSocket.MessageOpcode.RequestContinuationFinished;
                                 }
                                 else if (read < maxReadLength)
                                 {
                                     var read2 = await bodyStream.ReadAsync(sendBuffer.Buffer, readOffset + read,
                                         maxReadLength - read, cancellationToken);
                                     if (read2 == 0)
-                                        opCode = OrcusSocket.MessageOpcode.RequestContinuationFinished;
+                                        opCode = MazeSocket.MessageOpcode.RequestContinuationFinished;
                                     else
                                         read += read2;
                                 }
@@ -237,7 +237,7 @@ namespace Orcus.Sockets
                                     new ArraySegment<byte>(sendBuffer.Buffer, sendBuffer.Offset, 4 + read),
                                     bufferHasRequiredLength: true, cancellationToken);
 
-                                if (opCode == OrcusSocket.MessageOpcode.RequestContinuationFinished)
+                                if (opCode == MazeSocket.MessageOpcode.RequestContinuationFinished)
                                     break;
                             }
                         }
@@ -245,7 +245,7 @@ namespace Orcus.Sockets
                     catch (Exception)
                     {
                         BinaryUtils.WriteInt32(sendBuffer.Buffer, sendBuffer.Offset, requestId);
-                        await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CancelRequest,
+                        await _socket.SendFrameAsync(MazeSocket.MessageOpcode.CancelRequest,
                             new ArraySegment<byte>(sendBuffer.Buffer, sendBuffer.Offset, 4),
                             bufferHasRequiredLength: true, CancellationToken.None); //DO NOT USE THE CANCELLATION TOKEN HERE
                         throw;
@@ -257,7 +257,7 @@ namespace Orcus.Sockets
                     using (var buffer = AllocateBuffer(4))
                     {
                         BinaryUtils.WriteInt32(buffer.Buffer, buffer.Offset, requestId);
-                        _socket.SendFrameAsync(OrcusSocket.MessageOpcode.CancelRequest,
+                        _socket.SendFrameAsync(MazeSocket.MessageOpcode.CancelRequest,
                             new ArraySegment<byte>(buffer.Buffer, buffer.Offset, 4), bufferHasRequiredLength: true,
                             CancellationToken.None).Wait();
                     }
@@ -269,12 +269,12 @@ namespace Orcus.Sockets
             }
         }
 
-        public async Task FinishResponse(OrcusRequestReceivedEventArgs e)
+        public async Task FinishResponse(MazeRequestReceivedEventArgs e)
         {
             if (e.CancellationToken.IsCancellationRequested)
                 return;
 
-            var defaultResponse = (DefaultOrcusResponse) e.Response;
+            var defaultResponse = (DefaultMazeResponse) e.Response;
             defaultResponse.IsCompleted = true;
 
             await defaultResponse.Body.FlushAsync();
@@ -287,37 +287,37 @@ namespace Orcus.Sockets
         {
             switch (e.Opcode)
             {
-                case OrcusSocket.MessageOpcode.Message:
+                case MazeSocket.MessageOpcode.Message:
                     ProcessMessage(e.Buffer);
                     break;
-                case OrcusSocket.MessageOpcode.CloseChannel:
+                case MazeSocket.MessageOpcode.CloseChannel:
                     CloseChannel(e.Buffer);
                     break;
-                case OrcusSocket.MessageOpcode.Request:
+                case MazeSocket.MessageOpcode.Request:
                     ProcessRequest(e.Buffer, false);
                     break;
-                case OrcusSocket.MessageOpcode.RequestSinglePackage:
+                case MazeSocket.MessageOpcode.RequestSinglePackage:
                     ProcessRequest(e.Buffer, true);
                     break;
-                case OrcusSocket.MessageOpcode.RequestContinuation:
+                case MazeSocket.MessageOpcode.RequestContinuation:
                     AppendRequestData(e.Buffer, false);
                     break;
-                case OrcusSocket.MessageOpcode.RequestContinuationFinished:
+                case MazeSocket.MessageOpcode.RequestContinuationFinished:
                     AppendRequestData(e.Buffer, true);
                     break;
-                case OrcusSocket.MessageOpcode.Response:
+                case MazeSocket.MessageOpcode.Response:
                     ProcessResponse(e.Buffer, false);
                     break;
-                case OrcusSocket.MessageOpcode.ResponseSinglePackage:
+                case MazeSocket.MessageOpcode.ResponseSinglePackage:
                     ProcessResponse(e.Buffer, true);
                     break;
-                case OrcusSocket.MessageOpcode.ResponseContinuation:
+                case MazeSocket.MessageOpcode.ResponseContinuation:
                     AppendResponseData(e.Buffer, false);
                     break;
-                case OrcusSocket.MessageOpcode.ResponseContinuationFinished:
+                case MazeSocket.MessageOpcode.ResponseContinuationFinished:
                     AppendResponseData(e.Buffer, true);
                     break;
-                case OrcusSocket.MessageOpcode.CancelRequest:
+                case MazeSocket.MessageOpcode.CancelRequest:
                     CancelRequest(e.Buffer);
                     break;
                 default:
@@ -332,7 +332,7 @@ namespace Orcus.Sockets
                 BinaryUtils.WriteInt32(buffer, offset - 5, channel.ChannelId);
                 buffer[offset - 1] = (byte) (channel.IsSynchronized ? 1 : 0);
 
-                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message,
+                await _socket.SendFrameAsync(MazeSocket.MessageOpcode.Message,
                     new ArraySegment<byte>(buffer, offset - 5, count + 5), true, CancellationToken.None);
                 return;
             }
@@ -343,7 +343,7 @@ namespace Orcus.Sockets
                 newBuffer.Buffer[newBuffer.Offset + 4] = (byte) (channel.IsSynchronized ? 1 : 0);
 
                 Buffer.BlockCopy(buffer, offset, newBuffer.Buffer, newBuffer.Offset + 5, count);
-                await _socket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset, count + 5),
+                await _socket.SendFrameAsync(MazeSocket.MessageOpcode.Message, new ArraySegment<byte>(newBuffer.Buffer, newBuffer.Offset, count + 5),
                     true, CancellationToken.None);
             }
         }
@@ -372,7 +372,7 @@ namespace Orcus.Sockets
 
                             try
                             {
-                                await synchronizedSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, buffer, true,
+                                await synchronizedSocket.DataSocket.SendFrameAsync(MazeSocket.MessageOpcode.Message, buffer, true,
                                     CancellationToken.None);
                             }
                             finally
@@ -382,7 +382,7 @@ namespace Orcus.Sockets
                         }
                         else
                         {
-                            await synchronizedSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.Message, buffer, true,
+                            await synchronizedSocket.DataSocket.SendFrameAsync(MazeSocket.MessageOpcode.Message, buffer, true,
                                 CancellationToken.None);
                         }
 
@@ -440,7 +440,7 @@ namespace Orcus.Sockets
                     if (_channelRedirects.TryRemove(channelId, out var dataSocket))
                     {
                         dataSocket.Dispose();
-                        await dataSocket.DataSocket.SendFrameAsync(OrcusSocket.MessageOpcode.CloseChannel, buffer, true, CancellationToken.None);
+                        await dataSocket.DataSocket.SendFrameAsync(MazeSocket.MessageOpcode.CloseChannel, buffer, true, CancellationToken.None);
                         return;
                     }
 
@@ -490,7 +490,7 @@ namespace Orcus.Sockets
             stream.PushBuffer(new ArraySegment<byte>(buffer.Buffer, buffer.Offset + headerLength,
                 buffer.Length - headerLength));
 
-            var requestId = int.Parse(request.Headers[OrcusHeaders.OrcusSocketRequestIdHeader]);
+            var requestId = int.Parse(request.Headers[MazeHeaders.MazeSocketRequestIdHeader]);
             var cancellationTokenSource = _cancellableRequests.GetOrAdd(requestId, i => new CancellationTokenSource());
             var token = cancellationTokenSource.Token;
 
@@ -520,15 +520,15 @@ namespace Orcus.Sockets
                 }
             }
 
-            var response = new DefaultOrcusResponse(requestId);
-            response.Headers.Add(OrcusHeaders.OrcusSocketRequestIdHeader, requestId.ToString());
+            var response = new DefaultMazeResponse(requestId);
+            response.Headers.Add(MazeHeaders.MazeSocketRequestIdHeader, requestId.ToString());
 
             var rawStream = new HttpResponseStream(response, request, _socket, _packageBufferSize, _maxHeaderSize,
                 _bufferPool, token);
             response.HttpResponseStream = rawStream;
             response.Body = new BufferingWriteStream(rawStream, _packageBufferSize, _bufferPool);
 
-            LogTaskError(Task.Run(() => RequestReceived?.Invoke(this, new OrcusRequestReceivedEventArgs(request, response, token))));
+            LogTaskError(Task.Run(() => RequestReceived?.Invoke(this, new MazeRequestReceivedEventArgs(request, response, token))));
         }
 
         private void ProcessResponse(BufferSegment buffer, bool isCompleted)
@@ -536,7 +536,7 @@ namespace Orcus.Sockets
             Logger.LogDataPackage("Received Response", buffer.Buffer, buffer.Offset, buffer.Length);
             
             var headerLength = HttpFormatter.ParseResponse(buffer, out var response, out var contentHeaders);
-            var requestId = int.Parse(response.Headers.GetValues(OrcusHeaders.OrcusSocketRequestIdHeader).Single());
+            var requestId = int.Parse(response.Headers.GetValues(MazeHeaders.MazeSocketRequestIdHeader).Single());
             var bufferSegment =
                 new ArraySegment<byte>(buffer.Buffer, buffer.Offset + headerLength, buffer.Length - headerLength);
 

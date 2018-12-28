@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public enum ResolvedActionType
     {

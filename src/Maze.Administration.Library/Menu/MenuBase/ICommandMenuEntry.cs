@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
-namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public interface ICommandMenuEntry : IVisibleMenuItem
     {

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.3.0" />
-    <PackageReference Include="Orcus.NuGet.Packaging.Core" Version="1.0.0" />
+    <PackageReference Include="Maze.NuGet.Packaging.Core" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

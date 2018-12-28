@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Encoder;
 using RemoteDesktop.Shared.Dtos;
@@ -11,9 +11,9 @@ using RemoteDesktop.Shared.Dtos;
 namespace RemoteDesktop.Client.Controllers
 {
     [Route("")]
-    public class RemoteDesktopController : OrcusController
+    public class RemoteDesktopController : MazeController
     {
-        [OrcusGet("parameters")]
+        [MazeGet("parameters")]
         public IActionResult GetParameters([FromServices] IEnumerable<IScreenCaptureService> captureServices,
             [FromServices] IEnumerable<IStreamEncoder> encoders)
         {

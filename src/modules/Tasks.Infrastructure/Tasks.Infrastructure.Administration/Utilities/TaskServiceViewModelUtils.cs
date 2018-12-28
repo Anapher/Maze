@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Core;
@@ -13,10 +13,10 @@ namespace Tasks.Infrastructure.Administration.Utilities
             return (ValidationResult) method.Invoke(viewModel, new object[0]);
         }
 
-        public static ValidationResult ValidateContext(object viewModel, OrcusTask orcusTask)
+        public static ValidationResult ValidateContext(object viewModel, MazeTask mazeTask)
         {
             var method = viewModel.GetType().GetMethod(nameof(ITaskServiceViewModel<string>.ValidateContext), BindingFlags.Instance | BindingFlags.Public);
-            return (ValidationResult) method.Invoke(viewModel, new object[] {orcusTask});
+            return (ValidationResult) method.Invoke(viewModel, new object[] {mazeTask});
         }
 
         public static void Initialize(object viewModel, object dto)

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Connection
+namespace Maze.Server.Connection
 {
-    public static class OfficalOrcusRepository
+    public static class OfficalMazeRepository
     {
         public static Uri Uri { get; } = new Uri("https://api.nuget.org/v3/index.json");
     }

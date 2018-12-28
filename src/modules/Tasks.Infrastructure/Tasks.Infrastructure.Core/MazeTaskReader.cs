@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core.Audience;
 using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Filter;
@@ -14,60 +14,60 @@ using Tasks.Infrastructure.Core.Triggers;
 namespace Tasks.Infrastructure.Core
 {
     //https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Packaging/NuspecReader.cs
-    public class OrcusTaskReader : OrcusTaskReaderBase
+    public class MazeTaskReader : MazeTaskReaderBase
     {
         private readonly ITaskComponentResolver _componentResolver;
         private readonly IXmlSerializerCache _xmlSerializerCache;
 
         /// <summary>
-        ///     Orcus task file reader.
+        ///     Maze task file reader.
         /// </summary>
-        public OrcusTaskReader(string path, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : base(path)
+        public MazeTaskReader(string path, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : base(path)
         {
             _componentResolver = componentResolver;
             _xmlSerializerCache = xmlSerializerCache;
         }
 
         /// <summary>
-        ///     Orcus task file reader
+        ///     Maze task file reader
         /// </summary>
-        /// <param name="stream">Orcus task file stream.</param>
+        /// <param name="stream">Maze task file stream.</param>
         /// <param name="componentResolver">The service resolver used to resolve the task services</param>
         /// <param name="xmlSerializerCache">The xml serializer cache for deserialization</param>
-        public OrcusTaskReader(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : this(stream,
+        public MazeTaskReader(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : this(stream,
             componentResolver, xmlSerializerCache, false)
         {
         }
 
         /// <summary>
-        ///     Orcus task file reader
+        ///     Maze task file reader
         /// </summary>
-        /// <param name="xml">Orcus task file xml data.</param>
+        /// <param name="xml">Maze task file xml data.</param>
         /// <param name="componentResolver">The service resolver used to resolve the task services</param>
         /// <param name="xmlSerializerCache">The xml serializer cache for deserialization</param>
-        public OrcusTaskReader(XDocument xml, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : base(xml)
+        public MazeTaskReader(XDocument xml, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache) : base(xml)
         {
             _componentResolver = componentResolver;
             _xmlSerializerCache = xmlSerializerCache;
         }
 
         /// <summary>
-        ///     Orcus task file reader
+        ///     Maze task file reader
         /// </summary>
-        /// <param name="stream">Orcus task file stream.</param>
+        /// <param name="stream">Maze task file stream.</param>
         /// <param name="componentResolver">The service resolver used to resolve the task services</param>
         /// <param name="leaveStreamOpen">Leave the stream open</param>
         /// <param name="xmlSerializerCache">The xml serializer cache for deserialization</param>
-        public OrcusTaskReader(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache, bool leaveStreamOpen)
+        public MazeTaskReader(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache xmlSerializerCache, bool leaveStreamOpen)
             : base(stream, leaveStreamOpen)
         {
             _componentResolver = componentResolver;
             _xmlSerializerCache = xmlSerializerCache;
         }
 
-        public OrcusTask ReadTask()
+        public MazeTask ReadTask()
         {
-            return new OrcusTask
+            return new MazeTask
             {
                 Name = GetName(),
                 Id = GetId(),

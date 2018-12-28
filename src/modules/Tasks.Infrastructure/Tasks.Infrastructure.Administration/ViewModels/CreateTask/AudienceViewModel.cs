@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base;
@@ -22,17 +22,17 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         public bool IsSelected { get; set; }
         public object NodeViewModel => this;
 
-        public void Initialize(OrcusTask orcusTask)
+        public void Initialize(MazeTask mazeTask)
         {
         }
 
         public IEnumerable<ValidationResult> ValidateInput() => Enumerable.Empty<ValidationResult>();
 
-        public IEnumerable<ValidationResult> ValidateContext(OrcusTask orcusTask) => Enumerable.Empty<ValidationResult>();
+        public IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask) => Enumerable.Empty<ValidationResult>();
 
-        public void Apply(OrcusTask orcusTask)
+        public void Apply(MazeTask mazeTask)
         {
-            orcusTask.Audience = new AudienceCollection {IsAll = true};
+            mazeTask.Audience = new AudienceCollection {IsAll = true};
         }
     }
 }

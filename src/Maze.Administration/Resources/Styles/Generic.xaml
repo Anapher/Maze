@@ -1,12 +1,12 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Orcus.Administration.Controls"
-    xmlns:converter="clr-namespace:Orcus.Administration.Converter"
+    xmlns:controls="clr-namespace:Maze.Administration.Controls"
+    xmlns:converter="clr-namespace:Maze.Administration.Converter"
     xmlns:converter1="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:menu="clr-namespace:Orcus.Administration.Library.Menu;assembly=Orcus.Administration.Library"
-    xmlns:statusBar="clr-namespace:Orcus.Administration.Library.StatusBar;assembly=Orcus.Administration.Library"
+    xmlns:menu="clr-namespace:Maze.Administration.Library.Menu;assembly=Maze.Administration.Library"
+    xmlns:statusBar="clr-namespace:Maze.Administration.Library.StatusBar;assembly=Maze.Administration.Library"
     xmlns:tx="http://unclassified.software/source/txtranslation">
 
     <converter1:CloneConverter x:Key="CloneConverter" />

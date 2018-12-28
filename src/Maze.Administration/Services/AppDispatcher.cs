@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using NuGet.Common;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Services;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Services;
 
-namespace Orcus.Administration.Services
+namespace Maze.Administration.Services
 {
     public class AppDispatcher : IAppDispatcher
     {

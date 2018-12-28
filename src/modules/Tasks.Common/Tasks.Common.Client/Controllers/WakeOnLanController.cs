@@ -1,6 +1,6 @@
-﻿using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Tasks.Common.Client.Controllers
 {
     [Route("wol")]
-    public class WakeOnLanController : OrcusController
+    public class WakeOnLanController : MazeController
     {
-        [OrcusGet]
+        [MazeGet]
         public async Task<IActionResult> WakeOnLan([FromQuery] string address)
         {
             await WakeOnLan(PhysicalAddress.Parse(address));

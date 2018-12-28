@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Orcus.Server.BusinessLogic.ClientGroups;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Clients;
-using Orcus.Server.Data.EfCode;
-using Orcus.Server.Library.Controllers;
-using Orcus.Server.Library.Hubs;
+using Maze.Server.BusinessLogic.ClientGroups;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Clients;
+using Maze.Server.Data.EfCode;
+using Maze.Server.Library.Controllers;
+using Maze.Server.Library.Hubs;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     [Route("v1/clients/groups"), Authorize("admin")]
     public class ClientGroupsController : BusinessController

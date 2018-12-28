@@ -1,25 +1,25 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Library.Controllers;
-using Orcus.Server.Library.Utilities;
-using Orcus.Server.Service;
-using Orcus.Server.Service.Commander;
-using Orcus.Server.Service.Extensions;
-using Orcus.Service.Commander;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Library.Controllers;
+using Maze.Server.Library.Utilities;
+using Maze.Server.Service;
+using Maze.Server.Service.Commander;
+using Maze.Server.Service.Extensions;
+using Maze.Service.Commander;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     public class CommanderController : BusinessController
     {
-        //Path: v1/modules/Orcus.RemoteDesktop/start
+        //Path: v1/modules/Maze.RemoteDesktop/start
         [Route("v1/modules/{*path}"), Authorize("admin")]
-        public async Task ExecuteCommand(string path, [FromServices] IOrcusRequestExecuter requestExecuter,
+        public async Task ExecuteCommand(string path, [FromServices] IMazeRequestExecuter requestExecuter,
             [FromServices] ICommandDistributer commandDistributer)
         {
             Request.Headers.TryGetValue("CommandTarget", out var targetHeader);
@@ -37,8 +37,8 @@ namespace Orcus.Server.Controllers
 
             if (targets.TargetsServer)
             {
-                var orcusContext = new HttpOrcusContextWrapper(HttpContext) {Request = {Path = "/" + path}};
-                await requestExecuter.Execute(orcusContext, null /* TODO */);
+                var mazeContext = new HttpMazeContextWrapper(HttpContext) {Request = {Path = "/" + path}};
+                await requestExecuter.Execute(mazeContext, null /* TODO */);
             }
             else
             {

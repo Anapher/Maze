@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
     <Version>1.0</Version>
     <LangVersion>latest</LangVersion>
     <Authors>Anapher</Authors>
-    <Owners>OrcusTechnologies</Owners>
-    <Copyright>Copyright 2018 Orcus Technologies</Copyright>
-    <Company>Orcus Technologies</Company>
-    <PackageProjectUrl>https://www.orcustechnologies.com/</PackageProjectUrl>
+    <Owners>MazeTechnologies</Owners>
+    <Copyright>Copyright 2018 Maze Technologies</Copyright>
+    <Company>Maze Technologies</Company>
+    <PackageProjectUrl>https://www.mazetechnologies.com/</PackageProjectUrl>
     <PackageOutputPath>$(SolutionDir)artifacts</PackageOutputPath>
   </PropertyGroup>
 </Project>

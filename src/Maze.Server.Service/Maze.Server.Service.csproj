@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
@@ -9,11 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj" />
-    <ProjectReference Include="..\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Library\Orcus.Server.Library.csproj" />
-    <ProjectReference Include="..\Orcus.Server.OrcusSockets\Orcus.Server.OrcusSockets.csproj" />
-    <ProjectReference Include="..\Orcus.Service.Commander\Orcus.Service.Commander.csproj" />
+    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj" />
+    <ProjectReference Include="..\Maze.Server.BusinessLogic\Maze.Server.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
+    <ProjectReference Include="..\Maze.Server.Library\Maze.Server.Library.csproj" />
+    <ProjectReference Include="..\Maze.Server.MazeSockets\Maze.Server.MazeSockets.csproj" />
+    <ProjectReference Include="..\Maze.Service.Commander\Maze.Service.Commander.csproj" />
   </ItemGroup>
 </Project>

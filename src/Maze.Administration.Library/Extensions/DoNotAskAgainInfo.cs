@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     public class DoNotAskAgainInfo
     {

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     public class StatusBarManager : BindableBase, IShellStatusBar
     {

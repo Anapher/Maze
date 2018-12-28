@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Server.Library.Interfaces
+namespace Maze.Server.Library.Interfaces
 {
     /// <summary>
     ///     An action that will be invoked when the server pipeline is configured.

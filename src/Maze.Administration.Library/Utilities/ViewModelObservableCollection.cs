@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace Orcus.Administration.Library.Utilities
+namespace Maze.Administration.Library.Utilities
 {
     public class ViewModelObservableCollection<TViewModel, TModel> : ObservableCollection<TViewModel>
     {

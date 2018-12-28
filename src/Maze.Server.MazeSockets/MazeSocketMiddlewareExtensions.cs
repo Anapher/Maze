@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 
-namespace Orcus.Server.OrcusSockets
+namespace Maze.Server.MazeSockets
 {
     /// <summary>
-    ///     Extensions of the <see cref="IApplicationBuilder" /> to enqueue the <see cref="OrcusSocketMiddleware" />
+    ///     Extensions of the <see cref="IApplicationBuilder" /> to enqueue the <see cref="MazeSocketMiddleware" />
     /// </summary>
-    public static class OrcusSocketMiddlewareExtensions
+    public static class MazeSocketMiddlewareExtensions
     {
         /// <summary>
-        ///     Enqueue the <see cref="OrcusSocketMiddleware" /> and provide the <see cref="IOrcusSocketFeature" /> in the context
+        ///     Enqueue the <see cref="MazeSocketMiddleware" /> and provide the <see cref="IMazeSocketFeature" /> in the context
         ///     if possible
         /// </summary>
         /// <param name="builder">The application builder of your server</param>
-        public static IApplicationBuilder UseOrcusSockets(this IApplicationBuilder builder) =>
-            builder.UseMiddleware<OrcusSocketMiddleware>();
+        public static IApplicationBuilder UseMazeSockets(this IApplicationBuilder builder) =>
+            builder.UseMiddleware<MazeSocketMiddleware>();
     }
 }

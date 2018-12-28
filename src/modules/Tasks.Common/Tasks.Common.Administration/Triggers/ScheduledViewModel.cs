@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -82,7 +82,7 @@ namespace Tasks.Common.Administration.Triggers
         }
 
         public ValidationResult ValidateInput() => ValidationResult.Success;
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
         public ScheduledTriggerInfo Build() => throw new NotImplementedException();
     }
 

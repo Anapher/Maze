@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using Tasks.Common.Shared.StopEvents;
 using Tasks.Infrastructure.Administration.Library;
@@ -34,7 +34,7 @@ namespace Tasks.Common.Administration.StopEvents
             return ValidationResult.Success;
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
 
         public DurationStopEventInfo Build() => new DurationStopEventInfo {Duration = Duration};
     }

@@ -1,4 +1,4 @@
-﻿<views:WindowUserControl
+<views:WindowUserControl
     x:Class="Tasks.Infrastructure.Administration.Views.TaskOverviewView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     xmlns:taskOverview1="clr-namespace:Tasks.Infrastructure.Administration.ViewModels.TaskOverview"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
-    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:TaskOverviewViewModel}"
     d:DesignHeight="580"

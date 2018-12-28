@@ -1,19 +1,19 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using CodeElements.BizRunner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Orcus.Server.Authentication;
-using Orcus.Server.BusinessLogic.Authentication;
-using Orcus.Server.Connection.Authentication.Client;
-using Orcus.Server.Connection.Clients;
-using Orcus.Server.Data.EfCode;
-using Orcus.Server.Library.Controllers;
-using Orcus.Server.Library.Services;
-using Orcus.Server.Service.Modules;
+using Maze.Server.Authentication;
+using Maze.Server.BusinessLogic.Authentication;
+using Maze.Server.Connection.Authentication.Client;
+using Maze.Server.Connection.Clients;
+using Maze.Server.Data.EfCode;
+using Maze.Server.Library.Controllers;
+using Maze.Server.Library.Services;
+using Maze.Server.Service.Modules;
 
-namespace Orcus.Server.Controllers
+namespace Maze.Server.Controllers
 {
     [Route("v1/[controller]")]
     public class ClientsController : BusinessController

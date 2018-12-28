@@ -1,4 +1,4 @@
-﻿namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
     ///     Represents an <see cref="ActionResult" /> that when executed will

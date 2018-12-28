@@ -1,8 +1,8 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 
-namespace Orcus.Server.Service.Modules.Config.Base
+namespace Maze.Server.Service.Modules.Config.Base
 {
     public abstract class SerializableObjectFile<TObject>
     {

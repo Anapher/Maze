@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,22 +8,22 @@ using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
-using Orcus.Administration.Core.Modules;
-using Orcus.Administration.Factories;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Resources;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Prism;
-using Orcus.Administration.Services;
-using Orcus.Administration.ViewModels;
-using Orcus.Administration.Views;
-using Orcus.Administration.Views.Main;
+using Maze.Administration.Core.Modules;
+using Maze.Administration.Factories;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Resources;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Prism;
+using Maze.Administration.Services;
+using Maze.Administration.ViewModels;
+using Maze.Administration.Views;
+using Maze.Administration.Views.Main;
 using Prism.Autofac;
 using Prism.Modularity;
 using Prism.Mvvm;
 
-namespace Orcus.Administration
+namespace Maze.Administration
 {
     internal class Bootstrapper : AutofacBootstrapper
     {

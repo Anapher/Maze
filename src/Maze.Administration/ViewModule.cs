@@ -1,21 +1,21 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Orcus.Administration.Library;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Views;
-using Orcus.Administration.ViewModels.Overview.Groups;
-using Orcus.Administration.Views.Main;
-using Orcus.Administration.Views.Main.Overview;
-using Orcus.Administration.Views.Main.Overview.Clients;
+using Maze.Administration.Library;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.Views;
+using Maze.Administration.ViewModels.Overview.Groups;
+using Maze.Administration.Views.Main;
+using Maze.Administration.Views.Main.Overview;
+using Maze.Administration.Views.Main.Overview.Clients;
 using Prism.Modularity;
 using Prism.Regions;
 
-namespace Orcus.Administration
+namespace Maze.Administration
 {
     public class ViewModule : IModule
     {

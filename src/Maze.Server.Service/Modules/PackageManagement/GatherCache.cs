@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,9 @@ using NuGet.Configuration;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.Server.Service.Extensions;
+using Maze.Server.Service.Extensions;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Maze.Server.Service.Modules.PackageManagement
 {
     /// <summary>
     /// GatherCache contains cached results from DependencyInfoResource providers

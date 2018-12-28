@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 using Moq;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core.Audience;
 using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Filter;
@@ -14,13 +14,13 @@ using Xunit;
 
 namespace Tasks.Infrastructure.Core.Tests
 {
-    public class OrcusTaskWriterTests
+    public class MazeTaskWriterTests
     {
-        private readonly OrcusTask _task;
+        private readonly MazeTask _task;
 
-        public OrcusTaskWriterTests()
+        public MazeTaskWriterTests()
         {
-            _task = new OrcusTask
+            _task = new MazeTask
             {
                 Name = "TestCommand",
                 Id = Guid.Parse("53221F85-23DC-4C4C-BD27-A26A5F85BCA0"),
@@ -109,7 +109,7 @@ namespace Tasks.Infrastructure.Core.Tests
         [Fact]
         public void TestWriteTaskEmptyCommand()
         {
-            var task = new OrcusTask
+            var task = new MazeTask
             {
                 Name = "TestCommand",
                 Id = Guid.Parse("53221F85-23DC-4C4C-BD27-A26A5F85BCA0"),
@@ -135,7 +135,7 @@ namespace Tasks.Infrastructure.Core.Tests
             CompareWriteTask(task, TaskDetails.Execution, expected);
         }
 
-        private static void CompareWriteTask(OrcusTask orcusTask, TaskDetails details, string expected)
+        private static void CompareWriteTask(MazeTask mazeTask, TaskDetails details, string expected)
         {
             var mock = new Mock<ITaskComponentResolver>();
             mock.Setup(x => x.ResolveName(It.IsAny<Type>())).Returns<Type>(GetName);
@@ -144,8 +144,8 @@ namespace Tasks.Infrastructure.Core.Tests
             {
                 var xmlWriter = XmlWriter.Create(memoryStream,
                     new XmlWriterSettings { OmitXmlDeclaration = false, Indent = true, IndentChars = "    ", Encoding = new UTF8Encoding(false) });
-                var writer = new OrcusTaskWriter(xmlWriter, mock.Object, new XmlSerializerCache());
-                writer.Write(orcusTask, details);
+                var writer = new MazeTaskWriter(xmlWriter, mock.Object, new XmlSerializerCache());
+                writer.Write(mazeTask, details);
 
                 var result = Encoding.UTF8.GetString(memoryStream.ToArray());
                 Assert.Equal(expected, result);

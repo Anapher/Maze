@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Data.EfClasses
+namespace Maze.Server.Data.EfClasses
 {
     public class ClientGroupMembership
     {

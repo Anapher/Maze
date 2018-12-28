@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
-using Orcus.Utilities;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
+using Maze.Utilities;
 using RemoteDesktop.Client.Capture;
 using RemoteDesktop.Client.Encoder;
 using RemoteDesktop.Shared;
@@ -15,7 +15,7 @@ using RemoteDesktop.Shared;
 namespace RemoteDesktop.Client.Channels
 {
     [Route("screen"), SynchronizedChannel]
-    public class RemoteDesktopChannel : OrcusChannel, IFrameTransmitter
+    public class RemoteDesktopChannel : MazeChannel, IFrameTransmitter
     {
         private bool _isDisposed;
         private bool _isCapturing;
@@ -38,7 +38,7 @@ namespace RemoteDesktop.Client.Channels
             throw new NotSupportedException();
         }
 
-        [OrcusGet("start")]
+        [MazeGet("start")]
         public IActionResult InitializeRemoteDesktop()
         {
             Task.Run(CaptureLoop).Forget(); //not long running
@@ -68,8 +68,8 @@ namespace RemoteDesktop.Client.Channels
         public override void Initialize()
         {
             base.Initialize();
-            var captureCommandLine = OrcusContext.Request.Headers["capture"];
-            var encoderCommandLine = OrcusContext.Request.Headers[HeaderNames.AcceptEncoding];
+            var captureCommandLine = MazeContext.Request.Headers["capture"];
+            var encoderCommandLine = MazeContext.Request.Headers[HeaderNames.AcceptEncoding];
 
             var captureOptions = ComponentOptions.Parse(captureCommandLine);
             var encoderOptions = ComponentOptions.Parse(encoderCommandLine);

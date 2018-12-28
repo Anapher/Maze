@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server", "src\Orcus.Server\Orcus.Server.csproj", "{16E5D6DC-F93E-47F0-8F67-D2A1DA18E017}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server", "src\Maze.Server\Maze.Server.csproj", "{16E5D6DC-F93E-47F0-8F67-D2A1DA18E017}"
 	ProjectSection(ProjectDependencies) = postProject
 		{04A14402-20E5-4EA0-8118-635C6865E64F} = {04A14402-20E5-4EA0-8118-635C6865E64F}
 		{3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76} = {3F5FFCD6-A785-4D58-BDD0-5E204B9DFB76}
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{9C6E52
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Administration", "Administration", "{E7996DC9-7C33-4F35-9748-4A825DB56784}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Core", "src\Orcus.Administration.Core\Orcus.Administration.Core.csproj", "{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.Core", "src\Maze.Administration.Core\Maze.Administration.Core.csproj", "{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2AB85A8-1B64-4C1F-8E1A-DE7FC872E7E7}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{C36BE6FF-2267-4A51-8B6F-763C9C8CC52F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Modules.Api", "src\Orcus.Modules.Api\Orcus.Modules.Api.csproj", "{F7BA3EC1-1583-4A93-97F8-3394954B5953}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Modules.Api", "src\Maze.Modules.Api\Maze.Modules.Api.csproj", "{F7BA3EC1-1583-4A93-97F8-3394954B5953}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{505B289B-B216-44A4-8234-12E31B16C230}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,37 +34,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anapher.Wpf.Swan", "src\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj", "{DE56441C-B66E-40C5-86B3-DE881D7D09F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Data", "src\Orcus.Server.Data\Orcus.Server.Data.csproj", "{B413093F-9C96-4D93-BB03-A1E2F25940EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Data", "src\Maze.Server.Data\Maze.Server.Data.csproj", "{B413093F-9C96-4D93-BB03-A1E2F25940EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Connection", "src\Orcus.Server.Connection\Orcus.Server.Connection.csproj", "{B0F87C73-910B-41DD-8F00-3A33A85A707C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Connection", "src\Maze.Server.Connection\Maze.Server.Connection.csproj", "{B0F87C73-910B-41DD-8F00-3A33A85A707C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.BusinessLogic", "src\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj", "{9DE0B1DE-1AF7-47D0-B869-C2AB52468349}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.BusinessLogic", "src\Maze.Server.BusinessLogic\Maze.Server.BusinessLogic.csproj", "{9DE0B1DE-1AF7-47D0-B869-C2AB52468349}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.BusinessDataAccess", "src\Orcus.Server.BusinessDataAccess\Orcus.Server.BusinessDataAccess.csproj", "{EBCE073F-A41C-4FF1-967B-40E2D9344663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.BusinessDataAccess", "src\Maze.Server.BusinessDataAccess\Maze.Server.BusinessDataAccess.csproj", "{EBCE073F-A41C-4FF1-967B-40E2D9344663}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.BizRunner", "src\submodules\CodeElements.BizRunner\CodeElements.BizRunner\CodeElements.BizRunner.csproj", "{B3A4C752-54E7-4125-951B-BA7660A09B02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Service", "src\Orcus.Server.Service\Orcus.Server.Service.csproj", "{1A3DF103-07AA-42DE-AED4-40FD4D44635B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Service", "src\Maze.Server.Service\Maze.Server.Service.csproj", "{1A3DF103-07AA-42DE-AED4-40FD4D44635B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.ModuleManagement", "src\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj", "{42D5467F-20DB-4416-B673-0383304D098E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.ModuleManagement", "src\Maze.ModuleManagement\Maze.ModuleManagement.csproj", "{42D5467F-20DB-4416-B673-0383304D098E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet.Core", "NuGet.Core", "{55CBE41B-081E-43A5-9AC4-6D895D4E415C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuGet.Frameworks", "src\submodules\NuGet.Client\src\NuGet.Core\NuGet.Frameworks\NuGet.Frameworks.csproj", "{43A0869B-39E6-4CBD-A256-6ED56ED3010F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Library", "src\Orcus.Server.Library\Orcus.Server.Library.csproj", "{6DFFC199-BA67-4B49-9EF7-F2FFA66C3B2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Library", "src\Maze.Server.Library\Maze.Server.Library.csproj", "{6DFFC199-BA67-4B49-9EF7-F2FFA66C3B2A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{22C4E303-30DF-41D2-86BA-906CD6BDE4F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Service.Tests", "test\Orcus.Server.Service.Tests\Orcus.Server.Service.Tests.csproj", "{BDAC99B3-E005-4A85-A699-D9E36E7408F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Service.Tests", "test\Maze.Server.Service.Tests\Maze.Server.Service.Tests.csproj", "{BDAC99B3-E005-4A85-A699-D9E36E7408F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{0074EF5C-A141-4A92-A085-89775EA5E8EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.Connection.Tests", "test\Orcus.Server.Connection.Tests\Orcus.Server.Connection.Tests.csproj", "{7B87BB5B-3BF8-4500-A416-687AF492781F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.Connection.Tests", "test\Maze.Server.Connection.Tests\Maze.Server.Connection.Tests.csproj", "{7B87BB5B-3BF8-4500-A416-687AF492781F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{67CFB457-D51C-4F50-9F54-41EA955EA795}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus", "src\Orcus\Orcus.csproj", "{860BFB06-4FCD-494F-B7C3-1D53683FA988}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maze", "src\Maze\Maze.csproj", "{860BFB06-4FCD-494F-B7C3-1D53683FA988}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C0A4940E-4E20-4501-8B12-7848D9FEE167} = {C0A4940E-4E20-4501-8B12-7848D9FEE167}
 		{54379010-5CE4-4A8A-9C78-EF250C42C7F4} = {54379010-5CE4-4A8A-9C78-EF250C42C7F4}
@@ -80,13 +80,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus", "src\Orcus\Orcus.cs
 		{035582D8-6D43-4B9A-B1B6-9FE2A9C20B72} = {035582D8-6D43-4B9A-B1B6-9FE2A9C20B72}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.BusinessLogic.Tests", "test\Orcus.Server.BusinessLogic.Tests\Orcus.Server.BusinessLogic.Tests.csproj", "{B815C545-E86A-47E9-81F5-11CE7B2E141D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.BusinessLogic.Tests", "test\Maze.Server.BusinessLogic.Tests\Maze.Server.BusinessLogic.Tests.csproj", "{B815C545-E86A-47E9-81F5-11CE7B2E141D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Service.Commander", "src\Orcus.Service.Commander\Orcus.Service.Commander.csproj", "{A671F822-E1D1-491F-A31D-5C24F5482F74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Service.Commander", "src\Maze.Service.Commander\Maze.Service.Commander.csproj", "{A671F822-E1D1-491F-A31D-5C24F5482F74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Server.OrcusSockets", "src\Orcus.Server.OrcusSockets\Orcus.Server.OrcusSockets.csproj", "{92894371-2AA8-43FB-865A-39E1DCE5BF03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server.MazeSockets", "src\Maze.Server.MazeSockets\Maze.Server.MazeSockets.csproj", "{92894371-2AA8-43FB-865A-39E1DCE5BF03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Client.Library", "src\Orcus.Client.Library\Orcus.Client.Library.csproj", "{F6268227-51AA-4C46-83E0-AF2D77FF5868}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Client.Library", "src\Maze.Client.Library\Maze.Client.Library.csproj", "{F6268227-51AA-4C46-83E0-AF2D77FF5868}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestModule", "TestModule", "{565AECC1-EB61-4484-B199-ED1F7F787388}"
 EndProject
@@ -98,9 +98,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestModule.Administration",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModulePacker", "src\ModulePacker\ModulePacker.csproj", "{7E96E342-C1DC-4DF2-B775-2CDD532402FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Sockets", "src\Orcus.Sockets\Orcus.Sockets.csproj", "{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Sockets", "src\Maze.Sockets\Maze.Sockets.csproj", "{9C1C6607-7F2E-4F28-8629-2552D3BBFB38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration", "src\Orcus.Administration\Orcus.Administration.csproj", "{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maze.Administration", "src\Maze.Administration\Maze.Administration.csproj", "{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C0356729-0B69-4B8F-BFDE-9B94BE154D82} = {C0356729-0B69-4B8F-BFDE-9B94BE154D82}
 		{78079640-832D-4593-B86A-6D2D537C5824} = {78079640-832D-4593-B86A-6D2D537C5824}
@@ -114,11 +114,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orcus.Administration", "src
 		{B2A77EFD-2ABC-4F4D-9F59-8032F240D07E} = {B2A77EFD-2ABC-4F4D-9F59-8032F240D07E}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ViewModels", "src\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj", "{34B39498-66BC-45A3-8502-44F15D28D670}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.ViewModels", "src\Maze.Administration.ViewModels\Maze.Administration.ViewModels.csproj", "{34B39498-66BC-45A3-8502-44F15D28D670}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Library", "src\Orcus.Administration.Library\Orcus.Administration.Library.csproj", "{8B7888A3-A402-4D7C-82BB-E1A2494C023D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.Library", "src\Maze.Administration.Library\Maze.Administration.Library.csproj", "{8B7888A3-A402-4D7C-82BB-E1A2494C023D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Modules.Api.Tests", "test\Orcus.Modules.Api.Tests\Orcus.Modules.Api.Tests.csproj", "{F70F3C62-7504-4526-BC16-3344BA753C09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Modules.Api.Tests", "test\Maze.Modules.Api.Tests\Maze.Modules.Api.Tests.csproj", "{F70F3C62-7504-4526-BC16-3344BA753C09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserInteraction", "UserInteraction", "{B4AB533F-EC5B-43BA-9686-5D784CC80742}"
 EndProject
@@ -128,7 +128,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInteraction.Client", "s
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UserInteraction.Dtos", "src\modules\UserInteraction\UserInteraction.Dtos\UserInteraction.Dtos.shproj", "{A6DD1856-AFB7-43A3-A816-D153B8866140}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.Library.Test", "test\Orcus.Administration.Library.Test\Orcus.Administration.Library.Test.csproj", "{143B1316-91D4-471B-AED1-FFCD344281CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.Library.Test", "test\Maze.Administration.Library.Test\Maze.Administration.Library.Test.csproj", "{143B1316-91D4-471B-AED1-FFCD344281CD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleLocalUpdater", "src\ModuleLocalUpdater\ModuleLocalUpdater.csproj", "{77C26037-9C50-4E3F-9DCA-8E7145F595BD}"
 EndProject
@@ -140,21 +140,21 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileExplorer.Shared", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration.Tests", "src\modules\FileExplorer\test\FileExplorer.Administration.Tests\FileExplorer.Administration.Tests.csproj", "{C8A05842-CAF4-49E0-86B9-FEBD69B47627}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Utilities", "src\Orcus.Utilities\Orcus.Utilities.csproj", "{28ABF583-643F-488C-B5FC-B285E41ED342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Utilities", "src\Maze.Utilities\Maze.Utilities.csproj", "{28ABF583-643F-488C-B5FC-B285E41ED342}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileExplorer.Administration", "src\modules\FileExplorer\FileExplorer.Administration\FileExplorer.Administration.csproj", "{8F8A07C3-7C4E-49D2-9997-0836F51F44AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TxLib", "src\submodules\TxTranslation\TxLib\TxLib.csproj", "{DC6BA170-806F-4D6E-9165-401DE852E304}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Sockets.Tests", "test\Orcus.Sockets.Tests\Orcus.Sockets.Tests.csproj", "{69082050-9353-4CA3-B29A-05F37CE1D1F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Sockets.Tests", "test\Maze.Sockets.Tests\Maze.Sockets.Tests.csproj", "{69082050-9353-4CA3-B29A-05F37CE1D1F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.ControllerExtensions", "src\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj", "{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.ControllerExtensions", "src\Maze.ControllerExtensions\Maze.ControllerExtensions.csproj", "{2663C0AF-3839-4483-A1B6-83CD1F7CD4C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall", "src\submodules\NetworkCallTransmission\CodeElements.NetworkCall\CodeElements.NetworkCall.csproj", "{932E830B-6E94-470F-BC56-01BA3E0DD066}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetworkCall.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\CodeElements.NetworkCall.NetSerializer\CodeElements.NetworkCall.NetSerializer.csproj", "{E388EF83-7406-4679-80D4-4213B5D858C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcus.Administration.ControllerExtensions", "src\Orcus.Administration.ControllerExtensions\Orcus.Administration.ControllerExtensions.csproj", "{E689F881-DAB5-403E-97D2-161056929844}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.ControllerExtensions", "src\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj", "{E689F881-DAB5-403E-97D2-161056929844}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeElements.NetSerializer", "src\submodules\NetworkCallTransmission\NetSerializer\NetSerializer\NetSerializer\CodeElements.NetSerializer.csproj", "{1DC3C68D-5E5E-4488-8A44-1DE27CC7D9D2}"
 EndProject
@@ -303,7 +303,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Infrastructure.Admini
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks.Common.Client.Tests", "src\modules\Tasks.Common\tests\Tasks.Common.Client.Tests\Tasks.Common.Client.Tests.csproj", "{79384309-BB57-46D8-8C94-971ADA143A84}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Orcus.Setup", "src\Orcus.Setup\Orcus.Setup.wixproj", "{D68515C1-50CC-4403-A082-F603DD2D2B97}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Maze.Setup", "src\Maze.Setup\Maze.Setup.wixproj", "{D68515C1-50CC-4403-A082-F603DD2D2B97}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -314,11 +314,11 @@ Global
 		src\modules\ClipboardManager\ClipboardManager.Shared\ClipboardManager.Shared.projitems*{5e5eb0c8-f6ac-4b95-8e00-7ca0e27de731}*SharedItemsImports = 13
 		src\modules\SystemUtilities\SystemUtilities.Shared\SystemUtilities.Shared.projitems*{625e431d-165c-4d68-8d59-e9a4874bbbb7}*SharedItemsImports = 13
 		src\modules\Tasks.Common\Tasks.Common.Shared\Tasks.Common.Shared.projitems*{72dc8c93-056d-401c-b5a8-fd9b7016cf99}*SharedItemsImports = 13
-		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
+		src\modules\UserInteraction\UserInteraction.Dtos\Maze.Modules.UserInteraction.Dtos.projitems*{78079640-832d-4593-b86a-6d2d537c5824}*SharedItemsImports = 4
 		src\modules\FileExplorer\FileExplorer.Shared\FileExplorer.Shared.projitems*{8f8a07c3-7c4e-49d2-9997-0836f51f44ac}*SharedItemsImports = 4
 		src\modules\RemoteDesktop\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems*{90e1c3cb-19bf-47f6-b524-d0702f130ffe}*SharedItemsImports = 13
 		src\modules\Tasks.Infrastructure\Tasks.Infrastructure.Management\Tasks.Infrastructure.Management.projitems*{9872f1cc-2226-487d-a438-acf69826e8fa}*SharedItemsImports = 13
-		src\modules\UserInteraction\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
+		src\modules\UserInteraction\UserInteraction.Dtos\Maze.Modules.UserInteraction.Dtos.projitems*{a6dd1856-afb7-43a3-a816-d153b8866140}*SharedItemsImports = 13
 		src\modules\SystemInformation\SystemInformation.Shared\SystemInformation.Shared.projitems*{a828ac7a-5a93-4977-b167-c8912842d359}*SharedItemsImports = 13
 		src\modules\Console\Console.Shared\Console.Shared.projitems*{b1070ee4-03c8-4760-86bf-e9341cfac088}*SharedItemsImports = 13
 		src\modules\ClientPanel\ClientPanel.Shared\ClientPanel.Shared.projitems*{b644f9a2-c0a6-4803-aa6a-487b03b64c4b}*SharedItemsImports = 13

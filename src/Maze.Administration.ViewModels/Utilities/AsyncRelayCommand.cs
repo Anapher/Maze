@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Orcus.Administration.ViewModels.Utilities
+namespace Maze.Administration.ViewModels.Utilities
 {
     /// <summary>
     ///     A command whose sole purpose is to relay its functionality to other objects by invoking delegates. The default

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,10 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Client.Library.Clients;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Utilities;
+using Maze.Client.Library.Clients;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Utilities;
+using Maze.Utilities;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Client.Storage;
@@ -26,8 +26,8 @@ namespace Tasks.Infrastructure.Client
         Task Initialize();
         Task RemoveTask(Guid taskId);
         Task Synchronize(List<TaskSyncDto> tasks, IRestClient restClient);
-        Task AddOrUpdateTask(OrcusTask orcusTask);
-        Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskStorage taskStorage);
+        Task AddOrUpdateTask(MazeTask mazeTask);
+        Task TriggerNow(MazeTask task, SessionKey sessionKey, ITaskStorage taskStorage);
     }
 
     public class ClientTaskManager : IClientTaskManager
@@ -55,15 +55,15 @@ namespace Tasks.Infrastructure.Client
             _logger.LogDebug("Initialize tasks");
             
             var tasks = await _taskDirectory.LoadTasksRefresh();
-            foreach (var orcusTask in tasks)
+            foreach (var mazeTask in tasks)
             {
-                if (await _taskStorage.CheckTaskFinished(orcusTask))
+                if (await _taskStorage.CheckTaskFinished(mazeTask))
                     continue;
 
-                var taskRunner = new TaskRunner(orcusTask, _taskStorage, _serviceProvider);
+                var taskRunner = new TaskRunner(mazeTask, _taskStorage, _serviceProvider);
                 var cancellationTokenSource = new CancellationTokenSource();
 
-                Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
+                Tasks.TryAdd(mazeTask.Id, (taskRunner, cancellationTokenSource));
                 RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
             }
         }
@@ -73,7 +73,7 @@ namespace Tasks.Infrastructure.Client
             if (Tasks.TryGetValue(taskId, out var taskInfo))
             {
                 taskInfo.Item2.Cancel();
-                await _taskDirectory.RemoveTask(taskInfo.Item1.OrcusTask.Id);
+                await _taskDirectory.RemoveTask(taskInfo.Item1.MazeTask.Id);
             }
             else
             {
@@ -118,8 +118,8 @@ namespace Tasks.Infrastructure.Client
                     _logger.LogDebug("Update task {taskId}", dto.TaskId);
                     try
                     {
-                        var orcusTask = await TasksResource.FetchTaskAsync(dto.TaskId, taskComponentResolver, xmlSerializerCache, restClient);
-                        await AddOrUpdateTask(orcusTask);
+                        var mazeTask = await TasksResource.FetchTaskAsync(dto.TaskId, taskComponentResolver, xmlSerializerCache, restClient);
+                        await AddOrUpdateTask(mazeTask);
                     }
                     catch (Exception e)
                     {
@@ -131,30 +131,30 @@ namespace Tasks.Infrastructure.Client
             await UpdateTaskMachineStatus(restClient);
         }
 
-        public async Task AddOrUpdateTask(OrcusTask orcusTask)
+        public async Task AddOrUpdateTask(MazeTask mazeTask)
         {
-            await _taskDirectory.WriteTask(orcusTask);
+            await _taskDirectory.WriteTask(mazeTask);
 
-            if (Tasks.TryGetValue(orcusTask.Id, out var existingTaskInfo))
+            if (Tasks.TryGetValue(mazeTask.Id, out var existingTaskInfo))
             {
-                _logger.LogDebug("Cancel runner for task {taskId}", orcusTask.Id);
+                _logger.LogDebug("Cancel runner for task {taskId}", mazeTask.Id);
                 existingTaskInfo.Item2.Cancel();
-                Tasks.TryRemove(orcusTask.Id, out _);
+                Tasks.TryRemove(mazeTask.Id, out _);
             }
 
-            var taskRunner = new TaskRunner(orcusTask, _taskStorage, _serviceProvider);
+            var taskRunner = new TaskRunner(mazeTask, _taskStorage, _serviceProvider);
             var cancellationTokenSource = new CancellationTokenSource();
 
             lock (_taskUpdateLock)
             {
-                Tasks.TryRemove(orcusTask.Id, out _);
-                Tasks.TryAdd(orcusTask.Id, (taskRunner, cancellationTokenSource));
+                Tasks.TryRemove(mazeTask.Id, out _);
+                Tasks.TryAdd(mazeTask.Id, (taskRunner, cancellationTokenSource));
             }
 
             RunTask(taskRunner, cancellationTokenSource.Token).ContinueWith(_ => cancellationTokenSource.Dispose()).Forget();
         }
 
-        public async Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskStorage taskStorage)
+        public async Task TriggerNow(MazeTask task, SessionKey sessionKey, ITaskStorage taskStorage)
         {
             var taskRunner = new TaskRunner(task, taskStorage, _serviceProvider);
             await taskRunner.TriggerNow(sessionKey);
@@ -175,14 +175,14 @@ namespace Tasks.Infrastructure.Client
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "An error occurred when starting task runner for task {taskId}", taskRunner.OrcusTask.Id);
+                _logger.LogError(e, "An error occurred when starting task runner for task {taskId}", taskRunner.MazeTask.Id);
             }
             finally
             {
                 lock (_taskUpdateLock)
                 {
-                    if (Tasks.TryRemove(taskRunner.OrcusTask.Id, out var taskInfo) && taskInfo.Item1 != taskRunner)
-                        Tasks.TryAdd(taskRunner.OrcusTask.Id, taskInfo);
+                    if (Tasks.TryRemove(taskRunner.MazeTask.Id, out var taskInfo) && taskInfo.Item1 != taskRunner)
+                        Tasks.TryAdd(taskRunner.MazeTask.Id, taskInfo);
                 }
             }
             

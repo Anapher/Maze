@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Orcus.Modules.Api.ModelBinding;
+using Maze.Modules.Api.ModelBinding;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding
+namespace Maze.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     /// Represents a <see cref="IValueProvider"/> whose values come from a collection of <see cref="IValueProvider"/>s.

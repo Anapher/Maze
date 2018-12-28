@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Error;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Error;
 
 namespace Tasks.Infrastructure.Core
 {

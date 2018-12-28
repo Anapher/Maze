@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orcus.Service.Commander.Routing
+namespace Maze.Service.Commander.Routing
 {
     public class ResolveResult
     {

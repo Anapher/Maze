@@ -1,17 +1,17 @@
-﻿using System.Threading.Tasks;
-using Orcus.Sockets;
+using System.Threading.Tasks;
+using Maze.Sockets;
 
-namespace Orcus.Server.OrcusSockets
+namespace Maze.Server.MazeSockets
 {
     /// <summary>
-    ///     Activator of an <see cref="OrcusSocket" />
+    ///     Activator of an <see cref="MazeSocket" />
     /// </summary>
-    public interface IOrcusSocketFeature
+    public interface IMazeSocketFeature
     {
         /// <summary>
-        ///     Upgrade the connection and create the <see cref="OrcusSocket" />
+        ///     Upgrade the connection and create the <see cref="MazeSocket" />
         /// </summary>
-        /// <returns>Return the created <see cref="OrcusSocket" /></returns>
-        Task<OrcusSocket> AcceptAsync();
+        /// <returns>Return the created <see cref="MazeSocket" /></returns>
+        Task<MazeSocket> AcceptAsync();
     }
 }

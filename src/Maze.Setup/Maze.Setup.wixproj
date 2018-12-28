@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>d68515c1-50cc-4403-a082-f603dd2d2b97</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Orcus.Setup</OutputName>
+    <OutputName>Maze.Setup</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

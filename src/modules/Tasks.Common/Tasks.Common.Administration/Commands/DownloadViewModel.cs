@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Tasks.Common.Administration.Commands.Utils;
@@ -39,7 +39,7 @@ namespace Tasks.Common.Administration.Commands
             OnPropertiesChanged();
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
 
         public ValidationResult ValidateInput()
         {

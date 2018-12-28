@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Parameters
+namespace Maze.Modules.Api.Parameters
 {
     /// <summary>
     ///     Specifies that an action parameter should be bound using the request services.

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Utilities
+namespace Maze.Utilities
 {
     /// <summary>
     ///     Contains task execution strategies, such as parallel throttled execution.

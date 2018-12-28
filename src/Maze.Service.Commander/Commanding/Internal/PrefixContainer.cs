@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Orcus.Service.Commander.Commanding.Internal
+namespace Maze.Service.Commander.Commanding.Internal
 {
     /// <summary>
     ///     This is a container for prefix values. It normalizes all the values into dotted-form and then stores

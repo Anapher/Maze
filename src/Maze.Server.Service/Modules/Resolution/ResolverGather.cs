@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +11,10 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using Orcus.ModuleManagement.PackageManagement;
-using Orcus.Server.Service.Modules.PackageManagement;
+using Maze.ModuleManagement.PackageManagement;
+using Maze.Server.Service.Modules.PackageManagement;
 
-namespace Orcus.Server.Service.Modules.Resolution
+namespace Maze.Server.Service.Modules.Resolution
 {
     public class ResolverGather
     {

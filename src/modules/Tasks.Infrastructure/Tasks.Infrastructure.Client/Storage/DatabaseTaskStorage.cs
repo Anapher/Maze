@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.IO.Abstractions;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.Options;
 using Nito.AsyncEx;
-using Orcus.Utilities;
+using Maze.Utilities;
 using RequestTransmitter.Client;
 using Tasks.Infrastructure.Client.Data;
 using Tasks.Infrastructure.Client.Library;
@@ -37,14 +37,14 @@ namespace Tasks.Infrastructure.Client.Storage
             var mapper = BsonMapper.Global;
             mapper.Entity<TaskSession>().Id(x => x.TaskSessionId, autoId: false).DbRef(x => x.Executions, nameof(TaskExecution));
             mapper.Entity<TaskExecution>().Id(x => x.TaskExecutionId).DbRef(x => x.CommandResults, nameof(CommandResult));
-            mapper.Entity<OrcusTaskStatus>().Id(x => x.IsFinished, autoId: false);
+            mapper.Entity<MazeTaskStatus>().Id(x => x.IsFinished, autoId: false);
         }
 
-        public async Task<TaskSession> OpenSession(SessionKey sessionKey, OrcusTask orcusTask, string description)
+        public async Task<TaskSession> OpenSession(SessionKey sessionKey, MazeTask mazeTask, string description)
         {
             using (await _readerWriterLock.ReaderLockAsync())
             {
-                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(mazeTask));
                 if (file.Exists)
                     using (var dbStream = file.OpenRead())
                     using (var db = new LiteDatabase(dbStream))
@@ -63,17 +63,17 @@ namespace Tasks.Infrastructure.Client.Storage
                 TaskSessionId = sessionKey.Hash,
                 Description = description,
                 CreatedOn = DateTimeOffset.UtcNow,
-                TaskReference = new TaskReference {TaskId = orcusTask.Id},
-                TaskReferenceId = orcusTask.Id,
+                TaskReference = new TaskReference {TaskId = mazeTask.Id},
+                TaskReferenceId = mazeTask.Id,
                 Executions = ImmutableList<TaskExecution>.Empty
             };
         }
 
-        public async Task StartExecution(OrcusTask orcusTask, TaskSession taskSession, TaskExecution taskExecution)
+        public async Task StartExecution(MazeTask mazeTask, TaskSession taskSession, TaskExecution taskExecution)
         {
             using (await _readerWriterLock.WriterLockAsync())
             {
-                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(mazeTask));
                 file.Directory.Create();
 
                 var transmitterQueue = new TaskQueue();
@@ -91,7 +91,7 @@ namespace Tasks.Infrastructure.Client.Storage
                             taskSessionEntity = new TaskSession
                             {
                                 TaskSessionId = taskSession.TaskSessionId,
-                                TaskReferenceId = orcusTask.Id,
+                                TaskReferenceId = mazeTask.Id,
                                 Description = taskSession.Description,
                                 CreatedOn = DateTimeOffset.UtcNow
                             };
@@ -115,36 +115,36 @@ namespace Tasks.Infrastructure.Client.Storage
             }
         }
 
-        public async Task MarkTaskFinished(OrcusTask orcusTask)
+        public async Task MarkTaskFinished(MazeTask mazeTask)
         {
             using (await _readerWriterLock.WriterLockAsync())
             {
-                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(mazeTask));
                 file.Directory.Create();
 
                 using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 using (var db = new LiteDatabase(dbStream))
                 {
-                    var entities = db.GetCollection<OrcusTaskStatus>(nameof(OrcusTaskStatus));
+                    var entities = db.GetCollection<MazeTaskStatus>(nameof(MazeTaskStatus));
                     entities.Delete(x => true);
 
-                    entities.Insert(new OrcusTaskStatus {IsFinished = true});
+                    entities.Insert(new MazeTaskStatus {IsFinished = true});
                 }
             }
         }
 
-        public async Task<bool> CheckTaskFinished(OrcusTask orcusTask)
+        public async Task<bool> CheckTaskFinished(MazeTask mazeTask)
         {
             using (await _readerWriterLock.ReaderLockAsync())
             {
-                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(mazeTask));
                 if (!file.Exists)
                     return false;
 
                 using (var dbStream = file.Open(FileMode.Open, FileAccess.ReadWrite))
                 using (var db = new LiteDatabase(dbStream))
                 {
-                    var entities = db.GetCollection<OrcusTaskStatus>(nameof(OrcusTaskStatus));
+                    var entities = db.GetCollection<MazeTaskStatus>(nameof(MazeTaskStatus));
                     var entity = entities.FindAll().FirstOrDefault();
 
                     return entity?.IsFinished == true;
@@ -152,11 +152,11 @@ namespace Tasks.Infrastructure.Client.Storage
             }
         }
 
-        public async Task AppendCommandResult(OrcusTask orcusTask, CommandResult commandResult)
+        public async Task AppendCommandResult(MazeTask mazeTask, CommandResult commandResult)
         {
             using (await _readerWriterLock.WriterLockAsync())
             {
-                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(orcusTask));
+                var file = _fileSystem.FileInfo.FromFileName(GetTaskDbFilename(mazeTask));
                 file.Directory.Create();
 
                 using (var dbStream = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite))
@@ -170,6 +170,6 @@ namespace Tasks.Infrastructure.Client.Storage
             }
         }
 
-        private string GetTaskDbFilename(OrcusTask orcusTask) => _fileSystem.Path.Combine(_sessionsDirectory, orcusTask.Id.ToString("N"));
+        private string GetTaskDbFilename(MazeTask mazeTask) => _fileSystem.Path.Combine(_sessionsDirectory, mazeTask.Id.ToString("N"));
     }
 }

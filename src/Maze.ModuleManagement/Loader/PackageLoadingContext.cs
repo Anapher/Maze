@@ -1,18 +1,18 @@
-﻿using NuGet.Frameworks;
+using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 
-namespace Orcus.ModuleManagement.Loader
+namespace Maze.ModuleManagement.Loader
 {
     public class PackageLoadingContext
     {
         public PackageLoadingContext(PackageIdentity package, string packageDirectory, string libraryDirectory,
-            NuGetFramework framework, bool isOrcusModule)
+            NuGetFramework framework, bool isMazeModule)
         {
             Package = package;
             PackageDirectory = packageDirectory;
             LibraryDirectory = libraryDirectory;
             Framework = framework;
-            IsOrcusModule = isOrcusModule;
+            IsMazeModule = isMazeModule;
         }
 
         public PackageIdentity Package { get; }
@@ -33,8 +33,8 @@ namespace Orcus.ModuleManagement.Loader
         public NuGetFramework Framework { get; }
 
         /// <summary>
-        ///     True if the package is an Orcus module
+        ///     True if the package is an Maze module
         /// </summary>
-        public bool IsOrcusModule { get; }
+        public bool IsMazeModule { get; }
     }
 }

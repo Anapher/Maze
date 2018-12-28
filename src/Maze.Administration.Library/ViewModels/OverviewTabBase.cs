@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using MahApps.Metro.IconPacks;
 using Prism;
 
-namespace Orcus.Administration.Library.ViewModels
+namespace Maze.Administration.Library.ViewModels
 {
     public class OverviewTabBase : ViewModelBase, IActiveAware
     {

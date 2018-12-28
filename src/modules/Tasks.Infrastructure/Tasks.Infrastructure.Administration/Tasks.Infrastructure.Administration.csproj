@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -59,7 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
   </ItemGroup>
 

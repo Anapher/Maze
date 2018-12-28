@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Orcus.Server.Data.Extensions
+namespace Maze.Server.Data.Extensions
 {
     public static class ModelBuilderExtensions
     {

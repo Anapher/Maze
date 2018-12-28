@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -11,16 +11,16 @@ using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.Loader;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules;
-using Orcus.Server.Service.Modules.PackageManagement;
-using Orcus.Server.Service.Tests.Utils;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.Loader;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Modules;
+using Maze.Server.Service.Modules.PackageManagement;
+using Maze.Server.Service.Tests.Utils;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Orcus.Server.Service.Tests.Modules
+namespace Maze.Server.Service.Tests.Modules
 {
     //public class ModulePackageManagerTests
     //{
@@ -66,7 +66,7 @@ namespace Orcus.Server.Service.Tests.Modules
     //        InstalledPackages = ImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>.Empty;
     //    }
 
-    //    public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
+    //    public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.MazeServer10;
     //    public Runtime Runtime { get; }
     //    public Architecture Architecture { get; }
     //    public IImmutableList<PackageIdentity> PrimaryPackages { get; }

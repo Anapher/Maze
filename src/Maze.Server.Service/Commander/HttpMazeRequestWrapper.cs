@@ -1,20 +1,20 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
 
-namespace Orcus.Server.Service.Commander
+namespace Maze.Server.Service.Commander
 {
-    public class HttpOrcusRequestWrapper : OrcusRequest
+    public class HttpMazeRequestWrapper : MazeRequest
     {
         private readonly HttpRequest _httpRequest;
 
-        public HttpOrcusRequestWrapper(HttpRequest httpRequest)
+        public HttpMazeRequestWrapper(HttpRequest httpRequest)
         {
             _httpRequest = httpRequest;
         }
 
-        public override OrcusContext Context { get; set; }
+        public override MazeContext Context { get; set; }
 
         public override string Method
         {

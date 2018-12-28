@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Server.Service.Commander
+namespace Maze.Server.Service.Commander
 {
-    public class HttpOrcusResponseWrapper : OrcusResponse
+    public class HttpMazeResponseWrapper : MazeResponse
     {
         private readonly HttpResponse _httpResponse;
 
-        public HttpOrcusResponseWrapper(HttpResponse httpResponse)
+        public HttpMazeResponseWrapper(HttpResponse httpResponse)
         {
             _httpResponse = httpResponse;
         }

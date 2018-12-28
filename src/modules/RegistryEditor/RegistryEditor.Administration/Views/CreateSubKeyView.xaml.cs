@@ -1,4 +1,4 @@
-﻿using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 using RegistryEditor.Administration.Resources;
 
 namespace RegistryEditor.Administration.Views

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.Net.Http.Headers;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
     ///     Represents an <see cref="FileResult" /> that when executed will

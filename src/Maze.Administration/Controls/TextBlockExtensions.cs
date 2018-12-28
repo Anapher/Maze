@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Controls
+namespace Maze.Administration.Controls
 {
     public static class TextBlockExtensions
     {

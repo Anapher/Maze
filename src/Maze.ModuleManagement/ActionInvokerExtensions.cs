@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public static class ActionInvokerExtensions
     {

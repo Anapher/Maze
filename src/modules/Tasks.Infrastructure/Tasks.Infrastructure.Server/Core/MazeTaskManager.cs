@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nito.AsyncEx;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Library.Services;
-using Orcus.Utilities;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Library.Services;
+using Maze.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
@@ -23,7 +23,7 @@ using Tasks.Infrastructure.Server.Rest.V1;
 
 namespace Tasks.Infrastructure.Server.Core
 {
-    public interface IOrcusTaskManager
+    public interface IMazeTaskManager
     {
         /// <summary>
         ///     The tasks that must be executed at client level
@@ -41,24 +41,24 @@ namespace Tasks.Infrastructure.Server.Core
         Task Initialize();
     }
 
-    public interface IOrcusTaskManagerManagement
+    public interface IMazeTaskManagerManagement
     {
         Task<TaskInfo> CancelTask(Guid taskId);
-        Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally);
-        Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage);
+        Task InitializeTask(MazeTask mazeTask, Hash hash, bool transmit, bool executeLocally);
+        Task TriggerNow(MazeTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage);
     }
 
-    public class OrcusTaskManager : IOrcusTaskManager, IOrcusTaskManagerManagement
+    public class MazeTaskManager : IMazeTaskManager, IMazeTaskManagerManagement
     {
         private readonly ITaskDirectory _taskDirectory;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<OrcusTaskManager> _logger;
+        private readonly ILogger<MazeTaskManager> _logger;
         private readonly Dictionary<Guid, TaskInfo> _tasks;
         private readonly AsyncLock _tasksLock;
         private IImmutableList<TaskInfo> _localActiveTasks;
 
-        public OrcusTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider,
-            ILogger<OrcusTaskManager> logger)
+        public MazeTaskManager(ITaskDirectory taskDirectory, IServiceProvider serviceProvider,
+            ILogger<MazeTaskManager> logger)
         {
             _taskDirectory = taskDirectory;
             _serviceProvider = serviceProvider;
@@ -117,9 +117,9 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public async Task TriggerNow(OrcusTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage)
+        public async Task TriggerNow(MazeTask task, SessionKey sessionKey, ITaskResultStorage taskResultStorage)
         {
-            var service = new OrcusTaskService(task, taskResultStorage, _serviceProvider);
+            var service = new MazeTaskService(task, taskResultStorage, _serviceProvider);
             await service.TriggerNow(sessionKey);
         }
 
@@ -157,24 +157,24 @@ namespace Tasks.Infrastructure.Server.Core
             }
         }
 
-        public Task InitializeTask(OrcusTask orcusTask, Hash hash, bool transmit, bool executeLocally)
+        public Task InitializeTask(MazeTask mazeTask, Hash hash, bool transmit, bool executeLocally)
         {
-            var (executeOnServer, executeOnClient) = GetTaskExecutionMode(orcusTask);
+            var (executeOnServer, executeOnClient) = GetTaskExecutionMode(mazeTask);
 
-            var taskInfo = new TaskInfo(orcusTask, hash, executeOnServer, executeOnClient);
-            if (!_tasks.TryAdd(orcusTask.Id, taskInfo))
+            var taskInfo = new TaskInfo(mazeTask, hash, executeOnServer, executeOnClient);
+            if (!_tasks.TryAdd(mazeTask.Id, taskInfo))
             {
                 taskInfo.Dispose();
-                throw new InvalidOperationException($"Unable to add task with id {orcusTask.Id} because the task already exists.");
+                throw new InvalidOperationException($"Unable to add task with id {mazeTask.Id} because the task already exists.");
             }
 
             var executionTasks = new List<Task>();
             if (executeOnServer && executeLocally)
             {
-                var taskService = new OrcusTaskService(orcusTask, new DatabaseTaskResultStorage(_serviceProvider), _serviceProvider);
+                var taskService = new MazeTaskService(mazeTask, new DatabaseTaskResultStorage(_serviceProvider), _serviceProvider);
                 taskService.PropertyChanged += (sender, args) =>
                 {
-                    if (args.PropertyName == nameof(OrcusTaskService.NextExecution))
+                    if (args.PropertyName == nameof(MazeTaskService.NextExecution))
                     {
                         taskInfo.NextExecution = taskService.NextExecution;
                         //Event
@@ -191,7 +191,7 @@ namespace Tasks.Infrastructure.Server.Core
                 //we always transmit to clients because they have their own logic to check if it completed
 
                 if (transmit)
-                    executionTasks.Add(TransmitTask(orcusTask, taskInfo.Token));
+                    executionTasks.Add(TransmitTask(mazeTask, taskInfo.Token));
 
                 ClientTasks = ClientTasks.Add(taskInfo);
             }
@@ -199,7 +199,7 @@ namespace Tasks.Infrastructure.Server.Core
             return Task.WhenAll(executionTasks).ContinueWith(task => TaskExecutionCompleted(taskInfo));
         }
 
-        private async Task TransmitTask(OrcusTask orcusTask, CancellationToken cancellationToken)
+        private async Task TransmitTask(MazeTask mazeTask, CancellationToken cancellationToken)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -207,8 +207,8 @@ namespace Tasks.Infrastructure.Server.Core
 
                 var filters = new AggregatedClientFilter(services.GetRequiredService<ILogger< AggregatedClientFilter>>());
 
-                filters.Add(new AudienceFilter(orcusTask.Audience));
-                foreach (var filterInfo in orcusTask.Filters)
+                filters.Add(new AudienceFilter(mazeTask.Audience));
+                foreach (var filterInfo in mazeTask.Filters)
                 {
                     var filterType = typeof(IFilterService<>).MakeGenericType(filterInfo.GetType());
                     filters.Add(new CustomFilterFactory(filterType, filterInfo, services.GetRequiredService < ILogger<CustomFilterFactory>>()));
@@ -227,24 +227,24 @@ namespace Tasks.Infrastructure.Server.Core
 
                     try
                     {
-                        await TasksResource.CreateOrUpdateTask(orcusTask, tasksComponentResolver, xmlSerializerCache, clientConnection);
+                        await TasksResource.CreateOrUpdateTask(mazeTask, tasksComponentResolver, xmlSerializerCache, clientConnection);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogWarning(e, "Transmitting task {taskId} to client {clientId} failed.", orcusTask.Id, clientConnection.ClientId);
+                        _logger.LogWarning(e, "Transmitting task {taskId} to client {clientId} failed.", mazeTask.Id, clientConnection.ClientId);
                         continue;
                     }
 
                     var action = services.GetRequiredService<ICreateTaskTransmissionAction>();
                     await action.BizActionAsync(new TaskTransmission
                     {
-                        TaskReferenceId = orcusTask.Id, TargetId = clientConnection.ClientId, CreatedOn = DateTimeOffset.UtcNow
+                        TaskReferenceId = mazeTask.Id, TargetId = clientConnection.ClientId, CreatedOn = DateTimeOffset.UtcNow
                     });
                 }
             }
         }
 
-        private async Task RunTask(OrcusTaskService taskService, CancellationToken cancellationToken)
+        private async Task RunTask(MazeTaskService taskService, CancellationToken cancellationToken)
         {
             try
             {
@@ -256,14 +256,14 @@ namespace Tasks.Infrastructure.Server.Core
             }
             catch (Exception e)
             {
-                taskService.Logger.LogCritical(e, "An error occurred when running task service for task {taskId}.", taskService.OrcusTask.Id);
+                taskService.Logger.LogCritical(e, "An error occurred when running task service for task {taskId}.", taskService.MazeTask.Id);
                 return;
             }
 
             using (var scope = _serviceProvider.CreateScope())
             {
                 var action = scope.ServiceProvider.GetRequiredService<IMarkTaskCompletedAction>();
-                await action.BizActionAsync(taskService.OrcusTask.Id);
+                await action.BizActionAsync(taskService.MazeTask.Id);
             }
         }
 
@@ -286,16 +286,16 @@ namespace Tasks.Infrastructure.Server.Core
             taskInfo.Dispose();
         }
 
-        private (bool server, bool client) GetTaskExecutionMode(OrcusTask orcusTask)
+        private (bool server, bool client) GetTaskExecutionMode(MazeTask mazeTask)
         {
             var executeOnServer = false;
             var executeOnClient = false;
 
             using (var scope = _serviceProvider.CreateScope())
             {
-                foreach (var orcusTaskCommand in orcusTask.Commands)
+                foreach (var mazeTaskCommand in mazeTask.Commands)
                 {
-                    var serviceType = typeof(ITaskExecutor<>).MakeGenericType(orcusTaskCommand.GetType());
+                    var serviceType = typeof(ITaskExecutor<>).MakeGenericType(mazeTaskCommand.GetType());
                     var service = scope.ServiceProvider.GetService(serviceType);
                     if (service == null)
                         executeOnClient = true;

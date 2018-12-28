@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Orcus.Service.Commander.Commanding
+namespace Maze.Service.Commander.Commanding
 {
     /// <summary>
     ///     Metadata of an action method

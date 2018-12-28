@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Newtonsoft.Json;
 using NuGet.Packaging.Core;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Server.Connection.JsonConverters;
 
-namespace Orcus.Server.Connection.Modules
+namespace Maze.Server.Connection.Modules
 {
     [JsonConverter(typeof(PackageLockConverter))]
     public class PackagesLock : IImmutableDictionary<PackageIdentity, IImmutableList<PackageIdentity>>

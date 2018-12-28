@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api.Formatters;
+using Maze.Modules.Api.Formatters;
 
-namespace Orcus.Service.Commander.Commanding.Formatters
+namespace Maze.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// Writes an object in a given text format to the output stream.
@@ -135,7 +135,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
             }
             else
             {
-                var response = context.OrcusContext.Response;
+                var response = context.MazeContext.Response;
                 response.StatusCode = StatusCodes.Status406NotAcceptable;
                 return Task.CompletedTask;
             }
@@ -163,7 +163,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters
 
         internal static IList<StringWithQualityHeaderValue> GetAcceptCharsetHeaderValues(OutputFormatterWriteContext context)
         {
-            var request = context.OrcusContext.Request;
+            var request = context.MazeContext.Request;
             if (StringWithQualityHeaderValue.TryParseList(request.Headers[HeaderNames.AcceptCharset], out IList<StringWithQualityHeaderValue> result))
             {
                 return result;

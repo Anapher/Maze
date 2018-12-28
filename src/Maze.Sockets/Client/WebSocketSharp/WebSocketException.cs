@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 /*
  * WebSocketException.cs
@@ -30,7 +30,7 @@
 
 using System;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     /// <summary>
     ///     The exception that is thrown when a fatal error occurs in

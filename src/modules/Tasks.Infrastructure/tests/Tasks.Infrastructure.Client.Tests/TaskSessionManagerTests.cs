@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -21,7 +21,7 @@ namespace Tasks.Infrastructure.Client.Tests
             var taskId = Guid.Parse("CB49D689-95FD-4A09-A78A-3A4397E9425E");
 
             var sessionManager = new DatabaseTaskStorage(fileSystem, null, new OptionsWrapper<TasksOptions>(options));
-            var session = await sessionManager.OpenSession(SessionKey.Create("test"), new OrcusTask {Id = taskId}, "Test123");
+            var session = await sessionManager.OpenSession(SessionKey.Create("test"), new MazeTask {Id = taskId}, "Test123");
 
             Assert.Empty(fileSystem.AllFiles);
             Assert.NotNull(session);
@@ -40,7 +40,7 @@ namespace Tasks.Infrastructure.Client.Tests
         //    mock.Setup(x => x.Transmit(It.IsAny<HttpRequestMessage>())).ReturnsAsync(true);
 
         //    var sessionManager = new DatabaseTaskStorage(fileSystem, mock.Object, new OptionsWrapper<TasksOptions>(options));
-        //    await sessionManager.CreateExecution(new OrcusTask {Id = taskId},
+        //    await sessionManager.CreateExecution(new MazeTask {Id = taskId},
         //        new TaskSession {Description = "test description", TaskSessionId = sessionKey.Hash},
         //        new TaskExecution {Result = Convert.ToBase64String(Encoding.UTF8.GetBytes("Test"))});
 

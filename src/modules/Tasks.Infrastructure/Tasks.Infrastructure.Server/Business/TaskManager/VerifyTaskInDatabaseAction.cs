@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -8,7 +8,7 @@ using Tasks.Infrastructure.Server.BusinessDataAccess;
 
 namespace Tasks.Infrastructure.Server.Business.TaskManager
 {
-    public interface IVerifyTaskInDatabaseAction : IGenericActionAsync<OrcusTask, TaskReference>
+    public interface IVerifyTaskInDatabaseAction : IGenericActionAsync<MazeTask, TaskReference>
     {
     }
 
@@ -21,7 +21,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
             _dbAccess = dbAccess;
         }
 
-        public async Task<TaskReference> BizActionAsync(OrcusTask inputData)
+        public async Task<TaskReference> BizActionAsync(MazeTask inputData)
         {
             if (ValidateModelFailed(inputData))
                 return null;

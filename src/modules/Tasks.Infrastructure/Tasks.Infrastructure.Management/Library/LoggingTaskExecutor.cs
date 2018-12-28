@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -48,7 +48,7 @@ namespace Tasks.Infrastructure.Client.Library
         protected HttpResponseMessage Log(HttpStatusCode statusCode) =>
             new HttpResponseMessage(statusCode)
             {
-                Content = new StringContent(_sink.ToString()) {Headers = {ContentType = new MediaTypeHeaderValue("orcus/jsonlog")}}
+                Content = new StringContent(_sink.ToString()) {Headers = {ContentType = new MediaTypeHeaderValue("maze/jsonlog")}}
             };
 
         protected HttpResponseMessage NotExecuted(string reason) =>

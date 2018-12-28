@@ -1,14 +1,14 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.OrcusServerTests
+namespace Maze.Sockets.Tests.MazeServerTests
 {
-    public class TestSendShortMessageReceiveResponse : OrcusServerTestBase
+    public class TestSendShortMessageReceiveResponse : MazeServerTestBase
     {
         protected override HttpRequestMessage GetRequest()
         {
@@ -18,7 +18,7 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             };
         }
 
-        protected override async Task WriteResponse(OrcusResponse response)
+        protected override async Task WriteResponse(MazeResponse response)
         {
             response.StatusCode = 303;
 
@@ -26,13 +26,13 @@ namespace Orcus.Sockets.Tests.OrcusServerTests
             await response.Body.WriteAsync(testResponse, 0, testResponse.Length);
         }
 
-        protected override async Task AssertReceivedRequest(HttpRequestMessage requestMessage, OrcusRequest request)
+        protected override async Task AssertReceivedRequest(HttpRequestMessage requestMessage, MazeRequest request)
         {
             await base.AssertReceivedRequest(requestMessage, request);
             Assert.Equal("Hello World!", await new StreamReader(request.Body).ReadToEndAsync());
         }
 
-        protected override async Task AssertReceivedResponse(OrcusResponse response, HttpResponseMessage responseMessage)
+        protected override async Task AssertReceivedResponse(MazeResponse response, HttpResponseMessage responseMessage)
         {
             await base.AssertReceivedResponse(response, responseMessage);
 

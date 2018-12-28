@@ -5,11 +5,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Response;
-using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Response;
+using Maze.Service.Commander.Commanding.Formatters.Json.Internal;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json
+namespace Maze.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// An action result which formats the given object as JSON.

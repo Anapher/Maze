@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
-namespace Orcus.Server.Library.Services
+namespace Maze.Server.Library.Services
 {
     /// <summary>
     ///     A shared HttpClient

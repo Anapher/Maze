@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using NuGet.Versioning;
 
-namespace Orcus.Administration.Converter
+namespace Maze.Administration.Converter
 {
     public class VersionRangeFormatterConverter : IValueConverter
     {

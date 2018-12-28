@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
-using Orcus.Sockets.Internal.Infrastructure;
+using Maze.Sockets.Internal.Infrastructure;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     /// <summary>
     ///     A stream that queues buffers and reads from them linear

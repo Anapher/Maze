@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Input;
 using System.Windows.Media;
 using FileExplorer.Administration.Models;
@@ -6,8 +6,8 @@ using FileExplorer.Administration.Models.Args;
 using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Utilities;
+using Maze.Administration.Library.StatusBar;
+using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Xml;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public static class XmlUtilities
     {

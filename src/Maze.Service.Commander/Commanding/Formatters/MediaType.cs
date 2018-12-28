@@ -1,13 +1,13 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.Primitives;
-using Orcus.Service.Commander.Commanding.Formatters.Internal;
+using Maze.Service.Commander.Commanding.Formatters.Internal;
 
-namespace Orcus.Service.Commander.Commanding.Formatters
+namespace Maze.Service.Commander.Commanding.Formatters
 {
     /// <summary>
     /// A media type value.

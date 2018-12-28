@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,30 +16,30 @@ using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using Orcus.Administration.Core.Extensions;
-using Orcus.Administration.Library.Channels;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Exceptions;
-using Orcus.Modules.Api;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Authentication;
-using Orcus.Server.Connection.Error;
-using Orcus.Sockets;
-using Orcus.Sockets.Client;
-using Orcus.Utilities;
+using Maze.Administration.Core.Extensions;
+using Maze.Administration.Library.Channels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Exceptions;
+using Maze.Modules.Api;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Authentication;
+using Maze.Server.Connection.Error;
+using Maze.Sockets;
+using Maze.Sockets.Client;
+using Maze.Utilities;
 
-namespace Orcus.Administration.Core.Rest
+namespace Maze.Administration.Core.Rest
 {
-    public class OrcusRestClient : IOrcusRestClient
+    public class MazeRestClient : IMazeRestClient
     {
         private readonly HttpClient _httpClient;
         private readonly JwtSecurityTokenHandler _jwtHandler;
         private readonly SecureString _password;
         private JwtSecurityToken _jwtSecurityToken;
-        private OrcusServer _orcusServer;
-        private readonly SemaphoreSlim _orcusServerLock = new SemaphoreSlim(1, 1);
+        private MazeServer _mazeServer;
+        private readonly SemaphoreSlim _mazeServerLock = new SemaphoreSlim(1, 1);
 
-        public OrcusRestClient(string username, SecureString password, HttpClient httpClient)
+        public MazeRestClient(string username, SecureString password, HttpClient httpClient)
         {
             _password = password;
             _httpClient = httpClient;
@@ -51,8 +51,8 @@ namespace Orcus.Administration.Core.Rest
         {
             _httpClient.Dispose();
             _password.Dispose();
-            _orcusServer?.Dispose();
-            _orcusServer = null;
+            _mazeServer?.Dispose();
+            _mazeServer = null;
         }
 
         public string Username { get; private set; }
@@ -80,10 +80,10 @@ namespace Orcus.Administration.Core.Rest
 
         public Task<HttpResponseMessage> SendChannelMessage(HttpRequestMessage request, IDataChannel channel, CancellationToken cancellationToken)
         {
-            if (_orcusServer == null)
+            if (_mazeServer == null)
                 throw new InvalidOperationException("The channel is not open");
 
-            var id = _orcusServer.GetChannelId(channel);
+            var id = _mazeServer.GetChannelId(channel);
             request.Headers.Add("ChannelId", id.ToString());
             return SendMessage(request, cancellationToken);
         }
@@ -177,52 +177,52 @@ namespace Orcus.Administration.Core.Rest
 
         private void OnCloseChannel(int channelId)
         {
-            if (_orcusServer != null)
+            if (_mazeServer != null)
                 try
                 {
-                    _orcusServer?.CloseChannel(channelId);
+                    _mazeServer?.CloseChannel(channelId);
                 }
                 catch (Exception)
                 {
-                    _orcusServer.Dispose();
-                    _orcusServer = null;
+                    _mazeServer.Dispose();
+                    _mazeServer = null;
                 }
         }
 
-        protected async Task<OrcusServer> GetServerConnection()
+        protected async Task<MazeServer> GetServerConnection()
         {
-            if (_orcusServer != null)
-                return _orcusServer;
+            if (_mazeServer != null)
+                return _mazeServer;
 
-            await _orcusServerLock.WaitAsync();
+            await _mazeServerLock.WaitAsync();
             try
             {
-                if (_orcusServer != null)
-                    return _orcusServer;
+                if (_mazeServer != null)
+                    return _mazeServer;
 
                 var builder = new UriBuilder(_httpClient.BaseAddress) { Path = "ws", Scheme = _httpClient.BaseAddress.Scheme == "https" ? "wss" : "ws" };
 
-                var connector = new OrcusSocketConnector(builder.Uri) { AuthenticationHeaderValue = _httpClient.DefaultRequestHeaders.Authorization };
+                var connector = new MazeSocketConnector(builder.Uri) { AuthenticationHeaderValue = _httpClient.DefaultRequestHeaders.Authorization };
                 var dataStream = await connector.ConnectAsync();
                 var webSocket = WebSocket.CreateClientWebSocket(dataStream, null, 8192, 8192, TimeSpan.FromMinutes(2), true,
                     WebSocket.CreateClientBuffer(8192, 8192));
 
                 var webSocketWrapper = new WebSocketWrapper(webSocket, 8192);
-                _orcusServer = new OrcusServer(webSocketWrapper, 8192, 4096, ArrayPool<byte>.Shared);
+                _mazeServer = new MazeServer(webSocketWrapper, 8192, 4096, ArrayPool<byte>.Shared);
 
                 webSocketWrapper.ReceiveAsync().ContinueWith(ReceiveAsyncContinuation).Forget();
-                return _orcusServer;
+                return _mazeServer;
             }
             finally
             {
-                _orcusServerLock.Release();
+                _mazeServerLock.Release();
             }
         }
 
         private void ReceiveAsyncContinuation(Task obj)
         {
-            _orcusServer?.Dispose();
-            _orcusServer = null;
+            _mazeServer?.Dispose();
+            _mazeServer = null;
         }
     }
 }

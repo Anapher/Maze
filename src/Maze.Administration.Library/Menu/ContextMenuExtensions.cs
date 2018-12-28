@@ -1,7 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Windows;
 
-namespace Orcus.Administration.Library.Menu
+namespace Maze.Administration.Library.Menu
 {
     public static class ContextMenuExtensions
     {

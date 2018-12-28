@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     //https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.shell.interop.ivsstatusbar?view=visualstudiosdk-2017
     /// <summary>

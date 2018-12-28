@@ -1,10 +1,10 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using Microsoft.Extensions.Primitives;
 
-namespace Orcus.Modules.Api.Formatters
+namespace Maze.Modules.Api.Formatters
 {
     /// <summary>
     ///     A context object for <see cref="IOutputFormatter.CanWriteResult(OutputFormatterCanWriteContext)" />.
@@ -14,16 +14,16 @@ namespace Orcus.Modules.Api.Formatters
         /// <summary>
         ///     Creates a new <see cref="OutputFormatterCanWriteContext" />.
         /// </summary>
-        /// <param name="context">The <see cref="OrcusContext" /> for the current request.</param>
-        protected OutputFormatterCanWriteContext(OrcusContext context)
+        /// <param name="context">The <see cref="MazeContext" /> for the current request.</param>
+        protected OutputFormatterCanWriteContext(MazeContext context)
         {
-            OrcusContext = context ?? throw new ArgumentNullException(nameof(context));
+            MazeContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="OrcusContext" /> context associated with the current operation.
+        ///     Gets or sets the <see cref="MazeContext" /> context associated with the current operation.
         /// </summary>
-        public virtual OrcusContext OrcusContext { get; protected set; }
+        public virtual MazeContext MazeContext { get; protected set; }
 
         /// <summary>
         ///     Gets or sets the content type to write to the response.

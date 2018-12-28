@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Windows.Input;
 using Prism.Commands;
 
-namespace Orcus.Administration.Library.ViewModels
+namespace Maze.Administration.Library.ViewModels
 {
     /// <summary>
     ///     An <see cref="ICommand" /> whose delegates can be attached for <see cref="Execute(T)" /> and

@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -299,7 +299,7 @@
         options:Freeze="True"
         Color="#FF666666" />
 
-    <!--  Orcus Special  -->
+    <!--  Maze Special  -->
     <SolidColorBrush x:Key="PropertiesBorderBrush" Color="#FF3B3B3B" />
     <SolidColorBrush x:Key="PropertiesSecondCellBrush" Color="#FF242424" />
     <Color x:Key="CommandsItemFocusColor">#FF424242</Color>

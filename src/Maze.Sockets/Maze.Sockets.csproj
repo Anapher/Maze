@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
+    <ProjectReference Include="..\Maze.Modules.Api\Maze.Modules.Api.csproj" />
   </ItemGroup>
 
 </Project>

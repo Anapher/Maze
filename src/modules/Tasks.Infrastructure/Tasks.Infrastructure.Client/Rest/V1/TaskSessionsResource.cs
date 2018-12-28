@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
-using Orcus.Client.Library.Clients;
-using Orcus.Client.Library.Clients.Helpers;
+using System.Net.Http;
+using Maze.Client.Library.Clients;
+using Maze.Client.Library.Clients.Helpers;
 using Tasks.Infrastructure.Management.Data;
 
 namespace Tasks.Infrastructure.Client.Rest.V1

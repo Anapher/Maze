@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using Orcus.Administration.Library.Views;
+using System.Windows;
+using Maze.Administration.Library.Views;
 
-namespace Orcus.Administration.Views.Main.Overview.Groups
+namespace Maze.Administration.Views.Main.Overview.Groups
 {
     /// <summary>
     ///     Interaction logic for ChangeGroupNameView.xaml

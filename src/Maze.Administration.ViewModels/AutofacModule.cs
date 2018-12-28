@@ -1,9 +1,9 @@
-﻿using Autofac;
-using Orcus.Administration.Core.Clients;
-using Orcus.Administration.Library.Services;
-using Orcus.Server.Connection.Utilities;
+using Autofac;
+using Maze.Administration.Core.Clients;
+using Maze.Administration.Library.Services;
+using Maze.Server.Connection.Utilities;
 
-namespace Orcus.Administration.ViewModels
+namespace Maze.Administration.ViewModels
 {
     public class AutofacModule : Module
     {

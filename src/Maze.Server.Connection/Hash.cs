@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using Newtonsoft.Json;
-using Orcus.Server.Connection.Extensions;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Server.Connection.Extensions;
+using Maze.Server.Connection.JsonConverters;
 
-namespace Orcus.Server.Connection
+namespace Maze.Server.Connection
 {
     /// <summary>
     ///     Represents a hash value

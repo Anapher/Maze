@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Internal;
 
 namespace Tasks.Infrastructure.Client.Utilities
 {

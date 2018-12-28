@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,13 +10,13 @@ using Anapher.Wpf.Swan.Extensions;
 using Autofac;
 using MahApps.Metro.IconPacks;
 using Microsoft.AspNetCore.SignalR.Client;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.ViewModels;
-using Orcus.Administration.Library.Views;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
+using Maze.Server.Connection.Utilities;
+using Maze.Utilities;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Core;
 using Tasks.Infrastructure.Administration.Rest.V1;
@@ -29,7 +29,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 {
     public class TasksViewModel : OverviewTabBase, IDisposable
     {
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private readonly IAppDispatcher _dispatcher;
         private readonly IComponentContext _services;
         private readonly IWindowService _windowService;
@@ -46,7 +46,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private bool _isEventsInitialized;
         private DelegateCommand<PendingCommandViewModel> _openExecutionOverviewCommand;
 
-        public TasksViewModel(IWindowService windowService, IOrcusRestClient restClient, IAppDispatcher dispatcher, IComponentContext services,
+        public TasksViewModel(IWindowService windowService, IMazeRestClient restClient, IAppDispatcher dispatcher, IComponentContext services,
             CommandExecutionManager commandExecutionManager) : base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
         {
             CommandExecutionManager = commandExecutionManager;

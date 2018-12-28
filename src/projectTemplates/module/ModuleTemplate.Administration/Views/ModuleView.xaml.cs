@@ -1,4 +1,4 @@
-﻿using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
 namespace ModuleTemplate.Administration.Views
 {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -6,10 +6,10 @@ using System.ComponentModel;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Orcus.Modules.Api.ModelBinding;
-using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
+using Maze.Modules.Api.ModelBinding;
+using Maze.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
+namespace Maze.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinder" /> for simple types.

@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
-using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.ModuleManagement.Loader
+namespace Maze.ModuleManagement.Loader
 {
     public class ModuleMapper
     {
-        public ModuleMapper(NuGetFramework orcusFramework, IModulesDirectory modulesDirectory, Runtime runtime, Architecture architecture)
+        public ModuleMapper(NuGetFramework mazeFramework, IModulesDirectory modulesDirectory, Runtime runtime, Architecture architecture)
         {
-            OrcusFramework = orcusFramework;
+            MazeFramework = mazeFramework;
             ModulesDirectory = modulesDirectory;
             Runtime = runtime;
             Architecture = architecture;
         }
 
-        public NuGetFramework OrcusFramework { get; }
+        public NuGetFramework MazeFramework { get; }
         public IModulesDirectory ModulesDirectory { get; }
         public Runtime Runtime { get; }
         public Architecture Architecture { get; }
@@ -49,12 +49,12 @@ namespace Orcus.ModuleManagement.Loader
                     var packageDirectory =
                         ModulesDirectory.VersionFolderPathResolver.GetInstallPath(packageIdentity.Id,
                             packageIdentity.Version);
-                    var resolvedDirectory = LoadResolver.ResolveNuGetFolder(packageDirectory, OrcusFramework, Runtime, Architecture);
+                    var resolvedDirectory = LoadResolver.ResolveNuGetFolder(packageDirectory, MazeFramework, Runtime, Architecture);
                     if (resolvedDirectory == null) //maybe build only package?
                         continue;
                     
                     levelList.Add(new PackageLoadingContext(packageIdentity, packageDirectory, resolvedDirectory.Directory.FullName,
-                        resolvedDirectory.Framework, resolvedDirectory.Framework.Framework == OrcusFramework.Framework));
+                        resolvedDirectory.Framework, resolvedDirectory.Framework.Framework == MazeFramework.Framework));
                 }
 
                 result.Push(levelList);

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orcus.Service.Commander.Routing.Trie
+namespace Maze.Service.Commander.Routing.Trie
 {
     /// <summary>
     ///     A segment match result

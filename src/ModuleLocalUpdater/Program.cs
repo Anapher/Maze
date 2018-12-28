@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace ModuleLocalUpdater
 
         private static int ExecuteAction(ModuleLocalUpdaterOptions arg)
         {
-            //F:\Projects\Orcus\src\modules\UserInteraction\UserInteraction.Administration\bin\Debug\net47
+            //F:\Projects\Maze\src\modules\UserInteraction\UserInteraction.Administration\bin\Debug\net47
             //UserInteraction.Administration
 
             if (arg.ModuleName.EndsWith(".Tests"))
@@ -61,14 +61,14 @@ namespace ModuleLocalUpdater
                     {
                         nugetFolderName = "admin10";
                         packagesDirectory =
-                            Path.Combine(solutionDirectory, "src\\Orcus.Administration\\bin\\Debug\\packages");
+                            Path.Combine(solutionDirectory, "src\\Maze.Administration\\bin\\Debug\\packages");
                     }
                     else
                     {
                         nugetFolderName = "client10";
                         packagesDirectory =
                             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                "Orcus\\modules");
+                                "Maze\\modules");
                     }
 
                     var directoryInfo = new DirectoryInfo(packagesDirectory);
@@ -78,7 +78,7 @@ namespace ModuleLocalUpdater
                     packageDirectory = GetLatestDirectory(directoryInfo.GetDirectories(moduleName + "*"));
                     break;
                 case "Server":
-                    directoryInfo = new DirectoryInfo(Path.Combine(solutionDirectory, "src\\Orcus.Server\\modules\\" + moduleName));
+                    directoryInfo = new DirectoryInfo(Path.Combine(solutionDirectory, "src\\Maze.Server\\modules\\" + moduleName));
                     if (!directoryInfo.Exists)
                         return 0;
 

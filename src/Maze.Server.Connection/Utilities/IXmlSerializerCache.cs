@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Xml.Serialization;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public interface IXmlSerializerCache
     {

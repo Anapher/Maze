@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.ModuleManagement.Server
+namespace Maze.ModuleManagement.Server
 {
     public class ServerDownloadResourceProvider : ResourceProvider
     {

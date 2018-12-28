@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     //Inspired by https://stackoverflow.com/a/961904/4166138
     public class FifoAsyncLock : IDisposable

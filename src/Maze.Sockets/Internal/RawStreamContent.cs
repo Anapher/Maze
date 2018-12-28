@@ -1,9 +1,9 @@
-﻿using System.IO;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     public class RawStreamContent : HttpContent
     {

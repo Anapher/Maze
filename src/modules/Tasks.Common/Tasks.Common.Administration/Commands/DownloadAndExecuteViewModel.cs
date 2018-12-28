@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Tasks.Common.Administration.Commands.Base;
 using Tasks.Common.Administration.Commands.Utils;
 using Tasks.Common.Shared.Commands;
@@ -25,7 +25,7 @@ namespace Tasks.Common.Administration.Commands
             return result;
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
 
         public override void Initialize(DownloadAndExecuteCommandInfo model)
         {

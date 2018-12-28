@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Windows.Forms;
-using Orcus.Server.Connection.Authentication.Client;
+using Maze.Server.Connection.Authentication.Client;
 
-namespace Orcus.Core.Connection
+namespace Maze.Core.Connection
 {
     public interface IClientInfoProvider
     {

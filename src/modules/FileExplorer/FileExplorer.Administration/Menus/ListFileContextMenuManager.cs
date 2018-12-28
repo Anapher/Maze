@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using FileExplorer.Administration.Resources;
@@ -7,14 +7,14 @@ using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using Microsoft.Win32;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.ViewModels;
-using Orcus.Administration.Library.Views;
-using Orcus.Utilities;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
+using Maze.Utilities;
 using Unclassified.TxLib;
 
 namespace FileExplorer.Administration.Menus

@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Orcus.Modules.Api.Response;
+using System.Threading.Tasks;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Modules.Api.Services
+namespace Maze.Modules.Api.Services
 {
     /// <summary>
     ///     Defines an interface for a service which can execute a particular kind of <see cref="IActionResult" /> by
-    ///     manipulating the <see cref="OrcusResponse" />.
+    ///     manipulating the <see cref="MazeResponse" />.
     /// </summary>
     /// <typeparam name="TResult">The type of <see cref="IActionResult" />.</typeparam>
     /// <remarks>
@@ -16,7 +16,7 @@ namespace Orcus.Modules.Api.Services
     public interface IActionResultExecutor<in TResult> where TResult : IActionResult
     {
         /// <summary>
-        ///     Asynchronously excecutes the action result, by modifying the <see cref="OrcusResponse" />.
+        ///     Asynchronously excecutes the action result, by modifying the <see cref="MazeResponse" />.
         /// </summary>
         /// <param name="context">The <see cref="ActionContext" /> associated with the current request."/></param>
         /// <param name="result">The action result to execute.</param>

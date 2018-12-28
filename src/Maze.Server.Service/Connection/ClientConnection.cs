@@ -1,35 +1,35 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Error;
-using Orcus.Server.Library.Exceptions;
-using Orcus.Server.Library.Services;
-using Orcus.Sockets;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Error;
+using Maze.Server.Library.Exceptions;
+using Maze.Server.Library.Services;
+using Maze.Sockets;
 
-namespace Orcus.Server.Service.Connection
+namespace Maze.Server.Service.Connection
 {
     public class ClientConnection : IClientConnection, IDisposable
     {
-        public ClientConnection(int clientId, WebSocketWrapper webSocket, OrcusServer orcusServer)
+        public ClientConnection(int clientId, WebSocketWrapper webSocket, MazeServer mazeServer)
         {
             ClientId = clientId;
             WebSocketWrapper = webSocket;
-            OrcusServer = orcusServer;
+            MazeServer = mazeServer;
         }
 
         public void Dispose()
         {
             WebSocketWrapper?.Dispose();
-            OrcusServer?.Dispose();
+            MazeServer?.Dispose();
         }
 
         public int ClientId { get; }
         public WebSocketWrapper WebSocketWrapper { get; }
-        public OrcusServer OrcusServer { get; }
+        public MazeServer MazeServer { get; }
 
         public Task BeginListen()
         {
@@ -38,7 +38,7 @@ namespace Orcus.Server.Service.Connection
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
-            var response = await OrcusServer.SendRequest(requestMessage, cancellationToken);
+            var response = await MazeServer.SendRequest(requestMessage, cancellationToken);
             if (response.IsSuccessStatusCode)
                 return response;
 

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Formatters
+namespace Maze.Modules.Api.Formatters
 {
     /// <summary>
     ///     Exception thrown by <see cref="IInputFormatter" /> when the input is not in an expected format.

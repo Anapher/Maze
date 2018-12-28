@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Options;
-using Orcus.Client.Library.Interfaces;
-using Orcus.Client.Library.Services;
-using Orcus.Core.Modules;
-using Orcus.Logging;
-using Orcus.ModuleManagement;
-using Orcus.Options;
-using Orcus.Service.Commander;
+using Maze.Client.Library.Interfaces;
+using Maze.Client.Library.Services;
+using Maze.Core.Modules;
+using Maze.Logging;
+using Maze.ModuleManagement;
+using Maze.Options;
+using Maze.Service.Commander;
 
-namespace Orcus.Core.Connection
+namespace Maze.Core.Connection
 {
     public interface IManagementCoreConnector : ICoreConnector
     {
@@ -70,7 +70,7 @@ namespace Orcus.Core.Connection
                             if (loadedContext.PackagesLoaded)
                                 loadedContext.Configure(builder);
                             
-                            builder.RegisterOrcusServices(cache => cache.BuildCache(controllers));
+                            builder.RegisterMazeServices(cache => cache.BuildCache(controllers));
                             builder.RegisterInstance(connection.RestClient).AsImplementedInterfaces();
                         });
 

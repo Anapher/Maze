@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Orcus.Server.Service.Modules.Config.Base
+namespace Maze.Server.Service.Modules.Config.Base
 {
     public abstract class JsonObjectFile<TObject> : SerializableObjectFile<TObject>
     {

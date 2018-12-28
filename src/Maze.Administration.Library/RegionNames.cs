@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library
+namespace Maze.Administration.Library
 {
     /// <summary>
     ///     Region names of Prism

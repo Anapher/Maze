@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
-using Orcus.Server.BusinessDataAccess.ClientGroups;
-using Orcus.Server.Connection;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.BusinessDataAccess.ClientGroups;
+using Maze.Server.Connection;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.BusinessLogic.ClientGroups
+namespace Maze.Server.BusinessLogic.ClientGroups
 {
     public interface IAddClientsToClientGroupAction : IGenericActionWriteDbAsync<(int, IEnumerable<int>), ClientGroup>
     {

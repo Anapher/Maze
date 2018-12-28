@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeElements.NetworkCall;
@@ -6,12 +6,12 @@ using CodeElements.NetworkCall.Extensions;
 using CodeElements.NetworkCall.NetSerializer;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Extensions;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Extensions;
 
-namespace Orcus.ControllerExtensions
+namespace Maze.ControllerExtensions
 {
-    public abstract class CallTransmissionChannel<TInterface> : OrcusChannel
+    public abstract class CallTransmissionChannel<TInterface> : MazeChannel
     {
         protected readonly Dictionary<string, Func<IServiceProvider, INetworkSerializer>> Serializers =
             new Dictionary<string, Func<IServiceProvider, INetworkSerializer>>(StringComparer.OrdinalIgnoreCase)
@@ -32,7 +32,7 @@ namespace Orcus.ControllerExtensions
 
         public override void Initialize()
         {
-            var requestHeaders = OrcusContext.Request.GetTypedHeaders();
+            var requestHeaders = MazeContext.Request.GetTypedHeaders();
             var serializer = GetSerializer(requestHeaders);
 
             var thisObj = (object) this;
@@ -47,12 +47,12 @@ namespace Orcus.ControllerExtensions
                 if (Serializers.TryGetValue(acceptedEncoder.Value.ToString(), out var getSerializerAction))
                 {
                     Response.Headers.Add(HeaderNames.ContentEncoding, acceptedEncoder.Value.ToString());
-                    return getSerializerAction(OrcusContext.RequestServices);
+                    return getSerializerAction(MazeContext.RequestServices);
                 }
             }
 
             Response.Headers.Add(HeaderNames.ContentEncoding, "netserializer");
-            return OrcusContext.RequestServices.GetRequiredService<NetSerializerNetworkSerializer>(); //default
+            return MazeContext.RequestServices.GetRequiredService<NetSerializerNetworkSerializer>(); //default
         }
 
         private Task SendData(BufferSegment data) => Send(data.Buffer, data.Offset, data.Length, true);

@@ -1,14 +1,14 @@
-﻿namespace Orcus.Modules.Api.Routing
+namespace Maze.Modules.Api.Routing
 {
-    public class OrcusPostAttribute : OrcusMethodAttribute
+    public class MazePostAttribute : MazeMethodAttribute
     {
         private const string _method = "POST";
 
-        public OrcusPostAttribute(string path) : base(_method, path)
+        public MazePostAttribute(string path) : base(_method, path)
         {
         }
 
-        public OrcusPostAttribute() : base(_method)
+        public MazePostAttribute() : base(_method)
         {
         }
     }

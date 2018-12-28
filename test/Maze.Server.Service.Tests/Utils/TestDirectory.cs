@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 
-namespace Orcus.Server.Service.Tests.Utils
+namespace Maze.Server.Service.Tests.Utils
 {
     /// <summary>
     ///     Temporary new folder under .test/work/

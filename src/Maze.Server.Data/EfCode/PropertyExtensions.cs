@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Orcus.Server.Data.EfCode
+namespace Maze.Server.Data.EfCode
 {
     public static class PropertyExtensions
     {

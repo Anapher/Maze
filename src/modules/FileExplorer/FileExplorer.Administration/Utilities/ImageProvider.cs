@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using FileExplorer.Administration.Cache;
 using FileExplorer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
-using Orcus.Administration.Library.Extensions;
+using Maze.Administration.Library.Extensions;
 
 namespace FileExplorer.Administration.Utilities
 {

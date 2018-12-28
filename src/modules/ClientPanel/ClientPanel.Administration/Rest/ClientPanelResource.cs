@@ -1,4 +1,4 @@
-﻿using Orcus.Administration.Library.Clients;
+using Maze.Administration.Library.Clients;
 
 namespace ClientPanel.Administration.Rest
 {

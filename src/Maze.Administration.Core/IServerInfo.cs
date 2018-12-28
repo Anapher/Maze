@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Administration.Core
+namespace Maze.Administration.Core
 {
     public interface IServerInfo
     {

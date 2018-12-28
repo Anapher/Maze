@@ -1,4 +1,4 @@
-﻿namespace Orcus.Service.Commander.Routing.Trie
+namespace Maze.Service.Commander.Routing.Trie
 {
     /// <summary>
     ///     Represents a route that ends at a particular node.

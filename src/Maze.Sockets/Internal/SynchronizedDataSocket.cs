@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     internal struct SynchronizedDataSocket : IDisposable
     {

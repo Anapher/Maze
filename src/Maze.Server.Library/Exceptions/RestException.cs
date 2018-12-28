@@ -1,7 +1,7 @@
-﻿using System;
-using Orcus.Server.Connection;
+using System;
+using Maze.Server.Connection;
 
-namespace Orcus.Server.Library.Exceptions
+namespace Maze.Server.Library.Exceptions
 {
     public abstract class RestException : Exception
     {

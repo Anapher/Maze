@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
-namespace Orcus.Administration.ViewModels.Overview.Modules
+namespace Maze.Administration.ViewModels.Overview.Modules
 {
     public interface IModuleTabViewModel
     {

@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using Orcus.ModuleManagement.Loader;
+using System.Reflection;
+using Maze.ModuleManagement.Loader;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public class PackageCarrier
     {

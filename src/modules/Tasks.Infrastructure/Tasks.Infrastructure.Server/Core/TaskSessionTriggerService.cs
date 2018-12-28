@@ -1,10 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Orcus.Server.Data.EfCode;
-using Orcus.Utilities;
+using Maze.Server.Data.EfCode;
+using Maze.Utilities;
 using Tasks.Infrastructure.Management.Data;
 using Tasks.Infrastructure.Server.Library;
 
@@ -12,9 +12,9 @@ namespace Tasks.Infrastructure.Server.Core
 {
     public class TaskSessionTriggerService : TaskSessionTrigger
     {
-        private readonly OrcusTaskService _taskService;
+        private readonly MazeTaskService _taskService;
 
-        public TaskSessionTriggerService(OrcusTaskService taskService, TaskSession taskSession)
+        public TaskSessionTriggerService(MazeTaskService taskService, TaskSession taskSession)
         {
             _taskService = taskService;
             Info = taskSession;

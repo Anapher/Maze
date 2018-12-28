@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     /// <summary>
     ///     A result that either carries a success or an error

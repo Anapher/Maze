@@ -1,7 +1,7 @@
-﻿using Orcus.Modules.Api;
-using Orcus.Server.Library.Services;
+using Maze.Modules.Api;
+using Maze.Server.Library.Services;
 
-namespace Orcus.Server.Library.Interfaces
+namespace Maze.Server.Library.Interfaces
 {
     /// <summary>
     ///     An action that will be invoked once a client connects to the server.

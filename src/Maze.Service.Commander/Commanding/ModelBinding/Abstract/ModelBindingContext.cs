@@ -1,9 +1,9 @@
-﻿using System;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.ModelBinding;
+using System;
+using Maze.Modules.Api;
+using Maze.Modules.Api.ModelBinding;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Abstract
+namespace Maze.Service.Commander.Commanding.ModelBinding.Abstract
 {
     /// <summary>
     ///     A context that contains operating information for model binding and validation.
@@ -11,7 +11,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Abstract
     public abstract class ModelBindingContext
     {
         /// <summary>
-        ///     Represents the <see cref="Orcus.Modules.Api.ActionContext" /> associated with this context.
+        ///     Represents the <see cref="Maze.Modules.Api.ActionContext" /> associated with this context.
         /// </summary>
         /// <remarks>
         ///     The property setter is provided for unit testing purposes only.
@@ -19,9 +19,9 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding.Abstract
         public abstract ActionContext ActionContext { get; set; }
 
         /// <summary>
-        ///     Gets the <see cref="OrcusContext" /> associated with this context.
+        ///     Gets the <see cref="MazeContext" /> associated with this context.
         /// </summary>
-        public OrcusContext OrcusContext => ActionContext?.Context;
+        public MazeContext MazeContext => ActionContext?.Context;
 
         /// <summary>
         ///     Gets or sets the model value for the current operation.

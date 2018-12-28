@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
-namespace Orcus.Server
+namespace Maze.Server
 {
     public class Program
     {

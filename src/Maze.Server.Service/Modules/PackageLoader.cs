@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.PackageManagement;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.PackageManagement;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public class PackageLoader
     {

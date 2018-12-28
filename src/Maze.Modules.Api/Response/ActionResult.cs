@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
     ///     A default implementation of <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult" />.

@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Moq;
-using Orcus.Server.BusinessDataAccess.Accounts;
-using Orcus.Server.BusinessLogic.Authentication;
-using Orcus.Server.Connection.Authentication;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.BusinessDataAccess.Accounts;
+using Maze.Server.BusinessLogic.Authentication;
+using Maze.Server.Connection.Authentication;
+using Maze.Server.Data.EfClasses;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Orcus.Server.BusinessLogic.Tests.Authentication
+namespace Maze.Server.BusinessLogic.Tests.Authentication
 {
     public class AuthenticateAdministrationActionTest : BusinessLogicTestBase<AuthenticateAdministrationAction>
     {

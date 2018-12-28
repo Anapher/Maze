@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Tasks.Infrastructure.Core;
 
@@ -6,9 +6,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask.Base
 {
     public interface ITaskConfiguringViewModel : ITreeViewItem
     {
-        void Initialize(OrcusTask orcusTask);
+        void Initialize(MazeTask mazeTask);
         IEnumerable<ValidationResult> ValidateInput();
-        IEnumerable<ValidationResult> ValidateContext(OrcusTask orcusTask);
-        void Apply(OrcusTask orcusTask);
+        IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask);
+        void Apply(MazeTask mazeTask);
     }
 }

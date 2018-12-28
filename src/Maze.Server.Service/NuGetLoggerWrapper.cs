@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NuGetLogger = NuGet.Common.ILogger;
 using ILogMessage = NuGet.Common.ILogMessage;
 using LogLevel = NuGet.Common.LogLevel;
 
-namespace Orcus.Server.Service
+namespace Maze.Server.Service
 {
     public class NuGetLoggerWrapper : NuGetLogger
     {

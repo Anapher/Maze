@@ -1,6 +1,6 @@
-﻿using NuGet.Packaging.Core;
+using NuGet.Packaging.Core;
 
-namespace Orcus.Service.Commander.Routing
+namespace Maze.Service.Commander.Routing
 {
     public class RouteDescription
     {

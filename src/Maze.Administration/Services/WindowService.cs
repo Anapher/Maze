@@ -1,17 +1,17 @@
-﻿using Anapher.Wpf.Swan;
+using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Views;
-using Orcus.Administration.Prism;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Views;
+using Maze.Administration.Prism;
 using Prism;
 using System;
 using System.Windows;
 
-namespace Orcus.Administration.Services
+namespace Maze.Administration.Services
 {
     public class WindowService : IWindowService
     {

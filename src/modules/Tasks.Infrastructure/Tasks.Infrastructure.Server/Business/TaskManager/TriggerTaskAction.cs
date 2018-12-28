@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
-using Orcus.Server.Library.Services;
+using Maze.Server.Library.Services;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Server.Core;
@@ -22,10 +22,10 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
         private readonly ActiveTasksManager _activeTasksManager;
         private readonly IServiceProvider _serviceProvider;
         private readonly IConnectionManager _connectionManager;
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
         private readonly ITaskDirectory _taskDirectory;
 
-        public TriggerTaskAction(IOrcusTaskManagerManagement management, ITaskDirectory taskDirectory, IConnectionManager connectionManager,
+        public TriggerTaskAction(IMazeTaskManagerManagement management, ITaskDirectory taskDirectory, IConnectionManager connectionManager,
             ActiveTasksManager activeTasksManager, IServiceProvider serviceProvider)
         {
             _management = management;

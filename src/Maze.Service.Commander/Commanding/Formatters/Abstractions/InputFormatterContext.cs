@@ -1,14 +1,14 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.IO;
 using System.Text;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.ModelBinding;
+using Maze.Modules.Api;
+using Maze.Modules.Api.ModelBinding;
 
 // ReSharper disable once CheckNamespace
-namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
+namespace Maze.Service.Commander.Commanding.Formatters.Abstractions
 {
     /// <summary>
     ///     A context object used by an input formatter for deserializing the request body into an object.
@@ -32,7 +32,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
         ///     A delegate which can create a <see cref="TextReader" /> for the request body.
         /// </param>
         public InputFormatterContext(
-            OrcusContext httpContext,
+            MazeContext httpContext,
             string modelName,
             ModelStateDictionary modelState,
             ModelMetadata metadata,
@@ -61,14 +61,14 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
         ///     A value for the <see cref="TreatEmptyInputAsDefaultValue" /> property.
         /// </param>
         public InputFormatterContext(
-            OrcusContext httpContext,
+            MazeContext httpContext,
             string modelName,
             ModelStateDictionary modelState,
             ModelMetadata metadata,
             Func<Stream, Encoding, TextReader> readerFactory,
             bool treatEmptyInputAsDefaultValue)
         {
-            OrcusContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
+            MazeContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
             ModelName = modelName ?? throw new ArgumentNullException(nameof(modelName));
             ModelState = modelState ?? throw new ArgumentNullException(nameof(modelState));
             Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
@@ -89,7 +89,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Abstractions
         /// <summary>
         ///     Gets the <see cref="Microsoft.AspNetCore.Http.HttpContext" /> associated with the current operation.
         /// </summary>
-        public OrcusContext OrcusContext { get; }
+        public MazeContext MazeContext { get; }
 
         /// <summary>
         ///     Gets the name of the model. Used as the key or key prefix for errors added to <see cref="ModelState" />.

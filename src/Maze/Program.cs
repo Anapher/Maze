@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 
-namespace Orcus
+namespace Maze
 {
     internal static class Program
     {
@@ -17,7 +17,7 @@ namespace Orcus
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Debug(LogEventLevel.Debug).CreateLogger();
 
-            var config = new ConfigurationBuilder().AddJsonFile("orcussettings.json").Build();
+            var config = new ConfigurationBuilder().AddJsonFile("mazesettings.json").Build();
             var startup = new Startup(config);
 
             var builder = new ContainerBuilder();

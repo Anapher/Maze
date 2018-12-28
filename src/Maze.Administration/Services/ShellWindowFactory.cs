@@ -1,8 +1,8 @@
-﻿using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Views;
-using Orcus.Administration.Views;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.Views;
+using Maze.Administration.Views;
 
-namespace Orcus.Administration.Services
+namespace Maze.Administration.Services
 {
     public class ShellWindowFactory : IShellWindowFactory
     {

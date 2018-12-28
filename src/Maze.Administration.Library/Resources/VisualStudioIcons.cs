@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
-namespace Orcus.Administration.Library.Resources
+namespace Maze.Administration.Library.Resources
 {
     internal class VisualStudioIcons : ResourceDictionaryProvider, ILibraryIcons
     {
         public VisualStudioIcons() : base(
-            new Uri("/Orcus.Administration.Library;component/Resources/VisualStudioIcons.xaml", UriKind.Relative))
+            new Uri("/Maze.Administration.Library;component/Resources/VisualStudioIcons.xaml", UriKind.Relative))
         {
         }
 

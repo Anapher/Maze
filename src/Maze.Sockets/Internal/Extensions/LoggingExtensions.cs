@@ -1,7 +1,7 @@
-﻿using System.Text;
-using Orcus.Sockets.Logging;
+using System.Text;
+using Maze.Sockets.Logging;
 
-namespace Orcus.Sockets.Internal.Extensions
+namespace Maze.Sockets.Internal.Extensions
 {
     internal static class LoggingExtensions
     {

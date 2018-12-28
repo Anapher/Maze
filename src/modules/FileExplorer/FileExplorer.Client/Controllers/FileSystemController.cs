@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,17 +11,17 @@ using FileExplorer.Client.FileProperties;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Dtos;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
-using Orcus.Utilities;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
+using Maze.Utilities;
 
 namespace FileExplorer.Client.Controllers
 {
     [Route("fileSystem")]
-    public class FileSystemController : OrcusController
+    public class FileSystemController : MazeController
     {
-        [OrcusGet]
+        [MazeGet]
         public async Task<IActionResult> QueryPathEntries([FromQuery] string path, [FromQuery] bool directoriesOnly = false)
         {
             var directoryHelper = new DirectoryHelper();
@@ -40,11 +40,11 @@ namespace FileExplorer.Client.Controllers
             return Ok(entries);
         }
 
-        [OrcusGet("path")]
+        [MazeGet("path")]
         public IActionResult ExpandEnvironmentVariables([FromQuery] string path) =>
             Ok(Environment.ExpandEnvironmentVariables(path));
 
-        [OrcusGet("directory")]
+        [MazeGet("directory")]
         public IActionResult GetDirectory([FromQuery] string path)
         {
             using (var directory = new DirectoryInfoEx(path))
@@ -54,48 +54,48 @@ namespace FileExplorer.Client.Controllers
             }
         }
 
-        [OrcusPost("directory")]
+        [MazePost("directory")]
         public IActionResult CreateDirectory([FromQuery] string path)
         {
             Directory.CreateDirectory(path);
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [OrcusDelete("directory")]
+        [MazeDelete("directory")]
         public IActionResult DeleteDirectory([FromQuery] string path)
         {
             Directory.Delete(path, true);
             return Ok();
         }
 
-        [OrcusDelete("file")]
+        [MazeDelete("file")]
         public IActionResult DeleteFile([FromQuery] string path)
         {
             System.IO.File.Delete(path);
             return Ok();
         }
 
-        [OrcusPatch("file")]
+        [MazePatch("file")]
         public IActionResult MoveFile([FromQuery] string path, [FromQuery] string newPath)
         {
             System.IO.File.Move(path, newPath);
             return Ok();
         }
 
-        [OrcusPatch("directory")]
+        [MazePatch("directory")]
         public IActionResult MoveDirectory([FromQuery] string path, [FromQuery] string newPath)
         {
             Directory.Move(path, newPath);
             return Ok();
         }
 
-        [OrcusGet("directory/properties")]
+        [MazeGet("directory/properties")]
         public IActionResult GetDirectoryProperties([FromQuery] string path)
         {
             return Ok();
         }
 
-        [OrcusGet("file/properties")]
+        [MazeGet("file/properties")]
         public async Task<IActionResult> GetFileProperties([FromQuery] string path, [FromServices] IEnumerable<IFilePropertyValueProvider> propertyValueProviders)
         {
             var result = new FilePropertiesDto();
@@ -112,7 +112,7 @@ namespace FileExplorer.Client.Controllers
             return Ok(result);
         }
 
-        [OrcusPost("file/execute")]
+        [MazePost("file/execute")]
         public IActionResult ExecuteFile([FromBody] ExecuteFileDto executeDto, [FromQuery] bool waitForExit)
         {
             var processStartInfo = new ProcessStartInfo(executeDto.FileName, executeDto.Arguments)
@@ -133,7 +133,7 @@ namespace FileExplorer.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("file/verbs")]
+        [MazeGet("file/verbs")]
         public IActionResult GetFileVerbs([FromQuery] string path)
         {
             var info = new ProcessStartInfo(path);

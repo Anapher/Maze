@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Orcus.Server.Library.Interfaces;
+using Maze.Server.Library.Interfaces;
 using Tasks.Infrastructure.Server.Core;
 using Tasks.Infrastructure.Server.Migrations;
 using Tasks.Infrastructure.Server.Options;
@@ -13,11 +13,11 @@ namespace Tasks.Infrastructure.Server.Hooks
     public class OnServerStartupEvent : IConfigureServerPipelineAction
     {
         private readonly TasksOptions _options;
-        private readonly IOrcusTaskManager _orcusTaskManager;
+        private readonly IMazeTaskManager _mazeTaskManager;
 
-        public OnServerStartupEvent(IOrcusTaskManager orcusTaskManager, IOptions<TasksOptions> options)
+        public OnServerStartupEvent(IMazeTaskManager mazeTaskManager, IOptions<TasksOptions> options)
         {
-            _orcusTaskManager = orcusTaskManager;
+            _mazeTaskManager = mazeTaskManager;
             _options = options.Value;
         }
 
@@ -30,7 +30,7 @@ namespace Tasks.Infrastructure.Server.Hooks
                 UpdateDatabase(scope.ServiceProvider);
             }
 
-            return _orcusTaskManager.Initialize();
+            return _mazeTaskManager.Initialize();
         }
 
         /// <summary>

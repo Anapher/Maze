@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,7 +9,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.Modules.Loader
+namespace Maze.Server.Service.Modules.Loader
 {
     public class ModuleTypeMap
     {

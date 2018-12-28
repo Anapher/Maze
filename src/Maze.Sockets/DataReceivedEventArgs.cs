@@ -1,14 +1,14 @@
-﻿namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     public class DataReceivedEventArgs
     {
-        public DataReceivedEventArgs(BufferSegment buffer, OrcusSocket.MessageOpcode opcode)
+        public DataReceivedEventArgs(BufferSegment buffer, MazeSocket.MessageOpcode opcode)
         {
             Buffer = buffer;
             Opcode = opcode;
         }
 
         public BufferSegment Buffer { get; }
-        public OrcusSocket.MessageOpcode Opcode { get; }
+        public MazeSocket.MessageOpcode Opcode { get; }
     }
 }

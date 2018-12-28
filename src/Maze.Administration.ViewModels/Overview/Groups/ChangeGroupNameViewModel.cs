@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Linq;
 using Anapher.Wpf.Swan;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Rest.ClientGroups.V1;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Views;
-using Orcus.Server.Connection.Clients;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Rest.ClientGroups.V1;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.Views;
+using Maze.Server.Connection.Clients;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Overview.Groups
+namespace Maze.Administration.ViewModels.Overview.Groups
 {
     public class ChangeGroupNameViewModel : BindableBase
     {

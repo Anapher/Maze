@@ -1,55 +1,55 @@
-﻿using System.Diagnostics;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
+using System.Diagnostics;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
 
 namespace ClientPanel.Client.Controllers
 {
     [Route("programs")]
-    public class ProgramsController : OrcusController
+    public class ProgramsController : MazeController
     {
-        [OrcusGet("taskManager")]
+        [MazeGet("taskManager")]
         public IActionResult StartTaskManager()
         {
             Process.Start("taskmgr.exe");
             return Ok();
         }
 
-        [OrcusGet("regEdit")]
+        [MazeGet("regEdit")]
         public IActionResult StartRegEdit()
         {
             Process.Start("regedit.exe");
             return Ok();
         }
 
-        [OrcusGet("deviceManager")]
+        [MazeGet("deviceManager")]
         public IActionResult StartDeviceManager()
         {
             Process.Start("Devmgmt.msc");
             return Ok();
         }
 
-        [OrcusGet("eventLog")]
+        [MazeGet("eventLog")]
         public IActionResult StartEventLog()
         {
             Process.Start("eventvwr.msc");
             return Ok();
         }
 
-        [OrcusGet("controlPanel")]
+        [MazeGet("controlPanel")]
         public IActionResult StartControlPanel()
         {
             Process.Start("control");
             return Ok();
         }
 
-        [OrcusGet("services")]
+        [MazeGet("services")]
         public IActionResult StartServices()
         {
             Process.Start("services.msc");
             return Ok();
         }
 
-        [OrcusGet("computerManagement")]
+        [MazeGet("computerManagement")]
         public IActionResult StartComputerManagement()
         {
             Process.Start("Compmgmt.msc");

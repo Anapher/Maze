@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using MahApps.Metro.IconPacks;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.ViewModels;
 
-namespace Orcus.Administration.ViewModels.Overview.Clients
+namespace Maze.Administration.ViewModels.Overview.Clients
 {
     public class DefaultClientListViewModel : ClientListBase
     {

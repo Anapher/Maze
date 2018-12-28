@@ -1,4 +1,4 @@
-﻿namespace Orcus.Options
+namespace Maze.Options
 {
     public class ConnectionOptions
     {

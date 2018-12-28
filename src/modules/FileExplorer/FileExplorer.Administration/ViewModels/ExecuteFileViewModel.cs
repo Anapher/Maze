@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using Anapher.Wpf.Swan;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.ViewModels;
 using Prism.Regions;
 
 namespace FileExplorer.Administration.ViewModels

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Management.Data;
 
@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Server.Library
         /// <summary>
         ///     The task that contains the command.
         /// </summary>
-        public abstract OrcusTask OrcusTask { get; }
+        public abstract MazeTask MazeTask { get; }
 
         /// <summary>
         ///     Receive services from the global services

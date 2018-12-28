@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -24,7 +24,7 @@
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="Orcus.NuGet.Protocol" Version="1.0.0" />
+    <PackageReference Include="Maze.NuGet.Protocol" Version="1.0.0" />
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.4" />
     <PackageReference Include="Serilog" Version="2.7.1" />
@@ -38,10 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Modules.Api\Orcus.Modules.Api.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Connection\Orcus.Server.Connection.csproj" />
-    <ProjectReference Include="..\Orcus.Sockets\Orcus.Sockets.csproj" />
-    <ProjectReference Include="..\Orcus.Utilities\Orcus.Utilities.csproj" />
+    <ProjectReference Include="..\Maze.Modules.Api\Maze.Modules.Api.csproj" />
+    <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
+    <ProjectReference Include="..\Maze.Sockets\Maze.Sockets.csproj" />
+    <ProjectReference Include="..\Maze.Utilities\Maze.Utilities.csproj" />
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
     <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj" />
   </ItemGroup>

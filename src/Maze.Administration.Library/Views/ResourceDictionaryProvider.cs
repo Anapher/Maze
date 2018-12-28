@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Library.Views
+namespace Maze.Administration.Library.Views
 {
     /// <summary>
     ///     A base class for creating bindings to a XAML dictionary

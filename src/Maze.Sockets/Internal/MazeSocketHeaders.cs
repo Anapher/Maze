@@ -1,6 +1,6 @@
-﻿namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
-    public static class OrcusSocketHeaders
+    public static class MazeSocketHeaders
     {
         public const string Upgrade = "Upgrade";
         public const string SecWebSocketKey = "Sec-WebSocket-Key";

@@ -1,6 +1,6 @@
-﻿using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.ViewModels;
 
 namespace ClipboardManager.Administration.ViewModels
 {

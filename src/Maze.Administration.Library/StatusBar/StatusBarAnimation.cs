@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     /// <summary>
     ///     The animation that will be displayed on the status bar

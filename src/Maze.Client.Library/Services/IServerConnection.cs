@@ -1,10 +1,10 @@
-﻿using Orcus.Server.Connection.Modules;
+using Maze.Server.Connection.Modules;
 
-namespace Orcus.Client.Library.Services
+namespace Maze.Client.Library.Services
 {
     public interface IServerConnection
     {
-        IOrcusRestClient RestClient { get; }
+        IMazeRestClient RestClient { get; }
         PackagesLock PackagesLock { get; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Orcus.Server.BusinessLogic;
+using Autofac;
+using Maze.Server.BusinessLogic;
 
-namespace Orcus.Server.Autofac
+namespace Maze.Server.Autofac
 {
     public class BusinessLogicModule : Module
     {

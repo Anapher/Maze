@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -30,10 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Server.BusinessDataAccess\Orcus.Server.BusinessDataAccess.csproj" />
-    <ProjectReference Include="..\Orcus.Server.BusinessLogic\Orcus.Server.BusinessLogic.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Data\Orcus.Server.Data.csproj" />
-    <ProjectReference Include="..\Orcus.Server.Service\Orcus.Server.Service.csproj" />
+    <ProjectReference Include="..\Maze.Server.BusinessDataAccess\Maze.Server.BusinessDataAccess.csproj" />
+    <ProjectReference Include="..\Maze.Server.BusinessLogic\Maze.Server.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Maze.Server.Data\Maze.Server.Data.csproj" />
+    <ProjectReference Include="..\Maze.Server.Service\Maze.Server.Service.csproj" />
     <ProjectReference Include="..\submodules\CodeElements.BizRunner\CodeElements.BizRunner\CodeElements.BizRunner.csproj" />
   </ItemGroup>
 

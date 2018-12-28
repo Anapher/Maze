@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Tasks.Common.Triggers;
 using Tasks.Infrastructure.Administration.Library.Trigger;
 using Tasks.Infrastructure.Core;
@@ -12,7 +12,7 @@ namespace Tasks.Common.Administration.Triggers
         }
 
         public ValidationResult ValidateInput() => ValidationResult.Success;
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
         public OnAppStartupTriggerInfo Build() => new OnAppStartupTriggerInfo();
     }
 }

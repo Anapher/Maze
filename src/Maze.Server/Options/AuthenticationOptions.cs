@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Options
+namespace Maze.Server.Options
 {
     public class AuthenticationOptions
     {

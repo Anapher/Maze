@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Buffers;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     /// <summary>
     ///     Contains information which must be sent to the counterpart for the services to work

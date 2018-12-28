@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Orcus.Administration.Converter
+namespace Maze.Administration.Converter
 {
     [ValueConversion(typeof(string), typeof(string))]
     public class NoNewLinesConverter : IValueConverter

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,11 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NuGet.Packaging.Core;
-using Orcus.ModuleManagement.Loader;
-using Orcus.Server.Connection.Modules;
-using Orcus.Utilities;
+using Maze.ModuleManagement.Loader;
+using Maze.Server.Connection.Modules;
+using Maze.Utilities;
 
-namespace Orcus.Server.Service.Modules.Loader
+namespace Maze.Server.Service.Modules.Loader
 {
     public class AssemblyNameComparer : IEqualityComparer<AssemblyName>
     {
@@ -53,7 +53,7 @@ namespace Orcus.Server.Service.Modules.Loader
 
             while (map.TryPop(out var dependencyLayer))
             {
-                foreach (var context in dependencyLayer.Where(x => !x.IsOrcusModule))
+                foreach (var context in dependencyLayer.Where(x => !x.IsMazeModule))
                 {
                     foreach (var file in Directory.GetFiles(context.LibraryDirectory, "*.dll"))
                     {
@@ -61,7 +61,7 @@ namespace Orcus.Server.Service.Modules.Loader
                     }
                 }
 
-                await TaskCombinators.ThrottledAsync(dependencyLayer.Where(x => x.IsOrcusModule), (context, token) => Task.Run(() =>
+                await TaskCombinators.ThrottledAsync(dependencyLayer.Where(x => x.IsMazeModule), (context, token) => Task.Run(() =>
                 {
                     foreach (var file in Directory.GetFiles(context.LibraryDirectory, "*.dll"))
                     {

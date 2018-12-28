@@ -1,24 +1,24 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security;
 using System.Threading;
 using NuGet.Frameworks;
-using Orcus.Administration.Core;
-using Orcus.Administration.Core.Modules;
-using Orcus.Administration.Core.Rest;
-using Orcus.Administration.Library.Exceptions;
-using Orcus.Administration.Library.Rest.Modules.V1;
-using Orcus.Administration.ViewModels.Utilities;
-using Orcus.ModuleManagement;
+using Maze.Administration.Core;
+using Maze.Administration.Core.Modules;
+using Maze.Administration.Core.Rest;
+using Maze.Administration.Library.Exceptions;
+using Maze.Administration.Library.Rest.Modules.V1;
+using Maze.Administration.ViewModels.Utilities;
+using Maze.ModuleManagement;
 using Prism.Mvvm;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Main
+namespace Maze.Administration.ViewModels.Main
 {
     public class LoginViewModel : BindableBase
     {
         private static readonly NuGetFramework
-            Framework = FrameworkConstants.CommonFrameworks.OrcusAdministration10; //TODO move somewhere else
+            Framework = FrameworkConstants.CommonFrameworks.MazeAdministration10; //TODO move somewhere else
 
         private readonly Action<AppLoadContext> _loadAppAction;
         private string _errorMessage;
@@ -69,7 +69,7 @@ namespace Orcus.Administration.ViewModels.Main
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
                         var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:50485/") };
-                        var client = await OrcusRestConnector.TryConnect(Username, parameter, serverInfo);
+                        var client = await MazeRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
 

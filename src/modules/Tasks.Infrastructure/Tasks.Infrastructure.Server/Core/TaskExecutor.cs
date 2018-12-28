@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.Connection.Extensions;
-using Orcus.Server.Library.Hubs;
-using Orcus.Utilities;
+using Maze.Server.Connection.Extensions;
+using Maze.Server.Library.Hubs;
+using Maze.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Dtos;
@@ -25,7 +25,7 @@ namespace Tasks.Infrastructure.Server.Core
 {
     public class TaskExecutor
     {
-        private readonly OrcusTask _orcusTask;
+        private readonly MazeTask _mazeTask;
         private readonly TaskSession _taskSession;
         private readonly ITaskResultStorage _taskResultStorage;
         private readonly IServiceProvider _services;
@@ -36,9 +36,9 @@ namespace Tasks.Infrastructure.Server.Core
         private readonly IReadOnlyDictionary<CommandInfo, Type> _executorTypes;
         private readonly IReadOnlyDictionary<Type, MethodInfo> _executionMethods;
 
-        public TaskExecutor(OrcusTask orcusTask, TaskSession taskSession, ITaskResultStorage taskResultStorage, IServiceProvider services)
+        public TaskExecutor(MazeTask mazeTask, TaskSession taskSession, ITaskResultStorage taskResultStorage, IServiceProvider services)
         {
-            _orcusTask = orcusTask;
+            _mazeTask = mazeTask;
             _taskSession = taskSession;
             _taskResultStorage = taskResultStorage;
             _services = services;
@@ -47,7 +47,7 @@ namespace Tasks.Infrastructure.Server.Core
             _activeTasksManager = services.GetRequiredService<ActiveTasksManager>();
             _hubContext = services.GetRequiredService<IHubContext<AdministrationHub>>();
 
-            _executorTypes = _orcusTask.Commands.ToDictionary(x => x, commandInfo => typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType()));
+            _executorTypes = _mazeTask.Commands.ToDictionary(x => x, commandInfo => typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType()));
             _executionMethods = _executorTypes.Values.ToDictionary(x => x, executorType => executorType.GetMethod("InvokeAsync"));
         }
 
@@ -73,7 +73,7 @@ namespace Tasks.Infrastructure.Server.Core
                 TaskSessionId = _taskSession.TaskSessionId,
                 TargetId = id.IsServer ? (int?) null : id.ClientId,
                 CreatedOn = DateTimeOffset.UtcNow,
-                TaskReferenceId = _orcusTask.Id
+                TaskReferenceId = _mazeTask.Id
             };
 
             if (!await _taskResultStorage.CreateTaskExecution(execution))
@@ -82,7 +82,7 @@ namespace Tasks.Infrastructure.Server.Core
             await _hubContext.Clients.All.SendAsync(HubEventNames.TaskExecutionCreated, execution, cancellationToken);
 
             var machineStatus = _activeTasksManager.ActiveCommands.GetOrAdd(id, _ => new TasksMachineStatus());
-            foreach (var commandInfo in _orcusTask.Commands)
+            foreach (var commandInfo in _mazeTask.Commands)
             {
                 await ExecuteCommand(id, services, commandInfo, machineStatus, execution.TaskExecutionId, cancellationToken);
             }
@@ -124,7 +124,7 @@ namespace Tasks.Infrastructure.Server.Core
             status.Processes.TryAdd(commandProcessDto.CommandResultId, commandProcessDto);
             try
             {
-                using (var context = new DefaultTaskExecutionContext(_taskSession, _orcusTask, services, UpdateStatus))
+                using (var context = new DefaultTaskExecutionContext(_taskSession, _mazeTask, services, UpdateStatus))
                 {
                     context.ReportProgress(null); //important to notify about the start of the operation
 

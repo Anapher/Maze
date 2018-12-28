@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Library.Menu
+namespace Maze.Administration.Library.Menu
 {
     public abstract class ContextMenuManager
     {

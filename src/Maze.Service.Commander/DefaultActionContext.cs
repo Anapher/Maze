@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
-using Orcus.Modules.Api;
-using Orcus.Service.Commander.Routing;
+using System.Collections.Generic;
+using Maze.Modules.Api;
+using Maze.Service.Commander.Routing;
 
-namespace Orcus.Service.Commander
+namespace Maze.Service.Commander
 {
     public class DefaultActionContext : ActionContext
     {
-        public DefaultActionContext(OrcusContext context, Route route, IReadOnlyDictionary<string, object> routeData)
+        public DefaultActionContext(MazeContext context, Route route, IReadOnlyDictionary<string, object> routeData)
         {
             Context = context;
             Route = route;
             RouteData = routeData;
         }
 
-        public override OrcusContext Context { get; }
+        public override MazeContext Context { get; }
         public Route Route { get; }
         public override IReadOnlyDictionary<string, object> RouteData { get; }
     }

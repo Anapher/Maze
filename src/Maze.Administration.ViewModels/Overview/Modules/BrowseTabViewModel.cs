@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -10,11 +10,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
-using Orcus.Utilities;
+using Maze.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.ViewModels.Overview.Modules
+namespace Maze.Administration.ViewModels.Overview.Modules
 {
     public class BrowseTabViewModel : BindableBase, IModuleTabViewModel
     {

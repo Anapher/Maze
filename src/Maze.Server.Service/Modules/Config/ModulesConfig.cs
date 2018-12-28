@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Packaging.Core;
-using Orcus.Server.Connection.JsonConverters;
-using Orcus.Server.Service.Modules.Config.Base;
-using Orcus.Server.Service.Modules.Extensions;
+using Maze.Server.Connection.JsonConverters;
+using Maze.Server.Service.Modules.Config.Base;
+using Maze.Server.Service.Modules.Extensions;
 
-namespace Orcus.Server.Service.Modules.Config
+namespace Maze.Server.Service.Modules.Config
 {
     public class ModulesConfig : JsonObjectFile<IReadOnlyList<PackageIdentity>>, IModulesConfig
     {

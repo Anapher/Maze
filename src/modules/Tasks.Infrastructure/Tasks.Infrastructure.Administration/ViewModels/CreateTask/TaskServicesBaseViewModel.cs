@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Input;
 using Autofac;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -143,11 +143,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
-        public override IEnumerable<ValidationResult> ValidateContext(OrcusTask orcusTask)
+        public override IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask)
         {
             foreach (var taskViewModelView in _childs)
             {
-                var validationResult = TaskServiceViewModelUtils.ValidateContext(taskViewModelView.ViewModel, orcusTask);
+                var validationResult = TaskServiceViewModelUtils.ValidateContext(taskViewModelView.ViewModel, mazeTask);
                 if (validationResult != ValidationResult.Success)
                     yield return validationResult;
             }
@@ -159,11 +159,11 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                     switch (audienceAttribute.Mode)
                     {
                         case TaskAudienceMode.Clients:
-                            if (!orcusTask.Audience.Any() && !orcusTask.Audience.IsAll)
+                            if (!mazeTask.Audience.Any() && !mazeTask.Audience.IsAll)
                                 yield return new ValidationResult("No clients included");
                             break;
                         case TaskAudienceMode.Server:
-                            if (!orcusTask.Audience.IncludesServer)
+                            if (!mazeTask.Audience.IncludesServer)
                                 yield return new ValidationResult("No server included");
                             break;
                         case TaskAudienceMode.ClientsAndServer:

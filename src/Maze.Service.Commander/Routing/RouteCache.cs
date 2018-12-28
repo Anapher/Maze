@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using NuGet.Packaging.Core;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
-using Orcus.Server.Connection.Extensions;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
+using Maze.Server.Connection.Extensions;
 
-namespace Orcus.Service.Commander.Routing
+namespace Maze.Service.Commander.Routing
 {
     /// <summary>
     ///     Extracts the routes of package controllers
@@ -21,8 +21,8 @@ namespace Orcus.Service.Commander.Routing
         public void BuildCache(IReadOnlyDictionary<PackageIdentity, List<Type>> controllers)
         {
             var routes = new Dictionary<RouteDescription, Route>();
-            var channelBaseType = typeof(OrcusChannel);
-            var channelInitMethod = channelBaseType.GetMethod(nameof(OrcusChannel.Initialize),
+            var channelBaseType = typeof(MazeChannel);
+            var channelInitMethod = channelBaseType.GetMethod(nameof(MazeChannel.Initialize),
                 BindingFlags.Instance | BindingFlags.Public);
 
 #if NETCOREAPP
@@ -117,8 +117,8 @@ namespace Orcus.Service.Commander.Routing
             if (segment.Equals("[controller]", comparisonType))
             {
                 var value = controllerType.Name;
-                if (value.EndsWith("OrcusController", comparisonType))
-                    return value.TrimEnd("OrcusController", comparisonType);
+                if (value.EndsWith("MazeController", comparisonType))
+                    return value.TrimEnd("MazeController", comparisonType);
 
                 return value.TrimEnd("Controller", comparisonType);
             }

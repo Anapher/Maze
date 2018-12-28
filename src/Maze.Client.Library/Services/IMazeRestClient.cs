@@ -1,9 +1,9 @@
-﻿using Orcus.Client.Library.Clients;
+using Maze.Client.Library.Clients;
 using System;
 
-namespace Orcus.Client.Library.Services
+namespace Maze.Client.Library.Services
 {
-    public interface IOrcusRestClient : IRestClient
+    public interface IMazeRestClient : IRestClient
     {
         Uri BaseUri { get; }
         string Jwt { get; }

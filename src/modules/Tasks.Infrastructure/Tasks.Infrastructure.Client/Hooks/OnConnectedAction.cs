@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using Orcus.Client.Library.Interfaces;
-using Orcus.Client.Library.Services;
+using System.Threading.Tasks;
+using Maze.Client.Library.Interfaces;
+using Maze.Client.Library.Services;
 using Tasks.Infrastructure.Client.Rest.V1;
 
 namespace Tasks.Infrastructure.Client.Hooks
 {
     public class OnConnectedAction : IConnectedAction
     {
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private readonly IClientTaskManager _taskManager;
 
         public OnConnectedAction(ICoreConnector coreConnector, IClientTaskManager taskManager)

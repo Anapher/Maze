@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,17 +8,17 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.ModelBinding;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Response;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Commanding.Formatters.Internal;
-using Orcus.Service.Commander.Commanding.ModelBinding;
-using Orcus.Service.Commander.Commanding.ModelBinding.Abstract;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Formatters;
+using Maze.Modules.Api.ModelBinding;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Response;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.Formatters.Internal;
+using Maze.Service.Commander.Commanding.ModelBinding;
+using Maze.Service.Commander.Commanding.ModelBinding.Abstract;
 
-namespace Orcus.Service.Commander.Logging
+namespace Maze.Service.Commander.Logging
 {
     internal static class MvcCoreLoggerExtensions
     {
@@ -736,7 +736,7 @@ namespace Orcus.Service.Commander.Logging
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                var contentType = formatterContext.OrcusContext.Request.ContentType;
+                var contentType = formatterContext.MazeContext.Request.ContentType;
                 _inputFormatterSelected(logger, inputFormatter, contentType, null);
             }
         }
@@ -748,7 +748,7 @@ namespace Orcus.Service.Commander.Logging
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                var contentType = formatterContext.OrcusContext.Request.ContentType;
+                var contentType = formatterContext.MazeContext.Request.ContentType;
                 _inputFormatterRejected(logger, inputFormatter, contentType, null);
             }
         }

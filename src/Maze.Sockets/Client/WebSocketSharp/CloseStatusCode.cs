@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 /*
  * CloseStatusCode.cs
  *
@@ -28,7 +28,7 @@
 
 using System;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     /// <summary>
     /// Indicates the status code for the WebSocket connection close.

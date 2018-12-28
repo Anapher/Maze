@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO;
@@ -6,12 +6,12 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
     /// <summary>
     ///     A websocket like implementation that provides the methods to send prefixed buffers over a stream
     /// </summary>
-    public class OrcusSocket : IDataSocket
+    public class MazeSocket : IDataSocket
     {
         //   7 6 5 4 3 2 1 0
         //  +-+-+-+-+-+-+-+-+
@@ -72,21 +72,21 @@ namespace Orcus.Sockets
         private int _receiveBufferOffset;
 
         /// <summary>
-        ///     Initialize a new instance of <see cref="OrcusSocket" />
+        ///     Initialize a new instance of <see cref="MazeSocket" />
         /// </summary>
         /// <param name="stream">The stream that carries the underlying connection</param>
         /// <param name="keepAliveInterval">
         ///     The frequency the ping-pong messages should be send to verify that the underlying
         ///     connection is still alive
         /// </param>
-        public OrcusSocket(Stream stream, TimeSpan? keepAliveInterval)
+        public MazeSocket(Stream stream, TimeSpan? keepAliveInterval)
         {
             _stream = stream;
 
             // Set up the abort source so that if it's triggered, we transition the instance appropriately.
             _abortSource.Token.Register(s =>
             {
-                var thisRef = (OrcusSocket) s;
+                var thisRef = (MazeSocket) s;
 
                 lock (thisRef.StateUpdateLock)
                 {
@@ -99,7 +99,7 @@ namespace Orcus.Sockets
             }, this);
 
             if (keepAliveInterval.HasValue)
-                _keepAliveTimer = new Timer(s => ((OrcusSocket) s).SendKeepAliveFrameAsync(), this,
+                _keepAliveTimer = new Timer(s => ((MazeSocket) s).SendKeepAliveFrameAsync(), this,
                     keepAliveInterval.Value, keepAliveInterval.Value);
         }
 
@@ -274,7 +274,7 @@ namespace Orcus.Sockets
             // release the semaphore and translate any exception that occurred.
             return writeTask.ContinueWith((t, s) =>
             {
-                var thisRef = (OrcusSocket) s;
+                var thisRef = (MazeSocket) s;
                 thisRef._sendFrameAsyncLock.Release();
                 thisRef.ReleaseSendBuffer(sendBuffer.Array);
 
@@ -333,7 +333,7 @@ namespace Orcus.Sockets
             await _sendFrameAsyncLock.WaitAsync().ConfigureAwait(false);
             try
             {
-                using (cancellationToken.Register(s => ((OrcusSocket) s).Abort(), this))
+                using (cancellationToken.Register(s => ((MazeSocket) s).Abort(), this))
                 {
                     await _stream.WriteAsync(sendBuffer.Array, sendBuffer.Offset, sendBuffer.Count, cancellationToken)
                         .ConfigureAwait(false);

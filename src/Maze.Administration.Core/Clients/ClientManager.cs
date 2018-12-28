@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,24 +8,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Rest.ClientGroups.V1;
-using Orcus.Administration.Library.Rest.Clients.V1;
-using Orcus.Administration.Library.Services;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Clients;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Rest.ClientGroups.V1;
+using Maze.Administration.Library.Rest.Clients.V1;
+using Maze.Administration.Library.Services;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Clients;
 
-namespace Orcus.Administration.Core.Clients
+namespace Maze.Administration.Core.Clients
 {
     public class ClientManager : IClientManager, INotifyPropertyChanged
     {
         private readonly IAppDispatcher _appDispatcher;
         private readonly SemaphoreSlim _initalizationLock = new SemaphoreSlim(1, 1);
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private bool _isInitialized;
 
-        public ClientManager(IOrcusRestClient restClient, IAppDispatcher appDispatcher)
+        public ClientManager(IMazeRestClient restClient, IAppDispatcher appDispatcher)
         {
             _restClient = restClient;
             _appDispatcher = appDispatcher;

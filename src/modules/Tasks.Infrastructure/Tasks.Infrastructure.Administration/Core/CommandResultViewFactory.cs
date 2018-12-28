@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Logging;
+using Maze.Administration.Library.Logging;
 using Tasks.Infrastructure.Administration.Library.Result;
 using Tasks.Infrastructure.Administration.Utilities;
 using Tasks.Infrastructure.Core.Dtos;

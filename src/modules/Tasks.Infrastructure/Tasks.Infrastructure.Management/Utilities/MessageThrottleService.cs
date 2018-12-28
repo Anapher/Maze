@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Utilities;
+using Maze.Utilities;
 using Serilog;
 
 namespace Tasks.Infrastructure.Management.Utilities

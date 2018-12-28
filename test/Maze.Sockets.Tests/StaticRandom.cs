@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
 
-namespace Orcus.Sockets.Tests
+namespace Maze.Sockets.Tests
 {
     //https://stackoverflow.com/a/19271062
     public static class StaticRandom

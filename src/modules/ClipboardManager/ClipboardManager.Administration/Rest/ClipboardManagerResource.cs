@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using ClipboardManager.Shared.Channels;
 using ClipboardManager.Shared.Dtos;
-using Orcus.Administration.ControllerExtensions;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.ControllerExtensions;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
 
 namespace ClipboardManager.Administration.Rest
 {

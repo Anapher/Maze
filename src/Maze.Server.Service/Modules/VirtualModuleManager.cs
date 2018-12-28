@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using NuGet.Packaging.Core;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.Config;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Modules.Config;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public interface IVirtualModuleManager
     {

@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Connection.Commanding
+namespace Maze.Server.Connection.Commanding
 {
     /// <summary>
     ///     A target represents a single client/group or a range of clients/groups

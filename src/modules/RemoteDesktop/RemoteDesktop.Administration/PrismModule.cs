@@ -1,6 +1,6 @@
-﻿using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Services;
 using Prism.Modularity;
 using RemoteDesktop.Administration.Resources;
 using RemoteDesktop.Administration.ViewModels;

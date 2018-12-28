@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +11,7 @@ using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Helpers;
 using FileExplorer.Shared.Dtos;
-using Orcus.Utilities;
+using Maze.Utilities;
 using Prism.Mvvm;
 using TreeViewEx.Controls;
 using TreeViewEx.Controls.Models;

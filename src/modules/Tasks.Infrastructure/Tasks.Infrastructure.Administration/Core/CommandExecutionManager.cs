@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Autofac;
-using Orcus.Administration.Library.Clients;
-using Orcus.Server.Connection.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Server.Connection.Utilities;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Library.Command;
 using Tasks.Infrastructure.Administration.Rest.V1;
@@ -31,25 +31,25 @@ namespace Tasks.Infrastructure.Administration.Core
 
         public ObservableCollection<PendingCommandViewModel> PendingCommands { get; }
 
-        public TaskActivityWatcher Execute(OrcusTask orcusTask, ICommandDescription commandDescription)
+        public TaskActivityWatcher Execute(MazeTask mazeTask, ICommandDescription commandDescription)
         {
-            var task = TasksResource.Execute(orcusTask, _taskComponentResolver, _xmlSerializerCache, _restClient);
+            var task = TasksResource.Execute(mazeTask, _taskComponentResolver, _xmlSerializerCache, _restClient);
 
             var watcher = _componentContext.Resolve<TaskActivityWatcher>();
-            watcher.InitializeWatch(orcusTask.Id);
+            watcher.InitializeWatch(mazeTask.Id);
 
-            PendingCommands.Insert(0, new PendingCommandViewModel(commandDescription, task, orcusTask, watcher));
+            PendingCommands.Insert(0, new PendingCommandViewModel(commandDescription, task, mazeTask, watcher));
             return watcher;
         }
     }
 
     public class PendingCommandViewModel : BindableBase
     {
-        public PendingCommandViewModel(ICommandDescription commandDescription, Task<TaskSessionsInfo> task, OrcusTask orcusTask, TaskActivityWatcher taskActivityWatcher)
+        public PendingCommandViewModel(ICommandDescription commandDescription, Task<TaskSessionsInfo> task, MazeTask mazeTask, TaskActivityWatcher taskActivityWatcher)
         {
             CommandDescription = commandDescription;
             Task = task;
-            OrcusTask = orcusTask;
+            MazeTask = mazeTask;
             TaskActivityWatcher = taskActivityWatcher;
 
             Task.ContinueWith(x =>
@@ -61,7 +61,7 @@ namespace Tasks.Infrastructure.Administration.Core
 
         public ICommandDescription CommandDescription { get; }
         public Task<TaskSessionsInfo> Task { get; }
-        public OrcusTask OrcusTask { get; }
+        public MazeTask MazeTask { get; }
 
         public TaskActivityWatcher TaskActivityWatcher { get; }
 

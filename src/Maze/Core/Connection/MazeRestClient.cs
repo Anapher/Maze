@@ -1,23 +1,23 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Orcus.Client.Library.Clients;
-using Orcus.Client.Library.Services;
-using Orcus.Exceptions;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Error;
+using Maze.Client.Library.Clients;
+using Maze.Client.Library.Services;
+using Maze.Exceptions;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Error;
 
-namespace Orcus.Core.Connection
+namespace Maze.Core.Connection
 {
-    public class OrcusRestClient : IRestClient, IOrcusRestClient
+    public class MazeRestClient : IRestClient, IMazeRestClient
     {
         private readonly HttpClient _httpClient;
 
-        public OrcusRestClient(HttpClient httpClient, Uri baseUri)
+        public MazeRestClient(HttpClient httpClient, Uri baseUri)
         {
             _httpClient = httpClient;
             BaseUri = baseUri;

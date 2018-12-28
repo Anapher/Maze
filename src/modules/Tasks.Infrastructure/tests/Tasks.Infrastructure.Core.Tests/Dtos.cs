@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -49,7 +49,7 @@ namespace Tasks.Infrastructure.Core.Tests
         public TimeSpan Duration { get; set; }
     }
 
-    [OrcusCommand("Maze.WakeOnLan", "SystemUtilities;TaskManager")]
+    [MazeCommand("Maze.WakeOnLan", "SystemUtilities;TaskManager")]
     public class WakeOnLanCommand : CommandInfo, IXmlSerializable
     {
         public string Content { get; set; }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Service.Commander.Commanding.Formatters
+namespace Maze.Service.Commander.Commanding.Formatters
 {
     public static class ResponseContentTypeHelper
     {

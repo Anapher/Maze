@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.Loader;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.Config;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.Loader;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Modules.Config;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public interface IModuleProject
     {

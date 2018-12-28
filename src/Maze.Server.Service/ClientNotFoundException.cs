@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Service
+namespace Maze.Server.Service
 {
     public class ClientNotFoundException : Exception
     {

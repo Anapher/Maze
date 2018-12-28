@@ -1,14 +1,14 @@
-﻿namespace Orcus.Modules.Api.Routing
+namespace Maze.Modules.Api.Routing
 {
-    public class OrcusDeleteAttribute : OrcusMethodAttribute
+    public class MazeDeleteAttribute : MazeMethodAttribute
     {
         private const string _method = "DELETE";
 
-        public OrcusDeleteAttribute(string path) : base(_method, path)
+        public MazeDeleteAttribute(string path) : base(_method, path)
         {
         }
 
-        public OrcusDeleteAttribute() : base(_method)
+        public MazeDeleteAttribute() : base(_method)
         {
         }
     }

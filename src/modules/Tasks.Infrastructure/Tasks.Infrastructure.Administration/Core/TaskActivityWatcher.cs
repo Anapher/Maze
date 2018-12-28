@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR.Client;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Services;
-using Orcus.Server.Connection.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Services;
+using Maze.Server.Connection.Utilities;
 using Tasks.Infrastructure.Administration.ViewModels.TaskOverview;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
@@ -14,7 +14,7 @@ namespace Tasks.Infrastructure.Administration.Core
 {
     public class TaskActivityWatcher : IDisposable
     {
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private readonly IAppDispatcher _dispatcher;
         private Guid _taskId;
         private readonly Stack<IDisposable> _disposables = new Stack<IDisposable>();
@@ -22,7 +22,7 @@ namespace Tasks.Infrastructure.Administration.Core
         private Dictionary<Guid, TaskExecutionViewModel> _executions;
         private Dictionary<Guid, ICommandStatusViewModel> _results;
 
-        public TaskActivityWatcher(IOrcusRestClient restClient, IAppDispatcher dispatcher)
+        public TaskActivityWatcher(IMazeRestClient restClient, IAppDispatcher dispatcher)
         {
             _restClient = restClient;
             _dispatcher = dispatcher;

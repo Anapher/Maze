@@ -1,24 +1,24 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using Anapher.Wpf.Swan.Extensions;
 using MahApps.Metro.IconPacks;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Rest.ClientGroups.V1;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Utilities;
-using Orcus.Administration.Library.ViewModels;
-using Orcus.Administration.Library.Views;
-using Orcus.Administration.ViewModels.Overview.Groups;
-using Orcus.Server.Connection.Clients;
-using Orcus.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Rest.ClientGroups.V1;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.Utilities;
+using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
+using Maze.Administration.ViewModels.Overview.Groups;
+using Maze.Server.Connection.Clients;
+using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Overview
+namespace Maze.Administration.ViewModels.Overview
 {
     public class GroupsViewModel : OverviewTabBase
     {

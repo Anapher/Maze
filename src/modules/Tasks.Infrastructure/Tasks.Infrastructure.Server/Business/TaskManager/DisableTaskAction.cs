@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
@@ -14,9 +14,9 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
     public class DisableTaskAction : BusinessActionErrors, IDisableTaskAction
     {
         private readonly ITaskReferenceDbAccess _dbAccess;
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
 
-        public DisableTaskAction(IOrcusTaskManagerManagement management, ITaskReferenceDbAccess dbAccess)
+        public DisableTaskAction(IMazeTaskManagerManagement management, ITaskReferenceDbAccess dbAccess)
         {
             _management = management;
             _dbAccess = dbAccess;

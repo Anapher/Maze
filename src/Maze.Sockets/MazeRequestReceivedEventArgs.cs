@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Threading;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Sockets
+namespace Maze.Sockets
 {
-    public class OrcusRequestReceivedEventArgs : EventArgs
+    public class MazeRequestReceivedEventArgs : EventArgs
     {
-        public OrcusRequestReceivedEventArgs(OrcusRequest request, OrcusResponse response,
+        public MazeRequestReceivedEventArgs(MazeRequest request, MazeResponse response,
             CancellationToken cancellationToken)
         {
             Request = request;
@@ -15,8 +15,8 @@ namespace Orcus.Sockets
             CancellationToken = cancellationToken;
         }
 
-        public OrcusRequest Request { get; }
-        public OrcusResponse Response { get; }
+        public MazeRequest Request { get; }
+        public MazeResponse Response { get; }
         public CancellationToken CancellationToken { get; }
     }
 }

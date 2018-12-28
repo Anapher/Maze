@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace Tasks.Infrastructure.Core
 {
     //Inspired by https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Packaging.Core/NuspecCoreReaderBase.cs
     /// <summary>
-    ///     A very basic Orcus Task reader that understands the Id, Version, PackageType, and MinClientVersion of a package.
+    ///     A very basic Maze Task reader that understands the Id, Version, PackageType, and MinClientVersion of a package.
     /// </summary>
-    public abstract class OrcusTaskReaderBase
+    public abstract class MazeTaskReaderBase
     {
         private XElement _metadataNode;
         private Dictionary<string, string> _metadataValues;
@@ -19,7 +19,7 @@ namespace Tasks.Infrastructure.Core
         /// <summary>
         ///     Read a task from a path.
         /// </summary>
-        protected OrcusTaskReaderBase(string path)
+        protected MazeTaskReaderBase(string path)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
 
@@ -29,14 +29,14 @@ namespace Tasks.Infrastructure.Core
         /// <summary>
         ///     Read a task from a stream.
         /// </summary>
-        protected OrcusTaskReaderBase(Stream stream) : this(stream, false)
+        protected MazeTaskReaderBase(Stream stream) : this(stream, false)
         {
         }
 
         /// <summary>
         ///     Read a task from a stream.
         /// </summary>
-        protected OrcusTaskReaderBase(Stream stream, bool leaveStreamOpen)
+        protected MazeTaskReaderBase(Stream stream, bool leaveStreamOpen)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
@@ -46,7 +46,7 @@ namespace Tasks.Infrastructure.Core
         /// <summary>
         ///     Reads a task from XML
         /// </summary>
-        protected OrcusTaskReaderBase(XDocument xml)
+        protected MazeTaskReaderBase(XDocument xml)
         {
             Xml = xml ?? throw new ArgumentNullException(nameof(xml));
         }

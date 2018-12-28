@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.IO;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     /// <summary>
     ///     A simple memory stream that returns the buffer to the <see cref="ArrayPool{T}" /> on disposing

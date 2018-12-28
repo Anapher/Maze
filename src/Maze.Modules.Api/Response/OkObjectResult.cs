@@ -1,4 +1,4 @@
-﻿namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
     /// An <see cref="T:Microsoft.AspNetCore.Mvc.ObjectResult" /> that when executed performs content negotiation, formats the entity body, and

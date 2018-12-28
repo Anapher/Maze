@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Filter;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -39,9 +39,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override string EntryName { get; } = Tx.T("TasksInfrastructure:CreateTask.Filters", 1);
 
-        public override void Initialize(OrcusTask orcusTask)
+        public override void Initialize(MazeTask mazeTask)
         {
-            foreach (var filterInfo in orcusTask.Filters)
+            foreach (var filterInfo in mazeTask.Filters)
             {
                 var filterInfoType = filterInfo.GetType();
                 var description = AvailableServices.First(x => x.DtoType == filterInfoType);
@@ -50,7 +50,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, filterInfo);
                 AddChild(view);
 
-                if (orcusTask.Filters.Count == 1)
+                if (mazeTask.Filters.Count == 1)
                 {
                     SetProperty(ref _selectedService, description, nameof(SelectedService));
                     SetProperty(ref _selectedChild, view, nameof(SelectedChild));
@@ -58,13 +58,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
-        public override void Apply(OrcusTask orcusTask)
+        public override void Apply(MazeTask mazeTask)
         {
-            orcusTask.Filters = new List<FilterInfo>();
+            mazeTask.Filters = new List<FilterInfo>();
             foreach (var taskView in _childs)
             {
                 var dto = TaskServiceViewModelUtils.Build<FilterInfo>(taskView.ViewModel);
-                orcusTask.Filters.Add(dto);
+                mazeTask.Filters.Add(dto);
             }
         }
     }

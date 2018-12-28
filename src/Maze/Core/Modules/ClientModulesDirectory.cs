@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Options;
-using Orcus.ModuleManagement;
-using Orcus.Options;
+using Maze.ModuleManagement;
+using Maze.Options;
 
-namespace Orcus.Core.Modules
+namespace Maze.Core.Modules
 {
     public class ClientModulesDirectory : ModulesDirectory
     {

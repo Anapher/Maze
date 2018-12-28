@@ -1,7 +1,7 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Orcus.Client.Library.Clients;
-using Orcus.Client.Library.Clients.Helpers;
+using Maze.Client.Library.Clients;
+using Maze.Client.Library.Clients.Helpers;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management.Data;
 

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Extensions
+namespace Maze.Modules.Api.Extensions
 {
     public static class ServiceProviderServiceExtensions
     {

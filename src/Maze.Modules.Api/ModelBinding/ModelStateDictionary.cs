@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Primitives;
-using Orcus.Modules.Api.Formatters;
+using Maze.Modules.Api.Formatters;
 
-namespace Orcus.Modules.Api.ModelBinding
+namespace Maze.Modules.Api.ModelBinding
 {
     /// <summary>
     /// Represents the state of an attempt to bind values from an HTTP Request to an action method, which includes

@@ -13,7 +13,7 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Service.Modules.Resolver
+namespace Maze.Server.Service.Modules.Resolver
 {
     /// <summary>
     /// A core package dependency resolver.

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 
-namespace Orcus.Administration.Extensions
+namespace Maze.Administration.Extensions
 {
     public static class HyperlinkExtensions
     {

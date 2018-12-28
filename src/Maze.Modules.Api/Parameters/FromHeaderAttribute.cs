@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Parameters
+namespace Maze.Modules.Api.Parameters
 {
     /// <summary>
     ///     Specifies that a parameter or property should be bound using the request headers.

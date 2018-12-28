@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.Response;
-using Orcus.Modules.Api.Services;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Logging;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Formatters;
+using Maze.Modules.Api.Response;
+using Maze.Modules.Api.Services;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Logging;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Executes an <see cref="ObjectResult" /> to write to the response.

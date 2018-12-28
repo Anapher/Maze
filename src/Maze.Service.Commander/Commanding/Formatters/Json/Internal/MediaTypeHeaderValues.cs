@@ -3,7 +3,7 @@
 
 using Microsoft.Net.Http.Headers;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Json.Internal
 {
     internal class MediaTypeHeaderValues
     {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Controls
+namespace Maze.Administration.Controls
 {
     public class FrameAnimationControl : ContentControl
     {

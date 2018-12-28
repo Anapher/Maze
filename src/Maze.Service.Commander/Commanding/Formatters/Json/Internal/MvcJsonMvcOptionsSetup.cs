@@ -9,12 +9,12 @@ using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
+namespace Maze.Service.Commander.Commanding.Formatters.Json.Internal
 {
     /// <summary>
     /// Sets up JSON formatter options for <see cref="MvcOptions"/>.
     /// </summary>
-    public class MvcJsonMvcOptionsSetup : IConfigureOptions<OrcusServerOptions>
+    public class MvcJsonMvcOptionsSetup : IConfigureOptions<MazeServerOptions>
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly ArrayPool<char> _charPool;
@@ -45,7 +45,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json.Internal
             _objectPoolProvider = objectPoolProvider;
         }
 
-        public void Configure(OrcusServerOptions options)
+        public void Configure(MazeServerOptions options)
         {
             options.OutputFormatters.Add(new JsonOutputFormatter(options.SerializerSettings, _charPool));
 

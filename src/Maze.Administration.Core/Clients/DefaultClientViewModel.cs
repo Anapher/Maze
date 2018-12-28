@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using Orcus.Administration.Library.Models;
-using Orcus.Server.Connection.Clients;
+using Maze.Administration.Library.Models;
+using Maze.Server.Connection.Clients;
 
-namespace Orcus.Administration.Core.Clients
+namespace Maze.Administration.Core.Clients
 {
     public class DefaultClientViewModel : ClientViewModel
     {

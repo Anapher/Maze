@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
 using TaskManager.Client.Native;
 
 namespace TaskManager.Client.Controllers
 {
     [Route("processes/{processId}/window")]
-    public class ProcessesWindowController : OrcusController
+    public class ProcessesWindowController : MazeController
     {
-        [OrcusGet("bringToFront")]
+        [MazeGet("bringToFront")]
         public IActionResult BringToFront(int processId)
         {
             if (!GetWindowHandle(processId, out var windowHandle, out var errorResult))
@@ -25,7 +25,7 @@ namespace TaskManager.Client.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [OrcusGet("maximize")]
+        [MazeGet("maximize")]
         public IActionResult Maximize(int processId)
         {
             if (!GetWindowHandle(processId, out var windowHandle, out var errorResult))
@@ -37,7 +37,7 @@ namespace TaskManager.Client.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [OrcusGet("minimize")]
+        [MazeGet("minimize")]
         public IActionResult Minimize(int processId)
         {
             if (!GetWindowHandle(processId, out var windowHandle, out var errorResult))
@@ -49,7 +49,7 @@ namespace TaskManager.Client.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [OrcusGet("restore")]
+        [MazeGet("restore")]
         public IActionResult Restore(int processId)
         {
             if (!GetWindowHandle(processId, out var windowHandle, out var errorResult))
@@ -61,7 +61,7 @@ namespace TaskManager.Client.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [OrcusGet("close")]
+        [MazeGet("close")]
         public IActionResult Close(int processId)
         {
             if (!GetWindowHandle(processId, out var windowHandle, out var errorResult))

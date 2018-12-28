@@ -1,7 +1,7 @@
-﻿using NuGet.Packaging;
+using NuGet.Packaging;
 using NuGet.Versioning;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public class VersionFolderPathResolverFlat : VersionFolderPathResolver
     {

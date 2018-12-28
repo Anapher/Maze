@@ -1,18 +1,18 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Rest.ClientGroups.V1;
-using Orcus.Administration.Library.Views;
-using Orcus.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Rest.ClientGroups.V1;
+using Maze.Administration.Library.Views;
+using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Overview.Groups
+namespace Maze.Administration.ViewModels.Overview.Groups
 {
     public class GroupMenuItemViewModel
     {

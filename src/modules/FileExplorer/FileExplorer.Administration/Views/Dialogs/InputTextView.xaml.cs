@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Threading;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
 // ReSharper disable once CheckNamespace
 namespace FileExplorer.Administration.Views

@@ -1,11 +1,11 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     Creates <see cref="TextWriter" /> instances for writing to <see cref="HttpResponse.Body" />.

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 
-namespace Orcus.Server.Connection.Error
+namespace Maze.Server.Connection.Error
 {
     public static class ErrorTypes
     {

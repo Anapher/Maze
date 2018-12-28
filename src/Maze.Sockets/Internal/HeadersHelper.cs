@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     public class HeadersHelper
     {

@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Connection.Utilities;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Connection.Utilities;
 using Tasks.Infrastructure.Core.Audience;
 using Tasks.Infrastructure.Core.Commands;
 
 namespace Tasks.Infrastructure.Core
 {
     /// <summary>
-    ///     Writer for an <see cref="OrcusTask"/>
+    ///     Writer for an <see cref="MazeTask"/>
     /// </summary>
-    public class OrcusTaskWriter
+    public class MazeTaskWriter
     {
         private readonly XmlWriter _xmlWriter;
         private readonly ITaskComponentResolver _componentResolver;
         private readonly IXmlSerializerCache _serializerCache;
         private readonly XmlSerializerNamespaces _namespaces;
 
-        public OrcusTaskWriter(XmlWriter xmlWriter, ITaskComponentResolver componentResolver, IXmlSerializerCache serializerCache)
+        public MazeTaskWriter(XmlWriter xmlWriter, ITaskComponentResolver componentResolver, IXmlSerializerCache serializerCache)
         {
             _xmlWriter = xmlWriter;
             _componentResolver = componentResolver;
@@ -31,40 +31,40 @@ namespace Tasks.Infrastructure.Core
             _namespaces.Add(string.Empty, string.Empty);
         }
 
-        public OrcusTaskWriter(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache serializerCache) : this(
+        public MazeTaskWriter(Stream stream, ITaskComponentResolver componentResolver, IXmlSerializerCache serializerCache) : this(
             XmlWriter.Create(stream, new XmlWriterSettings {OmitXmlDeclaration = false, Indent = false}), componentResolver, serializerCache)
         {
         }
 
-        public void Write(OrcusTask orcusTask, TaskDetails details)
+        public void Write(MazeTask mazeTask, TaskDetails details)
         {
             _xmlWriter.WriteStartElement(XmlNames.Root);
 
-            WriteMetadata(orcusTask);
+            WriteMetadata(mazeTask);
 
             if (details == TaskDetails.Server)
             {
-                WriteAudience(orcusTask.Audience);
-                WriteElements(orcusTask.Filters, XmlNames.Filters);
+                WriteAudience(mazeTask.Audience);
+                WriteElements(mazeTask.Filters, XmlNames.Filters);
             }
 
             if (details >= TaskDetails.Client)
             {
-                WriteElements(orcusTask.Triggers, XmlNames.Triggers);
+                WriteElements(mazeTask.Triggers, XmlNames.Triggers);
             }
 
-            WriteElements(orcusTask.StopEvents, XmlNames.Stop);
-            WriteCommands(orcusTask.Commands);
+            WriteElements(mazeTask.StopEvents, XmlNames.Stop);
+            WriteCommands(mazeTask.Commands);
 
             _xmlWriter.WriteEndElement();
             _xmlWriter.Dispose();
         }
 
-        private void WriteMetadata(OrcusTask orcusTask)
+        private void WriteMetadata(MazeTask mazeTask)
         {
             _xmlWriter.WriteStartElement(XmlNames.Metadata);
-            _xmlWriter.WriteElementString(XmlNames.Name, orcusTask.Name);
-            _xmlWriter.WriteElementString(XmlNames.Id, orcusTask.Id.ToString("D"));
+            _xmlWriter.WriteElementString(XmlNames.Name, mazeTask.Name);
+            _xmlWriter.WriteElementString(XmlNames.Id, mazeTask.Id.ToString("D"));
             _xmlWriter.WriteEndElement();
         }
 
@@ -120,7 +120,7 @@ namespace Tasks.Infrastructure.Core
 
             foreach (var commandInfo in commands)
             {
-                var commandAttribute = commandInfo.GetType().GetCustomAttribute<OrcusCommandAttribute>();
+                var commandAttribute = commandInfo.GetType().GetCustomAttribute<MazeCommandAttribute>();
                 var serializer = _serializerCache.Resolve(commandInfo.GetType(), "Command");
 
                 using (var stream = new MemoryStream())

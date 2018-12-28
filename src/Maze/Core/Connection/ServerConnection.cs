@@ -1,29 +1,29 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Autofac;
-using Orcus.Client.Library.Services;
-using Orcus.Core.Commanding;
-using Orcus.Server.Connection.Modules;
-using Orcus.Sockets;
-using Orcus.Sockets.Client;
+using Maze.Client.Library.Services;
+using Maze.Core.Commanding;
+using Maze.Server.Connection.Modules;
+using Maze.Sockets;
+using Maze.Sockets.Client;
 
-namespace Orcus.Core.Connection
+namespace Maze.Core.Connection
 {
     public class ServerConnection : IServerConnection
     {
-        private readonly OrcusSocketOptions _options;
+        private readonly MazeSocketOptions _options;
 
-        public ServerConnection(OrcusRestClient restClient, PackagesLock packagesLock, OrcusSocketOptions options)
+        public ServerConnection(MazeRestClient restClient, PackagesLock packagesLock, MazeSocketOptions options)
         {
             _options = options;
             RestClient = restClient;
             PackagesLock = packagesLock;
         }
 
-        public IOrcusRestClient RestClient { get; }
+        public IMazeRestClient RestClient { get; }
         public PackagesLock PackagesLock { get; }
         public ServerCommandListener Listener { get; private set; }
 
@@ -35,7 +35,7 @@ namespace Orcus.Core.Connection
                 Scheme = RestClient.BaseUri.Scheme == "https" ? "wss" : "ws"
             };
 
-            var connector = new OrcusSocketConnector(builder.Uri)
+            var connector = new MazeSocketConnector(builder.Uri)
             {
                 AuthenticationHeaderValue = new AuthenticationHeaderValue("Bearer", RestClient.Jwt)
             };
@@ -44,7 +44,7 @@ namespace Orcus.Core.Connection
                 _options.KeepAliveInterval, true, WebSocket.CreateClientBuffer(_options.PackageBufferSize, _options.PackageBufferSize));
 
             var wrapper = new WebSocketWrapper(webSocket, _options.PackageBufferSize);
-            var server = new OrcusServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize, ArrayPool<byte>.Shared);
+            var server = new MazeServer(wrapper, _options.PackageBufferSize, _options.MaxHeaderSize, ArrayPool<byte>.Shared);
 
             Listener = new ServerCommandListener(connector, wrapper, server, lifetimeScope);
             await Listener.Listen();

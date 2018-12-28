@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Orcus.ModuleManagement.Loader;
+using Maze.ModuleManagement.Loader;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public static class LibraryLocator
     {

@@ -1,8 +1,8 @@
-﻿using System.Windows.Input;
-using Orcus.Administration.Library.Menu.Internal;
+using System.Windows.Input;
+using Maze.Administration.Library.Menu.Internal;
 using Prism.Commands;
 
-namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public class ContextCommand<TContext> : ICommandMenuEntry
     {

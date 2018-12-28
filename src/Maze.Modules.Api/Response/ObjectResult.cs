@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orcus.Modules.Api.Extensions;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.Services;
+using Maze.Modules.Api.Extensions;
+using Maze.Modules.Api.Formatters;
+using Maze.Modules.Api.Services;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     public class ObjectResult : IActionResult
     {

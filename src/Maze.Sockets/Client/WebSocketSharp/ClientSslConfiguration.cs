@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 /*
  * ClientSslConfiguration.cs
@@ -43,7 +43,7 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     /// <summary>
     ///     Stores the parameters for the <see cref="SslStream" /> used by clients.

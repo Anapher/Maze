@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,24 +14,24 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Rest.Modules.V1;
-using Orcus.Administration.Library.ViewModels;
-using Orcus.Administration.Library.Views;
-using Orcus.Administration.ViewModels.Overview.Modules;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Utilities;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Rest.Modules.V1;
+using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
+using Maze.Administration.ViewModels.Overview.Modules;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Utilities;
+using Maze.Utilities;
 using Prism.Commands;
 using Prism.Events;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Overview
+namespace Maze.Administration.ViewModels.Overview
 {
     public class ModulesViewModel : OverviewTabBase, IModuleService
     {
-        private readonly IOrcusRestClient _restClient;
+        private readonly IMazeRestClient _restClient;
         private readonly List<IModuleTabViewModel> _tabViewModels;
         private readonly IWindowService _windowService;
 
@@ -50,7 +50,7 @@ namespace Orcus.Administration.ViewModels.Overview
         private DelegateCommand<ModuleViewModel> _uninstallModuleCommand;
         private DelegateCommand<ModuleViewModel> _updateModuleCommand;
 
-        public ModulesViewModel(IOrcusRestClient restClient, IWindowService windowService) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
+        public ModulesViewModel(IMazeRestClient restClient, IWindowService windowService) : base(Tx.T("Modules"), PackIconFontAwesomeKind.PuzzlePieceSolid)
         {
             _restClient = restClient;
             _windowService = windowService;

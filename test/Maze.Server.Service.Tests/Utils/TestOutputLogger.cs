@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NuGet.Common;
 using Xunit.Abstractions;
 
-namespace Orcus.Server.Service.Tests.Utils
+namespace Maze.Server.Service.Tests.Utils
 {
     public class TestOutputLogger : ILogger
     {

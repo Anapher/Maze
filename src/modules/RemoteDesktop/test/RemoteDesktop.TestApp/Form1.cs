@@ -1,4 +1,4 @@
-﻿using RemoteDesktop.Client.Capture.DesktopDuplication;
+using RemoteDesktop.Client.Capture.DesktopDuplication;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace RemoteDesktop.TestApp
         private DateTimeOffset _offset;
         private DateTimeOffset _dataOffset;
         private int _data;
-        private readonly OpenH264Lib.OpenH264Decoder _decoder = new OpenH264Lib.OpenH264Decoder(@"F:\Projects\Orcus\src\modules\RemoteDesktop\libraries\OpenH264net\lib\openh264\x86\openh264-1.8.0-win32.dll");
+        private readonly OpenH264Lib.OpenH264Decoder _decoder = new OpenH264Lib.OpenH264Decoder(@"F:\Projects\Maze\src\modules\RemoteDesktop\libraries\OpenH264net\lib\openh264\x86\openh264-1.8.0-win32.dll");
 
         public Form1()
         {

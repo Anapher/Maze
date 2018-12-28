@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menus;
+using System.Windows.Controls;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Menus;
 
-namespace Orcus.Administration.Views.Main.Overview.Clients
+namespace Maze.Administration.Views.Main.Overview.Clients
 {
     /// <summary>
     ///     Interaction logic for DefaultClientListView.xaml

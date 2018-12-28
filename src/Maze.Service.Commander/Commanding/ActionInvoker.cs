@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -6,13 +6,13 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.ModelBinding;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Service.Commander.Commanding.ModelBinding;
-using IValueProvider = Orcus.Service.Commander.Commanding.ModelBinding.IValueProvider;
+using Maze.Modules.Api;
+using Maze.Modules.Api.ModelBinding;
+using Maze.Modules.Api.Parameters;
+using Maze.Service.Commander.Commanding.ModelBinding;
+using IValueProvider = Maze.Service.Commander.Commanding.ModelBinding.IValueProvider;
 
-namespace Orcus.Service.Commander.Commanding
+namespace Maze.Service.Commander.Commanding
 {
     /// <summary>
     ///     Cached delegate for the controller method
@@ -62,7 +62,7 @@ namespace Orcus.Service.Commander.Commanding
         public async Task<IActionResult> Invoke(ActionContext actionContext)
         {
             var controller =
-                (OrcusController) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+                (MazeController) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
 
             using (controller)
             {
@@ -70,9 +70,9 @@ namespace Orcus.Service.Commander.Commanding
             }
         }
 
-        private async Task<IActionResult> InvokeMethod(ActionContext actionContext, OrcusController controller)
+        private async Task<IActionResult> InvokeMethod(ActionContext actionContext, MazeController controller)
         {
-            controller.OrcusContext = actionContext.Context;
+            controller.MazeContext = actionContext.Context;
 
             var parameterBindingInfo =
                 GetParameterBindingInfo(actionContext.Context.RequestServices
@@ -102,15 +102,15 @@ namespace Orcus.Service.Commander.Commanding
             return await _executor.Execute(_objectMethodExecutor, controller, arguments, Metadata);
         }
 
-        public Task<IActionResult> InvokeChannel(ActionContext actionContext, OrcusChannel channel)
+        public Task<IActionResult> InvokeChannel(ActionContext actionContext, MazeChannel channel)
         {
             return InvokeMethod(actionContext, channel);
         }
 
-        public async Task<OrcusChannel> InitializeChannel(ActionContext actionContext, IChannelServer channelServer)
+        public async Task<MazeChannel> InitializeChannel(ActionContext actionContext, IChannelServer channelServer)
         {
-            var channel = (OrcusChannel) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
-            channel.OrcusContext = actionContext.Context;
+            var channel = (MazeChannel) ObjectFactory.Invoke(actionContext.Context.RequestServices, new object[0]);
+            channel.MazeContext = actionContext.Context;
             channel.ChannelId = channelServer.RegisterChannel(channel);
 
             await _executor.Execute(_objectMethodExecutor, channel, new object[0], Metadata);

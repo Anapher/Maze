@@ -1,7 +1,7 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Orcus.Administration.Library.Utilities;
+using Maze.Administration.Library.Utilities;
 
 namespace Tasks.Infrastructure.Administration.Extensions
 {

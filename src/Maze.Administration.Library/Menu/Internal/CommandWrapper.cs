@@ -1,6 +1,6 @@
-﻿using Orcus.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menu.MenuBase;
 
-namespace Orcus.Administration.Library.Menu.Internal
+namespace Maze.Administration.Library.Menu.Internal
 {
     internal class CommandWrapper<TCommandEntryEntry> : IMenuEntry<TCommandEntryEntry>, IVisibleMenuItem where TCommandEntryEntry : ICommandMenuEntry
     {

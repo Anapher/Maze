@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata minClientVersion="2.12">
-    <id>Orcus.RemoteDesktop</id>
+    <id>Maze.RemoteDesktop</id>
     <version>1.0.0</version>
-    <title>Orcus Remote Desktop</title>
+    <title>Maze Remote Desktop</title>
     <authors>Anapher</authors>
-    <owners>Orcus Technologies</owners>
+    <owners>Maze Technologies</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://www.orcustechnologies.com/</projectUrl>
+    <projectUrl>https://www.mazetechnologies.com/</projectUrl>
     <iconUrl>https://www.newtonsoft.com/content/images/nugeticon.png</iconUrl>
     <description>Provides remote desktop based on Desktop Duplication API</description>
     <summary>Fast remote desktop with mouse and keyboard control</summary>
-    <copyright>Copyright © Orcus Technologies 2018</copyright>
+    <copyright>Copyright © Maze Technologies 2018</copyright>
     <language>en-US</language>
     <tags>desktop,remote,control,screen</tags>
     <repository type="git" url="https://github.com/JamesNK/Newtonsoft.Json.git" />
     <dependencies>
       <group targetFramework="Server1.0"> <!-- Server -->
-        <dependency id="Orcus.Server.Library" version="1.*" />
+        <dependency id="Maze.Server.Library" version="1.*" />
       </group>
       <group targetFramework="Administration1.0"> <!-- Administration -->
-        <dependency id="Orcus.Administration.Library" version="1.*" />
+        <dependency id="Maze.Administration.Library" version="1.*" />
       </group>
       <group targetFramework="Client1.0"> <!-- Client -->
-        <dependency id="Orcus.Client.Library" version="1.*" />
+        <dependency id="Maze.Client.Library" version="1.*" />
         <dependency id="SharpDX" version="4.*" />
       </group>
     </dependencies>

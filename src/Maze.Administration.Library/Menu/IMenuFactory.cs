@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Windows;
-using Orcus.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menu.MenuBase;
 
-namespace Orcus.Administration.Library.Menu
+namespace Maze.Administration.Library.Menu
 {
     public interface IMenuFactory
     {

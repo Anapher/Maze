@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding.Binders
+namespace Maze.Service.Commander.Commanding.ModelBinding.Binders
 {
     /// <summary>
     ///     An <see cref="IModelBinderProvider" /> for <see cref="CancellationToken" />.

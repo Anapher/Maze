@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Claims;
 
-namespace Orcus.Server.Library.Utilities
+namespace Maze.Server.Library.Utilities
 {
     /// <summary>
     ///     Extensions to a <see cref="ClaimsPrincipal"/>

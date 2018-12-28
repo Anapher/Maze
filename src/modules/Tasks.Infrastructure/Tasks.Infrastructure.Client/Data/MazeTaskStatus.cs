@@ -1,6 +1,6 @@
-﻿namespace Tasks.Infrastructure.Client.Data
+namespace Tasks.Infrastructure.Client.Data
 {
-    public class OrcusTaskStatus
+    public class MazeTaskStatus
     {
         public bool IsFinished { get; set; }
     }

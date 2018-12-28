@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using Console.Administration.ViewModels;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 
 namespace Console.Administration.Views
 {

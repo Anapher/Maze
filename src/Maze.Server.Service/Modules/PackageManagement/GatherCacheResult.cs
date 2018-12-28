@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Maze.Server.Service.Modules.PackageManagement
 {
     /// <summary>
     /// The result of a cache look up. HasEntry determines if the query has already been made. 

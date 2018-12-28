@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography;
@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using Moq;
 using NuGet.Frameworks;
 using NuGet.Versioning;
-using Orcus.Server.BusinessDataAccess.Clients;
-using Orcus.Server.BusinessLogic.Authentication;
-using Orcus.Server.Connection;
-using Orcus.Server.Connection.Authentication.Client;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.BusinessDataAccess.Clients;
+using Maze.Server.BusinessLogic.Authentication;
+using Maze.Server.Connection;
+using Maze.Server.Connection.Authentication.Client;
+using Maze.Server.Data.EfClasses;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Orcus.Server.BusinessLogic.Tests.Authentication
+namespace Maze.Server.BusinessLogic.Tests.Authentication
 {
     public class AuthenticateClientActionTest : BusinessLogicTestBase<AuthenticateClientAction>
     {
@@ -41,7 +41,7 @@ namespace Orcus.Server.BusinessLogic.Tests.Authentication
                 HardwareId = new Hash(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes("N.O.R.A"))).ToString(),
                 MacAddress = new byte[] {10, 11, 12, 13, 14, 67},
                 ClientVersion = new NuGetVersion(1, 2, 3),
-                Framework = FrameworkConstants.CommonFrameworks.OrcusClient10
+                Framework = FrameworkConstants.CommonFrameworks.MazeClient10
             },
             IpAddress = IPAddress.Parse("192.168.178.89")
         };

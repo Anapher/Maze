@@ -1,6 +1,6 @@
-﻿using Autofac;
+using Autofac;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public class ModuleManagementModule : Module
     {

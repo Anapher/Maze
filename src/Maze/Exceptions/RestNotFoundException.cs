@@ -1,6 +1,6 @@
-﻿using Orcus.Server.Connection;
+using Maze.Server.Connection;
 
-namespace Orcus.Exceptions
+namespace Maze.Exceptions
 {
     public class RestNotFoundException : RestException
     {

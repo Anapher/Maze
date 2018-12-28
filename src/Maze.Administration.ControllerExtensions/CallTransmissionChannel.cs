@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Linq;
 using System.Net.Http;
@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Autofac;
 using CodeElements.NetworkCall;
 using CodeElements.NetworkCall.NetSerializer;
-using Orcus.Administration.Library.Channels;
+using Maze.Administration.Library.Channels;
 
-namespace Orcus.Administration.ControllerExtensions
+namespace Maze.Administration.ControllerExtensions
 {
     public class CallTransmissionChannel<TInterface> : ChannelBase
     {

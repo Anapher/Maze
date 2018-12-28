@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     public static class HashHelper
     {

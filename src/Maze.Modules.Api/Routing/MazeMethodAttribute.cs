@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Routing
+namespace Maze.Modules.Api.Routing
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public abstract class OrcusMethodAttribute : Attribute, IRouteFragment, IActionMethodProvider
+    public abstract class MazeMethodAttribute : Attribute, IRouteFragment, IActionMethodProvider
     {
-        protected OrcusMethodAttribute(string method) : this(method, null)
+        protected MazeMethodAttribute(string method) : this(method, null)
         {
         }
 
-        protected OrcusMethodAttribute(string method, string path)
+        protected MazeMethodAttribute(string method, string path)
         {
             Method = method;
             Path = path;

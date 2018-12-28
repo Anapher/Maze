@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
-using Orcus.Server.Connection;
+using Maze.Server.Connection;
 
-namespace Orcus.Server.Data.EfClasses
+namespace Maze.Server.Data.EfClasses
 {
     public class Account
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Orcus.Sockets.Client.WebSocketSharp;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Client.WebSocketSharp;
+using Maze.Sockets.Internal;
 
-namespace Orcus.Sockets.Client
+namespace Maze.Sockets.Client
 {
     public static class HttpMessageExtensions
     {

@@ -1,6 +1,6 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
-namespace Orcus.Administration.Library.Menu.Internal
+namespace Maze.Administration.Library.Menu.Internal
 {
     internal interface IContextAwareCommand : ICommand
     {

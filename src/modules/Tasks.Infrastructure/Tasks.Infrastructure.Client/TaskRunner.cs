@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Client.Library.Clients;
-using Orcus.Utilities;
+using Maze.Client.Library.Clients;
+using Maze.Utilities;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Rest.V1;
 using Tasks.Infrastructure.Client.StopEvents;
@@ -18,7 +18,7 @@ using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
 using Tasks.Infrastructure.Management.Data;
-using Orcus.Server.Connection.Extensions;
+using Maze.Server.Connection.Extensions;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -31,15 +31,15 @@ namespace Tasks.Infrastructure.Client
         private readonly ITaskStorage _storage;
         private DateTimeOffset? _nextTrigger;
 
-        public TaskRunner(OrcusTask orcusTask, ITaskStorage taskStorage, IServiceProvider services)
+        public TaskRunner(MazeTask mazeTask, ITaskStorage taskStorage, IServiceProvider services)
         {
-            OrcusTask = orcusTask;
+            MazeTask = mazeTask;
             Services = services;
             Logger = services.GetRequiredService<ILogger<TaskRunner>>();
             _storage = taskStorage;
         }
 
-        public OrcusTask OrcusTask { get; }
+        public MazeTask MazeTask { get; }
         public IServiceProvider Services { get; }
         public ILogger Logger { get; }
 
@@ -65,7 +65,7 @@ namespace Tasks.Infrastructure.Client
                     {
                         //create stop services and add to dictionary
                         var stopTasks = new Dictionary<Task, Type>();
-                        foreach (var stopEvent in OrcusTask.StopEvents)
+                        foreach (var stopEvent in MazeTask.StopEvents)
                         {
                             var serviceType = typeof(IStopService<>).MakeGenericType(stopEvent.GetType());
 
@@ -104,16 +104,16 @@ namespace Tasks.Infrastructure.Client
 
                                 if (task.IsFaulted) //stop the execution even if it fails, because else the task might run endless
                                     Logger.LogError(task.Exception, "An error occurred on execution {stopService} on task {task}", type,
-                                        OrcusTask.Id);
+                                        MazeTask.Id);
 
-                                Logger.LogDebug("Stop service {stopService} stopped the execution of task {task}", type, OrcusTask.Id);
+                                Logger.LogDebug("Stop service {stopService} stopped the execution of task {task}", type, MazeTask.Id);
                                 localCancellationTokenSource.Cancel();
                             }).Forget();
                         }
 
                         //create triggers and add to dictionary
                         var triggerTasks = new Dictionary<Task, Type>();
-                        foreach (var triggerInfo in OrcusTask.Triggers)
+                        foreach (var triggerInfo in MazeTask.Triggers)
                         {
                             var serviceType = typeof(ITriggerService<>).MakeGenericType(triggerInfo.GetType());
 
@@ -166,7 +166,7 @@ namespace Tasks.Infrastructure.Client
                     if (!cancellationToken.IsCancellationRequested)
                     {
                         //the task finished
-                        await _storage.MarkTaskFinished(OrcusTask);
+                        await _storage.MarkTaskFinished(MazeTask);
                     }
                 }
         }
@@ -192,11 +192,11 @@ namespace Tasks.Infrastructure.Client
                     TaskExecutionId = Guid.NewGuid()
                 };
 
-                _storage.StartExecution(OrcusTask, taskSession, execution).Forget();
+                _storage.StartExecution(MazeTask, taskSession, execution).Forget();
 
                 var afterExecutionTasks = new ConcurrentQueue<Func<Task>>();
 
-                await TaskCombinators.ThrottledAsync(OrcusTask.Commands, async (commandInfo, token) =>
+                await TaskCombinators.ThrottledAsync(MazeTask.Commands, async (commandInfo, token) =>
                 {
                     var executorType = typeof(ITaskExecutor<>).MakeGenericType(commandInfo.GetType());
 
@@ -258,7 +258,7 @@ namespace Tasks.Infrastructure.Client
                             }
 
                         commandResult.FinishedAt = DateTimeOffset.UtcNow;
-                        await _storage.AppendCommandResult(OrcusTask, commandResult);
+                        await _storage.AppendCommandResult(MazeTask, commandResult);
                     }
                 }, cancellationToken);
 

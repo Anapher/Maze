@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orcus.Service.Commander.Routing.Trie.Nodes;
+using Maze.Service.Commander.Routing.Trie.Nodes;
 
-namespace Orcus.Service.Commander.Routing.Trie
+namespace Maze.Service.Commander.Routing.Trie
 {
     public class RouteResolverTrie : IRouteResolverTrie
     {

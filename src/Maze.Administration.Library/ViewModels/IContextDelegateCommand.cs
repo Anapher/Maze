@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.ViewModels
+namespace Maze.Administration.Library.ViewModels
 {
     public interface IContextDelegateCommand
     {

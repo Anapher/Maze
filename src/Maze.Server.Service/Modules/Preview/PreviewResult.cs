@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.Modules.Preview
+namespace Maze.Server.Service.Modules.Preview
 {
     public class PreviewResult
     {

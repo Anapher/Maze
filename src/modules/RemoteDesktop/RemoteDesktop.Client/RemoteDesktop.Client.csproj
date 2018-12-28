@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Client.Library\Maze.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Maze.ControllerExtensions\Maze.ControllerExtensions.csproj" />
     <ProjectReference Include="..\libraries\x264net\x264net.vcxproj" />
   </ItemGroup>
 

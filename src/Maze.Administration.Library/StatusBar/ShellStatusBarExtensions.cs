@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Exceptions;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Utilities;
+using Maze.Administration.Library.Exceptions;
+using Maze.Administration.Library.Extensions;
+using Maze.Utilities;
 
-namespace Orcus.Administration.Library.StatusBar
+namespace Maze.Administration.Library.StatusBar
 {
     /// <summary>
     ///     Extensions for <see cref="IShellStatusBar"/>

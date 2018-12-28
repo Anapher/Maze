@@ -1,9 +1,9 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Orcus.Modules.Api.Parameters;
+using Maze.Modules.Api.Parameters;
 
-namespace Orcus.Modules.Api.ModelBinding
+namespace Maze.Modules.Api.ModelBinding
 {
     /// <summary>
     ///     Binding info which represents metadata associated to an action parameter.

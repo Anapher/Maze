@@ -1,4 +1,4 @@
-﻿namespace Orcus.Modules.Api.Parameters
+namespace Maze.Modules.Api.Parameters
 {
     /// <summary>
     /// Metadata which specificies the data source for model binding.

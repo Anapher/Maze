@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
-namespace Orcus.Client.Library.Interfaces
+namespace Maze.Client.Library.Interfaces
 {
     /// <summary>
     ///     An action that is invoked to configure the <see cref="HttpMessageHandler"/> to connect to the server

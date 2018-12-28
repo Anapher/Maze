@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Serilog.Debugging;
 using Serilog.Extensions.Logging;
 
-namespace Orcus.Extensions
+namespace Maze.Extensions
 {
     /// <summary>
     ///     Implements <see cref="ILoggerFactory" /> so that we can inject Serilog Logger.

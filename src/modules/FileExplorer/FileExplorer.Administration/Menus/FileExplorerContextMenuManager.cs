@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -9,12 +9,12 @@ using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using Ookii.Dialogs.Wpf;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Menu;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Views;
-using Orcus.Utilities;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Menu;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Views;
+using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
 

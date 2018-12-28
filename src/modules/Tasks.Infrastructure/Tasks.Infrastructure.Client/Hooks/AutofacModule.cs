@@ -1,8 +1,8 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Orcus.Client.Library.Extensions;
-using Orcus.Client.Library.Interfaces;
+using Maze.Client.Library.Extensions;
+using Maze.Client.Library.Interfaces;
 using Tasks.Infrastructure.Client.Options;
 using Tasks.Infrastructure.Client.Storage;
 using Tasks.Infrastructure.Core;

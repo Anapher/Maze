@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 
-namespace Orcus.Sockets.Internal.Extensions
+namespace Maze.Sockets.Internal.Extensions
 {
     public static class ConcurrentDictionaryExtensions
     {

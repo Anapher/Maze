@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using Console.Administration.Rest;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.ViewModels;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.ViewModels;
 using Prism.Commands;
 using Prism.Regions;
 

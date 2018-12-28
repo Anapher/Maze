@@ -1,9 +1,9 @@
-﻿using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Resources;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Resources;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Library.Menus
+namespace Maze.Administration.Library.Menus
 {
     public class ClientsContextMenu : MenuSection<ItemCommand<ClientViewModel>>
     {

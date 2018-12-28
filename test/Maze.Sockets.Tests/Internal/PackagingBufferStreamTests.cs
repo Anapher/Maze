@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Internal;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.Internal
+namespace Maze.Sockets.Tests.Internal
 {
     public class PackagingBufferStreamTests : StreamTestBase
     {

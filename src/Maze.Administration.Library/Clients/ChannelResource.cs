@@ -1,9 +1,9 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Channels;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.Library.Channels;
+using Maze.Administration.Library.Clients.Helpers;
 
-namespace Orcus.Administration.Library.Clients
+namespace Maze.Administration.Library.Clients
 {
     public abstract class ChannelResource<TResource> : ResourceBase<TResource> where TResource : IResourceId, new()
     {

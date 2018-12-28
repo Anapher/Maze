@@ -1,6 +1,6 @@
-﻿using MahApps.Metro.IconPacks;
+using MahApps.Metro.IconPacks;
 
-namespace Orcus.Administration.Library.ViewModels
+namespace Maze.Administration.Library.ViewModels
 {
     public class ClientListBase : ViewModelBase
     {

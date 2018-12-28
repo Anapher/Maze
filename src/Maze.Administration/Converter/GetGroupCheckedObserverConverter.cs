@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using Orcus.Administration.Library.Models;
+using Maze.Administration.Library.Models;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.Converter
+namespace Maze.Administration.Converter
 {
     public class GetGroupCheckedObserverConverter : IMultiValueConverter
     {

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using Orcus.Utilities;
+using Maze.Utilities;
 using Tasks.Common.Administration.Commands.Base;
 using Tasks.Common.Shared.Commands;
 using Tasks.Infrastructure.Administration.Library.Command;
@@ -36,7 +36,7 @@ namespace Tasks.Common.Administration.Commands
             base.Initialize(model);
         }
 
-        public ValidationResult ValidateContext(OrcusTask orcusTask) => ValidationResult.Success;
+        public ValidationResult ValidateContext(MazeTask mazeTask) => ValidationResult.Success;
 
         public override ValidationResult ValidateInput()
         {

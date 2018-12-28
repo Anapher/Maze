@@ -1,8 +1,8 @@
-﻿using MahApps.Metro.IconPacks;
-using Orcus.Administration.Library.ViewModels;
+using MahApps.Metro.IconPacks;
+using Maze.Administration.Library.ViewModels;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.ViewModels.Overview
+namespace Maze.Administration.ViewModels.Overview
 {
     public class ClientsViewModel : OverviewTabBase
     {

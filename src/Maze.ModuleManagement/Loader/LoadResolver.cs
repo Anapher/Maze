@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NuGet.Frameworks;
 using NuGet.Packaging;
 
-namespace Orcus.ModuleManagement.Loader
+namespace Maze.ModuleManagement.Loader
 {
     public class LoadResolver
     {

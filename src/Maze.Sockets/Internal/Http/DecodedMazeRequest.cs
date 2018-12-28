@@ -1,19 +1,19 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
 
-namespace Orcus.Sockets.Internal.Http
+namespace Maze.Sockets.Internal.Http
 {
-    internal class DecodedOrcusRequest : OrcusRequest
+    internal class DecodedMazeRequest : MazeRequest
     {
-        public DecodedOrcusRequest()
+        public DecodedMazeRequest()
         {
             Headers = new HeaderDictionary();
         }
 
-        public override OrcusContext Context { get; set; }
+        public override MazeContext Context { get; set; }
         public override string Method { get; set; }
         public override PathString Path { get; set; }
         public override QueryString QueryString { get; set; }

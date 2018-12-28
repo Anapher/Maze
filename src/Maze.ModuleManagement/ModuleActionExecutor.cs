@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.ModuleManagement.Logging;
-using Orcus.Modules.Api;
-using Orcus.Utilities;
+using Maze.ModuleManagement.Logging;
+using Maze.Modules.Api;
+using Maze.Utilities;
 
-namespace Orcus.ModuleManagement
+namespace Maze.ModuleManagement
 {
     public interface IActionInterfaceInvoker<TInterface> where TInterface : IActionInterface
     {

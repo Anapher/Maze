@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public static class DataSizeFormatter
     {

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Threading;
-using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Sockets.Internal
+namespace Maze.Sockets.Internal
 {
     internal struct DataChannelInfo : IDisposable
     {

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Maze.Server.Service.Modules.PackageManagement
 {
     /// <summary>
     /// Resolution context such as DependencyBehavior, IncludePrerelease and so on

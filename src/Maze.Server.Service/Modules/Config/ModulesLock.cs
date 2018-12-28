@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using NuGet.Frameworks;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Modules.Config.Base;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Modules.Config.Base;
 
-namespace Orcus.Server.Service.Modules.Config
+namespace Maze.Server.Service.Modules.Config
 {
     public class ModulesLock : JsonObjectFile<Dictionary<string, PackagesLock>>, IModulesLock
     {

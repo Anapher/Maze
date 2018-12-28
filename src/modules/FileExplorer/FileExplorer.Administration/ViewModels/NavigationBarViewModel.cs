@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Anapher.Wpf.Swan;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Administration.ViewModels.Explorer.Helpers;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Utilities;
+using Maze.Administration.Library.Extensions;
+using Maze.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
 

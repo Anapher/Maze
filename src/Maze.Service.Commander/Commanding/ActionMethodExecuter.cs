@@ -1,19 +1,19 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Response;
 
 #if NETSTANDARD
-using ReturnTask = System.Threading.Tasks.Task<Orcus.Modules.Api.IActionResult>;
+using ReturnTask = System.Threading.Tasks.Task<Maze.Modules.Api.IActionResult>;
 #else
-using ReturnTask = System.Threading.Tasks.ValueTask<Orcus.Modules.Api.IActionResult>;
+using ReturnTask = System.Threading.Tasks.ValueTask<Maze.Modules.Api.IActionResult>;
 #endif
 
-namespace Orcus.Service.Commander.Commanding
+namespace Maze.Service.Commander.Commanding
 {
     /// <summary>
     ///     Executes different signatures of controller methods and unifies them

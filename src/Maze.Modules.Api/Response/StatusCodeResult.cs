@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     public class StatusCodeResult : ActionResult
     {
@@ -14,7 +14,7 @@ namespace Orcus.Modules.Api.Response
             StatusCode = statusCode;
         }
 
-        /// <summary>Gets the Orcus status code.</summary>
+        /// <summary>Gets the Maze status code.</summary>
         public int StatusCode { get; }
 
         /// <inheritdoc />

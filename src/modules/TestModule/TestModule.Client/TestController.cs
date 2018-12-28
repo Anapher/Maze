@@ -1,12 +1,12 @@
-﻿using System;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Routing;
+using System;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Routing;
 
 namespace TestModule.Client
 {
-    public class TestController : OrcusController
+    public class TestController : MazeController
     {
-        [OrcusGet]
+        [MazeGet]
         public IActionResult Test() => Ok("Processor Count on this PC: " + Environment.ProcessorCount);
     }
 }

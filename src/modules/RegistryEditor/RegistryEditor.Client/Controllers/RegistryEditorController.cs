@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Win32;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 using RegistryEditor.Client.Utilities;
 using RegistryEditor.Shared.Dtos;
 
 namespace RegistryEditor.Client.Controllers
 {
-    public class RegistryEditorController : OrcusController
+    public class RegistryEditorController : MazeController
     {
-        [OrcusGet("subKeys")]
+        [MazeGet("subKeys")]
         public IActionResult GetSubKeys([FromQuery] string path)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);
@@ -42,7 +42,7 @@ namespace RegistryEditor.Client.Controllers
             }
         }
 
-        [OrcusDelete("subKeys")]
+        [MazeDelete("subKeys")]
         public IActionResult DeleteSubKey([FromQuery] string path)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);
@@ -54,7 +54,7 @@ namespace RegistryEditor.Client.Controllers
             }
         }
 
-        [OrcusPost("subKeys")]
+        [MazePost("subKeys")]
         public IActionResult CreateSubKey([FromBody] string path)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);
@@ -66,7 +66,7 @@ namespace RegistryEditor.Client.Controllers
             }
         }
 
-        [OrcusGet("subKeys/values")]
+        [MazeGet("subKeys/values")]
         public IActionResult GetSubKeyValues([FromQuery] string path)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);
@@ -112,7 +112,7 @@ namespace RegistryEditor.Client.Controllers
             }
         }
 
-        [OrcusDelete("subKeys/values")]
+        [MazeDelete("subKeys/values")]
         public IActionResult DeleteSubKeyValue([FromQuery] string path, [FromQuery] string name)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);
@@ -124,7 +124,7 @@ namespace RegistryEditor.Client.Controllers
             }
         }
 
-        [OrcusPost("subKeys/values")]
+        [MazePost("subKeys/values")]
         public IActionResult CreateSubKeyValue([FromQuery] string path, [FromBody] RegistryValueDto valueDto)
         {
             var (registryHive, relativePath) = RegistryHelper.UnpackPath(path);

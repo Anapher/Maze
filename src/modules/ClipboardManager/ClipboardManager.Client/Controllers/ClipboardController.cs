@@ -1,15 +1,15 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using ClipboardManager.Client.Utilities;
 using ClipboardManager.Shared.Dtos;
 using ClipboardManager.Shared.Extensions;
-using Orcus.Client.Library.Services;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using Maze.Client.Library.Services;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 
 namespace ClipboardManager.Client.Controllers
 {
-    public class ClipboardController : OrcusController
+    public class ClipboardController : MazeController
     {
         private readonly IStaSynchronizationContext _synchronizationContext;
 
@@ -18,7 +18,7 @@ namespace ClipboardManager.Client.Controllers
             _synchronizationContext = synchronizationContext;
         }
 
-        [OrcusGet]
+        [MazeGet]
         public IActionResult GetClipboardData()
         {
             IDataObject dataObject = null;
@@ -27,7 +27,7 @@ namespace ClipboardManager.Client.Controllers
             return Ok(ClipboardDataExtensions.FromDataObject(dataObject));
         }
 
-        [OrcusPost]
+        [MazePost]
         public IActionResult SetClipboardData([FromBody] ClipboardData clipboardData)
         {
             _synchronizationContext.Current.Send(state => ClipboardManagerExtensions.SetClipboardData(clipboardData), null);

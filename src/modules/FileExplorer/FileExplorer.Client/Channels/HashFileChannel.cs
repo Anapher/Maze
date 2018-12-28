@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Client.Utilities;
 using FileExplorer.Shared.Channels;
 using Force.Crc32;
-using Orcus.ControllerExtensions;
-using Orcus.Modules.Api.Routing;
+using Maze.ControllerExtensions;
+using Maze.Modules.Api.Routing;
 
 namespace FileExplorer.Client.Channels
 {

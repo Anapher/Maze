@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Service.Modules.Config
+namespace Maze.Server.Service.Modules.Config
 {
     /// <summary>
     ///     Provides the primary modules only (user installed)

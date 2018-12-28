@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NuGet.Packaging.Core;
 
-namespace Orcus.Server.Connection.Modules
+namespace Maze.Server.Connection.Modules
 {
     public class InstalledModulesDto
     {

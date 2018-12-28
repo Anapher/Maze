@@ -1,8 +1,8 @@
-﻿using System;
-using Orcus.Administration.Library.Extensions;
+using System;
+using Maze.Administration.Library.Extensions;
 using Xunit;
 
-namespace Orcus.Administration.Library.Test.Extensions
+namespace Maze.Administration.Library.Test.Extensions
 {
     public class UriHelperTests
     {

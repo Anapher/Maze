@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Security;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Orcus.Administration.Extensions
+namespace Maze.Administration.Extensions
 {
     public static class PasswordBoxExtensions
     {

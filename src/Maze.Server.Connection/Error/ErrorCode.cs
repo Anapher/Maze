@@ -1,5 +1,5 @@
-﻿// ReSharper disable InconsistentNaming
-namespace Orcus.Server.Connection.Error
+// ReSharper disable InconsistentNaming
+namespace Maze.Server.Connection.Error
 {
     public enum ErrorCode
     {

@@ -1,29 +1,29 @@
-﻿using System;
+using System;
 using Autofac;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Extensions;
-using Orcus.Administration.Library.Menu.MenuBase;
-using Orcus.Administration.Library.Menus;
-using Orcus.Administration.Library.Models;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Menu.MenuBase;
+using Maze.Administration.Library.Menus;
+using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Unclassified.TxLib;
 
-namespace Orcus.Administration.Services
+namespace Maze.Administration.Services
 {
     public class ClientCommandRegistrar : IClientCommandRegistrar
     {
         private readonly ClientsContextMenu _clientsContextMenu;
-        private readonly IOrcusRestClient _orcusRestClient;
+        private readonly IMazeRestClient _mazeRestClient;
         private readonly IWindowService _windowService;
 
         public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IWindowService windowService,
-            IOrcusRestClient orcusRestClient)
+            IMazeRestClient mazeRestClient)
         {
             _clientsContextMenu = clientsContextMenu;
             _windowService = windowService;
-            _orcusRestClient = orcusRestClient;
+            _mazeRestClient = mazeRestClient;
         }
 
         public void Register<TViewModel>(string txLibResource, IIconFactory iconFactory, CommandCategory category)
@@ -37,7 +37,7 @@ namespace Orcus.Administration.Services
                     _windowService.Show(typeof(TViewModel), builder =>
                     {
                         builder.RegisterInstance(model);
-                        builder.Register(_ => _orcusRestClient.CreateTargeted(model.ClientId))
+                        builder.Register(_ => _mazeRestClient.CreateTargeted(model.ClientId))
                             .SingleInstance();
                     }, window => window.TitleBarIcon = iconFactory.Create(), null, out _);
                 })

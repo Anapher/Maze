@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orcus.Service.Commander.Routing.Trie.Nodes
+namespace Maze.Service.Commander.Routing.Trie.Nodes
 {
     public abstract class TrieNode
     {

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Connection.Clients
+namespace Maze.Server.Connection.Clients
 {
     public class ClientDto
     {

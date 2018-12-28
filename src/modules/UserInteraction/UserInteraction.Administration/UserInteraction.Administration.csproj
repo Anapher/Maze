@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
@@ -18,7 +18,7 @@
     </Page>
     <None Remove="Resources\VisualStudioIcons.xaml" />
     <EmbeddedResource Include="Resources\UserInteraction.Translation.txd" />
-    <ProjectReference Include="..\..\..\Orcus.Administration.Library\Orcus.Administration.Library.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
 
     <!-- Resources -->
@@ -41,5 +41,5 @@
     </Page>
   </ItemGroup>
 
-  <Import Project="..\UserInteraction.Dtos\Orcus.Modules.UserInteraction.Dtos.projitems" Label="Shared" />
+  <Import Project="..\UserInteraction.Dtos\Maze.Modules.UserInteraction.Dtos.projitems" Label="Shared" />
 </Project>

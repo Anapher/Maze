@@ -1,7 +1,7 @@
-﻿using System.Collections.Concurrent;
-using Orcus.Server.Library.Services;
+using System.Collections.Concurrent;
+using Maze.Server.Library.Services;
 
-namespace Orcus.Server.Service.Connection
+namespace Maze.Server.Service.Connection
 {
     public class ConnectionManager : IConnectionManager
     {

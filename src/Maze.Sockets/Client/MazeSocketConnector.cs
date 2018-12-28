@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -8,17 +8,17 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Orcus.Sockets.Client.WebSocketSharp;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Client.WebSocketSharp;
+using Maze.Sockets.Internal;
 
-namespace Orcus.Sockets.Client
+namespace Maze.Sockets.Client
 {
-    public class OrcusSocketConnector
+    public class MazeSocketConnector
     {
         private readonly Uri _serverUri;
         private readonly string _base64Key;
 
-        public OrcusSocketConnector(Uri serverUri)
+        public MazeSocketConnector(Uri serverUri)
         {
             _serverUri = serverUri;
             TcpClient = new TcpClient();
@@ -60,8 +60,8 @@ namespace Orcus.Sockets.Client
         {
             var message = HttpRequest.CreateHandshakeRequest(_serverUri);
 
-            message.Headers.Add(OrcusSocketHeaders.SecWebSocketKey, _base64Key);
-            message.Headers.Add(OrcusSocketHeaders.SecWebSocketVersion, OrcusSocketHeaders.SupportedVersion);
+            message.Headers.Add(MazeSocketHeaders.SecWebSocketKey, _base64Key);
+            message.Headers.Add(MazeSocketHeaders.SecWebSocketVersion, MazeSocketHeaders.SupportedVersion);
 
             if (AuthenticationHeaderValue != null)
                 message.Headers.Authorization = AuthenticationHeaderValue;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,8 +10,8 @@ using FileExplorer.Client.Extensions;
 using FileExplorer.Client.Native;
 using FileExplorer.Shared.Dtos;
 using Microsoft.Win32;
-using Orcus.Client.Library.Utilities;
-using Orcus.Utilities;
+using Maze.Client.Library.Utilities;
+using Maze.Utilities;
 using Serilog;
 using ShellDll;
 

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Service.Extensions
+namespace Maze.Server.Service.Extensions
 {
     public static class StringExtensions
     {

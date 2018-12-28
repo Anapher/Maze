@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -20,17 +20,17 @@ using NuGet.Packaging.PackageExtraction;
 using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
-using Orcus.ModuleManagement.PackageManagement;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Service.Extensions;
-using Orcus.Server.Service.Modules.Extensions;
-using Orcus.Server.Service.Modules.PackageManagement;
-using Orcus.Server.Service.Modules.Resolution;
-using Orcus.Utilities;
+using Maze.ModuleManagement.PackageManagement;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Service.Extensions;
+using Maze.Server.Service.Modules.Extensions;
+using Maze.Server.Service.Modules.PackageManagement;
+using Maze.Server.Service.Modules.Resolution;
+using Maze.Utilities;
 using ILogger = NuGet.Common.ILogger;
-using PackageResolver = Orcus.Server.Service.Modules.Resolver.PackageResolver;
+using PackageResolver = Maze.Server.Service.Modules.Resolver.PackageResolver;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
     public class PackageLockRequestManager
     {
@@ -161,7 +161,7 @@ namespace Orcus.Server.Service.Modules
                         .ToList(),
                 AllowDowngrades = downgradeAllowed,
                 PrimaryFramework = primaryFramework,
-                DependencyFramework = OrcusFrameworks.MapToNetFramework(primaryFramework),
+                DependencyFramework = MazeFrameworks.MapToNetFramework(primaryFramework),
                 Log = logger
             };
 
@@ -325,7 +325,7 @@ namespace Orcus.Server.Service.Modules
 
                     // Download all packages up front in parallel
                     downloadTasks = await PackageLoader.GetPackagesAsync(actionsList, _project.ModulesDirectory,
-                        downloadContext, NullLogger.Instance, downloadTokenSource.Token);
+                        downloadContext, new NullLogger(), downloadTokenSource.Token);
                 }
 
                 foreach (var action in actionsList)
@@ -351,15 +351,11 @@ namespace Orcus.Server.Service.Modules
                             // use the version exactly as specified in the nuspec file
                             var packageIdentity = await downloadPackageResult.PackageReader.GetIdentityAsync(token);
 
-                            var signedPackageVerifier = new PackageSignatureVerifier(
-                                SignatureVerificationProviderFactory.GetSignatureVerificationProviders());
-
                             var packageExtractionContext = new PackageExtractionContext(
                                 PackageSaveMode.Defaultv3,
                                 PackageExtractionBehavior.XmlDocFileSaveMode,
-                                NullLogger.Instance,
-                                signedPackageVerifier,
-                                SignedPackageVerifierSettings.GetDefault());
+                                ClientPolicyContext.GetClientPolicy(new NullSettings(), new NullLogger()), 
+                                new NullLogger());
 
                             downloadPackageResult.PackageStream.Position = 0;
 

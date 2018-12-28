@@ -1,25 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Response;
-using Orcus.Server.Connection;
-using Orcus.Service.Commander.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Response;
+using Maze.Server.Connection;
+using Maze.Service.Commander.Routing;
 
-namespace Orcus.Service.Commander
+namespace Maze.Service.Commander
 {
     /// <inheritdoc />
-    public class OrcusRequestExecuter : IOrcusRequestExecuter
+    public class MazeRequestExecuter : IMazeRequestExecuter
     {
-        private readonly ILogger<OrcusRequestExecuter> _logger;
+        private readonly ILogger<MazeRequestExecuter> _logger;
         private readonly IRouteCache _routeCache;
         private readonly IRouteResolver _routeResolver;
 
-        public OrcusRequestExecuter(IRouteResolver routeResolver, IRouteCache routeCache,
-            ILogger<OrcusRequestExecuter> logger)
+        public MazeRequestExecuter(IRouteResolver routeResolver, IRouteCache routeCache,
+            ILogger<MazeRequestExecuter> logger)
         {
             _routeResolver = routeResolver;
             _routeCache = routeCache;
@@ -27,9 +27,9 @@ namespace Orcus.Service.Commander
         }
 
         /// <inheritdoc />
-        public async Task Execute(OrcusContext context, IChannelServer channelServer)
+        public async Task Execute(MazeContext context, IChannelServer channelServer)
         {
-            _logger.LogDebug($"Resolve Orcus path {context.Request.Path}");
+            _logger.LogDebug($"Resolve Maze path {context.Request.Path}");
             var result = _routeResolver.Resolve(context);
             if (!result.Success)
             {
@@ -67,7 +67,7 @@ namespace Orcus.Service.Commander
 
                         var foundChannel = channelServer.GetChannel(channelId);
                         actionResult =
-                            await route.ActionInvoker.Value.InvokeChannel(actionContext, (OrcusChannel) foundChannel);
+                            await route.ActionInvoker.Value.InvokeChannel(actionContext, (MazeChannel) foundChannel);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -109,7 +109,7 @@ namespace Orcus.Service.Commander
             _logger.LogDebug("Request successfully executed.");
         }
 
-        private Task WriteError(OrcusContext context, RestError error, int statusCode)
+        private Task WriteError(MazeContext context, RestError error, int statusCode)
         {
             var actionContext = new DefaultActionContext(context, null, ImmutableDictionary<string, object>.Empty);
             return new ObjectResult(new[] {error}) {StatusCode = statusCode}.ExecuteResultAsync(actionContext);

@@ -1,7 +1,7 @@
-﻿using Orcus.Server.Connection.Commanding;
+using Maze.Server.Connection.Commanding;
 using Xunit;
 
-namespace Orcus.Server.Connection.Tests.Commanding
+namespace Maze.Server.Connection.Tests.Commanding
 {
     public class CommandTargetTests
     {

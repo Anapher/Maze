@@ -1,12 +1,12 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Shared.Channels;
 using FileExplorer.Shared.Dtos;
-using Orcus.Administration.ControllerExtensions;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.ControllerExtensions;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
 
 namespace FileExplorer.Administration.Rest
 {

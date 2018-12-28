@@ -1,7 +1,7 @@
-﻿{
+{
   "Modules": {
-    "LocalPath": "%appdata%/Orcus/modules",
-    "TempPath": "%appdata%/Orcus/tmp",
+    "LocalPath": "%appdata%/Maze/modules",
+    "TempPath": "%appdata%/Maze/tmp",
     "OnStartup": [
       "Tasks.Infrastructure"
     ]

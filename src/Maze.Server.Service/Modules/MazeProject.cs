@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -12,20 +12,20 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using Orcus.ModuleManagement;
-using Orcus.ModuleManagement.Loader;
-using Orcus.Server.Connection.Modules;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Service.Modules.Config;
-using Architecture = Orcus.ModuleManagement.Loader.Architecture;
+using Maze.ModuleManagement;
+using Maze.ModuleManagement.Loader;
+using Maze.Server.Connection.Modules;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Service.Modules.Config;
+using Architecture = Maze.ModuleManagement.Loader.Architecture;
 
-namespace Orcus.Server.Service.Modules
+namespace Maze.Server.Service.Modules
 {
-    public class OrcusProject : IModuleProject
+    public class MazeProject : IModuleProject
     {
         private readonly IModulesConfig _modulesConfig;
 
-        public OrcusProject(IModuleProjectConfig config, IModulesConfig modulesConfig, IModulesLock modulesLock)
+        public MazeProject(IModuleProjectConfig config, IModulesConfig modulesConfig, IModulesLock modulesLock)
         {
             var providers = Repository.Provider.GetCoreV3();
             PrimarySources = config.PrimarySources
@@ -46,7 +46,7 @@ namespace Orcus.Server.Service.Modules
             PrimaryPackages = modulesConfig.Modules; //very important because the file may change while the packages must consist
         }
 
-        public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.OrcusServer10;
+        public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.MazeServer10;
         public Runtime Runtime { get; }
         public Architecture Architecture { get; }
         public IImmutableList<PackageIdentity> PrimaryPackages { get; }

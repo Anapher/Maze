@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Prism.Commands;
 
-namespace Orcus.Administration.Library.Menu.Internal
+namespace Maze.Administration.Library.Menu.Internal
 {
     internal class ContextAwareDelegateCommand<T> : DelegateCommand<T>, IContextAwareCommand
     {

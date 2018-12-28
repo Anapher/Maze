@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.StatusBar;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.StatusBar;
 using RegistryEditor.Administration.Extensions;
 using RegistryEditor.Administration.Model;
 using RegistryEditor.Administration.ViewModels.Helpers;

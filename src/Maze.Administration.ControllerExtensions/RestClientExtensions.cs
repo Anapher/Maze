@@ -1,11 +1,11 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Orcus.Administration.Library.Clients;
-using Orcus.Administration.Library.Clients.Helpers;
+using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Clients.Helpers;
 
-namespace Orcus.Administration.ControllerExtensions
+namespace Maze.Administration.ControllerExtensions
 {
     public static class RestClientExtensions
     {

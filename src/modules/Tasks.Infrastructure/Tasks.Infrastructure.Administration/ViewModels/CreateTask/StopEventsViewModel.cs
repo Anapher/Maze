@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Autofac;
-using Orcus.Administration.Library.Views;
+using Maze.Administration.Library.Views;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.StopEvent;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -39,9 +39,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 
         public override string EntryName { get; } = Tx.T("TasksInfrastructure:CreateTask.StopEvents", 1);
 
-        public override void Initialize(OrcusTask orcusTask)
+        public override void Initialize(MazeTask mazeTask)
         {
-            foreach (var stopEventInfo in orcusTask.StopEvents)
+            foreach (var stopEventInfo in mazeTask.StopEvents)
             {
                 var stopEventInfoType = stopEventInfo.GetType();
                 var description = AvailableServices.First(x => x.DtoType == stopEventInfoType);
@@ -50,7 +50,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
                 TaskServiceViewModelUtils.Initialize(view.ViewModel, stopEventInfo);
                 AddChild(view);
 
-                if (orcusTask.StopEvents.Count == 1)
+                if (mazeTask.StopEvents.Count == 1)
                 {
                     SetProperty(ref _selectedService, description, nameof(SelectedService));
                     SetProperty(ref _selectedChild, view, nameof(SelectedChild));
@@ -58,13 +58,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
-        public override void Apply(OrcusTask orcusTask)
+        public override void Apply(MazeTask mazeTask)
         {
-            orcusTask.StopEvents = new List<StopEventInfo>();
+            mazeTask.StopEvents = new List<StopEventInfo>();
             foreach (var taskView in _childs)
             {
                 var dto = TaskServiceViewModelUtils.Build<StopEventInfo>(taskView.ViewModel);
-                orcusTask.StopEvents.Add(dto);
+                mazeTask.StopEvents.Add(dto);
             }
         }
     }

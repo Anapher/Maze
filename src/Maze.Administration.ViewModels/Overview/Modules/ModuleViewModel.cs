@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.ViewModels.Overview.Modules
+namespace Maze.Administration.ViewModels.Overview.Modules
 {
     public class ModuleViewModel : BindableBase
     {

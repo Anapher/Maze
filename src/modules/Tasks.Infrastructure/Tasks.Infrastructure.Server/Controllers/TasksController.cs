@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using Orcus.Server.Connection.Commanding;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Library.Controllers;
-using Orcus.Server.Library.Hubs;
-using Orcus.Server.Library.Utilities;
+using Maze.Server.Connection.Commanding;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Library.Controllers;
+using Maze.Server.Library.Hubs;
+using Maze.Server.Library.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management;
@@ -34,7 +34,7 @@ namespace Tasks.Infrastructure.Server.Controllers
         public async Task<IActionResult> CreateTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache, [FromServices] ICreateTaskAction createTaskAction, [FromServices] IHubContext<AdministrationHub> hubContext)
         {
-            var reader = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var reader = new MazeTaskReader(Request.Body, taskComponentResolver, serializerCache);
             var task = reader.ReadTask();
 
             await createTaskAction.BizActionAsync(task);
@@ -65,8 +65,8 @@ namespace Tasks.Infrastructure.Server.Controllers
             [FromServices] IXmlSerializerCache serializerCache, [FromServices] IUpdateTaskAction updateTaskAction,
             [FromServices] IHubContext<AdministrationHub> hubContext)
         {
-            var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
-            var task = orcusTask.ReadTask();
+            var mazeTask = new MazeTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var task = mazeTask.ReadTask();
 
             await updateTaskAction.BizActionAsync(task);
 
@@ -116,7 +116,7 @@ namespace Tasks.Infrastructure.Server.Controllers
         public async Task<IActionResult> ExecuteTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache,[FromServices] IExecuteTaskAction executeTaskAction)
         {
-            var reader = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var reader = new MazeTaskReader(Request.Body, taskComponentResolver, serializerCache);
             var task = reader.ReadTask();
 
             var result = await executeTaskAction.BizActionAsync(task);
@@ -149,7 +149,7 @@ namespace Tasks.Infrastructure.Server.Controllers
 
         [HttpGet]
         [Authorize("admin")]
-        public async Task<IActionResult> GetTasks([FromServices] ITaskDirectory taskDirectory, [FromServices] IOrcusTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
+        public async Task<IActionResult> GetTasks([FromServices] ITaskDirectory taskDirectory, [FromServices] IMazeTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
         {
             var tasks = await taskDirectory.LoadTasks();
             var taskInfos = await dbAccess.GetTasks();
@@ -157,7 +157,7 @@ namespace Tasks.Infrastructure.Server.Controllers
             var infos = tasks.Select(x =>
             {
                 var taskInfo = taskInfos[x.Id];
-                var localActiveTask = taskManager.LocalActiveTasks.FirstOrDefault(y => y.OrcusTask.Id == x.Id);
+                var localActiveTask = taskManager.LocalActiveTasks.FirstOrDefault(y => y.MazeTask.Id == x.Id);
 
                 taskInfo.Name = x.Name;
                 taskInfo.Commands = x.Commands.Count;
@@ -172,14 +172,14 @@ namespace Tasks.Infrastructure.Server.Controllers
 
         [HttpGet("{taskId}/info")]
         [Authorize("admin")]
-        public async Task<IActionResult> GetTaskInfo(Guid taskId, [FromServices] ITaskDirectory taskDirectory, [FromServices] IOrcusTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
+        public async Task<IActionResult> GetTaskInfo(Guid taskId, [FromServices] ITaskDirectory taskDirectory, [FromServices] IMazeTaskManager taskManager, [FromServices] ITaskReferenceDbAccess dbAccess)
         {
             var tasks = await taskDirectory.LoadTasks();
             var task = tasks.FirstOrDefault(x => x.Id == taskId);
             if (task == null)
                 return NotFound();
 
-            var localActiveTask = taskManager.LocalActiveTasks.FirstOrDefault(x => x.OrcusTask.Id == taskId);
+            var localActiveTask = taskManager.LocalActiveTasks.FirstOrDefault(x => x.MazeTask.Id == taskId);
 
             var taskInfo = await dbAccess.GetTaskInfo(taskId);
             taskInfo.Name = task.Name;

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Orcus.Server.Service.Modules;
+using Maze.Server.Service.Modules;
 
-namespace Orcus.Server.Options
+namespace Maze.Server.Options
 {
     public class ModulesOptions : IModuleProjectConfig
     {

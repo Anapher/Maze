@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Maze.Server.Service.Modules.PackageManagement
 {
     [Flags]
     public enum VersionConstraints

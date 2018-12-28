@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 using TaskManager.Client.Channels;
 using TaskManager.Client.Utilities;
 using TaskManager.Shared.Dtos;
@@ -13,9 +13,9 @@ using TaskManager.Shared.Dtos;
 namespace TaskManager.Client.Controllers
 {
     [Route("processes/{processId}")]
-    public class ProcessesController : OrcusController
+    public class ProcessesController : MazeController
     {
-        [OrcusGet("kill")]
+        [MazeGet("kill")]
         public async Task<IActionResult> KillProcess(int processId)
         {
             if (!GetProcess(processId, out var process, out var errorResult))
@@ -27,7 +27,7 @@ namespace TaskManager.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("killTree")]
+        [MazeGet("killTree")]
         public async Task<IActionResult> KillProcessTree(int processId)
         {
             if (!await ProcessExtensions.KillProcessTree(processId))
@@ -36,7 +36,7 @@ namespace TaskManager.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("suspend")]
+        [MazeGet("suspend")]
         public IActionResult Suspend(int processId)
         {
             if (!GetProcess(processId, out var process, out var errorResult))
@@ -48,7 +48,7 @@ namespace TaskManager.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("resume")]
+        [MazeGet("resume")]
         public IActionResult Resume(int processId)
         {
             if (!GetProcess(processId, out var process, out var errorResult))
@@ -60,7 +60,7 @@ namespace TaskManager.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("setPriority")]
+        [MazeGet("setPriority")]
         public IActionResult SetPriority(int processId, [FromQuery] ProcessPriorityClass priority)
         {
             if (!GetProcess(processId, out var process, out var errorResult))
@@ -72,13 +72,13 @@ namespace TaskManager.Client.Controllers
             return Ok();
         }
 
-        [OrcusGet("connections")]
+        [MazeGet("connections")]
         public IActionResult GetConnections(int processId)
         {
             return Ok(Connections.GetConnections(processId).ToList());
         }
 
-        [OrcusGet("properties")]
+        [MazeGet("properties")]
         public IActionResult GetProperties(int processId)
         {
             if (!GetProcess(processId, out var process, out var errorResult))

@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Orcus.Administration.ControllerExtensions;
-using Orcus.Administration.Library.Clients;
+using System.Threading.Tasks;
+using Maze.Administration.ControllerExtensions;
+using Maze.Administration.Library.Clients;
 using TaskManager.Shared.Channels;
 
 namespace TaskManager.Administration.Rest

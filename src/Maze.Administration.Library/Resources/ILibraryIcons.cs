@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace Orcus.Administration.Library.Resources
+namespace Maze.Administration.Library.Resources
 {
     public interface ILibraryIcons
     {

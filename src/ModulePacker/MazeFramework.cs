@@ -1,6 +1,6 @@
-﻿namespace ModulePacker
+namespace ModulePacker
 {
-    public enum OrcusFramework
+    public enum MazeFramework
     {
         Administration,
         Server,

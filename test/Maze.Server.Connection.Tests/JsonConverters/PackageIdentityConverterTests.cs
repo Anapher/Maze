@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Versioning;
-using Orcus.Server.Connection.JsonConverters;
+using Maze.Server.Connection.JsonConverters;
 using Xunit;
 
-namespace Orcus.Server.Connection.Tests.JsonConverters
+namespace Maze.Server.Connection.Tests.JsonConverters
 {
     public class PackageIdentityConverterTests
     {
@@ -21,20 +21,20 @@ namespace Orcus.Server.Connection.Tests.JsonConverters
         [Fact]
         public void TestDeserialize()
         {
-            var test = "\"Orcus.Nora/1.2.4\"";
+            var test = "\"Maze.Nora/1.2.4\"";
             var result = JsonConvert.DeserializeObject<PackageIdentity>(test, _jsonSettings);
             Assert.NotNull(result);
             Assert.Equal("1.2.4", result.Version.ToString());
-            Assert.Equal("Orcus.Nora", result.Id);
+            Assert.Equal("Maze.Nora", result.Id);
         }
 
         [Fact]
         public void TestSerialize()
         {
-            var packageIdentity = new PackageIdentity("Orcus.Nora", NuGetVersion.Parse("1.2.4"));
+            var packageIdentity = new PackageIdentity("Maze.Nora", NuGetVersion.Parse("1.2.4"));
             var result = JsonConvert.SerializeObject(packageIdentity, _jsonSettings);
             Assert.NotNull(result);
-            Assert.Equal("\"Orcus.Nora/1.2.4\"", result);
+            Assert.Equal("\"Maze.Nora/1.2.4\"", result);
         }
     }
 }

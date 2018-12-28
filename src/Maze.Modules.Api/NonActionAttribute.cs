@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
     /// <summary>
     ///     Indicates that a controller method is not an action method.

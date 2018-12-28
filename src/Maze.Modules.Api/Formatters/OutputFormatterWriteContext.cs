@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Modules.Api.Formatters
+namespace Maze.Modules.Api.Formatters
 {
     /// <summary>
     ///     A context object for <see cref="IOutputFormatter.WriteAsync(OutputFormatterWriteContext)" />.
@@ -13,11 +13,11 @@ namespace Orcus.Modules.Api.Formatters
         /// <summary>
         ///     Creates a new <see cref="OutputFormatterWriteContext" />.
         /// </summary>
-        /// <param name="context">The <see cref="OrcusContext" /> for the current request.</param>
+        /// <param name="context">The <see cref="MazeContext" /> for the current request.</param>
         /// <param name="writerFactory">The delegate used to create a <see cref="TextWriter" /> for writing the response.</param>
         /// <param name="objectType">The <see cref="Type" /> of the object to write to the response.</param>
         /// <param name="object">The object to write to the response.</param>
-        public OutputFormatterWriteContext(OrcusContext context, Func<Stream, Encoding, TextWriter> writerFactory,
+        public OutputFormatterWriteContext(MazeContext context, Func<Stream, Encoding, TextWriter> writerFactory,
             Type objectType, object @object)
             : base(context)
         {
@@ -31,18 +31,18 @@ namespace Orcus.Modules.Api.Formatters
         ///         Gets or sets a delegate used to create a <see cref="TextWriter" /> for writing text to the response.
         ///     </para>
         ///     <para>
-        ///         Write to <see cref="OrcusResponse.Body" /> directly to write binary data to the response.
+        ///         Write to <see cref="MazeResponse.Body" /> directly to write binary data to the response.
         ///     </para>
         /// </summary>
         /// <remarks>
         ///     <para>
         ///         The <see cref="TextWriter" /> created by this delegate will encode text and write to the
-        ///         <see cref="OrcusResponse.Body" /> stream. Call this delegate to create a <see cref="TextWriter" />
+        ///         <see cref="MazeResponse.Body" /> stream. Call this delegate to create a <see cref="TextWriter" />
         ///         for writing text output to the response stream.
         ///     </para>
         ///     <para>
         ///         To implement a formatter that writes binary data to the response stream, do not use the
-        ///         <see cref="WriterFactory" /> delegate, and use <see cref="OrcusResponse.Body" /> instead.
+        ///         <see cref="WriterFactory" /> delegate, and use <see cref="MazeResponse.Body" /> instead.
         ///     </para>
         /// </remarks>
         public virtual Func<Stream, Encoding, TextWriter> WriterFactory { get; protected set; }

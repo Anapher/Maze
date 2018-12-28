@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using CodeElements.BizRunner.Generic;
 using Microsoft.Extensions.Logging;
-using Orcus.Server.BusinessDataAccess.Clients;
-using Orcus.Server.Connection;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.BusinessDataAccess.Clients;
+using Maze.Server.Connection;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.BusinessLogic.Authentication
+namespace Maze.Server.BusinessLogic.Authentication
 {
     public interface IAuthenticateClientAction : IGenericActionWriteDbAsync<ClientAuthenticationContext, Client>
     {

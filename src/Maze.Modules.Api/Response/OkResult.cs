@@ -1,4 +1,4 @@
-﻿namespace Orcus.Modules.Api.Response
+namespace Maze.Modules.Api.Response
 {
     /// <summary>
     ///     An <see cref="T:Microsoft.AspNetCore.Mvc.StatusCodeResult" /> that when executed will produce an empty

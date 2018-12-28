@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.IO.Abstractions;
 using System.Linq;
@@ -7,17 +7,17 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orcus.Client.Library.Extensions;
-using Orcus.Client.Library.Services;
-using Orcus.Core.Connection;
-using Orcus.Core.Modules;
-using Orcus.Core.Services;
-using Orcus.Extensions;
-using Orcus.ModuleManagement;
-using Orcus.Options;
-using Orcus.Server.Connection.Utilities;
+using Maze.Client.Library.Extensions;
+using Maze.Client.Library.Services;
+using Maze.Core.Connection;
+using Maze.Core.Modules;
+using Maze.Core.Services;
+using Maze.Extensions;
+using Maze.ModuleManagement;
+using Maze.Options;
+using Maze.Server.Connection.Utilities;
 
-namespace Orcus
+namespace Maze
 {
     public class Startup
     {
@@ -42,7 +42,7 @@ namespace Orcus
             builder.RegisterType<PackageLockLoader>().As<IPackageLockLoader>();
             builder.RegisterType<PackagesRegistrar>().As<IPackagesRegistrar>();
             builder.RegisterType<HttpClientService>().As<IHttpClientService>().SingleInstance();
-            builder.RegisterType<OrcusRestClientFactory>().As<IOrcusRestClientFactory>();
+            builder.RegisterType<MazeRestClientFactory>().As<IMazeRestClientFactory>();
             builder.RegisterType<ServerConnector>().As<IServerConnector>();
             builder.RegisterType<ModuleDownloader>().As<IModuleDownloader>();
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().As<IManagementCoreConnector>().SingleInstance();

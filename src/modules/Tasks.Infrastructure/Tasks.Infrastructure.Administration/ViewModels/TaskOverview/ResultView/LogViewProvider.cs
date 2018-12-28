@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
@@ -17,7 +17,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview.ResultView
 
         public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IComponentContext context)
         {
-            if (responseMessage.Content?.Headers.ContentType.MediaType != "orcus/jsonlog")
+            if (responseMessage.Content?.Headers.ContentType.MediaType != "maze/jsonlog")
                 return null;
 
             var log = responseMessage.Content.ReadAsStringAsync().Result;

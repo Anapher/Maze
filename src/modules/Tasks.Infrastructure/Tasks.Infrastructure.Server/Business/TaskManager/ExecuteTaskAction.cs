@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,10 +7,10 @@ using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Orcus.Server.Connection.Utilities;
-using Orcus.Server.Data.EfCode;
-using Orcus.Server.Library.Hubs;
-using Orcus.Server.Library.Services;
+using Maze.Server.Connection.Utilities;
+using Maze.Server.Data.EfCode;
+using Maze.Server.Library.Hubs;
+using Maze.Server.Library.Services;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Server.Core;
@@ -21,18 +21,18 @@ using Tasks.Infrastructure.Server.Rest.V1;
 
 namespace Tasks.Infrastructure.Server.Business.TaskManager
 {
-    public interface IExecuteTaskAction : IGenericActionAsync<OrcusTask, TaskSessionsInfo> { }
+    public interface IExecuteTaskAction : IGenericActionAsync<MazeTask, TaskSessionsInfo> { }
 
     public class ExecuteTaskAction : BusinessActionErrors, IExecuteTaskAction
     {
-        private readonly IOrcusTaskManagerManagement _management;
+        private readonly IMazeTaskManagerManagement _management;
         private readonly IConnectionManager _connectionManager;
         private readonly AppDbContext _dbContext;
         private readonly ITaskComponentResolver _taskComponentResolver;
         private readonly IXmlSerializerCache _xmlSerializerCache;
         private readonly IHubContext<AdministrationHub> _hubContext;
 
-        public ExecuteTaskAction(IOrcusTaskManagerManagement management, IConnectionManager connectionManager, AppDbContext dbContext,
+        public ExecuteTaskAction(IMazeTaskManagerManagement management, IConnectionManager connectionManager, AppDbContext dbContext,
             ITaskComponentResolver taskComponentResolver, IXmlSerializerCache xmlSerializerCache, IHubContext<AdministrationHub> hubContext)
         {
             _management = management;
@@ -43,7 +43,7 @@ namespace Tasks.Infrastructure.Server.Business.TaskManager
             _hubContext = hubContext;
         }
 
-        public async Task<TaskSessionsInfo> BizActionAsync(OrcusTask inputData)
+        public async Task<TaskSessionsInfo> BizActionAsync(MazeTask inputData)
         {
             var builder = new TaskSessionInfoBuilder(inputData.Id);
             builder.TaskSessionAdded += BuilderOnTaskSessionAdded;

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Orcus.Server.Connection.Commanding;
+using Maze.Server.Connection.Commanding;
 using Tasks.Infrastructure.Core.Audience;
 
 namespace Tasks.Infrastructure.Server.Filter

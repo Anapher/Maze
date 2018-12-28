@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.Extensions.Primitives;
 
-namespace Orcus.Sockets.Internal.Http
+namespace Maze.Sockets.Internal.Http
 {
     public static class StringValuesExtensions
     {

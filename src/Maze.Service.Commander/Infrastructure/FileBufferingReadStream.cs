@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     /// <summary>
     ///     A Stream that wraps another stream and enables rewinding by buffering the content as it is read.

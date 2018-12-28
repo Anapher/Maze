@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Orcus.Server.Data.Migrations
+namespace Maze.Server.Data.Migrations
 {
     public partial class InitialCreate : Migration
     {

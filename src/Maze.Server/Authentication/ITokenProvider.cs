@@ -1,8 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.Authentication
+namespace Maze.Server.Authentication
 {
     public interface ITokenProvider : ITokenGenerator
     {

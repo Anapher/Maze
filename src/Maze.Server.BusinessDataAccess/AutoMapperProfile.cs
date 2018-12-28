@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using AutoMapper;
-using Orcus.Server.Connection.Clients;
-using Orcus.Server.Data.EfClasses;
+using Maze.Server.Connection.Clients;
+using Maze.Server.Data.EfClasses;
 
-namespace Orcus.Server.BusinessDataAccess
+namespace Maze.Server.BusinessDataAccess
 {
     public class AutoMapperProfile : Profile
     {

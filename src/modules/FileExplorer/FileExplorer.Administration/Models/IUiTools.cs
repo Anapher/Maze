@@ -1,7 +1,7 @@
-﻿using FileExplorer.Administration.Utilities;
-using Orcus.Administration.Library.Services;
-using Orcus.Administration.Library.StatusBar;
-using Orcus.Administration.Library.Views;
+using FileExplorer.Administration.Utilities;
+using Maze.Administration.Library.Services;
+using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Views;
 
 namespace FileExplorer.Administration.Models
 {

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Xml.Serialization;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public class XmlSerializerCache : IXmlSerializerCache
     {

@@ -1,13 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Orcus.Client.Library\Orcus.Client.Library.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.ControllerExtensions\Orcus.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\..\..\Orcus.Utilities\Orcus.Utilities.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Client.Library\Maze.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Maze.ControllerExtensions\Maze.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Utilities\Maze.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

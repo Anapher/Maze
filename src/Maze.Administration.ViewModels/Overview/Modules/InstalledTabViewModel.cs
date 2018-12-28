@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.ViewModels.Overview.Modules
+namespace Maze.Administration.ViewModels.Overview.Modules
 {
     public class InstalledTabViewModel : BindableBase, IModuleTabViewModel
     {

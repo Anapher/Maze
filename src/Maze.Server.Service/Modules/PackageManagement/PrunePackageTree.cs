@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Service.Modules.PackageManagement
+namespace Maze.Server.Service.Modules.PackageManagement
 {
     /// <summary>
     /// Helpers to reduce down the gathered package dependency info to the allowed set

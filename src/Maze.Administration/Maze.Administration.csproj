@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -7,8 +7,8 @@
     <ProjectGuid>{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orcus.Administration</RootNamespace>
-    <AssemblyName>Orcus.Administration</AssemblyName>
+    <RootNamespace>Maze.Administration</RootNamespace>
+    <AssemblyName>Maze.Administration</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -207,21 +207,21 @@
     <PackageReference Include="Prism.Autofac" Version="6.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orcus.Administration.Core\Orcus.Administration.Core.csproj">
+    <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj">
       <Project>{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}</Project>
-      <Name>Orcus.Administration.Core</Name>
+      <Name>Maze.Administration.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Administration.Library\Orcus.Administration.Library.csproj">
+    <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj">
       <Project>{8b7888a3-a402-4d7c-82bb-e1a2494c023d}</Project>
-      <Name>Orcus.Administration.Library</Name>
+      <Name>Maze.Administration.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.Administration.ViewModels\Orcus.Administration.ViewModels.csproj">
+    <ProjectReference Include="..\Maze.Administration.ViewModels\Maze.Administration.ViewModels.csproj">
       <Project>{34b39498-66bc-45a3-8502-44f15d28d670}</Project>
-      <Name>Orcus.Administration.ViewModels</Name>
+      <Name>Maze.Administration.ViewModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orcus.ModuleManagement\Orcus.ModuleManagement.csproj">
+    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj">
       <Project>{42D5467F-20DB-4416-B673-0383304D098E}</Project>
-      <Name>Orcus.ModuleManagement</Name>
+      <Name>Maze.ModuleManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj">
       <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>

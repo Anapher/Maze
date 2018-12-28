@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Orcus.Sockets.Internal;
+using Maze.Sockets.Internal;
 using Xunit;
 
-namespace Orcus.Sockets.Tests.Internal
+namespace Maze.Sockets.Tests.Internal
 {
     public class DelegatingWriteStreamTests
     {

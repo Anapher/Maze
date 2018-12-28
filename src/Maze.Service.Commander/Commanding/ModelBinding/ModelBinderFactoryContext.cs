@@ -1,6 +1,6 @@
-﻿using Orcus.Modules.Api.ModelBinding;
+using Maze.Modules.Api.ModelBinding;
 
-namespace Orcus.Service.Commander.Commanding.ModelBinding
+namespace Maze.Service.Commander.Commanding.ModelBinding
 {
     /// <summary>
     ///     A context object for <see cref="IModelBinderFactory.CreateBinder" />.
@@ -8,7 +8,7 @@ namespace Orcus.Service.Commander.Commanding.ModelBinding
     public class ModelBinderFactoryContext
     {
         /// <summary>
-        /// Gets or sets the <see cref="Orcus.Modules.Api.ModelBinding.BindingInfo"/>.
+        /// Gets or sets the <see cref="Maze.Modules.Api.ModelBinding.BindingInfo"/>.
         /// </summary>
         public BindingInfo BindingInfo { get; set; }
 

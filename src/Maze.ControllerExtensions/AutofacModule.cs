@@ -1,7 +1,7 @@
-﻿using Autofac;
+using Autofac;
 using CodeElements.NetworkCall.NetSerializer;
 
-namespace Orcus.ControllerExtensions
+namespace Maze.ControllerExtensions
 {
     public class AutofacModule : Module
     {

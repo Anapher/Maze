@@ -1,6 +1,6 @@
-﻿using System.Threading;
+using System.Threading;
 
-namespace Orcus.Client.Library.Services
+namespace Maze.Client.Library.Services
 {
     /// <summary>
     ///     The synchronization context of the core app thread (STA)

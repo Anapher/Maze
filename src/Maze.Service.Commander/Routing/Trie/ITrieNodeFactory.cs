@@ -1,6 +1,6 @@
-﻿using Orcus.Service.Commander.Routing.Trie.Nodes;
+using Maze.Service.Commander.Routing.Trie.Nodes;
 
-namespace Orcus.Service.Commander.Routing.Trie
+namespace Maze.Service.Commander.Routing.Trie
 {
     /// <summary>
     ///     Factory for creating trie nodes from route definition segments

@@ -1,12 +1,12 @@
-﻿<views:WindowUserControl
-    x:Class="Orcus.Administration.Views.Main.Overview.Groups.ChangeGroupNameView"
+<views:WindowUserControl
+    x:Class="Maze.Administration.Views.Main.Overview.Groups.ChangeGroupNameView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:groups="clr-namespace:Orcus.Administration.ViewModels.Overview.Groups;assembly=Orcus.Administration.ViewModels"
+    xmlns:groups="clr-namespace:Maze.Administration.ViewModels.Overview.Groups;assembly=Maze.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
-    xmlns:views="clr-namespace:Orcus.Administration.Library.Views;assembly=Orcus.Administration.Library"
+    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
     Title="{tx:T GroupsView:ChangeName}"
     d:DataContext="{d:DesignInstance groups:ChangeGroupNameViewModel}"
     d:DesignHeight="450"

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,14 +16,14 @@ namespace ModulePacker
         public PseudoNuspecBuilder()
         {
             _metadata = new Dictionary<string, string>();
-            Dependencies = new Dictionary<OrcusFramework, List<PackageDependency>>();
+            Dependencies = new Dictionary<MazeFramework, List<PackageDependency>>();
             IncludedReferences = new List<IncludedReference>();
         }
 
-        public Dictionary<OrcusFramework, List<PackageDependency>> Dependencies { get; }
+        public Dictionary<MazeFramework, List<PackageDependency>> Dependencies { get; }
         public List<IncludedReference> IncludedReferences { get; }
 
-        public void Import(NuspecCoreReader reader, OrcusFramework framework)
+        public void Import(NuspecCoreReader reader, MazeFramework framework)
         {
             foreach (var metadataKeyValue in reader.GetMetadata())
             {
@@ -103,15 +103,15 @@ namespace ModulePacker
             }
         }
 
-        private IEnumerable<PackageDependency> GetDependencies(OrcusFramework framework, Dictionary<OrcusFramework, List<PackageDependency>> dependencies)
+        private IEnumerable<PackageDependency> GetDependencies(MazeFramework framework, Dictionary<MazeFramework, List<PackageDependency>> dependencies)
         {
-            if (framework == OrcusFramework.Administration)
+            if (framework == MazeFramework.Administration)
                 return dependencies[framework];
 
-            if (framework == OrcusFramework.Server)
+            if (framework == MazeFramework.Server)
             {
                 var allDependencies = dependencies[framework].ToList();
-                if (dependencies.TryGetValue(OrcusFramework.Administration, out var administrationDependencies))
+                if (dependencies.TryGetValue(MazeFramework.Administration, out var administrationDependencies))
                 {
                     allDependencies.AddRange(administrationDependencies.Where(IsModuleDependency));
                 }
@@ -119,14 +119,14 @@ namespace ModulePacker
                 return allDependencies;
             }
 
-            if (framework == OrcusFramework.Client)
+            if (framework == MazeFramework.Client)
             {
                 var allDependencies = dependencies[framework].ToList();
 
-                if (dependencies.TryGetValue(OrcusFramework.Administration, out var administrationDependencies))
+                if (dependencies.TryGetValue(MazeFramework.Administration, out var administrationDependencies))
                     allDependencies.AddRange(administrationDependencies.Where(IsModuleDependency));
 
-                if (dependencies.TryGetValue(OrcusFramework.Server, out var serverDependencies))
+                if (dependencies.TryGetValue(MazeFramework.Server, out var serverDependencies))
                     allDependencies.AddRange(serverDependencies.Where(IsModuleDependency));
 
                 return allDependencies;

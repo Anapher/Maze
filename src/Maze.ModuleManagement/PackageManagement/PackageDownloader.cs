@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -11,7 +11,7 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 
-namespace Orcus.ModuleManagement.PackageManagement
+namespace Maze.ModuleManagement.PackageManagement
 {
     /// <summary>
     /// Abstracts the logic to get a package stream for a given package identity from a given source repository

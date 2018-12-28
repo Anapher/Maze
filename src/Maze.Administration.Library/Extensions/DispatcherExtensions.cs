@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
-namespace Orcus.Administration.Library.Extensions
+namespace Maze.Administration.Library.Extensions
 {
     public static class DispatcherExtensions
     {

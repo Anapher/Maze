@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
 
-namespace Orcus.Modules.Api
+namespace Maze.Modules.Api
 {
-    public abstract class OrcusController : IDisposable
+    public abstract class MazeController : IDisposable
     {
-        public OrcusContext OrcusContext { get; set; }
-        public OrcusRequest Request => OrcusContext.Request;
-        public OrcusResponse Response => OrcusContext.Response;
+        public MazeContext MazeContext { get; set; }
+        public MazeRequest Request => MazeContext.Request;
+        public MazeResponse Response => MazeContext.Response;
 
         [NonAction]
         public virtual void Dispose()

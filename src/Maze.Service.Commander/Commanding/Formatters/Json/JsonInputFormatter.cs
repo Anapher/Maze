@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Newtonsoft.Json;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Commanding.Formatters.Json.Internal;
-using Orcus.Service.Commander.Infrastructure;
+using Maze.Modules.Api.Formatters;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.Formatters.Json.Internal;
+using Maze.Service.Commander.Infrastructure;
 
-namespace Orcus.Service.Commander.Commanding.Formatters.Json
+namespace Maze.Service.Commander.Commanding.Formatters.Json
 {
     /// <summary>
     /// A <see cref="TextInputFormatter"/> for JSON content.
@@ -93,7 +93,7 @@ namespace Orcus.Service.Commander.Commanding.Formatters.Json
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
 
-            var request = context.OrcusContext.Request;
+            var request = context.MazeContext.Request;
 
             if (!request.Body.CanSeek)
             {

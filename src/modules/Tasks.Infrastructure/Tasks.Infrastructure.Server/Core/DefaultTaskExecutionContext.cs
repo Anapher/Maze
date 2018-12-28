@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Orcus.Utilities;
+using Maze.Utilities;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Tasks.Infrastructure.Management.Data;
@@ -15,10 +15,10 @@ namespace Tasks.Infrastructure.Server.Core
         private string _message;
         private double? _progress;
 
-        public DefaultTaskExecutionContext(TaskSession session, OrcusTask orcusTask, IServiceProvider services, Func<CommandProcessDto, Task> updateStatus)
+        public DefaultTaskExecutionContext(TaskSession session, MazeTask mazeTask, IServiceProvider services, Func<CommandProcessDto, Task> updateStatus)
         {
             Session = session;
-            OrcusTask = orcusTask;
+            MazeTask = mazeTask;
             Services = services;
 
             _statusUpdate = new MessageThrottleService<CommandProcessDto>(updateStatus);
@@ -30,7 +30,7 @@ namespace Tasks.Infrastructure.Server.Core
         }
 
         public override TaskSession Session { get; }
-        public override OrcusTask OrcusTask { get; }
+        public override MazeTask MazeTask { get; }
         public override IServiceProvider Services { get; }
 
         public override void ReportProgress(double? progress)

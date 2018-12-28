@@ -1,4 +1,4 @@
-﻿namespace Orcus.Server.Connection.Commanding
+namespace Maze.Server.Connection.Commanding
 {
     public abstract class CommandExecutionPolicy
     {

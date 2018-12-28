@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -9,15 +9,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Orcus.Modules.Api.Formatters;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
-using Orcus.Service.Commander.Commanding.Formatters;
-using Orcus.Service.Commander.Commanding.Formatters.Abstractions;
-using Orcus.Service.Commander.Commanding.Formatters.Internal;
-using Orcus.Service.Commander.Logging;
+using Maze.Modules.Api.Formatters;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
+using Maze.Service.Commander.Commanding.Formatters;
+using Maze.Service.Commander.Commanding.Formatters.Abstractions;
+using Maze.Service.Commander.Commanding.Formatters.Internal;
+using Maze.Service.Commander.Logging;
 
-namespace Orcus.Service.Commander.Infrastructure
+namespace Maze.Service.Commander.Infrastructure
 {
     public class DefaultOutputFormatterSelector : OutputFormatterSelector
     {
@@ -31,7 +31,7 @@ namespace Orcus.Service.Commander.Infrastructure
         private readonly bool _respectBrowserAcceptHeader;
         private readonly bool _returnHttpNotAcceptable;
 
-        public DefaultOutputFormatterSelector(IOptions<OrcusServerOptions> options, ILogger<DefaultOutputFormatterSelector> logger)
+        public DefaultOutputFormatterSelector(IOptions<MazeServerOptions> options, ILogger<DefaultOutputFormatterSelector> logger)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
@@ -71,7 +71,7 @@ namespace Orcus.Service.Commander.Infrastructure
 
             _logger.RegisteredOutputFormatters(formatters);
 
-            var request = context.OrcusContext.Request;
+            var request = context.MazeContext.Request;
             var acceptableMediaTypes = GetAcceptableMediaTypes(request);
             var selectFormatterWithoutRegardingAcceptHeader = false;
 
@@ -151,7 +151,7 @@ namespace Orcus.Service.Commander.Infrastructure
             return selectedFormatter;
         }
 
-        private List<MediaTypeSegmentWithQuality> GetAcceptableMediaTypes(OrcusRequest request)
+        private List<MediaTypeSegmentWithQuality> GetAcceptableMediaTypes(MazeRequest request)
         {
             var result = new List<MediaTypeSegmentWithQuality>();
             AcceptHeaderParser.ParseAcceptHeader(request.Headers[HeaderNames.Accept], result);

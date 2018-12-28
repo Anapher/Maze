@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 /*
  * Ext.cs
@@ -56,7 +56,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Orcus.Sockets.Client.WebSocketSharp
+namespace Maze.Sockets.Client.WebSocketSharp
 {
     internal static class StringExtensions
     {

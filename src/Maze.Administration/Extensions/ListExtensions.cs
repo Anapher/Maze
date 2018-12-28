@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orcus.Administration.Extensions
+namespace Maze.Administration.Extensions
 {
     public static class ListExtensions
     {

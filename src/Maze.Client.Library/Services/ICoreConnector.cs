@@ -1,4 +1,4 @@
-﻿namespace Orcus.Client.Library.Services
+namespace Maze.Client.Library.Services
 {
     /// <summary>
     ///     The connector that will keep the connection to the server

@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Orcus.Server.BusinessDataAccess.Accounts;
+using Autofac;
+using Maze.Server.BusinessDataAccess.Accounts;
 
-namespace Orcus.Server.Autofac
+namespace Maze.Server.Autofac
 {
     public class DataAccessModule : Module
     {

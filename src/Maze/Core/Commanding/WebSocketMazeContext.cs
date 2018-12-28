@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Request;
-using Orcus.Modules.Api.Response;
-using Orcus.Sockets;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Request;
+using Maze.Modules.Api.Response;
+using Maze.Sockets;
 
-namespace Orcus.Core.Commanding
+namespace Maze.Core.Commanding
 {
-    public class WebSocketOrcusContext : OrcusContext
+    public class WebSocketMazeContext : MazeContext
     {
-        public WebSocketOrcusContext(OrcusRequestReceivedEventArgs args)
+        public WebSocketMazeContext(MazeRequestReceivedEventArgs args)
         {
             Request = args.Request;
             Response = args.Response;
@@ -20,8 +20,8 @@ namespace Orcus.Core.Commanding
         }
 
         public override object Caller { get; set; }
-        public override OrcusRequest Request { get; set; }
-        public override OrcusResponse Response { get; set; }
+        public override MazeRequest Request { get; set; }
+        public override MazeResponse Response { get; set; }
         public override ConnectionInfo Connection { get; set; }
         public override IServiceProvider RequestServices { get; set; }
         public override CancellationToken RequestAborted { get; set; }

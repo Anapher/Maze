@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Core.Extensions
+namespace Maze.Administration.Core.Extensions
 {
     public static class StringExtensions
     {

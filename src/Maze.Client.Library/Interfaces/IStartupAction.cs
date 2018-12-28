@@ -1,6 +1,6 @@
-﻿using Orcus.Modules.Api;
+using Maze.Modules.Api;
 
-namespace Orcus.Client.Library.Interfaces
+namespace Maze.Client.Library.Interfaces
 {
     /// <summary>
     ///     An action that will be invoked when the client starts up

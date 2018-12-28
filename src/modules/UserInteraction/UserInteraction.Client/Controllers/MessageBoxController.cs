@@ -1,16 +1,16 @@
-﻿using System.Windows.Forms;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
+using System.Windows.Forms;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
 using UserInteraction.Dtos.MessageBox;
 
 namespace UserInteraction.Client.Controllers
 {
     [Route("messageBox")]
-    public class MessageBoxController : OrcusController
+    public class MessageBoxController : MazeController
     {
         //UserInteraction/messageBox/open
-        [OrcusPost("open")]
+        [MazePost("open")]
         public IActionResult Open([FromBody] OpenMessageBoxDto dto)
         {
             var result = MessageBox.Show(dto.Text, dto.Caption, (MessageBoxButtons) dto.Buttons,

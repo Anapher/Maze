@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Tasks.Infrastructure.Core.Commands;
 
 namespace Tasks.Infrastructure.Core
@@ -7,7 +7,7 @@ namespace Tasks.Infrastructure.Core
     ///     An attribute for a <see cref="CommandInfo"/> to specify the information
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class OrcusCommandAttribute : Attribute
+    public class MazeCommandAttribute : Attribute
     {
         /// <summary>
         ///     The name of the command
@@ -20,11 +20,11 @@ namespace Tasks.Infrastructure.Core
         public string Modules { get; }
 
         /// <summary>
-        ///     Create a new <see cref="OrcusCommandAttribute"/>
+        ///     Create a new <see cref="MazeCommandAttribute"/>
         /// </summary>
         /// <param name="name">The name of the command</param>
         /// <param name="modules">The required modules separated by a semicolon ';'</param>
-        public OrcusCommandAttribute(string name, string modules)
+        public MazeCommandAttribute(string name, string modules)
         {
             Name = name;
             Modules = modules;

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Orcus.Client.Library.Interfaces;
-using Orcus.Client.Library.Services;
+using Maze.Client.Library.Interfaces;
+using Maze.Client.Library.Services;
 
-namespace Orcus.Core.Services
+namespace Maze.Core.Services
 {
     public class HttpClientService : IHttpClientService, IDisposable
     {

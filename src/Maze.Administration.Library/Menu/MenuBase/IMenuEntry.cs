@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Menu.MenuBase
+namespace Maze.Administration.Library.Menu.MenuBase
 {
     public interface IMenuEntry<in TCommandEntry> where TCommandEntry : IVisibleMenuItem { }
 }

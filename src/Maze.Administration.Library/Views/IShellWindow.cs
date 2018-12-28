@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using Anapher.Wpf.Swan.ViewInterface;
 using MahApps.Metro.Controls;
-using Orcus.Administration.Library.StatusBar;
+using Maze.Administration.Library.StatusBar;
 
-namespace Orcus.Administration.Library.Views
+namespace Maze.Administration.Library.Views
 {
     /// <summary>
     ///     The shell window

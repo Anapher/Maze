@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Orcus.Client.Library.Utilities
+namespace Maze.Client.Library.Utilities
 {
     public static class CoreHelper
     {

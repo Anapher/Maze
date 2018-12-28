@@ -1,4 +1,4 @@
-﻿namespace Orcus.Administration.Library.Models
+namespace Maze.Administration.Library.Models
 {
     /// <summary>
     ///     A factory that will create multiple, equal instances

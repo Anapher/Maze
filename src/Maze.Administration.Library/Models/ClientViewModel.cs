@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Orcus.Server.Connection.Clients;
+using Maze.Server.Connection.Clients;
 using Prism.Mvvm;
 
-namespace Orcus.Administration.Library.Models
+namespace Maze.Administration.Library.Models
 {
     public abstract class ClientViewModel : BindableBase
     {

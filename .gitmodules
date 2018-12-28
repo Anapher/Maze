@@ -4,9 +4,6 @@
 [submodule "src/submodules/CodeElements.BizRunner"]
 	path = src/submodules/CodeElements.BizRunner
 	url = https://github.com/CodeElements/CodeElements.BizRunner
-[submodule "src/submodules/NuGet.Client"]
-	path = src/submodules/NuGet.Client
-	url = https://github.com/OrcusTechnologies/NuGet.Client.git
 [submodule "src/submodules/TxTranslation"]
 	path = src/submodules/TxTranslation
 	url = https://github.com/Anapher/TxTranslation
@@ -19,3 +16,6 @@
 [submodule "src/submodules/TreeViewEx"]
 	path = src/submodules/TreeViewEx
 	url = https://github.com/Anapher/TreeViewEx.git
+[submodule "src/submodules/NuGet.Client"]
+	path = src/submodules/NuGet.Client
+	url = https://github.com/MazeAdmin/NuGet.Client

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Orcus.Modules.Api;
-using Orcus.Modules.Api.Parameters;
-using Orcus.Modules.Api.Routing;
-using Orcus.Server.Connection.Utilities;
+using Maze.Modules.Api;
+using Maze.Modules.Api.Parameters;
+using Maze.Modules.Api.Routing;
+using Maze.Server.Connection.Utilities;
 using Tasks.Infrastructure.Client.Library;
 using Tasks.Infrastructure.Client.Storage;
 using Tasks.Infrastructure.Core;
@@ -14,7 +14,7 @@ using Tasks.Infrastructure.Management;
 namespace Tasks.Infrastructure.Client.Controllers
 {
     [Route("v1/tasks")]
-    public class TasksController : OrcusController
+    public class TasksController : MazeController
     {
         private readonly IClientTaskManager _clientTaskManager;
 
@@ -23,25 +23,25 @@ namespace Tasks.Infrastructure.Client.Controllers
             _clientTaskManager = clientTaskManager;
         }
 
-        [OrcusPost]
+        [MazePost]
         public async Task<IActionResult> CreateOrUpdateTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache)
         {
-            var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
-            var task = orcusTask.ReadTask();
+            var mazeTask = new MazeTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var task = mazeTask.ReadTask();
 
             await _clientTaskManager.AddOrUpdateTask(task);
             return Ok();
         }
 
-        [OrcusDelete("{taskId}")]
+        [MazeDelete("{taskId}")]
         public async Task<IActionResult> DeleteTask(Guid taskId)
         {
             await _clientTaskManager.RemoveTask(taskId);
             return Ok();
         }
 
-        [OrcusGet("{taskId}/trigger")]
+        [MazeGet("{taskId}/trigger")]
         public async Task<IActionResult> TriggerTask(Guid taskId, [FromQuery] string sessionKey, [FromServices] ITaskDirectory taskDirectory,
             [FromServices] IDatabaseTaskStorage databaseTaskStorage)
         {
@@ -53,12 +53,12 @@ namespace Tasks.Infrastructure.Client.Controllers
             return Ok();
         }
 
-        [OrcusPost("execute")]
+        [MazePost("execute")]
         public async Task<IActionResult> ExecuteTask([FromServices] ITaskComponentResolver taskComponentResolver,
             [FromServices] IXmlSerializerCache serializerCache)
         {
-            var orcusTask = new OrcusTaskReader(Request.Body, taskComponentResolver, serializerCache);
-            var task = orcusTask.ReadTask();
+            var mazeTask = new MazeTaskReader(Request.Body, taskComponentResolver, serializerCache);
+            var task = mazeTask.ReadTask();
 
             var memoryStorage = new MemoryTaskStorage();
             await _clientTaskManager.TriggerNow(task, SessionKey.Create("Execute"), memoryStorage);

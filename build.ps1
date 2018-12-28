@@ -1,4 +1,4 @@
-#dotnet build Orcus.sln -c Release
+#dotnet build Maze.sln -c Release
 
 Get-ChildItem .\src\modules -Directory | ForEach-Object {
     Write-Host "Process module $_" -ForegroundColor Yellow

@@ -1,7 +1,7 @@
-﻿using NuGet.Packaging.Core;
+using NuGet.Packaging.Core;
 using NuGet.Versioning;
 
-namespace Orcus.Server.Connection.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public static class PackageIdentityConvert
     {
