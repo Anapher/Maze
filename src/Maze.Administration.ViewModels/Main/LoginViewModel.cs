@@ -68,7 +68,7 @@ namespace Maze.Administration.ViewModels.Main
                     {
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
-                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:50485/") };
+                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:54941/") };
                         var client = await MazeRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
