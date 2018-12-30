@@ -29,7 +29,7 @@ namespace Maze.Administration.Services
             _shellWindowFactory = shellWindowFactory;
         }
 
-        private IShellWindow Initialize(Type viewModelType, Action<IShellWindow> configureWindow,
+        private IShellWindow Initialize(Type viewModelType, Action<object> configureViewModel, Action<IShellWindow> configureWindow,
             Action<ContainerBuilder> setupContainer, out object viewModel)
         {
             var viewType = _viewModelResolver.ResolveViewType(viewModelType);
@@ -48,7 +48,9 @@ namespace Maze.Administration.Services
             });
 
             viewModel = lifescope.Resolve(viewModelType);
-            var view = (FrameworkElement)lifescope.Resolve(viewType);
+            configureViewModel?.Invoke(viewModel);
+
+            var view = (FrameworkElement) lifescope.Resolve(viewType);
             view.DataContext = viewModel;
 
             window.InitalizeContent(view, statusBar);
@@ -77,20 +79,13 @@ namespace Maze.Administration.Services
 
         public bool? ShowDialog(Type viewModelType, Action<ContainerBuilder> configureContainer, Action<IShellWindow> configureWindow, Action<object> configureViewModel, out object viewModel)
         {
-            var window = Initialize(viewModelType, configureWindow, configureContainer, out viewModel);
-
-            configureWindow?.Invoke(window);
-            configureViewModel?.Invoke(viewModel);
-
+            var window = Initialize(viewModelType, configureViewModel, configureWindow, configureContainer, out viewModel);
             return window.ShowDialog(_window);
         }
 
         public void Show(Type viewModelType, Action<ContainerBuilder> configureContainer, Action<IShellWindow> configureWindow, Action<object> configureViewModel, out object viewModel)
         {
-            var window = Initialize(viewModelType, configureWindow, configureContainer, out viewModel);
-            configureWindow?.Invoke(window);
-            configureViewModel?.Invoke(viewModel);
-
+            var window = Initialize(viewModelType, configureViewModel, configureWindow, configureContainer, out viewModel);
             window.Show(_window);
         }
 

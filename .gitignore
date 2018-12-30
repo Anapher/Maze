@@ -332,6 +332,7 @@ ASALocalRun/
 # Maze specific
 src/Maze.Server/modules/
 src/Maze.Server/tmp/
+src/Maze.Server/tasks/
 src/Maze.Server/modules.json
 src/Maze.Server/modules.lock
 *.sqlite

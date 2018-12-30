@@ -5,8 +5,14 @@
 		<text key="All">Alle</text>
 		<text key="Cancel">Abbrechen</text>
 		<text key="Canceled">Abgebrochen</text>
+		<text key="ClientConfiguration:CreateConfiguration">Konfiguration erstellen</text>
+		<text key="ClientConfiguration:GlobalConfiguration">Allgemeine Konfiguration</text>
+		<text key="ClientConfiguration:LastUpdate">Letzte Aktualisierung</text>
+		<text key="ClientConfiguration:NotCreated">Die Konfiguration wurde noch nicht erstellt. Möchten Sie eine erstellen?</text>
+		<text key="ClientConfiguration:UpdateConfiguration">Konfiguration aktualisieren</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Configuration">Konfiguration</text>
 		<text key="Copy">Kopieren</text>
 		<text key="Create">Erstellen</text>
 		<text key="DefaultClientListView:Connected">Verbunden</text>
@@ -25,7 +31,6 @@
 		<text key="GroupsView:ChangeName">Name ändern</text>
 		<text key="GroupsView:ClientsOnline">{#} Clients online</text>
 		<text key="GroupsView:ClientsOnline" count="1">Ein Client online</text>
-		<text key="GroupsView:Configuration">Konfiguration</text>
 		<text key="GroupsView:Error.GroupNameExists">Eine Gruppe mit dem Namen '{name}' existiert bereits.</text>
 		<text key="GroupsView:Warning.ClientsAreAlreadyInGroup">Manche Clients sind bereits in der Gruppe '{name}'. Möchsten Sie die ausgewählten Clients hinzufügen, die noch nicht in der Gruppe sind?</text>
 		<text key="GroupsView:Warning.SureRemoveGroup">Sind Sie sich sicher, dass Sie die Gruppe '{name}' entfernen wollen? Bitte beachten Sie, dass auch alles, was zu der Gruppe gehört, einschließlich der Konfiguration, entfernt wird.</text>
@@ -258,6 +263,7 @@
 		<text key="Tx:time.span neg.years.single">{#} Jahren</text>
 		<text key="Tx:time.span neg.years.single" count="1">einem Jahr</text>
 		<text key="Unknown">Unbekannt</text>
+		<text key="Update">Aktualisieren</text>
 		<text key="Username">Benutzername</text>
 		<text key="Value">Wert</text>
 		<text key="Version">Version</text>
@@ -267,8 +273,14 @@
 		<text key="All">All</text>
 		<text key="Cancel">Cancel</text>
 		<text key="Canceled">Canceled</text>
+		<text key="ClientConfiguration:CreateConfiguration">Create configuration</text>
+		<text key="ClientConfiguration:GlobalConfiguration">Global Configuration</text>
+		<text key="ClientConfiguration:LastUpdate">Last update</text>
+		<text key="ClientConfiguration:NotCreated">The configuration was not yet created. Do you want to create it?</text>
+		<text key="ClientConfiguration:UpdateConfiguration">Update configuration</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Configuration">Configuration</text>
 		<text key="Copy">Copy</text>
 		<text key="Create">Create</text>
 		<text key="DefaultClientListView:Connected">Connected</text>
@@ -287,7 +299,6 @@
 		<text key="GroupsView:ChangeName">Change Name</text>
 		<text key="GroupsView:ClientsOnline">{#} clients online</text>
 		<text key="GroupsView:ClientsOnline" count="1">One client online</text>
-		<text key="GroupsView:Configuration">Configuration</text>
 		<text key="GroupsView:Error.GroupNameExists">A group with the name '{name}' already exists.</text>
 		<text key="GroupsView:Warning.ClientsAreAlreadyInGroup">Some selected clients are already in the group '{name}'. Do you want to add the selected clients that are not yet in the group?</text>
 		<text key="GroupsView:Warning.SureRemoveGroup">Are you sure that you want to remove the group '{name}'? Please keep in mind that everything that belonged to the group including the configuration will be removed too.</text>
@@ -536,6 +547,7 @@
 		<text key="Tx:time.span neg.years.single">{#} years</text>
 		<text key="Tx:time.span neg.years.single" count="1">a year</text>
 		<text key="Unknown">Unknown</text>
+		<text key="Update">Update</text>
 		<text key="Username">Username</text>
 		<text key="Value">Value</text>
 		<text key="Version">Version</text>

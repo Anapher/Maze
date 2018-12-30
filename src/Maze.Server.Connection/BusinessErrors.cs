@@ -72,6 +72,24 @@ namespace Maze.Server.Connection
             public static RestError GroupNotFound => CreateNotFoundError("The client group was not found.", ErrorCode.ClientGroups_NotFound);
         }
 
+        public static class ClientConfigurations
+        {
+            public static RestError InvalidJson =>
+                CreateValidationError("The json of the configuration is invalid.", ErrorCode.ClientConfigurations_InvalidJson);
+
+            public static RestError CannotCreateGlobalConfig =>
+                CreateValidationError("Cannot create a global config as it is created by the server itself and undeletable.",
+                    ErrorCode.ClientConfigurations_CannotCreateGlobalConfig);
+
+            public static RestError ConfigAlreadyExists =>
+                CreateValidationError("The client configuration already exists.",
+                    ErrorCode.ClientConfigurations_AlreadyExists);
+
+            public static RestError NotFound =>
+                CreateNotFoundError("The client configuration was not found.",
+                    ErrorCode.ClientConfigurations_NotFound);
+        }
+
         private static RestError CreateValidationError(string message, ErrorCode code) =>
             new RestError(ErrorTypes.ValidationError, message, (int) code);
 

@@ -5,15 +5,20 @@ using System.Windows.Data;
 using Anapher.Wpf.Swan.Extensions;
 using MahApps.Metro.IconPacks;
 using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Exceptions;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Models;
+using Maze.Administration.Library.Rest.ClientConfigurations.V1;
 using Maze.Administration.Library.Rest.ClientGroups.V1;
 using Maze.Administration.Library.Services;
 using Maze.Administration.Library.Utilities;
 using Maze.Administration.Library.ViewModels;
 using Maze.Administration.Library.Views;
+using Maze.Administration.ViewModels.Main;
 using Maze.Administration.ViewModels.Overview.Groups;
+using Maze.Administration.ViewModels.Utilities;
 using Maze.Server.Connection.Clients;
+using Maze.Server.Connection.Error;
 using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;
@@ -30,6 +35,8 @@ namespace Maze.Administration.ViewModels.Overview
         private string _newGroupName;
         private DelegateCommand<GroupPresenterViewModel> _removeGroupCommand;
         private DelegateCommand<GroupPresenterViewModel> _changeNameCommand;
+        private AsyncRelayCommand<GroupPresenterViewModel> _configurationCommand;
+        private DelegateCommand _globalConfigurationCommand;
 
         public GroupsViewModel(IClientManager clientManager, IRestClient restClient, IWindowService windowService) : base(Tx.T("Groups"),
             PackIconFontAwesomeKind.ThLargeSolid)
@@ -95,6 +102,57 @@ namespace Maze.Administration.ViewModels.Overview
                 return _changeNameCommand ?? (_changeNameCommand = new DelegateCommand<GroupPresenterViewModel>(parameter =>
                 {
                     _windowService.ShowDialog<ChangeGroupNameViewModel>(vm => vm.Initialize(parameter.Group));
+                }));
+            }
+        }
+
+        public AsyncRelayCommand<GroupPresenterViewModel> ConfigurationCommand
+        {
+            get
+            {
+                return _configurationCommand ?? (_configurationCommand = new AsyncRelayCommand<GroupPresenterViewModel>(async parameter =>
+                {
+                    ClientConfigurationDto configurationDto;
+                    try
+                    {
+                        configurationDto = await ClientConfigurationsResource.GetAsync(parameter.Group.ClientGroupId, _restClient);
+                    }
+                    catch (RestException ex) when (ex.ErrorId == (int) ErrorCode.ClientConfigurations_NotFound)
+                    {
+                        if (_windowService.ShowMessage(Tx.T("ClientConfiguration:NotCreated"), Tx.T("Configuration"), MessageBoxButton.OKCancel,
+                                MessageBoxImage.Information) == MessageBoxResult.OK)
+                        {
+                            configurationDto = null;
+                        }
+                        else return;
+                    }
+                    catch (Exception e)
+                    {
+                        e.ShowMessage(_windowService);
+                        return;
+                    }
+
+                    _windowService.ShowDialog<ClientConfigurationViewModel>(vm =>
+                    {
+                        if (configurationDto == null)
+                            vm.InitializeCreate(parameter.Group.ClientGroupId);
+                        else vm.InitializeUpdate(configurationDto);
+                    });
+                }));
+            }
+        }
+
+        public DelegateCommand GlobalConfigurationCommand
+        {
+            get
+            {
+                return _globalConfigurationCommand ?? (_globalConfigurationCommand = new DelegateCommand(async () =>
+                {
+                    var result = await ClientConfigurationsResource.GetAsync(null, _restClient).OnErrorShowMessageBox(_windowService);
+                    if (result.Failed)
+                        return;
+
+                    _windowService.ShowDialog<ClientConfigurationViewModel>(vm => vm.InitializeUpdate(result.Result));
                 }));
             }
         }

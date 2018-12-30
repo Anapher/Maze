@@ -11,7 +11,7 @@ namespace Maze.Server
         {
             try
             {
-                BuildWebHost(args).Run();
+                BuildWebHost(args).Seed().Run();
                 return 0;
             }
             catch (Exception e)

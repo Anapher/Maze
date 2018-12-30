@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:groups="clr-namespace:Maze.Administration.ViewModels.Overview.Groups;assembly=Maze.Administration.ViewModels"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"
     xmlns:overview="clr-namespace:Maze.Administration.ViewModels.Overview;assembly=Maze.Administration.ViewModels"
@@ -20,13 +21,31 @@
         </Grid.RowDefinitions>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" MaxWidth="500" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="GroupNameTextBox" Text="{Binding NewGroupName}" />
-            <Button
+            <Button Command="{Binding GlobalConfigurationCommand}">
+                <StackPanel Margin="5,0" Orientation="Horizontal">
+                    <ContentPresenter VerticalAlignment="Center" Content="{StaticResource SettingsIcon}">
+                        <ContentPresenter.LayoutTransform>
+                            <ScaleTransform ScaleX=".8" ScaleY=".8" />
+                        </ContentPresenter.LayoutTransform>
+                    </ContentPresenter>
+                    <mah:ContentControlEx
+                        Margin="4,0,0,0"
+                        Content="{tx:T ClientConfiguration:GlobalConfiguration}"
+                        ContentCharacterCasing="Upper" />
+                </StackPanel>
+            </Button>
+            <TextBox
+                x:Name="GroupNameTextBox"
                 Grid.Column="2"
+                Text="{Binding NewGroupName}" />
+            <Button
+                Grid.Column="4"
                 HorizontalAlignment="Left"
                 Command="{Binding CreateNewGroupCommand}"
                 Content="Create new group">
@@ -45,7 +64,7 @@
             <ItemsControl Margin="5,0" ItemsSource="{Binding GroupsView}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemHeight="160" ItemWidth="300" />
+                        <WrapPanel ItemHeight="160" ItemWidth="400" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -85,7 +104,22 @@
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.ChangeNameCommand}"
                                         CommandParameter="{Binding}"
                                         Content="{tx:T GroupsView:ChangeName}" />
-                                    <Button Margin="5,0" Content="{tx:T GroupsView:Configuration}" />
+                                    <Button
+                                        Margin="5,0"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.ConfigurationCommand}"
+                                        CommandParameter="{Binding}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ContentPresenter VerticalAlignment="Center" Content="{StaticResource SettingsIcon}">
+                                                <ContentPresenter.LayoutTransform>
+                                                    <ScaleTransform ScaleX=".8" ScaleY=".8" />
+                                                </ContentPresenter.LayoutTransform>
+                                            </ContentPresenter>
+                                            <mah:ContentControlEx
+                                                Margin="4,0,0,0"
+                                                Content="{tx:T Configuration}"
+                                                ContentCharacterCasing="Upper" />
+                                        </StackPanel>
+                                    </Button>
                                     <Button
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveGroupCommand}"
                                         CommandParameter="{Binding}"

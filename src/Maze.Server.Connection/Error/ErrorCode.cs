@@ -19,6 +19,11 @@ namespace Maze.Server.Connection.Error
         Commander_ActionError,
         Commander_ResultError,
 
-        ClientGroups_NotFound = 3000
+        ClientGroups_NotFound = 3000,
+
+        ClientConfigurations_InvalidJson = 4000,
+        ClientConfigurations_CannotCreateGlobalConfig,
+        ClientConfigurations_AlreadyExists,
+        ClientConfigurations_NotFound,
     }
 }

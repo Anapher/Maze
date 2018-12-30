@@ -11,7 +11,7 @@ namespace Maze.Server.Data.EfClasses
         [Required]
         public string Content { get; set; }
 
-        public long ContentHash { get; set; }
+        public int ContentHash { get; set; }
 
         public DateTimeOffset UpdatedOn { get; set; }
 

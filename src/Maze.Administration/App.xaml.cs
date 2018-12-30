@@ -1,4 +1,8 @@
+using System;
 using System.Windows;
+using System.Xml;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Maze.Administration.Views;
 
 namespace Maze.Administration
@@ -11,6 +15,13 @@ namespace Maze.Administration
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            using (var stream = GetResourceStream(new Uri("/Resources/SyntaxHighlighting/Json.xshd", UriKind.Relative)).Stream)
+            using (var reader = new XmlTextReader(stream))
+            {
+                HighlightingManager.Instance.RegisterHighlighting("Json", new string[0],
+                    HighlightingLoader.Load(reader, HighlightingManager.Instance));
+            }
 
             new MainWindow().Show();
         }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -67,6 +67,7 @@
     <Compile Include="Converter\VersionRangeFormatterConverter.cs" />
     <Compile Include="Extensions\HyperlinkExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\TextEditorExtensions.cs" />
     <Compile Include="Factories\MenuFactory.cs" />
     <Compile Include="Prism\ViewModelResolver.cs" />
     <Compile Include="Services\AppDispatcher.cs" />
@@ -74,6 +75,9 @@
     <Compile Include="Services\ShellWindowFactory.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModule.cs" />
+    <Compile Include="Views\Main\ClientConfigurationView.xaml.cs">
+      <DependentUpon>ClientConfigurationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Main\Overview\GroupsView.xaml.cs">
       <DependentUpon>GroupsView.xaml</DependentUpon>
     </Compile>
@@ -125,6 +129,10 @@
     <Page Include="Resources\VisualStudioIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\ClientConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Main\Overview\GroupsView.xaml">
       <SubType>Designer</SubType>
@@ -196,8 +204,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\SyntaxHighlighting\Json.xshd" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AvalonEdit">
+      <Version>5.0.4</Version>
+    </PackageReference>
     <PackageReference Include="MahApps.Metro">
       <Version>1.6.5</Version>
     </PackageReference>

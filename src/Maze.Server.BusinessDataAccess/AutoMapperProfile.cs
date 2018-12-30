@@ -16,6 +16,7 @@ namespace Maze.Server.BusinessDataAccess
             CreateMap<ClientSession, ClientSessionDto>();
             CreateMap<ClientGroup, ClientGroupDto>().ForMember(x => x.Clients,
                 expression => expression.MapFrom(g => g.ClientGroupMemberships.Select(x => x.ClientId).ToList()));
+            CreateMap<ClientConfiguration, ClientConfigurationDto>();
         }
     }
 }
