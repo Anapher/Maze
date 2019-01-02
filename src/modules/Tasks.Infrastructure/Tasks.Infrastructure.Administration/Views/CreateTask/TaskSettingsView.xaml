@@ -18,9 +18,5 @@
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding Name}" />
         </Grid>
-        <CheckBox
-            Margin="0,10,0,0"
-            Content="{tx:T TasksInfrastructure:CreateTask.ExecuteOnce}"
-            IsChecked="{Binding ExecuteOnce}" />
     </StackPanel>
 </UserControl>

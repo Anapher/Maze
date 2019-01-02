@@ -5,6 +5,9 @@
 		<text key="TasksInfrastructure:CreateTask">Neue Aufgabe erstellen</text>
 		<text key="TasksInfrastructure:CreateTask.AddAnother">Weiteren {entry} hinzufügen</text>
 		<text key="TasksInfrastructure:CreateTask.Audience">Unterstehende</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.ExecuteOnAllClients">Auf allen Clients ausführen</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.ExecuteOnServer">Auf Server ausführen</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.SelectClients">Clients auswählen</text>
 		<text key="TasksInfrastructure:CreateTask.Commands">Befehle</text>
 		<text key="TasksInfrastructure:CreateTask.Commands" count="1">Befehl</text>
 		<text key="TasksInfrastructure:CreateTask.Common">Allgemein</text>
@@ -51,6 +54,9 @@
 		<text key="TasksInfrastructure:CreateTask">Create new task</text>
 		<text key="TasksInfrastructure:CreateTask.AddAnother">Add another {entry}</text>
 		<text key="TasksInfrastructure:CreateTask.Audience">Audience</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.ExecuteOnAllClients">Execute on all clients</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.ExecuteOnServer">Execute on server</text>
+		<text key="TasksInfrastructure:CreateTask.Audience.SelectClients">Select clients</text>
 		<text key="TasksInfrastructure:CreateTask.Commands">Commands</text>
 		<text key="TasksInfrastructure:CreateTask.Commands" count="1">Command</text>
 		<text key="TasksInfrastructure:CreateTask.Common">Common</text>

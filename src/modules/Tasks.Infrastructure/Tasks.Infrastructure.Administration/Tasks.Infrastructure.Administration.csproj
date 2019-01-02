@@ -38,6 +38,7 @@
     <None Remove="Resources\Styles\PropertyGrid\PropertyGrid.xaml" />
     <None Remove="Resources\Tasks.Infrastructure.Translation.txd" />
     <None Remove="Resources\VisualStudioIcons.xaml" />
+    <None Remove="Views\CreateTask\AudienceView.xaml" />
     <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
     <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
     <None Remove="Views\ExecuteCommandView.xaml" />
@@ -68,6 +69,12 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\CreateTask\AudienceView.xaml.cs">
+      <DependentUpon>AudienceView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -111,6 +118,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Resources\Styles\PropertyGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CreateTask\AudienceView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\CreateTask\TaskCreateServiceView.xaml">

@@ -202,6 +202,9 @@
                     <DataTemplate DataType="{x:Type createTask:TaskSettingsViewModel}">
                         <createTaskViews:TaskSettingsView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type createTask:AudienceViewModel}">
+                        <createTaskViews:AudienceView />
+                    </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
         </Border>

@@ -41,6 +41,7 @@ namespace Maze.Administration
             _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ClientsView));
             _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(GroupsView));
             _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ModulesView));
+            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(AdministratorsView));
 
             _regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));
 

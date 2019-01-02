@@ -4,6 +4,7 @@ using System.Linq;
 using Autofac;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
+using Maze.Administration.Library.Services;
 using Maze.Administration.Library.Views;
 using Maze.Server.Connection.Utilities;
 using Prism.Commands;
@@ -31,7 +32,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             {
                 new TaskSettingsViewModel {IsSelected = true},
                 new CommandsViewModel(windowService, container),
-                new AudienceViewModel(),
+                new AudienceViewModel(container.Resolve<IClientManager>()),
                 new TriggersViewModel(windowService, container),
                 new FiltersViewModel(windowService, container),
                 new StopEventsViewModel(windowService, container)

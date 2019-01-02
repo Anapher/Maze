@@ -11,7 +11,6 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
 {
     public class TaskSettingsViewModel : BindableBase, ITaskConfiguringViewModel
     {
-        private bool _executeOnce;
         private string _name;
         private Guid? _taskId;
 
@@ -21,19 +20,12 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             set => SetProperty(ref _name, value);
         }
 
-        public bool ExecuteOnce
-        {
-            get => _executeOnce;
-            set => SetProperty(ref _executeOnce, value);
-        }
-
         public bool IsSelected { get; set; }
         public object NodeViewModel => this;
 
         public void Initialize(MazeTask mazeTask)
         {
             Name = mazeTask.Name;
-            ExecuteOnce = mazeTask.ExecuteOnce;
             _taskId = mazeTask.Id;
         }
 
@@ -51,7 +43,6 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         public void Apply(MazeTask mazeTask)
         {
             mazeTask.Name = Name;
-            mazeTask.ExecuteOnce = ExecuteOnce;
             mazeTask.Id = _taskId ?? Guid.NewGuid();
         }
     }

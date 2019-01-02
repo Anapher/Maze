@@ -43,7 +43,6 @@ namespace Maze.Administration.Library.Utilities
 
                         Remove(viewModel);
                     }
-
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -25,7 +25,6 @@ namespace Tasks.Infrastructure.Core
         ///     The unique <see cref="Guid"/> for the task
         /// </summary>
         public Guid Id { get; set; }
-        public bool ExecuteOnce { get; set; }
         public TimeSpan? RestartOnFailInterval { get; set; }
         public int? MaximumRestarts { get; set; }
 

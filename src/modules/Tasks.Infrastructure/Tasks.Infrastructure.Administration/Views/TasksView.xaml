@@ -158,9 +158,6 @@
                                             <DataTrigger Binding="{Binding NextExecution}" Value="{x:Null}">
                                                 <Setter Property="Text" Value="{tx:T Unknown}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsActive}" Value="false">
-                                                <Setter Property="Text" Value="{tx:T None}" />
-                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </TextBlock.Style>
