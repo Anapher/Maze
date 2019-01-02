@@ -9,9 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Maze.Client.Library.Extensions;
 using Maze.Client.Library.Services;
+using Maze.Core.Configuration;
 using Maze.Core.Connection;
 using Maze.Core.Modules;
 using Maze.Core.Services;
+using Maze.Core.Startup;
 using Maze.Extensions;
 using Maze.ModuleManagement;
 using Maze.Options;
@@ -48,11 +50,16 @@ namespace Maze
             builder.RegisterType<CoreConnector>().As<ICoreConnector>().As<IManagementCoreConnector>().SingleInstance();
             builder.RegisterType<ClientInfoProvider>().As<IClientInfoProvider>().SingleInstance();
             builder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
+            builder.RegisterType<ConfigurationManager>().As<IConfigurationManager>().SingleInstance();
+            builder.RegisterType<StartupActionInvoker>().As<IStartupActionInvoker>();
+            builder.RegisterType<PackageLockUpdater>().As<IPackageLockUpdater>();
+            builder.RegisterType<MazeRestClientWrapper>().AsSelf().AsImplementedInterfaces().SingleInstance();
 
             builder.RegisterInstance(new SerilogLoggerFactory()).As<ILoggerFactory>().SingleInstance();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
             builder.RegisterInstance(ArrayPool<char>.Create());
             builder.RegisterInstance(ArrayPool<byte>.Create());
+
             
             builder.Populate(Enumerable.Empty<ServiceDescriptor>());
 

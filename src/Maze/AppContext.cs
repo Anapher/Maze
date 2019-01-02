@@ -1,24 +1,30 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Autofac;
-using Microsoft.Extensions.Options;
-using NuGet.Frameworks;
-using NuGet.Versioning;
 using Maze.Client.Library.Interfaces;
 using Maze.Client.Library.Services;
-using Maze.Core;
 using Maze.Core.Connection;
 using Maze.Core.Modules;
+using Maze.Core.Startup;
 using Maze.ModuleManagement;
 using Maze.Options;
+using Maze.Server.Connection.Modules;
+using Microsoft.Extensions.Options;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using NuGet.Frameworks;
+using NuGet.Versioning;
 
 namespace Maze
 {
-    public class AppContext : ApplicationContext, IApplicationInfo, IStaSynchronizationContext
+    public class AppContext : ApplicationContext, IApplicationInfo, IStaSynchronizationContext, IMazeProcessController
     {
+        private bool _shutdownTriggered;
+
         public AppContext(ContainerBuilder builder)
         {
             builder.RegisterInstance(this).AsImplementedInterfaces();
@@ -29,14 +35,11 @@ namespace Maze
             Container = LoadModules();
             StartConnecting();
 
-            Container.Execute<IStartupAction>();
-            Application.Idle += ApplicationOnIdle;
-        }
+            Container.Resolve<IStartupActionInvoker>().Load(CancellationToken.None);
 
-        /// <summary>
-        ///     The current synchronization context
-        /// </summary>
-        public SynchronizationContext Current { get; private set; }
+            Application.Idle += ApplicationOnIdle;
+            Application.ApplicationExit += ApplicationOnApplicationExit;
+        }
 
         /// <summary>
         ///     The root container that contains all services of Maze
@@ -51,16 +54,31 @@ namespace Maze
         public NuGetFramework Framework { get; } = FrameworkConstants.CommonFrameworks.MazeClient10;
         public NuGetVersion Version { get; } = NuGetVersion.Parse("1.0");
 
+        /// <summary>
+        ///     The current synchronization context
+        /// </summary>
+        public SynchronizationContext Current { get; private set; }
+
         private ILifetimeScope LoadModules()
         {
             var loader = RootContainer.Resolve<IPackageLockLoader>();
 
             var modulesConfig = RootContainer.Resolve<IOptions<ModulesOptions>>().Value;
-
-            var loadContext = loader.Load(modulesConfig.PackagesLock).Result;
-            if (loadContext.PackagesLoaded)
+            var lockFile = new FileInfo(Environment.ExpandEnvironmentVariables(modulesConfig.ModulesLockPath));
+            if (lockFile.Exists)
             {
-                return RootContainer.BeginLifetimeScope(builder => loadContext.Configure(builder));
+                PackagesLock packagesLock;
+                try
+                {
+                    packagesLock = JsonConvert.DeserializeObject<PackagesLock>(File.ReadAllText(lockFile.FullName));
+                }
+                catch (Exception)
+                {
+                    return RootContainer;
+                }
+
+                var loadContext = loader.Load(packagesLock).Result;
+                if (loadContext.PackagesLoaded) return RootContainer.BeginLifetimeScope(builder => loadContext.Configure(builder));
             }
 
             return RootContainer;
@@ -80,6 +98,50 @@ namespace Maze
         private void ApplicationOnIdle(object sender, EventArgs e)
         {
             Current = SynchronizationContext.Current;
+            SystemEvents.SessionEnding += SystemEventsOnSessionEnding;
+        }
+
+        public void Shutdown()
+        {
+            if (!_shutdownTriggered)
+            {
+                _shutdownTriggered = true;
+                Container.Execute<IShutdownAction, ShutdownContext>(new ShutdownContext(ShutdownTrigger.ApplicationShutdown));
+            }
+
+            Application.Exit();
+        }
+
+        public void Restart()
+        {
+            if (!_shutdownTriggered)
+            {
+                _shutdownTriggered = true;
+                Container.Execute<IShutdownAction, ShutdownContext>(new ShutdownContext(ShutdownTrigger.ApplicationRestart));
+            }
+
+            Application.Restart();
+        }
+
+        private void ApplicationOnApplicationExit(object sender, EventArgs e)
+        {
+            if (!_shutdownTriggered)
+            {
+                _shutdownTriggered = true;
+                Container.Execute<IShutdownAction, ShutdownContext>(new ShutdownContext(ShutdownTrigger.MainThreadShutdown));
+            }
+        }
+
+        private void SystemEventsOnSessionEnding(object sender, SessionEndingEventArgs e)
+        {
+            if (e.Reason != SessionEndReasons.SystemShutdown)
+                return;
+
+            if (!_shutdownTriggered)
+            {
+                _shutdownTriggered = true;
+                Container.Execute<IShutdownAction, ShutdownContext>(new ShutdownContext(ShutdownTrigger.SystemShutdown));
+            }
         }
     }
 }

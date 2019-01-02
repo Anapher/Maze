@@ -15,11 +15,11 @@ namespace Tasks.Common.Client.Triggers
             if (triggerInfo.OncePerDay)
             {
                 if (session.Info.Executions.Any())
-                    await Task.Delay(TimeSpan.MaxValue, cancellationToken);
+                    await Task.Delay(int.MaxValue, cancellationToken);
             }
 
             await session.Invoke();
-            await Task.Delay(TimeSpan.MaxValue, cancellationToken);
+            await Task.Delay(int.MaxValue, cancellationToken);
         }
     }
 }

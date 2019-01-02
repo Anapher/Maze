@@ -6,7 +6,9 @@ using Autofac;
 using Microsoft.Extensions.Options;
 using Maze.Client.Library.Interfaces;
 using Maze.Client.Library.Services;
+using Maze.Core.Configuration;
 using Maze.Core.Modules;
+using Maze.Core.Rest.ClientConfiguration.V1;
 using Maze.Logging;
 using Maze.ModuleManagement;
 using Maze.Options;
@@ -26,14 +28,20 @@ namespace Maze.Core.Connection
         private readonly IServerConnector _serverConnector;
         private readonly IModuleDownloader _moduleDownloader;
         private readonly IPackageLockLoader _packageLockLoader;
+        private readonly IConfigurationManager _configurationManager;
+        private readonly IPackageLockUpdater _packageLockUpdater;
+        private readonly IMazeProcessController _processController;
         private readonly ConnectionOptions _options;
 
-        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector,
-            IModuleDownloader moduleDownloader, IPackageLockLoader packageLockLoader)
+        public CoreConnector(IOptions<ConnectionOptions> options, IServerConnector serverConnector, IModuleDownloader moduleDownloader,
+            IPackageLockLoader packageLockLoader, IConfigurationManager configurationManager, IPackageLockUpdater packageLockUpdater, IMazeProcessController processController)
         {
             _serverConnector = serverConnector;
             _moduleDownloader = moduleDownloader;
             _packageLockLoader = packageLockLoader;
+            _configurationManager = configurationManager;
+            _packageLockUpdater = packageLockUpdater;
+            _processController = processController;
             _options = options.Value;
         }
 
@@ -58,20 +66,36 @@ namespace Maze.Core.Connection
                     try
                     {
                         var connection = await _serverConnector.TryConnect(serverUri);
-                        Logger.Debug("Connection succeeded, initialize modules");
 
+                        Logger.Debug("Connection succeeded, download modules");
                         await _moduleDownloader.Load(connection.PackagesLock, connection, CancellationToken.None);
+
+                        Logger.Debug("Modules downloaded successfully, loading configuration");
+                        var configurationInfo = await ClientConfigurationResource.GetConfigurationsInfo(connection.RestClient);
+                        if (!_configurationManager.IsSynchronized(configurationInfo))
+                        {
+                            var configurations = await ClientConfigurationResource.GetConfigurations(connection.RestClient);
+                            _configurationManager.Synchronize(configurations, connection.PackagesLock);
+                        }
+
+                        if (!_packageLockUpdater.Verify(connection.PackagesLock))
+                        {
+                            _processController.Restart();
+                            return;
+                        }
 
                         var loadedContext = await _packageLockLoader.Load(connection.PackagesLock);
                         var controllers = await loadedContext.GetControllers();
+
+                        var restClientWrapper = lifetimeScope.Resolve<MazeRestClientWrapper>();
+                        restClientWrapper.Initialize(connection.RestClient);
 
                         CurrentConnectionScope = lifetimeScope.BeginLifetimeScope(builder =>
                         {
                             if (loadedContext.PackagesLoaded)
                                 loadedContext.Configure(builder);
-                            
+
                             builder.RegisterMazeServices(cache => cache.BuildCache(controllers));
-                            builder.RegisterInstance(connection.RestClient).AsImplementedInterfaces();
                         });
 
                         CurrentConnection = connection;
@@ -83,7 +107,7 @@ namespace Maze.Core.Connection
                         }
 
                         CurrentConnection = null;
-
+                        restClientWrapper.Initialize(null);
                         break;
                     }
                     catch (Exception e)

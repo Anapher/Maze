@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using CodeElements.BizRunner;
 using Maze.Server.BusinessLogic.ClientConfigurations;
@@ -7,6 +8,7 @@ using Maze.Server.Connection.Clients;
 using Maze.Server.Data.EfClasses;
 using Maze.Server.Data.EfCode;
 using Maze.Server.Library.Controllers;
+using Maze.Server.Library.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Maze.Server.Controllers
 {
     [Route("v1/clients/configuration")]
-    [Authorize("admin")]
     public class ClientConfigurationController : BusinessController
     {
         private readonly AppDbContext _context;
@@ -25,10 +26,36 @@ namespace Maze.Server.Controllers
         }
 
         [HttpGet("current")]
-        public async Task<IActionResult> GetCurrentConfig() => NotFound();
+        public async Task<IActionResult> GetCurrentConfig()
+        {
+            if (User.IsAdministrator())
+                return BadRequest("This route can only be accessed by clients");
+
+            var clientId = User.GetClientId();
+            var configurations = await _context.Set<ClientConfiguration>().AsNoTracking()
+                .Where(x => x.ClientGroupId == null || x.ClientGroup.ClientGroupMemberships.Any(y => y.ClientId == clientId))
+                .Select(x => new ClientConfigurationDataDto {ClientGroupId = x.ClientGroupId, Content = x.Content}).ToListAsync();
+
+            return Ok(configurations);
+        }
+
+        [HttpGet("current/info")]
+        public async Task<IActionResult> GetCurrentConfigInfo()
+        {
+            if (User.IsAdministrator())
+                return BadRequest("This route can only be accessed by clients");
+
+            var clientId = User.GetClientId();
+            var configurations = await _context.Set<ClientConfiguration>().AsNoTracking()
+                .Where(x => x.ClientGroupId == null || x.ClientGroup.ClientGroupMemberships.Any(y => y.ClientId == clientId))
+                .Select(x => x.ContentHash).ToListAsync();
+
+            return Ok(configurations);
+        }
 
         [HttpGet("{id}")]
         [HttpGet]
+        [Authorize("admin")]
         public async Task<IActionResult> GetConfig(int? id)
         {
             var config = await _context.Set<ClientConfiguration>().AsNoTracking().FirstOrDefaultAsync(x => x.ClientGroupId == id);
@@ -40,6 +67,7 @@ namespace Maze.Server.Controllers
 
         [HttpPut("{id}")]
         [HttpPut]
+        [Authorize("admin")]
         public async Task<IActionResult> UpdateConfig(int? id, [FromBody] ClientConfigurationDto dto, [FromServices] IUpdateClientConfigAction action)
         {
             dto.ClientGroupId = id;
@@ -48,6 +76,7 @@ namespace Maze.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize("admin")]
         public async Task<IActionResult> CreateConfig([FromBody] ClientConfigurationDto dto, [FromServices] ICreateClientConfigAction action)
         {
             await action.ToRunner(_context).ExecuteAsync(dto);
@@ -55,6 +84,7 @@ namespace Maze.Server.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("admin")]
         public async Task<IActionResult> DeleteConfig(int id, [FromServices] IDeleteClientConfigAction action)
         {
             await action.ToRunner(_context).ExecuteAsync(id);

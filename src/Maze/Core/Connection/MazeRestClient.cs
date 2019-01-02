@@ -13,7 +13,7 @@ using Maze.Server.Connection.Error;
 
 namespace Maze.Core.Connection
 {
-    public class MazeRestClient : IRestClient, IMazeRestClient
+    public class MazeRestClient : IMazeRestClient
     {
         private readonly HttpClient _httpClient;
 

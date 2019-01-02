@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -53,11 +53,13 @@
     <Compile Include="Core\Commanding\ServerCommandListener.cs" />
     <Compile Include="Core\Commanding\WebSocketConnectionInfo.cs" />
     <Compile Include="Core\Commanding\WebSocketMazeContext.cs" />
+    <Compile Include="Core\Configuration\ConfigurationManager.cs" />
     <Compile Include="Core\Connection\ClientInfoProvider.cs" />
     <Compile Include="Core\Connection\CoreConnector.cs" />
+    <Compile Include="Core\Connection\MazeRestClientWrapper.cs" />
+    <Compile Include="Core\Connection\PackageLockUpdater.cs" />
     <Compile Include="Core\Connection\ServerConnection.cs" />
     <Compile Include="Core\Connection\ServerConnector.cs" />
-    <Compile Include="Core\IApplicationInfo.cs" />
     <Compile Include="Core\Modules\ClientModulesDirectory.cs" />
     <Compile Include="Core\Modules\ConfigurationRootProvider.cs" />
     <Compile Include="Core\Modules\IConfigurationRootProvider.cs" />
@@ -68,9 +70,11 @@
     <Compile Include="Core\Modules\ModulesCatalog.cs" />
     <Compile Include="Core\Modules\PackagesRegistrar.cs" />
     <Compile Include="Core\Rest\Authentication\V1\AuthenticationResource.cs" />
+    <Compile Include="Core\Rest\ClientConfiguration\V1\ClientConfigurationResource.cs" />
     <Compile Include="Core\Services\HttpClientService.cs" />
     <Compile Include="Core\Connection\MazeRestClient.cs" />
     <Compile Include="Core\Services\MazeRestClientFactory.cs" />
+    <Compile Include="Core\Startup\StartupActionInvoker.cs" />
     <Compile Include="Exceptions\RestAuthenticationException.cs" />
     <Compile Include="Exceptions\RestException.cs" />
     <Compile Include="Exceptions\RestNotFoundException.cs" />
@@ -173,6 +177,13 @@
       <Version>3.3.0</Version>
     </PackageReference>
   </ItemGroup>
+  <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'Microsoft.Extensions.Primitives'">
+        <Aliases>extensions</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>

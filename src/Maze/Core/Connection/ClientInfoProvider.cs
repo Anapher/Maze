@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Windows.Forms;
+using Maze.Client.Library.Services;
 using Maze.Server.Connection.Authentication.Client;
 
 namespace Maze.Core.Connection

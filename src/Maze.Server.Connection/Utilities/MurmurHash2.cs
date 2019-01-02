@@ -25,7 +25,7 @@
 
 using System.Text;
 
-namespace Maze.Server.BusinessLogic.Utilities
+namespace Maze.Server.Connection.Utilities
 {
     public class MurmurHash2
     {

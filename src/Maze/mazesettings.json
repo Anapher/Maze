@@ -2,12 +2,15 @@
   "Modules": {
     "LocalPath": "%appdata%/Maze/modules",
     "TempPath": "%appdata%/Maze/tmp",
-    "OnStartup": [
-      "Tasks.Infrastructure"
-    ]
+    "LoadOnStartup": {
+      "Tasks.Infrastructure": "1.4.56",
+      "Tasks.Common": "1.4.56"
+    }
   },
   "Connection": {
-    "ServerUris": [ "http://localhost:50485/" ],
+    "ServerUris": {
+      "MainServer": "http://localhost:54941/"
+    },
     "ReconnectDelay": 5000
   }
 }

@@ -20,7 +20,7 @@ namespace Tasks.Common.ServerClientShared.Triggers
             var session = await context.CreateSession(SessionKey.Create("OnAppStartup", DateTimeOffset.UtcNow));
             await session.Invoke();
 
-            await Task.Delay(TimeSpan.MaxValue, cancellationToken);
+            await Task.Delay(int.MaxValue, cancellationToken);
         }
     }
 }

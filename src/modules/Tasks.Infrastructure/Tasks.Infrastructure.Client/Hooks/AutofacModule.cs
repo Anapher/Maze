@@ -31,6 +31,7 @@ namespace Tasks.Infrastructure.Client.Hooks
             builder.RegisterType<ClientTaskManager>().As<IClientTaskManager>().SingleInstance();
 
             builder.RegisterType<OnConnectedAction>().As<IConnectedAction>();
+            builder.RegisterType<OnStartupAction>().As<IStartupAction>();
         }
     }
 }

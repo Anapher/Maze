@@ -37,6 +37,8 @@ namespace Tasks.Infrastructure.Client
         private readonly ILogger<ClientTaskManager> _logger;
         private readonly object _taskUpdateLock = new object();
         private readonly IDatabaseTaskStorage _taskStorage;
+        private bool _isInitialized;
+        private readonly object _initializationLock = new object();
 
         public ClientTaskManager(ITaskDirectory taskDirectory, IDatabaseTaskStorage taskStorage, IServiceProvider serviceProvider, ILogger<ClientTaskManager> logger)
         {
@@ -52,6 +54,17 @@ namespace Tasks.Infrastructure.Client
 
         public async Task Initialize()
         {
+            if (_isInitialized)
+                return;
+
+            lock (_initializationLock)
+            {
+                if (_isInitialized)
+                    return;
+
+                _isInitialized = true;
+            }
+
             _logger.LogDebug("Initialize tasks");
             
             var tasks = await _taskDirectory.LoadTasksRefresh();

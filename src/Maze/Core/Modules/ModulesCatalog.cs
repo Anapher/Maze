@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Maze.Client.Library.Services;
 using Maze.ModuleManagement;
 using Maze.ModuleManagement.Loader;
 using Maze.Server.Connection.Modules;

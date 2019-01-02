@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using CodeElements.BizRunner;
 using CodeElements.BizRunner.Generic;
 using Maze.Server.BusinessDataAccess.ClientConfigurations;
-using Maze.Server.BusinessLogic.Utilities;
 using Maze.Server.Connection;
 using Maze.Server.Connection.Clients;
+using Maze.Server.Connection.Utilities;
 using Maze.Server.Data.EfClasses;
 
 namespace Maze.Server.BusinessLogic.ClientConfigurations
 {
-    public interface ICreateClientConfigAction : IGenericActionAsync<ClientConfigurationDto, ClientConfiguration> { }
+    public interface ICreateClientConfigAction : IGenericActionWriteDbAsync<ClientConfigurationDto, ClientConfiguration> { }
 
     public class CreateClientConfigAction : BusinessActionErrors, ICreateClientConfigAction
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Maze.Server.BusinessLogic.Utilities;
+using Maze.Server.Connection.Utilities;
 using Maze.Server.Data.EfClasses;
 using Maze.Server.Data.EfCode;
 

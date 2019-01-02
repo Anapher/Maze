@@ -71,7 +71,7 @@ namespace Maze.Administration.ViewModels.Main
                         return;
                     }
 
-                    var dto = new ClientConfigurationDto {ClientGroupId = _groupId, Content = Content};
+                    var dto = new ClientConfigurationDto {ClientGroupId = _groupId, Content = parameter};
                     var errors = dto.Validate(new ValidationContext(dto)).ToList();
                     if (errors.Any())
                     {
