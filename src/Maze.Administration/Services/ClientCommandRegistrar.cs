@@ -39,7 +39,11 @@ namespace Maze.Administration.Services
                         builder.RegisterInstance(model);
                         builder.Register(_ => _mazeRestClient.CreateTargeted(model.ClientId))
                             .SingleInstance();
-                    }, window => window.TitleBarIcon = iconFactory.Create(), null, out _);
+                    }, window =>
+                    {
+                        window.TitleBarIcon = iconFactory.Create();
+                        window.Title = Tx.T(txLibResource);
+                    }, null, out _);
                 })
             });
         }

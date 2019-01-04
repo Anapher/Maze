@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.Extensions;
 using Anapher.Wpf.Swan.ViewInterface;
 using Microsoft.Win32;
@@ -132,6 +133,12 @@ namespace Maze.Administration.Views
 
         public void Show(IWindow owner)
         {
+            if (owner is Window ownerWindow)
+            {
+                this.Left = ownerWindow.Left + (ownerWindow.ActualWidth - this.Width) / 2;
+                this.Top = ownerWindow.Top + (ownerWindow.ActualHeight - this.Height) / 2;
+            }
+
             Show();
         }
 

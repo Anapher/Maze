@@ -10,6 +10,7 @@ using Maze.Administration.Prism;
 using Prism;
 using System;
 using System.Windows;
+using Prism.Regions;
 
 namespace Maze.Administration.Services
 {
@@ -62,6 +63,23 @@ namespace Maze.Administration.Services
                 window.SizeToContent = SizeToContent.Height;
             else if (double.IsNaN(window.Width))
                 window.SizeToContent = SizeToContent.Width;
+
+            if (viewModel is INavigationAware navigationAware)
+            {
+                void OnViewLoaded(object s, EventArgs e)
+                {
+                    navigationAware.OnNavigatedTo(null);
+                    view.Loaded -= OnViewLoaded;
+                }
+                void OnWindowClosed(object s, EventArgs e)
+                {
+                    navigationAware.OnNavigatedFrom(null);
+                    window.Closed -= OnWindowClosed;
+                }
+
+                view.Loaded += OnViewLoaded;
+                window.Closed += OnWindowClosed;
+            }
 
             configureWindow?.Invoke(window);
             return window;
