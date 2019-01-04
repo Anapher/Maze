@@ -22,7 +22,7 @@ namespace Maze.Service.Commander.Routing
             if (!results.Any())
                 return new ResolveResult(false);
 
-            var matchResult = results.OrderByDescending(x => x).First();
+            var matchResult = results.OrderByDescending(x => x.Score).First();
             return new ResolveResult
             {
                 RouteDescription = matchResult.RouteDescription,

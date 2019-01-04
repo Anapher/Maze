@@ -13,6 +13,9 @@ namespace Maze.Administration.Converter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values?.FirstOrDefault() == null)
+                return Binding.DoNothing;
+
             var group = (ClientGroupViewModel) values[0];
             var items = (IList) values[1];
 
