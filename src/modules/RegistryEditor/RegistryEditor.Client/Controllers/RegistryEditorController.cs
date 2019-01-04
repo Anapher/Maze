@@ -132,31 +132,39 @@ namespace RegistryEditor.Client.Controllers
             using (var regKey = RegistryHelper.OpenRegistry(registryHive).OpenSubKey(relativePath ?? string.Empty, RegistryKeyPermissionCheck.ReadWriteSubTree))
             {
                 object value;
+                RegistryValueKind kind;
+
                 switch (valueDto)
                 {
                     case var val when val is StringRegistryValueDto typedVal:
                         value = typedVal.Value;
+                        kind = RegistryValueKind.String;
                         break;
                     case var val when val is ExpandableStringRegistryValueDto typedVal:
                         value = typedVal.Value;
+                        kind = RegistryValueKind.ExpandString;
                         break;
                     case var val when val is BinaryRegistryValueDto typedVal:
                         value = typedVal.Value;
+                        kind = RegistryValueKind.Binary;
                         break;
                     case var val when val is DWordRegistryValueDto typedVal:
                         value = (int) typedVal.Value;
+                        kind = RegistryValueKind.DWord;
                         break;
                     case var val when val is QWordRegistryValueDto typedVal:
-                        value = (long)typedVal.Value;
+                        value = (long) typedVal.Value;
+                        kind = RegistryValueKind.QWord;
                         break;
                     case var val when val is MultiStringRegistryValueDto typedVal:
                         value = typedVal.Value;
+                        kind = RegistryValueKind.MultiString;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                regKey.SetValue(valueDto.Name, value);
+                regKey.SetValue(valueDto.Name, value, kind);
                 return Ok();
             }
         }

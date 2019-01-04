@@ -7,7 +7,6 @@ using System.Windows;
 using Anapher.Wpf.Swan.Extensions;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
-using Maze.Administration.Library.Services;
 using Maze.Administration.Library.StatusBar;
 using Maze.Administration.Library.ViewModels;
 using Maze.Administration.Library.Views;
@@ -75,8 +74,12 @@ namespace RegistryEditor.Administration.ViewModels
 
                         if (await RegistryEditorResource.CreateRegistryKey(path, _restClient)
                             .DisplayOnStatusBarCatchErrors(_statusBar, Tx.T("RegistryEditor:StatusBar.CreateSubKey")))
+                        {
+                            parameter.Entries.IsExpanded = true;
+
                             if (parameter.Entries.IsLoaded)
                                 parameter.RefreshCommand.Execute();
+                        }
                     }
                 }));
             }

@@ -1,3 +1,4 @@
+using System.Windows;
 using Maze.Administration.Library.Views;
 using RegistryEditor.Administration.Resources;
 
@@ -12,6 +13,13 @@ namespace RegistryEditor.Administration.Views
         {
             InitializeComponent();
             Icon = icons.NewSolutionFolder;
+
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            NameTextBox.Focus();
         }
     }
 }

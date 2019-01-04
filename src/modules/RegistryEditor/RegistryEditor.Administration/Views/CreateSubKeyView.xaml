@@ -26,7 +26,10 @@
             Opacity=".6"
             Text="{Binding SubKeyLocation, Mode=OneTime}" />
         <TextBlock Margin="0,10,0,0" Text="{tx:T Name}" />
-        <TextBox Margin="0,2,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox
+            x:Name="NameTextBox"
+            Margin="0,2,0,0"
+            Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
         <StackPanel
             Margin="0,15,0,0"
             HorizontalAlignment="Right"

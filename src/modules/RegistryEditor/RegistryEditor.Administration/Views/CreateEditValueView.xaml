@@ -24,7 +24,7 @@
     <UserControl.Resources>
         <converter:StringArrayToStringConverter x:Key="StringArrayToStringConverter" />
     </UserControl.Resources>
-    <StackPanel Margin="10" Orientation="Vertical">
+    <StackPanel Margin="10,5,10,10" Orientation="Vertical">
         <TextBlock Text="{tx:TC RegistryEditor:ValueName}" />
         <TextBox
             x:Name="KeyNameTextBox"
@@ -45,7 +45,8 @@
         <ContentControl
             x:Name="ValueContentControl"
             Margin="0,15,0,0"
-            Content="{Binding Value}">
+            Content="{Binding Value}"
+            Focusable="False">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type registry:StringRegistryValueDto}">
                     <StackPanel Orientation="Vertical">
@@ -72,10 +73,10 @@
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type registry:DWordRegistryValueDto}">
-                    <controls:EditIntegerHexDecimalControl Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:IntegerValueControl Value="{Binding Value}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type registry:QWordRegistryValueDto}">
-                    <controls:EditIntegerHexDecimalControl Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:IntegerValueControl Value="{Binding Value}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type registry:BinaryRegistryValueDto}">
                     <StackPanel Orientation="Vertical">

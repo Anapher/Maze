@@ -2,7 +2,6 @@ using System.Windows;
 using Maze.Administration.Library.Views;
 using RegistryEditor.Administration.Resources;
 using RegistryEditor.Administration.ViewModels;
-using Unclassified.TxLib;
 
 namespace RegistryEditor.Administration.Views
 {

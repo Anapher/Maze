@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
@@ -31,13 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Controls\ByteValueControl.xaml" />
-    <None Remove="Controls\EditIntegerHexDecimalControl.xaml" />
-    <None Remove="Views\CreateEditValueView.xaml" />
-    <None Remove="Views\CreateSubKeyView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Be.Windows.Forms.HexBox" Version="1.6.1" />
   </ItemGroup>
 
@@ -48,27 +41,6 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\RegistryEditorView.xaml.cs">
-      <DependentUpon>RegistryEditorView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\ByteValueControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Controls\EditIntegerHexDecimalControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateEditValueView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateSubKeyView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
 
   <Import Project="..\RegistryEditor.Shared\RegistryEditor.Shared.projitems" Label="Shared" />
