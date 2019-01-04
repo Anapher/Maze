@@ -48,7 +48,7 @@ namespace Maze.Administration.Core.Clients
                 if (_isInitialized)
                     return;
 
-                var groupsTask = ClientGroupsResource.FetchAsync(_restClient);
+                var groupsTask = ClientGroupsResource.GetGroups(_restClient);
 
                 var allClients = await ClientsResource.FetchAsync(_restClient);
                 _restClient.HubConnection.On<ClientDto>(HubEventNames.ClientConnected, OnClientConnected);

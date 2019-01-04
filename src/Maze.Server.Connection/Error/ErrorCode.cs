@@ -11,6 +11,10 @@ namespace Maze.Server.Connection.Error
         Account_UsernameNotFound,
         Account_InvalidPassword,
         Account_Disabled,
+        Account_UsernameTooLong,
+        Account_UsernameContainsInvalidChars,
+        Account_UsernameAlreadyExists,
+        Account_NotFound,
 
         Commander_ClientNotFound = 2000,
         Commander_SingleCommandTargetRequired,

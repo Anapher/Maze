@@ -83,6 +83,16 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
             }
         }
 
+        public void InitializeClients(IEnumerable<int> clientIds)
+        {
+            foreach (var clientId in clientIds)
+            {
+                var client = Clients.FirstOrDefault(x => x.Model.ClientId == clientId);
+                if (client != null)
+                    client.IsChecked = true;
+            }
+        }
+
         public IEnumerable<ValidationResult> ValidateInput() => Enumerable.Empty<ValidationResult>();
 
         public IEnumerable<ValidationResult> ValidateContext(MazeTask mazeTask) => Enumerable.Empty<ValidationResult>();

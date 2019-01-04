@@ -1,5 +1,6 @@
 using System.Linq;
 using AutoMapper;
+using Maze.Server.Connection.Accounts;
 using Maze.Server.Connection.Clients;
 using Maze.Server.Data.EfClasses;
 
@@ -17,6 +18,9 @@ namespace Maze.Server.BusinessDataAccess
             CreateMap<ClientGroup, ClientGroupDto>().ForMember(x => x.Clients,
                 expression => expression.MapFrom(g => g.ClientGroupMemberships.Select(x => x.ClientId).ToList()));
             CreateMap<ClientConfiguration, ClientConfigurationDto>();
+            CreateMap<Account, AccountDto>();
+            CreateMap<Account, PasswordProvidingAccountDto>();
+            CreateMap<PasswordProvidingAccountDto, AccountDto>();
         }
     }
 }

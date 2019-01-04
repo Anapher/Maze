@@ -2,9 +2,11 @@ using MahApps.Metro.IconPacks;
 
 namespace Maze.Administration.Library.ViewModels
 {
-    public class ClientListBase : ViewModelBase
+    public abstract class ClientListBase : ViewModelBase
     {
-        public ClientListBase(string name, PackIconFontAwesomeKind icon)
+        private string _searchText;
+
+        protected ClientListBase(string name, PackIconFontAwesomeKind icon)
         {
             Name = name;
             Icon = icon;
@@ -12,5 +14,18 @@ namespace Maze.Administration.Library.ViewModels
 
         public string Name { get; }
         public PackIconFontAwesomeKind Icon { get; }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (SetProperty(ref _searchText, value)) OnSearchTextChanged(value);
+            }
+        }
+
+        protected virtual void OnSearchTextChanged(string searchText)
+        {
+        }
     }
 }

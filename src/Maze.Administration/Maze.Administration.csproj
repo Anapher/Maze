@@ -65,6 +65,7 @@
     <Compile Include="Converter\GetGroupCheckedObserverConverter.cs" />
     <Compile Include="Converter\NoNewLinesConverter.cs" />
     <Compile Include="Converter\VersionRangeFormatterConverter.cs" />
+    <Compile Include="Extensions\BooleanComboboxData.cs" />
     <Compile Include="Extensions\HyperlinkExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\TextEditorExtensions.cs" />
@@ -77,6 +78,15 @@
     <Compile Include="ViewModule.cs" />
     <Compile Include="Views\Main\ClientConfigurationView.xaml.cs">
       <DependentUpon>ClientConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\AdministratorsView.xaml.cs">
+      <DependentUpon>AdministratorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\Administrators\ChangeAdministratorPasswordView.xaml.cs">
+      <DependentUpon>ChangeAdministratorPasswordView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Overview\Administrators\CreateAdministratorView.xaml.cs">
+      <DependentUpon>CreateAdministratorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\Overview\GroupsView.xaml.cs">
       <DependentUpon>GroupsView.xaml</DependentUpon>
@@ -131,6 +141,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Main\ClientConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\Overview\AdministratorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\Overview\Administrators\ChangeAdministratorPasswordView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\Overview\Administrators\CreateAdministratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -66,7 +66,7 @@ namespace Maze.Administration.ViewModels.Overview.Groups
                     }
 
                     if (await ClientGroupsResource
-                        .UpdateAsync(new ClientGroupDto {ClientGroupId = _clientGroupViewModel.ClientGroupId, Name = NewGroupName}, _restClient)
+                        .PutGroup(new ClientGroupDto {ClientGroupId = _clientGroupViewModel.ClientGroupId, Name = NewGroupName}, _restClient)
                         .OnErrorShowMessageBox(_windowService))
                         DialogResult = true;
                 }));

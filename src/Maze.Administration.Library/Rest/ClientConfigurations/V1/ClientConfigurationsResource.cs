@@ -12,16 +12,16 @@ namespace Maze.Administration.Library.Rest.ClientConfigurations.V1
         {
         }
 
-        public static Task<ClientConfigurationDto> GetAsync(int? groupId, IRestClient restClient) =>
+        public static Task<ClientConfigurationDto> GetClientConfiguration(int? groupId, IRestClient restClient) =>
             CreateRequest(HttpVerb.Get, groupId).Execute(restClient).Return<ClientConfigurationDto>();
 
-        public static Task UpdateAsync(ClientConfigurationDto clientConfiguration, IRestClient restClient) =>
+        public static Task PutClientConfiguration(ClientConfigurationDto clientConfiguration, IRestClient restClient) =>
             CreateRequest(HttpVerb.Put, clientConfiguration.ClientGroupId, clientConfiguration).Execute(restClient);
 
-        public static Task CreateAsync(ClientConfigurationDto clientConfiguration, IRestClient restClient) =>
+        public static Task PostClientConfiguration(ClientConfigurationDto clientConfiguration, IRestClient restClient) =>
             CreateRequest(HttpVerb.Post, clientConfiguration.ClientGroupId ?? throw new ArgumentException("Configuration must be a group config"),
                 clientConfiguration).Execute(restClient);
 
-        public static Task DeleteAsync(int groupId, IRestClient restClient) => CreateRequest(HttpVerb.Delete, groupId).Execute(restClient);
+        public static Task DeleteClientConfiguration(int groupId, IRestClient restClient) => CreateRequest(HttpVerb.Delete, groupId).Execute(restClient);
     }
 }

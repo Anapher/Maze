@@ -82,8 +82,8 @@ namespace Maze.Administration.ViewModels.Main
                     try
                     {
                         if (IsCreating)
-                            await ClientConfigurationsResource.CreateAsync(dto, _restClient);
-                        else await ClientConfigurationsResource.UpdateAsync(dto, _restClient);
+                            await ClientConfigurationsResource.PostClientConfiguration(dto, _restClient);
+                        else await ClientConfigurationsResource.PutClientConfiguration(dto, _restClient);
                     }
                     catch (Exception e)
                     {

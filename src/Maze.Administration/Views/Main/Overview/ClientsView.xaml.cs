@@ -1,28 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Maze.Administration.Library.ViewModels;
 
 namespace Maze.Administration.Views.Main.Overview
 {
     /// <summary>
-    /// Interaction logic for ClientsView.xaml
+    ///     Interaction logic for ClientsView.xaml
     /// </summary>
     public partial class ClientsView : UserControl
     {
         public ClientsView()
         {
             InitializeComponent();
+        }
+
+        private void SearchTextBoxOnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnSearchTextChanged();
+        }
+
+        private void ClientListTabControlOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            OnSearchTextChanged();
+        }
+
+        private void OnSearchTextChanged()
+        {
+            if (ClientListTabControl.SelectedItem is FrameworkElement item)
+                if (item.DataContext is ClientListBase clientListBase)
+                    clientListBase.SearchText = SearchTextBox.Text;
         }
     }
 }

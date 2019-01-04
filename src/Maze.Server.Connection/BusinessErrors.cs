@@ -36,6 +36,19 @@ namespace Maze.Server.Connection
                     "The account was disabled. If you think this is an error, please contact our support.",
                     ErrorCode.Account_Disabled);
 
+            public static RestError UsernameTooLong =>
+                CreateValidationError("The username is too long.", ErrorCode.Account_UsernameTooLong);
+
+            public static RestError InvalidCharsInUsername =>
+                CreateValidationError("The username contains invalid chars. Please note that it may only contain alphanumeric characters (a-z, 0-9)",
+                    ErrorCode.Account_UsernameContainsInvalidChars);
+
+            public static RestError UsernameAlreadyExists =>
+                CreateValidationError("The username already exists.", ErrorCode.Account_UsernameAlreadyExists);
+
+            public static RestError NotFound =>
+                CreateAuthenticationError("The account was not found.", ErrorCode.Account_NotFound);
+
             private static RestError CreateAuthenticationError(string message, ErrorCode code)
             {
                 return new RestError(ErrorTypes.AuthenticationError, message, (int) code);

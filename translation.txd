@@ -2,6 +2,13 @@
 <!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="Administrators">Administratoren</text>
+		<text key="AdministratorsView:AccountId">Account Id</text>
+		<text key="AdministratorsView:ChangePassword">Passwort ändern</text>
+		<text key="AdministratorsView:CreateAdministrator">Administrator erstellen</text>
+		<text key="AdministratorsView:Created">Erstellt</text>
+		<text key="AdministratorsView:Enabled">Aktiviert</text>
+		<text key="AdministratorsView:PasswordChangedSuccessfully">Das Passwort wurde erfolgreich geändert.</text>
 		<text key="All">Alle</text>
 		<text key="Cancel">Abbrechen</text>
 		<text key="Canceled">Abgebrochen</text>
@@ -270,6 +277,13 @@
 		<text key="Warning">Warnung</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="Administrators">Administrators</text>
+		<text key="AdministratorsView:AccountId">Account Id</text>
+		<text key="AdministratorsView:ChangePassword">Change password</text>
+		<text key="AdministratorsView:CreateAdministrator">Create Administrator</text>
+		<text key="AdministratorsView:Created">Created</text>
+		<text key="AdministratorsView:Enabled">Enabled</text>
+		<text key="AdministratorsView:PasswordChangedSuccessfully">The password was changed successfully.</text>
 		<text key="All">All</text>
 		<text key="Cancel">Cancel</text>
 		<text key="Canceled">Canceled</text>

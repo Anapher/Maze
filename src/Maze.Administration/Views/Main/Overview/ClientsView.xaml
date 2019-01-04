@@ -25,7 +25,10 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" />
+            <TextBox
+                x:Name="SearchTextBox"
+                Grid.Column="0"
+                TextChanged="SearchTextBoxOnTextChanged" />
             <ListBox
                 Grid.Column="2"
                 Margin="0,0,5,0"
@@ -69,7 +72,8 @@
             Padding="0"
             prism:RegionManager.RegionName="{x:Static library:RegionNames.ClientListTabs}"
             BorderThickness="0"
-            SelectedIndex="0">
+            SelectedIndex="0"
+            SelectionChanged="ClientListTabControlOnSelectionChanged">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="Visibility" Value="Collapsed" />

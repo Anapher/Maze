@@ -47,7 +47,7 @@ namespace Maze.Administration.ViewModels.Overview.Groups
 
                     if (!clientsNotInGroup.Any())
                     {
-                        ClientGroupsResource.RemoveClientsAsync(groupViewModel.ClientGroupId, clientsInGroup.Select(x => x.ClientId), _restClient)
+                        ClientGroupsResource.DeleteClientsFromGroup(groupViewModel.ClientGroupId, clientsInGroup.Select(x => x.ClientId), _restClient)
                             .OnErrorShowMessageBox(_windowService).Forget();
                     }
                     else
@@ -59,7 +59,7 @@ namespace Maze.Administration.ViewModels.Overview.Groups
                                 return;
                         }
 
-                        ClientGroupsResource.AddClientsAsync(groupViewModel.ClientGroupId, clientsNotInGroup.Select(x => x.ClientId), _restClient)
+                        ClientGroupsResource.PostClientsToGroup(groupViewModel.ClientGroupId, clientsNotInGroup.Select(x => x.ClientId), _restClient)
                             .OnErrorShowMessageBox(_windowService).Forget();
                     }
                 }));

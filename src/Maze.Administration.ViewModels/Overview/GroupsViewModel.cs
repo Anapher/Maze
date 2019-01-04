@@ -73,7 +73,7 @@ namespace Maze.Administration.ViewModels.Overview
                         return;
                     }
 
-                    ClientGroupsResource.CreateAsync(new ClientGroupDto {Name = NewGroupName}, _restClient).OnErrorShowMessageBox(_windowService)
+                    ClientGroupsResource.PostGroup(new ClientGroupDto {Name = NewGroupName}, _restClient).OnErrorShowMessageBox(_windowService)
                         .Forget();
                     NewGroupName = null;
                 }));
@@ -90,7 +90,7 @@ namespace Maze.Administration.ViewModels.Overview
                             MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel) != MessageBoxResult.OK)
                         return;
 
-                    ClientGroupsResource.DeleteAsync(parameter.Group.ClientGroupId, _restClient).OnErrorShowMessageBox(_windowService).Forget();
+                    ClientGroupsResource.DeleteGroup(parameter.Group.ClientGroupId, _restClient).OnErrorShowMessageBox(_windowService).Forget();
                 }));
             }
         }
@@ -115,7 +115,7 @@ namespace Maze.Administration.ViewModels.Overview
                     ClientConfigurationDto configurationDto;
                     try
                     {
-                        configurationDto = await ClientConfigurationsResource.GetAsync(parameter.Group.ClientGroupId, _restClient);
+                        configurationDto = await ClientConfigurationsResource.GetClientConfiguration(parameter.Group.ClientGroupId, _restClient);
                     }
                     catch (RestException ex) when (ex.ErrorId == (int) ErrorCode.ClientConfigurations_NotFound)
                     {
@@ -148,7 +148,7 @@ namespace Maze.Administration.ViewModels.Overview
             {
                 return _globalConfigurationCommand ?? (_globalConfigurationCommand = new DelegateCommand(async () =>
                 {
-                    var result = await ClientConfigurationsResource.GetAsync(null, _restClient).OnErrorShowMessageBox(_windowService);
+                    var result = await ClientConfigurationsResource.GetClientConfiguration(null, _restClient).OnErrorShowMessageBox(_windowService);
                     if (result.Failed)
                         return;
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Maze.Administration.Library;
 using Maze.Administration.Library.Extensions;
@@ -15,9 +14,9 @@ using Tasks.Infrastructure.Administration.Core;
 using Tasks.Infrastructure.Administration.Library.Command;
 using Tasks.Infrastructure.Administration.Resources;
 using Tasks.Infrastructure.Administration.ViewModels;
+using Tasks.Infrastructure.Administration.ViewModels.CreateTask;
 using Tasks.Infrastructure.Administration.Views;
 using Tasks.Infrastructure.Core.Audience;
-using Tasks.Infrastructure.Core.Dtos;
 using Unclassified.TxLib;
 
 namespace Tasks.Infrastructure.Administration.Hooks
@@ -123,7 +122,8 @@ namespace Tasks.Infrastructure.Administration.Hooks
 
         private void CreateTaskCommand(IList<ClientViewModel> obj)
         {
-            _windowService.ShowDialog<CreateTaskViewModel>();
+            _windowService.ShowDialog<CreateTaskViewModel>(vm =>
+                vm.TreeViewModels.OfType<AudienceViewModel>().First().InitializeClients(obj.Select(x => x.ClientId)));
         }
     }
 }
