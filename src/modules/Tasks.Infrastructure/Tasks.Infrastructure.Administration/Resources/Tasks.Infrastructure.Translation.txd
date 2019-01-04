@@ -48,6 +48,8 @@
 		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Deaktiviert</text>
 		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Aktiviert</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Aufgabe '{name}' Übersicht</text>
+		<text key="TasksInfrastructure:Tasks">Aufgaben</text>
+		<text key="TasksInfrastructure:Tasks.CreateNewTask">Neue Aufgabe erstellen</text>
 		<text key="TasksInfrastructure:Tasks.RecentCommands">Letzte Befehle</text>
 	</culture>
 	<culture name="en" primary="true">
@@ -97,6 +99,8 @@
 		<text key="TasksInfrastructure:TaskOverview.Status.Disabled">Disabled</text>
 		<text key="TasksInfrastructure:TaskOverview.Status.Enabled">Enabled</text>
 		<text key="TasksInfrastructure:TaskOverview.Title">Task '{name}' overview</text>
+		<text key="TasksInfrastructure:Tasks">Tasks</text>
+		<text key="TasksInfrastructure:Tasks.CreateNewTask">Create new task</text>
 		<text key="TasksInfrastructure:Tasks.RecentCommands">Recent Commands</text>
 	</culture>
 </translation>

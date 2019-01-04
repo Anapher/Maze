@@ -27,7 +27,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Menu>
-            <MenuItem Command="{Binding CreateTaskCommand}" Header="{tx:T TasksView:CreateNewTask}" />
+            <MenuItem Command="{Binding CreateTaskCommand}" Header="{tx:T TasksInfrastructure:Tasks.CreateNewTask}" />
             <MenuItem Header="{tx:T TasksInfrastructure:Tasks.RecentCommands}" ItemsSource="{Binding CommandExecutionManager.PendingCommands}">
                 <MenuItem.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="MenuItem">

@@ -47,7 +47,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private DelegateCommand<PendingCommandViewModel> _openExecutionOverviewCommand;
 
         public TasksViewModel(IWindowService windowService, IMazeRestClient restClient, IAppDispatcher dispatcher, IComponentContext services,
-            CommandExecutionManager commandExecutionManager) : base(Tx.T("TasksView:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
+            CommandExecutionManager commandExecutionManager) : base(Tx.T("TasksInfrastructure:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
         {
             CommandExecutionManager = commandExecutionManager;
             _windowService = windowService;

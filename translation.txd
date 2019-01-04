@@ -85,8 +85,6 @@
 		<text key="Refresh">Aktualisieren</text>
 		<text key="Remove">Entfernen</text>
 		<text key="Server">Server</text>
-		<text key="TasksView:CreateNewTask">Neue Aufgabe erstellen</text>
-		<text key="TasksView:Tasks">Aufgaben</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:date.day.tab">dd.</text>
 		<text key="Tx:date.month.abbr">MMM.</text>
@@ -364,8 +362,6 @@
 		<text key="Refresh">Refresh</text>
 		<text key="Remove">Remove</text>
 		<text key="Server">Server</text>
-		<text key="TasksView:CreateNewTask">Create new task</text>
-		<text key="TasksView:Tasks">Tasks</text>
 		<text key="Tx:byte unit" comment="Default: B" />
 		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
 		<text key="Tx:date.day" comment="Default: %d" />
