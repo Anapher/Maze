@@ -26,7 +26,7 @@ namespace Maze.Server.Service
         {
             if (_connectionManager.ClientConnections.TryGetValue(clientId, out var clientConnection))
             {
-                var response = await clientConnection.SendMessage(request, cancellationToken);
+                var response = await clientConnection.MazeServer.SendRequest(request, cancellationToken);
                 if (response.StatusCode == HttpStatusCode.Created && response.Headers.Location?.Host == "channels")
                 {
                     if (_connectionManager.AdministrationConnections.TryGetValue(accountId, out var administrationConnection))
