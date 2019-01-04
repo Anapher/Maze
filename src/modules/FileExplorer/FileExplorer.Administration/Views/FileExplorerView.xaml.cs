@@ -38,6 +38,10 @@ namespace FileExplorer.Administration.Views
 
             if (e.NewValue != null)
             {
+                ContextMenuExtensions.SetSelectedItems(contextMenu, EntriesView.EntriesGrid.SelectedItems);
+                ContextMenuExtensions.SetSelectedItems(fileContextMenu, EntriesView.EntriesGrid.SelectedItems);
+                ContextMenuExtensions.SetSelectedItems(directoryContextMenu, EntriesView.EntriesGrid.SelectedItems);
+
                 InitializeContextMenu(contextMenu, _scope.Resolve<FileExplorerContextMenuManager>());
                 InitializeContextMenu(fileContextMenu, _scope.Resolve<ListFileContextMenuManager>());
                 InitializeContextMenu(directoryContextMenu, _scope.Resolve<ListDirectoryContextMenuManager>());

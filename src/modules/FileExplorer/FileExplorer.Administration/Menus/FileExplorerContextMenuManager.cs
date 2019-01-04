@@ -53,12 +53,12 @@ namespace FileExplorer.Administration.Menus
                 Icon = _visualStudioIcons.UploadFile,
                 Command = new DelegateCommand<FileExplorerViewModel>(UploadFile)
             });
-            _contextMenu.Section2.Add(new ContextCommand<FileExplorerViewModel>
-            {
-                Header = Tx.T("FileExplorer:DownloadFileToDirectory"),
-                Icon = _visualStudioIcons.DownloadFile,
-                Command = new DelegateCommand<FileExplorerViewModel>(DownloadFile)
-            });
+            //_contextMenu.Section2.Add(new ContextCommand<FileExplorerViewModel>
+            //{
+            //    Header = Tx.T("FileExplorer:DownloadFileToDirectory"),
+            //    Icon = _visualStudioIcons.DownloadFile,
+            //    Command = new DelegateCommand<FileExplorerViewModel>(DownloadFile)
+            //});
 
             _contextMenu.Section3New.Header = Tx.T("FileExplorer:New");
             _contextMenu.Section3New.Add(new ContextCommand<FileExplorerViewModel>
@@ -89,10 +89,10 @@ namespace FileExplorer.Administration.Menus
             }
         }
 
-        private void DownloadFile(FileExplorerViewModel obj)
-        {
-            throw new System.NotImplementedException();
-        }
+        //private void DownloadFile(FileExplorerViewModel obj)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
 
         private void UploadFile(FileExplorerViewModel context)
         {

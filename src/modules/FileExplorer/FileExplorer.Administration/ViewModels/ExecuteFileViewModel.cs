@@ -4,19 +4,27 @@ using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Shared.Dtos;
 using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.ViewModels;
+using Maze.Administration.Library.Views;
 using Prism.Regions;
 
 namespace FileExplorer.Administration.ViewModels
 {
     public class ExecuteFileViewModel : ViewModelBase
     {
+        private readonly IWindowService _windowService;
         private FileViewModel _fileViewModel;
         private ITargetedRestClient _restClient;
         private string[] _availableVerbs;
         private bool? _dialogResult;
         private AsyncRelayCommand _executeCommand;
         private string _filename;
+
+        public ExecuteFileViewModel(IWindowService windowService)
+        {
+            _windowService = windowService;
+        }
 
         public void Initialize(FileViewModel fileViewModel, ITargetedRestClient restClient)
         {
@@ -68,13 +76,12 @@ namespace FileExplorer.Administration.ViewModels
                     try
                     {
                         await FileSystemResource.ExecuteFile(ExecuteDto, false, _restClient);
+                        DialogResult = true;
                     }
                     catch (Exception e)
                     {
-                        MessageBoxEx.Show(e.ToString());
+                        e.ShowMessage(_windowService);
                     }
-
-                    DialogResult = true;
                 }));
             }
         }

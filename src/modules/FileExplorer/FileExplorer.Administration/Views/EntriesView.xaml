@@ -29,6 +29,7 @@
         </ContextMenu>
     </UserControl.Resources>
     <DataGrid
+        x:Name="EntriesGrid"
         AutoGenerateColumns="False"
         BorderThickness="0"
         CanUserAddRows="False"

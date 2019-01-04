@@ -41,6 +41,13 @@ namespace FileExplorer.Administration.ViewModels
                     .Select(x => new ComputeHashViewModel(Entry.Source.Path, x, restClient)).ToList();
         }
 
+        public void Initialize(DirectoryViewModel directoryViewModel)
+        {
+            var properties = GeneralPropertyViewModel.CreatDirectoryProperties(directoryViewModel).ToList();
+            GeneralProperties = CreateGeneralProperties(properties);
+            Entry = directoryViewModel;
+        }
+
         private ListCollectionView CreateGeneralProperties(IList properties)
         {
             var result = new ListCollectionView(properties);
@@ -285,6 +292,22 @@ namespace FileExplorer.Administration.ViewModels
             yield return new GeneralPropertyViewModel
             {
                 Group = 4, Label = Tx.TC("FileExplorer:Properties.General.Attributes"), Value = dto.Attributes.ToString()
+            };
+        }
+
+        public static IEnumerable<GeneralPropertyViewModel> CreatDirectoryProperties(DirectoryViewModel directoryViewModel)
+        {
+            yield return new GeneralPropertyViewModel {Label = Tx.TC("FileExplorer:Type"), Value = Tx.T("FileExplorer:Directory")};
+            yield return new GeneralPropertyViewModel
+            {
+                Label = Tx.TC("FileExplorer:Properties.General.Location"),
+                Value = directoryViewModel.Source.Path
+            };
+            yield return new GeneralPropertyViewModel
+            {
+                Group = 2,
+                Label = Tx.TC("FileExplorer:Properties.General.Created"),
+                Value = directoryViewModel.Source.CreationTime.ToString("F", CultureInfo.CurrentUICulture)
             };
         }
     }

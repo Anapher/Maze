@@ -127,14 +127,29 @@ namespace FileExplorer.Client.Utilities
 
                                 using (var infoKey = possibleEntryRegKey.OpenSubKey("Instance\\InitPropertyBag"))
                                 {
-                                    var folder = (string) (infoKey?.GetValue("TargetFolderPath", null) ??
-                                                           infoKey?.GetValue("TargetKnownFolder"));
-                                    if (folder == null)
-                                        continue;
-
                                     DirectoryEntry entry;
-                                    using (var directory = new DirectoryInfoEx(folder))
-                                        entry = GetDirectoryEntry(directory, null);
+                                    var folderPath = (string) infoKey?.GetValue("TargetFolderPath", null);
+                                    if (folderPath != null)
+                                    {
+                                        using (var directory = new DirectoryInfoEx(folderPath))
+                                            entry = GetDirectoryEntry(directory, null);
+                                    }
+                                    else if ((folderPath = (string) infoKey?.GetValue("TargetKnownFolder")) != null && Guid.TryParse(folderPath, out var folderId))
+                                    {
+                                        try
+                                        {
+                                            using (var directory = new DirectoryInfoEx(KnownFolder.FromKnownFolderId(folderId)))
+                                                entry = GetDirectoryEntry(directory, null);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
 
                                     if (entry == null)
                                         continue;

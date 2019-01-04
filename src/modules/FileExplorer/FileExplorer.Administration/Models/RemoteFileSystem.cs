@@ -61,7 +61,7 @@ namespace FileExplorer.Administration.Models
             if (string.IsNullOrEmpty(path))
                 return null;
 
-            if (!path.Any(x => InvalidFileNameChars.Contains(x)))
+            if (!path.Any(x => InvalidFileNameChars.Contains(x)) && path[0] != '{')
                 path = Path.GetFullPath(path);
 
             path = path.TrimEnd('\\');

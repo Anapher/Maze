@@ -124,6 +124,9 @@ namespace FileExplorer.Client.Controllers
             };
 
             var process = Process.Start(processStartInfo);
+            if (executeDto.UseShellExecute)
+                return Ok();
+
             if (process == null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 

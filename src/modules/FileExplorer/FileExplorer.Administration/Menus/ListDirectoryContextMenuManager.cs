@@ -6,6 +6,7 @@ using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
+using Maze.Administration.Library.Extensions;
 using Ookii.Dialogs.Wpf;
 using Maze.Administration.Library.Menu;
 using Maze.Administration.Library.Menu.MenuBase;
@@ -142,9 +143,12 @@ namespace FileExplorer.Administration.Menus
             });
         }
 
-        private void OpenDirectoryProperties(DirectoryViewModel arg1, FileExplorerViewModel arg2)
+        private void OpenDirectoryProperties(DirectoryViewModel directory, FileExplorerViewModel context)
         {
-            throw new System.NotImplementedException();
+            context.Window.Show<PropertiesViewModel>(null, window =>
+            {
+                window.Title = Tx.T("FileExplorer:Properties.Title", "name", directory.Name);
+            }, viewModel => viewModel.Initialize(directory), out _);
         }
 
         protected override IEnumerable<UIElement> GetItems(object context) =>

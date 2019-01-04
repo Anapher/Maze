@@ -89,7 +89,7 @@
                 </ItemsControl>
             </StackPanel>
         </TabItem>
-        <TabItem Header="{tx:T FileExplorer:FileHashes}">
+        <TabItem Header="{tx:T FileExplorer:FileHashes}" Visibility="{Binding IsFile, Converter={StaticResource BooleanToVisibilityConverter}}">
             <DataGrid
                 AutoGenerateColumns="False"
                 CanUserAddRows="False"
