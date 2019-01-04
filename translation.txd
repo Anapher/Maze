@@ -27,8 +27,12 @@
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
 		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
+		<text key="DoNotAskMeAgainForCurrentOperation">Für aktuelle Operation nicht erneut fragen</text>
 		<text key="Edit">Bearbeiten</text>
 		<text key="Error">Fehler</text>
+		<text key="ErrorMessages:RestErrorOccurredContinue">{message} Möchten Sie fortfahren?</text>
+		<text key="ErrorMessages:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
+		<text key="ErrorMessages:UnexpectedErrorOccurredContinue">{=ErrorMessages:UnexpectedErrorOccurred}. Möchten Sie fortfahren?</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptpunctuation="true">Das Passwort ist ungültig.</text>
 		<text key="Exceptions:UnexpectedErrorOccurred">Ein unerwarteter Fehler ist aufgetreten: {message}</text>
 		<text key="Failed">Fehlgeschlagen</text>
@@ -302,8 +306,12 @@
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
 		<text key="Description">Description</text>
 		<text key="Done">Done</text>
+		<text key="DoNotAskMeAgainForCurrentOperation">Do not ask me again for the current operation</text>
 		<text key="Edit">Edit</text>
 		<text key="Error">Error</text>
+		<text key="ErrorMessages:RestErrorOccurredContinue">{message} Do you want to continue?</text>
+		<text key="ErrorMessages:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
+		<text key="ErrorMessages:UnexpectedErrorOccurredContinue">{=ErrorMessages:UnexpectedErrorOccurred}. Do you want to continue?</text>
 		<text key="Exceptions:RestErrors.Account_InvalidPassword" acceptmissing="true" />
 		<text key="Exceptions:UnexpectedErrorOccurred">An unexpected error occurred: {message}</text>
 		<text key="Failed">Failed</text>

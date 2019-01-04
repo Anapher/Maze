@@ -145,11 +145,11 @@ namespace Maze.Administration.Library.Extensions
         {
             if (exception is RestException restException)
                 return window.ShowMessage(
-                           Tx.T("MainWindow:RestErrorOccurredContinue", "message",
+                           Tx.T("ErrorMessages:RestErrorOccurredContinue", "message",
                                GetRestExceptionMessage(restException)), Tx.T("Error"), MessageBoxButton.OKCancel,
                            MessageBoxImage.Error) == MessageBoxResult.OK;
 
-            return window.ShowMessage(Tx.T("MainWindow:UnexpectedErrorOccurredContinue", "message", exception.Message),
+            return window.ShowMessage(Tx.T("ErrorMessages:UnexpectedErrorOccurredContinue", "message", exception.Message),
                        Tx.T("Error"), MessageBoxButton.OKCancel, MessageBoxImage.Error) == MessageBoxResult.OK;
         }
 
@@ -169,10 +169,10 @@ namespace Maze.Administration.Library.Extensions
 
             string message;
             if (exception is RestException restException)
-                message = Tx.T("MainWindow:RestErrorOccurredContinue", "message",
+                message = Tx.T("ErrorMessages:RestErrorOccurredContinue", "message",
                     GetRestExceptionMessage(restException));
             else
-                message = Tx.T("MainWindow:UnexpectedErrorOccurredContinue", "message", exception.Message);
+                message = Tx.T("ErrorMessages:UnexpectedErrorOccurredContinue", "message", exception.Message);
 
             var options = new TaskDialogOptions
             {
@@ -206,7 +206,7 @@ namespace Maze.Administration.Library.Extensions
             if (exception is RestException restException)
                 restException.ShowMessage(window);
             else
-                window.ShowErrorMessageBox(Tx.T("MainWindow:UnexpectedErrorOccurred", "message", exception.Message));
+                window.ShowErrorMessageBox(Tx.T("ErrorMessages:UnexpectedErrorOccurred", "message", exception.Message));
         }
 
         /// <summary>
