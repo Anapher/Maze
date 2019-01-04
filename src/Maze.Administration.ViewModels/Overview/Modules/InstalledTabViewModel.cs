@@ -37,8 +37,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
         public void Initialize(IModuleService service)
         {
-            Modules = new ListCollectionView(service.InstalledModules);
-            Modules.Filter = Filter;
+            Modules = new ListCollectionView(service.InstalledModules) {Filter = Filter};
         }
 
         private bool Filter(object obj)

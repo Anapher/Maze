@@ -90,7 +90,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
                     Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return; //TODO better handling
             }
@@ -114,13 +114,8 @@ namespace Maze.Administration.ViewModels.Overview.Modules
             _service = service;
             _service.InstalledModules.CollectionChanged += InstalledModulesOnCollectionChanged;
 
-            var searchResources = await TaskCombinators.ThrottledAsync(service.Repositories,
-                (repository, token) => repository.GetResourceAsync<PackageSearchResource>(token), CancellationToken.None);
-            var listResources = await TaskCombinators.ThrottledAsync(service.Repositories,
-                (repository, token) => repository.GetResourceAsync<ListResource>(token), CancellationToken.None);
-
-            _searchResource = new AggregatedPackageSearchResource(searchResources.ToList());
-            _listResource = new AggregateListResource(listResources.ToList());
+            _searchResource = new AggregatedPackageSearchResource(service.Repositories);
+            _listResource = new AggregateListResource(service.Repositories);
 
             await InitializePackages(null);
             service.BrowseLoaded.Publish();
@@ -177,18 +172,20 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
     public class AggregatedPackageSearchResource : AggregatedResource
     {
-        private readonly IReadOnlyList<PackageSearchResource> _searchResources;
+        private readonly IReadOnlyList<SourceRepository> _repositories;
 
-        public AggregatedPackageSearchResource(IReadOnlyList<PackageSearchResource> resources)
+        public AggregatedPackageSearchResource(IReadOnlyList<SourceRepository> repositories)
         {
-            _searchResources = resources;
+            _repositories = repositories;
         }
 
         public async Task<IEnumerable<IPackageSearchMetadata>> SearchAsync(string searchTerm, SearchFilter searchFilter, int skip, int take,
             CancellationToken cancellationToken)
         {
-            var results = await TaskCombinators.ThrottledAsync(_searchResources,
-                (resource, token) => resource.SearchAsync(searchTerm, searchFilter, skip, take, NullLogger.Instance, token), cancellationToken);
+            var results = await TaskCombinators.ThrottledAsync(_repositories,
+                async (repository, token) =>
+                    await (await repository.GetResourceAsync<PackageSearchResource>()).SearchAsync(searchTerm, searchFilter, skip, take,
+                        NullLogger.Instance, token), cancellationToken);
 
             return Combine(results);
         }
@@ -196,13 +193,13 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
     public class AggregateListResource : AggregatedResource
     {
-        private readonly IReadOnlyList<ListResource> _listResources;
+        private readonly IReadOnlyList<SourceRepository> _repositories;
         private List<IEnumeratorAsync<IPackageSearchMetadata>> _listEnumerators;
         private readonly List<IPackageSearchMetadata> _cachedPackages;
 
-        public AggregateListResource(IReadOnlyList<ListResource> resources)
+        public AggregateListResource(IReadOnlyList<SourceRepository> repositories)
         {
-            _listResources = resources;
+            _repositories = repositories;
             _cachedPackages = new List<IPackageSearchMetadata>();
         }
 
@@ -210,21 +207,15 @@ namespace Maze.Administration.ViewModels.Overview.Modules
         {
             if (_listEnumerators == null)
             {
-                var enumerators = await TaskCombinators.ThrottledAsync(_listResources, async (resource, token) =>
+                var enumerators = await TaskCombinators.ThrottledIgnoreErrorsAsync(_repositories, async (repository, token) =>
                 {
-                    try
-                    {
-                        var result = await resource.ListAsync(string.Empty, false, true, false, NullLogger.Instance, cancellationToken);
-                        return result.GetEnumeratorAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        // ignored
-                        return null;
-                    }
+                    var resource = await repository.GetResourceAsync<ListResource>();
+
+                    var result = await resource.ListAsync(string.Empty, false, true, false, NullLogger.Instance, cancellationToken);
+                    return result.GetEnumeratorAsync();
                 }, cancellationToken);
 
-                _listEnumerators = enumerators.Where(x => x != null).ToList();
+                _listEnumerators = enumerators.ToList();
             }
 
             IEnumerable<IPackageSearchMetadata> cachedPackages = Enumerable.Empty<IPackageSearchMetadata>();
@@ -250,7 +241,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
             var result = new List<T>();
 
             var enumerators = enumerables.Reverse().ToList();
-            while (result.Count < take)
+            while (result.Count < take && enumerators.Any())
                 for (var i = enumerators.Count - 1; i >= 0; i--)
                 {
                     var enumerator = enumerators[i];

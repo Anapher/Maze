@@ -38,6 +38,37 @@ namespace Maze.Utilities
             return values;
         }
 
+        public static async Task<IEnumerable<TValue>> ThrottledIgnoreErrorsAsync<TSource, TValue>(IEnumerable<TSource> sources,
+            Func<TSource, CancellationToken, Task<TValue>> valueSelector, CancellationToken cancellationToken)
+        {
+            var values = new ConcurrentQueue<TValue>();
+
+            async Task TaskBody(IEnumerator<TSource> enumerator)
+            {
+                using (enumerator)
+                    while (enumerator.MoveNext())
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        try
+                        {
+                            var value = await valueSelector(enumerator.Current, cancellationToken);
+                            values.Enqueue(value);
+                        }
+                        catch (Exception)
+                        {
+                            //ignored
+                        }
+                    }
+            }
+
+            var tasks = Partitioner.Create(sources).GetPartitions(MaxDegreeOfParallelism)
+                .Select(enumerator => Task.Run(() => TaskBody(enumerator)));
+            await Task.WhenAll(tasks);
+
+            return values;
+        }
+
         public static async Task<IEnumerable<TItem>> ThrottledFilterItems<TItem>(IEnumerable<TItem> sources,
             Func<TItem, CancellationToken, Task<bool>> valueSelector, CancellationToken cancellationToken)
         {

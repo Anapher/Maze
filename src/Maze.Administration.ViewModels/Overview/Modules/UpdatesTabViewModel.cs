@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Data;
@@ -41,8 +40,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
             _moduleService = service;
             service.BrowseLoaded.Subscribe(LoadData);
 
-            var modules = new ListCollectionView(service.InstalledModules);
-            modules.Filter = ModulesUpdateFilter;
+            var modules = new ListCollectionView(service.InstalledModules) {Filter = ModulesUpdateFilter};
             modules.LiveFilteringProperties.Add(nameof(ModuleViewModel.IsUpdateAvailable));
             modules.IsLiveFiltering = true;
 

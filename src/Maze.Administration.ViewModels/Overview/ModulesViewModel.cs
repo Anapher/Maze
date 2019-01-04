@@ -36,12 +36,10 @@ namespace Maze.Administration.ViewModels.Overview
         private readonly IWindowService _windowService;
 
         private DelegateCommand _displayRepositorySourcesInfoCommand;
-        private List<FindPackageByIdResource> _findPackageByIdResources;
         private bool _includePrerelease;
         private int _index;
         private DelegateCommand<ModuleViewModel> _installModuleCommand;
         private DelegateCommand<NuGetVersion> _installVersionCommand;
-        private List<PackageMetadataResource> _packageMetadataResources;
         private string _repositoryUris;
         private string _searchText;
         private ModuleViewModel _selectedModule;
@@ -191,7 +189,11 @@ namespace Maze.Administration.ViewModels.Overview
         public async Task LoadVersions(ModuleViewModel moduleViewModel, SourceCacheContext context, CancellationToken cancellationToken)
         {
             if (!await moduleViewModel.LoadVersionsAsync())
-                foreach (var findPackageByIdResource in _findPackageByIdResources)
+            {
+                var resources = (await TaskCombinators.ThrottledIgnoreErrorsAsync(Repositories,
+                    (repository, token) => repository.GetResourceAsync<FindPackageByIdResource>(token), CancellationToken.None));
+
+                foreach (var findPackageByIdResource in resources)
                     try
                     {
                         var versions = (await findPackageByIdResource.GetAllVersionsAsync(moduleViewModel.PackageIdentity.Id, context,
@@ -206,6 +208,7 @@ namespace Maze.Administration.ViewModels.Overview
                     {
                         // ignored
                     }
+            }
         }
 
         public override async void OnInitialize()
@@ -224,12 +227,6 @@ namespace Maze.Administration.ViewModels.Overview
             var providers = Repository.Provider.GetCoreV3();
             Repositories = (await sources).Select(x => new SourceRepository(new PackageSource(x.AbsoluteUri), providers)).ToList();
             RepositoryUris = string.Join(", ", sources.Result.Select(x => x.Host));
-
-            _packageMetadataResources = (await TaskCombinators.ThrottledAsync(Repositories,
-                (repository, token) => repository.GetResourceAsync<PackageMetadataResource>(token), CancellationToken.None)).ToList();
-
-            _findPackageByIdResources = (await TaskCombinators.ThrottledAsync(Repositories,
-                (repository, token) => repository.GetResourceAsync<FindPackageByIdResource>(token), CancellationToken.None)).ToList();
 
             foreach (var moduleTabViewModel in _tabViewModels) moduleTabViewModel.Initialize(this);
 
@@ -306,7 +303,10 @@ namespace Maze.Administration.ViewModels.Overview
 
         private async Task LoadModuleMetadata(ModuleViewModel moduleViewModel)
         {
-            foreach (var packageMetadataResource in _packageMetadataResources)
+            var resources = await TaskCombinators.ThrottledIgnoreErrorsAsync(Repositories,
+                (repository, token) => repository.GetResourceAsync<PackageMetadataResource>(token), CancellationToken.None);
+
+            foreach (var packageMetadataResource in resources)
                 try
                 {
                     var metadata = await packageMetadataResource.GetMetadataAsync(moduleViewModel.PackageIdentity, new SourceCacheContext(),
