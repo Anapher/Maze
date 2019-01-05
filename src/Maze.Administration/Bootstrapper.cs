@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using Anapher.Wpf.Swan;
 using Anapher.Wpf.Swan.ViewInterface;
 using Autofac;
 using AutoMapper;
@@ -70,6 +69,7 @@ namespace Maze.Administration
             builder.RegisterType<DefaultMenuFactory>().As<IMenuFactory>().SingleInstance();
             builder.RegisterType<ItemMenuFactory>().As<IItemMenuFactory>().SingleInstance();
             builder.RegisterType<ClientsContextMenu>().SingleInstance();
+            builder.RegisterType<OfflineClientsContextMenu>().SingleInstance();
             builder.RegisterInstance(new ViewModelResolver(Assembly.GetAssembly(typeof(MainViewModel)),
                 Assembly.GetEntryAssembly())).As<IViewModelResolver>();
             builder.RegisterType<ClientCommandRegistrar>().As<IClientCommandRegistrar>().SingleInstance();

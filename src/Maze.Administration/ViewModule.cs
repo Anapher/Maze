@@ -24,11 +24,13 @@ namespace Maze.Administration
         private readonly IClientManager _clientManager;
         private readonly IWindowService _windowService;
         private readonly IRestClient _restClient;
+        private readonly OfflineClientsContextMenu _offlineClientsContextMenu;
 
-        public ViewModule(IRegionManager regionManager, ClientsContextMenu clientsContextMenu, IClientManager clientManager, IWindowService windowService, IRestClient restClient)
+        public ViewModule(IRegionManager regionManager, ClientsContextMenu clientsContextMenu, OfflineClientsContextMenu offlineClientsContextMenu, IClientManager clientManager, IWindowService windowService, IRestClient restClient)
         {
             _regionManager = regionManager;
             _clientsContextMenu = clientsContextMenu;
+            _offlineClientsContextMenu = offlineClientsContextMenu;
             _clientManager = clientManager;
             _windowService = windowService;
             _restClient = restClient;
@@ -45,10 +47,11 @@ namespace Maze.Administration
 
             _regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));
 
-            InitializeGroupsContextMenu();
+            InitializeGroupsContextMenu(_clientsContextMenu);
+            InitializeGroupsContextMenu(_offlineClientsContextMenu);
         }
 
-        private void InitializeGroupsContextMenu()
+        private void InitializeGroupsContextMenu(MenuSection<ItemCommand<ClientViewModel>> contextMenu)
         {
             var menuItem = new MenuItem
             {
@@ -56,7 +59,9 @@ namespace Maze.Administration
                 Tag = new GroupMenuItemViewModel(_windowService, _restClient)
             };
             menuItem.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("GroupViewModels") {Source = _clientManager});
-            _clientsContextMenu.Add(new MenuItemEntry<ItemCommand<ClientViewModel>>(menuItem));
+
+            var section = new MenuSection<ItemCommand<ClientViewModel>> {new MenuItemEntry<ItemCommand<ClientViewModel>>(menuItem)};
+            contextMenu.Add(section);
         }
     }
 }
