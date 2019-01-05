@@ -9,3 +9,5 @@ Get-ChildItem .\src\modules -Directory | ForEach-Object {
         Remove-Item -Recurse -Force .\artifacts\$_
     }
 }
+
+src/modules/RemoteDesktop/patch.ps1 -Package ".\artifacts\RemoteDesktop.1.0.0.nupkg"
