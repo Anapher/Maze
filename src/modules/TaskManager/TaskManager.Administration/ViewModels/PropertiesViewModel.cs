@@ -28,16 +28,16 @@ namespace TaskManager.Administration.ViewModels
         private bool _isDisposed;
         private bool _refreshedActiveConnections;
 
-        public PropertiesViewModel(ITargetedRestClient restClient)
+        public PropertiesViewModel()
         {
-            _restClient = restClient;
-
             _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
             _refreshTimer.Tick += RefreshTimerOnTick;
         }
 
-        public void Initialize(ProcessPropertiesDto properties, ProcessViewModel process)
+        public void Initialize(ProcessPropertiesDto properties, ProcessViewModel process, ITargetedRestClient restClient)
         {
+            _restClient = restClient;
+
             StaticPropertiesDto = properties;
             PropertiesDto = properties;
             Process = process;

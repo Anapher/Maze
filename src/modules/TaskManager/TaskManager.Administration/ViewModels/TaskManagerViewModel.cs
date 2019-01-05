@@ -10,7 +10,6 @@ using System.Windows.Threading;
 using Maze.Administration.ControllerExtensions;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
-using Maze.Administration.Library.Services;
 using Maze.Administration.Library.StatusBar;
 using Maze.Administration.Library.ViewModels;
 using Maze.Administration.Library.Views;
@@ -233,7 +232,7 @@ namespace TaskManager.Administration.ViewModels
                         _windowService.Show<PropertiesViewModel>(window => {
                             window.Title = Tx.T("TaskManager:Properties.Title", "name", parameter.Name, "id", parameter.Id.ToString());
                             window.TaskBarIcon = parameter.Icon;
-                        }, vm => vm.Initialize(properties.Result, parameter), out var viewModel);
+                        }, vm => vm.Initialize(properties.Result, parameter, _restClient), out _);
                     }
                 }));
             }
