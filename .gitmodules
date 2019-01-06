@@ -1,6 +1,3 @@
-[submodule "src/submodules/Anapher.Swan.Wpf"]
-	path = src/submodules/Anapher.Swan.Wpf
-	url = https://github.com/Anapher/Anapher.Wpf.Swan
 [submodule "src/submodules/CodeElements.BizRunner"]
 	path = src/submodules/CodeElements.BizRunner
 	url = https://github.com/CodeElements/CodeElements.BizRunner
