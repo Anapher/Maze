@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace TaskManager.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace TaskManager.Administration.Views
     /// </summary>
     public partial class TaskManagerView
     {
-        public TaskManagerView(IShellWindow windowViewManager) : base(windowViewManager)
+        public TaskManagerView()
         {
             InitializeComponent();
         }

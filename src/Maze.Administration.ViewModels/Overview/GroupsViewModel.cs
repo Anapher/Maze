@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using Anapher.Wpf.Swan.Extensions;
+using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Extensions;
+using Anapher.Wpf.Toolkit.Windows;
 using MahApps.Metro.IconPacks;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Exceptions;
@@ -13,10 +15,8 @@ using Maze.Administration.Library.Rest.ClientGroups.V1;
 using Maze.Administration.Library.Services;
 using Maze.Administration.Library.Utilities;
 using Maze.Administration.Library.ViewModels;
-using Maze.Administration.Library.Views;
 using Maze.Administration.ViewModels.Main;
 using Maze.Administration.ViewModels.Overview.Groups;
-using Maze.Administration.ViewModels.Utilities;
 using Maze.Server.Connection.Clients;
 using Maze.Server.Connection.Error;
 using Maze.Utilities;
@@ -35,7 +35,7 @@ namespace Maze.Administration.ViewModels.Overview
         private string _newGroupName;
         private DelegateCommand<GroupPresenterViewModel> _removeGroupCommand;
         private DelegateCommand<GroupPresenterViewModel> _changeNameCommand;
-        private AsyncRelayCommand<GroupPresenterViewModel> _configurationCommand;
+        private AsyncDelegateCommand<GroupPresenterViewModel> _configurationCommand;
         private DelegateCommand _globalConfigurationCommand;
 
         public GroupsViewModel(IClientManager clientManager, IRestClient restClient, IWindowService windowService) : base(Tx.T("Groups"),
@@ -106,11 +106,11 @@ namespace Maze.Administration.ViewModels.Overview
             }
         }
 
-        public AsyncRelayCommand<GroupPresenterViewModel> ConfigurationCommand
+        public AsyncDelegateCommand<GroupPresenterViewModel> ConfigurationCommand
         {
             get
             {
-                return _configurationCommand ?? (_configurationCommand = new AsyncRelayCommand<GroupPresenterViewModel>(async parameter =>
+                return _configurationCommand ?? (_configurationCommand = new AsyncDelegateCommand<GroupPresenterViewModel>(async parameter =>
                 {
                     ClientConfigurationDto configurationDto;
                     try

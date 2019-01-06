@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Input;
-using Autofac;
-using Maze.Administration.Library.Extensions;
-using Maze.Administration.Library.Views;
+using Anapher.Wpf.Toolkit.Extensions;
+using Anapher.Wpf.Toolkit.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Commands;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -20,7 +21,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     public abstract class TaskServicesBaseViewModel<TServiceDescription> : TaskServicesViewModel where TServiceDescription : ITaskServiceDescription
     {
         protected readonly ObservableCollection<TaskViewModelView> _childs;
-        protected readonly IComponentContext Container;
+        protected readonly IServiceProvider ServiceProvider;
         protected readonly IWindowService WindowService;
         private DelegateCommand _addNewCommand;
         private bool _isSelected;
@@ -28,15 +29,15 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
         protected TaskViewModelView _selectedChild;
         protected ITaskServiceDescription _selectedService;
 
-        protected TaskServicesBaseViewModel(IWindowService windowService, IComponentContext container)
+        protected TaskServicesBaseViewModel(IWindowService windowService, IServiceProvider serviceProvider)
         {
             WindowService = windowService;
-            Container = container;
+            ServiceProvider = serviceProvider;
             _childs = new ObservableCollection<TaskViewModelView>();
 
             Childs = new ListCollectionView(_childs);
 
-            AvailableServices = container.Resolve<IEnumerable<TServiceDescription>>().Cast<ITaskServiceDescription>().ToList();
+            AvailableServices = serviceProvider.GetRequiredService<IEnumerable<TServiceDescription>>().Cast<ITaskServiceDescription>().ToList();
         }
 
         public override ListCollectionView Childs { get; }

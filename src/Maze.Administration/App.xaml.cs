@@ -1,16 +1,23 @@
 using System;
+using System.Reflection;
 using System.Windows;
 using System.Xml;
+using Anapher.Wpf.Toolkit.Metro.Extensions;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using Maze.Administration.ViewModels;
 using Maze.Administration.Views;
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Mvvm;
+using Prism.Unity;
 
 namespace Maze.Administration
 {
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -22,8 +29,28 @@ namespace Maze.Administration
                 HighlightingManager.Instance.RegisterHighlighting("Json", new string[0],
                     HighlightingLoader.Load(reader, HighlightingManager.Instance));
             }
-
-            new MainWindow().Show();
         }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterWindowServices(Assembly.GetEntryAssembly(), typeof(MainViewModel).Assembly);
+        }
+
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            base.ConfigureModuleCatalog(moduleCatalog);
+
+            moduleCatalog.AddModule<PrismModule>();
+        }
+
+        protected override void InitializeShell(Window shell)
+        {
+            base.InitializeShell(shell);
+
+            Container.GetContainer().RegisterShell(shell);
+            ViewModelLocator.SetAutoWireViewModel(shell, true);
+        }
+
+        protected override Window CreateShell() => new MainWindow();
     }
 }

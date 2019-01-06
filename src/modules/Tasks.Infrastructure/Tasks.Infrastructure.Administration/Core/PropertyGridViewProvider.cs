@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Autofac;
+﻿using System;
+using System.Windows;
 using Tasks.Infrastructure.Administration.Controls.PropertyGrid;
 using Tasks.Infrastructure.Administration.PropertyGrid;
 
@@ -16,7 +16,7 @@ namespace Tasks.Infrastructure.Administration.Core
 
         public int Priority { get; } = -10;
 
-        public UIElement GetView(object viewModel, IComponentContext context)
+        public UIElement GetView(object viewModel, IServiceProvider context)
         {
             if (viewModel is IProvideEditableProperties provideEditableProperties)
                 return new Controls.PropertyGrid.PropertyGrid

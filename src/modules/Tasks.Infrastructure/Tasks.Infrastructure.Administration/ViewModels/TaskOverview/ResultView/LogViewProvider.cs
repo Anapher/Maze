@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
-using Autofac;
 using Serilog.Events;
 using Serilog.Formatting.Compact.Reader;
 using Tasks.Infrastructure.Administration.Library.Result;
@@ -15,7 +15,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview.ResultView
     {
         public int Priority { get; set; } = 5;
 
-        public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IComponentContext context)
+        public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IServiceProvider serviceProvider)
         {
             if (responseMessage.Content?.Headers.ContentType.MediaType != "maze/jsonlog")
                 return null;

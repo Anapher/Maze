@@ -10,8 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="2.3.0" />
-    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
-    <PackageReference Include="Prism.Wpf" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj" />
     <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
+    <ProjectReference Include="..\submodules\Anapher.Wpf.Toolkit\Anapher.Wpf.Toolkit\Anapher.Wpf.Toolkit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

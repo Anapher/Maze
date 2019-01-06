@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Autofac;
+﻿using System;
+using System.Windows;
 
 namespace Tasks.Infrastructure.Administration.Library
 {
@@ -14,8 +14,8 @@ namespace Tasks.Infrastructure.Administration.Library
         ///     Get a view for a given view model
         /// </summary>
         /// <param name="viewModel">The view model that required a view</param>
-        /// <param name="context">The component context to resolve services or views</param>
+        /// <param name="serviceProvider"></param>
         /// <returns>Return the view for the given <see cref="viewModel"/>. If null, the next <see cref="ITaskServiceViewProvider"/> will be executed.</returns>
-        UIElement GetView(object viewModel, IComponentContext context);
+        UIElement GetView(object viewModel, IServiceProvider serviceProvider);
     }
 }

@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using Maze.Administration.Library.Clients;
-using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.ViewModels;
 using Prism.Regions;
 using RemoteDesktop.Administration.Channels;

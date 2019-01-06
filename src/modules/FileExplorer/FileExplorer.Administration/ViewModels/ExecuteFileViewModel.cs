@@ -1,12 +1,12 @@
 using System;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Windows;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Shared.Dtos;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.ViewModels;
-using Maze.Administration.Library.Views;
 using Prism.Regions;
 
 namespace FileExplorer.Administration.ViewModels
@@ -18,7 +18,7 @@ namespace FileExplorer.Administration.ViewModels
         private ITargetedRestClient _restClient;
         private string[] _availableVerbs;
         private bool? _dialogResult;
-        private AsyncRelayCommand _executeCommand;
+        private AsyncDelegateCommand _executeCommand;
         private string _filename;
 
         public ExecuteFileViewModel(IWindowService windowService)
@@ -67,11 +67,11 @@ namespace FileExplorer.Administration.ViewModels
             }
         }
 
-        public AsyncRelayCommand ExecuteCommand
+        public AsyncDelegateCommand ExecuteCommand
         {
             get
             {
-                return _executeCommand ?? (_executeCommand = new AsyncRelayCommand(async parameter =>
+                return _executeCommand ?? (_executeCommand = new AsyncDelegateCommand(async () =>
                 {
                     try
                     {
@@ -85,7 +85,6 @@ namespace FileExplorer.Administration.ViewModels
                 }));
             }
         }
-
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {

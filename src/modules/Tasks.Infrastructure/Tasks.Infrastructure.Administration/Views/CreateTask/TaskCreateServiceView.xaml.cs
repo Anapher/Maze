@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace Tasks.Infrastructure.Administration.Views.CreateTask
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace Tasks.Infrastructure.Administration.Views.CreateTask
     /// </summary>
     public partial class TaskCreateServiceView
     {
-        public TaskCreateServiceView(IShellWindow viewManager) : base(viewManager)
+        public TaskCreateServiceView()
         {
             InitializeComponent();
         }

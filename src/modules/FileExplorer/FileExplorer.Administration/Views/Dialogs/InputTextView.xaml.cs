@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Threading;
-using Maze.Administration.Library.Views;
 
 // ReSharper disable once CheckNamespace
 namespace FileExplorer.Administration.Views
@@ -11,7 +10,7 @@ namespace FileExplorer.Administration.Views
     /// </summary>
     public partial class InputTextView
     {
-        public InputTextView(IShellWindow viewManager) : base(viewManager)
+        public InputTextView()
         {
             InitializeComponent();
             Loaded += OnLoaded;

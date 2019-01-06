@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Microsoft.AspNetCore.SignalR.Client;
 using Maze.Administration.Library.Channels;
 using Maze.Administration.Library.Extensions;
 using Maze.Modules.Api;
+using Prism.Ioc;
 
 namespace Maze.Administration.Library.Clients
 {
@@ -52,7 +52,7 @@ namespace Maze.Administration.Library.Clients
 
         public string Username => _mazeRestClient.Username;
         public HubConnection HubConnection => _mazeRestClient.HubConnection;
-        public IComponentContext ServiceProvider => _mazeRestClient.ServiceProvider;
+        public IContainerProvider ServiceProvider => _mazeRestClient.ServiceProvider;
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {

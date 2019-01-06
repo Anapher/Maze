@@ -278,17 +278,4 @@
     <SolidColorBrush x:Key="EthernetChartFill" Color="#11FFAB1F" />
 
     <SolidColorBrush x:Key="ConsoleBackgroundBrush" Color="#FF2F2F2F" />
-
-    <Color x:Key="DialogBottomColor">#fdfdfd</Color>
-    <SolidColorBrush x:Key="DialogBottomBrush" Color="{StaticResource DialogBottomColor}" />
-    <Color x:Key="WindowButtonColor">#E5E5E5</Color>
-
-    <!--  Visual Studio Icons  -->
-    <SolidColorBrush x:Key="HaloBrush" Color="#FFF6F6F6" />
-    <SolidColorBrush x:Key="LightBrush1" Color="#FFF0EFF1" />
-    <SolidColorBrush x:Key="LightBrush2" Color="#FFEFEFF0" />
-    <SolidColorBrush x:Key="DarkBrush1" Color="#FF424242" />
-    <SolidColorBrush x:Key="DarkBrush2" Color="#FF414141" />
-    <SolidColorBrush x:Key="IconBlueBrush1" Color="#FF00529C" />
-    <SolidColorBrush x:Key="IconBlueBrush2" Color="#00539c" />
 </ResourceDictionary>

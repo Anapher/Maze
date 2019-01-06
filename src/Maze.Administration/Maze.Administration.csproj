@@ -1,277 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3287B9E9-D2D1-4D76-82ED-D8D9B80E75A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Maze.Administration</RootNamespace>
-    <AssemblyName>Maze.Administration</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <TargetFramework>net47</TargetFramework>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj" />
+    <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
+    <ProjectReference Include="..\Maze.Administration.ViewModels\Maze.Administration.ViewModels.csproj" />
+    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj" />
+    <ProjectReference Include="..\submodules\Anapher.Wpf.Toolkit\Anapher.Wpf.Toolkit.Metro\Anapher.Wpf.Toolkit.Metro.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Controls\FrameAnimationControl.cs" />
-    <Compile Include="Controls\StatusBar.cs" />
-    <Compile Include="Controls\TextBlockExtensions.cs" />
-    <Compile Include="Converter\GetGroupCheckedObserverConverter.cs" />
-    <Compile Include="Converter\NoNewLinesConverter.cs" />
-    <Compile Include="Converter\VersionRangeFormatterConverter.cs" />
-    <Compile Include="Extensions\BooleanComboboxData.cs" />
-    <Compile Include="Extensions\HyperlinkExtensions.cs" />
-    <Compile Include="Extensions\ListExtensions.cs" />
-    <Compile Include="Extensions\TextEditorExtensions.cs" />
-    <Compile Include="Factories\MenuFactory.cs" />
-    <Compile Include="Prism\ViewModelResolver.cs" />
-    <Compile Include="Services\AppDispatcher.cs" />
-    <Compile Include="Services\ClientCommandRegistrar.cs" />
-    <Compile Include="Services\ShellWindowFactory.cs" />
-    <Compile Include="Services\WindowService.cs" />
-    <Compile Include="ViewModule.cs" />
-    <Compile Include="Views\Main\ClientConfigurationView.xaml.cs">
-      <DependentUpon>ClientConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\AdministratorsView.xaml.cs">
-      <DependentUpon>AdministratorsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\Administrators\ChangeAdministratorPasswordView.xaml.cs">
-      <DependentUpon>ChangeAdministratorPasswordView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\Administrators\CreateAdministratorView.xaml.cs">
-      <DependentUpon>CreateAdministratorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\GroupsView.xaml.cs">
-      <DependentUpon>GroupsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\Groups\ChangeGroupNameView.xaml.cs">
-      <DependentUpon>ChangeGroupNameView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShellWindow.xaml.cs">
-      <DependentUpon>ShellWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\OverviewView.xaml.cs">
-      <DependentUpon>OverviewView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\ClientsView.xaml.cs">
-      <DependentUpon>ClientsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\Clients\DefaultClientListView.xaml.cs">
-      <DependentUpon>DefaultClientListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Main\Overview\ModulesView.xaml.cs">
-      <DependentUpon>ModulesView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Resources\Colors.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Styles\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Styles\Win10Window.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\Dark.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Themes\Light.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\VectorGraphics.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\VisualStudioIcons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Main\ClientConfigurationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\AdministratorsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\Administrators\ChangeAdministratorPasswordView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\Administrators\CreateAdministratorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\GroupsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\Groups\ChangeGroupNameView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShellWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controls\HeadFooterTabControl.cs" />
-    <Compile Include="Extensions\PasswordBoxExtensions.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\Main\LoginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\OverviewView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\ClientsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\Clients\DefaultClientListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Main\Overview\ModulesView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Resource Include="Resources\SyntaxHighlighting\Json.xshd" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AvalonEdit">
       <Version>5.0.4</Version>
     </PackageReference>
-    <PackageReference Include="MahApps.Metro">
-      <Version>1.6.5</Version>
-    </PackageReference>
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome">
       <Version>2.3.0</Version>
     </PackageReference>
-    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj">
-      <Project>{51DB7965-8C8C-4E44-BA1E-0A157D2DE6D9}</Project>
-      <Name>Maze.Administration.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Maze.Administration.Library\Maze.Administration.Library.csproj">
-      <Project>{8b7888a3-a402-4d7c-82bb-e1a2494c023d}</Project>
-      <Name>Maze.Administration.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Maze.Administration.ViewModels\Maze.Administration.ViewModels.csproj">
-      <Project>{34b39498-66bc-45a3-8502-44f15d28d670}</Project>
-      <Name>Maze.Administration.ViewModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj">
-      <Project>{42D5467F-20DB-4416-B673-0383304D098E}</Project>
-      <Name>Maze.ModuleManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj">
-      <Project>{de56441c-b66e-40c5-86b3-de881d7d09f7}</Project>
-      <Name>Anapher.Wpf.Swan</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj">
-      <Project>{dc6ba170-806f-4d6e-9165-401de852e304}</Project>
-      <Name>TxLib</Name>
-    </ProjectReference>
+    <!-- XAML elements -->
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icon.ico" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

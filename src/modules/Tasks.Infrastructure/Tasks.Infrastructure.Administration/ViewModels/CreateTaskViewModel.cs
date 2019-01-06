@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Services;
-using Maze.Administration.Library.Views;
 using Maze.Server.Connection.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Commands;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Rest.V1;
@@ -19,23 +19,23 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     public class CreateTaskViewModel : BindableBase
     {
         private readonly IWindowService _windowService;
-        private readonly IComponentContext _container;
+        private readonly IServiceProvider _serviceProvider;
         private DelegateCommand _createTaskCommand;
         private bool? _dialogResult;
         private bool _update;
 
-        public CreateTaskViewModel(IWindowService windowService, IComponentContext container)
+        public CreateTaskViewModel(IWindowService windowService, IServiceProvider serviceProvider)
         {
             _windowService = windowService;
-            _container = container;
+            _serviceProvider = serviceProvider;
             TreeViewModels = new List<ITaskConfiguringViewModel>
             {
                 new TaskSettingsViewModel {IsSelected = true},
-                new CommandsViewModel(windowService, container),
-                new AudienceViewModel(container.Resolve<IClientManager>()),
-                new TriggersViewModel(windowService, container),
-                new FiltersViewModel(windowService, container),
-                new StopEventsViewModel(windowService, container)
+                new CommandsViewModel(windowService, serviceProvider),
+                new AudienceViewModel(serviceProvider.GetRequiredService<IClientManager>()),
+                new TriggersViewModel(windowService, serviceProvider),
+                new FiltersViewModel(windowService, serviceProvider),
+                new StopEventsViewModel(windowService, serviceProvider)
             };
         }
 
@@ -77,9 +77,9 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                         return;
                     }
 
-                    var componentResolver = _container.Resolve<ITaskComponentResolver>();
-                    var xmlCache = _container.Resolve<IXmlSerializerCache>();
-                    var restClient = _container.Resolve<IRestClient>();
+                    var componentResolver = _serviceProvider.GetRequiredService<ITaskComponentResolver>();
+                    var xmlCache = _serviceProvider.GetRequiredService<IXmlSerializerCache>();
+                    var restClient = _serviceProvider.GetRequiredService<IRestClient>();
 
                     try
                     {

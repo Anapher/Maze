@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using Autofac;
-using Maze.Administration.Library.Views;
+using Anapher.Wpf.Toolkit.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Tasks.Infrastructure.Administration.Library;
 using Tasks.Infrastructure.Administration.Library.Trigger;
 using Tasks.Infrastructure.Administration.Utilities;
@@ -16,20 +17,20 @@ namespace Tasks.Infrastructure.Administration.ViewModels.CreateTask
     {
         private readonly IReadOnlyList<ITriggerViewProvider> _viewProviders;
 
-        public TriggersViewModel(IWindowService windowService, IComponentContext container) : base(windowService, container)
+        public TriggersViewModel(IWindowService windowService, IServiceProvider serviceProvider) : base(windowService, serviceProvider)
         {
-            _viewProviders = container.Resolve<IEnumerable<ITriggerViewProvider>>().OrderByDescending(x => x.Priority).ToList();
+            _viewProviders = serviceProvider.GetRequiredService<IEnumerable<ITriggerViewProvider>>().OrderByDescending(x => x.Priority).ToList();
         }
 
         public override TaskViewModelView CreateView(ITaskServiceDescription description)
         {
             var viewModelType = typeof(ITriggerViewModel<>).MakeGenericType(description.DtoType);
-            var viewModel = Container.Resolve(viewModelType);
+            var viewModel = ServiceProvider.GetRequiredService(viewModelType);
 
             UIElement view = null;
             foreach (var viewProvider in _viewProviders)
             {
-                view = viewProvider.GetView(viewModel, Container);
+                view = viewProvider.GetView(viewModel, ServiceProvider);
                 if (view != null)
                     break;
             }

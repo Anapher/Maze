@@ -3,6 +3,7 @@ using SystemInformation.Administration.ViewModels;
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -10,20 +11,17 @@ namespace SystemInformation.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("SystemInformation.Administration.Resources.SystemInformation.Translation.txd");
+        }
 
-            _registrar.Register<SystemInformationViewModel>("SystemInformation:SystemInformation", IconFactory.FromFactory(() => _icons.SystemInfo),
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            var registar = containerProvider.Resolve<IClientCommandRegistrar>();
+            var icons = containerProvider.Resolve<VisualStudioIcons>();
+
+            registar.Register<SystemInformationViewModel>("SystemInformation:SystemInformation", IconFactory.FromFactory(() => icons.SystemInfo),
                 CommandCategory.System);
         }
     }

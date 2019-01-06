@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Library\SessionKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Library\TaskExecutor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskDirectory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\AutofacUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\MessageThrottleService.cs" />
   </ItemGroup>
 </Project>

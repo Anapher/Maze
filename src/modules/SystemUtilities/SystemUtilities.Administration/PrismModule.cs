@@ -1,5 +1,6 @@
 using SystemUtilities.Administration.Resources;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -9,18 +10,13 @@ namespace SystemUtilities.Administration
     {
         public const string ModuleName = "SystemUtilities";
 
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("SystemUtilities.Administration.Resources.SystemUtilities.Translation.txd");
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
         }
     }
 }

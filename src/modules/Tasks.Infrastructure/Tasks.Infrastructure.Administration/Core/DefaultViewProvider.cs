@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using Autofac;
 
 namespace Tasks.Infrastructure.Administration.Core
 {
@@ -9,14 +8,14 @@ namespace Tasks.Infrastructure.Administration.Core
     {
         public int Priority { get; } = 0;
 
-        public UIElement GetView(object viewModel, IComponentContext context)
+        public UIElement GetView(object viewModel, IServiceProvider serviceProvider)
         {
             var viewModelType = viewModel.GetType();
             var viewType = ResolveViewType(viewModelType);
             if (viewType == null)
                 return null;
 
-            var view = context.ResolveOptional(viewType);
+            var view = serviceProvider.GetService(viewType);
             if (view == null)
                 return null;
 

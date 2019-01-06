@@ -7,7 +7,7 @@
     Width="1280"
     Height="720"
     ShowIconOnTitleBar="False"
-    Style="{StaticResource Win10Window}"
+    Style="{StaticResource MetroMainWindow}"
     TitleAlignment="Center"
     TitleCharacterCasing="Upper"
     TitlebarHeight="30"

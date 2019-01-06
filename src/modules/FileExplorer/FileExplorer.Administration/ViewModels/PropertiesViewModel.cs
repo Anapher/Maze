@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Toolkit;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels.Explorer;
@@ -125,6 +125,7 @@ namespace FileExplorer.Administration.ViewModels
                     }
                     catch (Exception e)
                     {
+                        //TODO replace with WindowService
                         MessageBoxEx.Show(e.ToString());
                     }
                     finally

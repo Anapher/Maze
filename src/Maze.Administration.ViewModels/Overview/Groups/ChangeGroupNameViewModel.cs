@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Rest.ClientGroups.V1;
 using Maze.Administration.Library.Services;
-using Maze.Administration.Library.Views;
 using Maze.Server.Connection.Clients;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -23,7 +23,7 @@ namespace Maze.Administration.ViewModels.Overview.Groups
         private ClientGroupViewModel _clientGroupViewModel;
         private bool? _dialogResult;
         private string _newGroupName;
-        private AsyncRelayCommand _okCommand;
+        private AsyncDelegateCommand _okCommand;
 
         public ChangeGroupNameViewModel(IClientManager clientManager, IWindowService windowService, IRestClient restClient)
         {
@@ -44,11 +44,11 @@ namespace Maze.Administration.ViewModels.Overview.Groups
             set => SetProperty(ref _dialogResult, value);
         }
 
-        public AsyncRelayCommand OkCommand
+        public AsyncDelegateCommand OkCommand
         {
             get
             {
-                return _okCommand ?? (_okCommand = new AsyncRelayCommand(async parameter =>
+                return _okCommand ?? (_okCommand = new AsyncDelegateCommand(async () =>
                 {
                     if (string.IsNullOrWhiteSpace(NewGroupName))
                         return;

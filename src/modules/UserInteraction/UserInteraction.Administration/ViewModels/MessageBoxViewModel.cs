@@ -1,9 +1,8 @@
 using System.Windows.Forms;
-using Anapher.Wpf.Swan.ViewInterface;
+using Anapher.Wpf.Toolkit.StatusBar;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
-using Maze.Administration.Library.StatusBar;
-using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Unclassified.TxLib;

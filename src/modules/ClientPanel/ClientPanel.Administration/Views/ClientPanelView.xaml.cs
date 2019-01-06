@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace ClientPanel.Administration.Views
 {
     /// <summary>

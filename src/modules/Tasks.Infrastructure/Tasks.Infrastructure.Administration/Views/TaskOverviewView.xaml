@@ -8,7 +8,7 @@
     xmlns:taskOverview1="clr-namespace:Tasks.Infrastructure.Administration.ViewModels.TaskOverview"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:Tasks.Infrastructure.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:TaskOverviewViewModel}"
     d:DesignHeight="580"

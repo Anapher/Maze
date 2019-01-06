@@ -6,7 +6,7 @@ using FileExplorer.Administration.Models.Args;
 using FileExplorer.Administration.Models.Cache;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
-using Maze.Administration.Library.StatusBar;
+using Maze.Administration.Library.Extensions;
 using Maze.Utilities;
 using Prism.Commands;
 using Unclassified.TxLib;

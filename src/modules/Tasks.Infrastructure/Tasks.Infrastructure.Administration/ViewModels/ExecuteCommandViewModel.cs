@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows;
-using Autofac;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Extensions;
-using Maze.Administration.Library.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Commands;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Administration.Library;
@@ -21,13 +21,13 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 {
     public class ExecuteCommandViewModel : BindableBase
     {
-        private readonly IComponentContext _container;
+        private readonly IServiceProvider _container;
         private readonly IWindowService _windowService;
         private AudienceCollection _audienceCollection;
         private bool? _dialogResult;
         private DelegateCommand _executeCommand;
 
-        public ExecuteCommandViewModel(IWindowService windowService, IComponentContext container)
+        public ExecuteCommandViewModel(IWindowService windowService, IServiceProvider container)
         {
             _windowService = windowService;
             _container = container;
@@ -86,10 +86,10 @@ namespace Tasks.Infrastructure.Administration.ViewModels
 
         private TaskViewModelView CreateView(ITaskServiceDescription description)
         {
-            var viewProviders = _container.Resolve<IEnumerable<ICommandViewProvider>>().OrderByDescending(x => x.Priority);
+            var viewProviders = _container.GetRequiredService<IEnumerable<ICommandViewProvider>>().OrderByDescending(x => x.Priority);
 
             var viewModelType = typeof(ICommandViewModel<>).MakeGenericType(description.DtoType);
-            var viewModel = _container.Resolve(viewModelType);
+            var viewModel = _container.GetRequiredService(viewModelType);
 
             UIElement view = null;
             foreach (var viewProvider in viewProviders)

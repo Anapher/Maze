@@ -2,7 +2,6 @@
     x:Class="Maze.Administration.Views.Main.Overview.ModulesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Maze.Administration.Controls"
     xmlns:converter="clr-namespace:Maze.Administration.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Maze.Administration.Extensions"
@@ -144,7 +143,7 @@
                                     <Run Text="{Binding Authors, Mode=OneWay}" />
                                 </TextBlock>
                                 <TextBlock
-                                    controls:TextBlockExtensions.LinesHeight="2"
+                                    extensions:TextBlockExtensions.LinesHeight="2"
                                     Text="{Binding Summary}"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="Wrap" />

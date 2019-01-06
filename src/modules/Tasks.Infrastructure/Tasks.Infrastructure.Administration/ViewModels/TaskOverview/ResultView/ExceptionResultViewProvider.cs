@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Windows;
-using Autofac;
 using Tasks.Infrastructure.Administration.Library.Result;
 using Tasks.Infrastructure.Administration.Views.TaskOverview.ResultView;
 using Tasks.Infrastructure.Core.Dtos;
@@ -11,7 +11,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels.TaskOverview.ResultView
     {
         public int Priority { get; set; } = 100000;
 
-        public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IComponentContext context)
+        public UIElement GetView(HttpResponseMessage responseMessage, CommandResultDto dto, IServiceProvider serviceProvider)
         {
             if (dto.Status != null)
                 return null;

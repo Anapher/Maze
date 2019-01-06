@@ -7,7 +7,7 @@
     xmlns:extensions="clr-namespace:Maze.Administration.Extensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     Title="{tx:T AdministratorsView:CreateAdministrator}"
     d:DataContext="{d:DesignInstance administrators:CreateAdministratorViewModel}"
     d:DesignWidth="500"

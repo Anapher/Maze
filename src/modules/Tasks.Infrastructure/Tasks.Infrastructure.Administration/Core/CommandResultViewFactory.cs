@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
-using Autofac;
 using Maze.Administration.Library.Logging;
 using Tasks.Infrastructure.Administration.Library.Result;
 using Tasks.Infrastructure.Administration.Utilities;
 using Tasks.Infrastructure.Core.Dtos;
+using Unity;
 
 namespace Tasks.Infrastructure.Administration.Core
 {
@@ -18,10 +18,10 @@ namespace Tasks.Infrastructure.Administration.Core
 
     public class CommandResultViewFactory : ICommandResultViewFactory
     {
-        private readonly ILifetimeScope _context;
+        private readonly IUnityContainer _context;
         private static readonly ILog Logger = LogProvider.For<CommandResultViewFactory>();
 
-        public CommandResultViewFactory(ILifetimeScope context)
+        public CommandResultViewFactory(IUnityContainer context)
         {
             _context = context;
         }
@@ -32,14 +32,15 @@ namespace Tasks.Infrastructure.Administration.Core
             if (commandResult.Status != null)
                 response = HttpResponseDeserializer.DecodeResponse(result);
 
-            using (var scope = _context.BeginLifetimeScope())
+            using (var scope = _context.CreateChildContainer())
             {
                 var viewProviders = scope.Resolve<IEnumerable<ICommandResultViewProvider>>().OrderByDescending(x => x.Priority);
+                var serviceProvider = scope.Resolve<IServiceProvider>();
 
                 foreach (var viewProvider in viewProviders)
                     try
                     {
-                        var view = viewProvider.GetView(response, commandResult, _context);
+                        var view = viewProvider.GetView(response, commandResult, serviceProvider);
                         if (view != null)
                             return view;
                     }

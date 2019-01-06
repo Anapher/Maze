@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace RegistryEditor.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class RegistryEditorView
     {
-        public RegistryEditorView(IShellWindow viewManager) : base(viewManager)
+        public RegistryEditorView()
         {
             InitializeComponent();
         }

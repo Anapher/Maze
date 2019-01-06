@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Toolkit;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
@@ -17,7 +17,7 @@ namespace FileExplorer.Administration.ViewModels
         private DelegateCommand _goBackCommand;
         private DelegateCommand _goForwardCommand;
         private DelegateCommand<string> _navigateToPathCommand;
-        private AsyncRelayCommand _refreshEntriesCommand;
+        private AsyncDelegateCommand _refreshEntriesCommand;
         private string _searchText;
 
         public void Initialize(FileExplorerViewModel fileExplorerViewModel)
@@ -76,11 +76,11 @@ namespace FileExplorer.Administration.ViewModels
             }
         }
 
-        public AsyncRelayCommand RefreshEntriesCommand
+        public AsyncDelegateCommand RefreshEntriesCommand
         {
             get
             {
-                return _refreshEntriesCommand ?? (_refreshEntriesCommand = new AsyncRelayCommand(parameter =>
+                return _refreshEntriesCommand ?? (_refreshEntriesCommand = new AsyncDelegateCommand(() =>
                            FileExplorerViewModel.OpenPath(FileExplorerViewModel.CurrentPath, true)));
             }
         }

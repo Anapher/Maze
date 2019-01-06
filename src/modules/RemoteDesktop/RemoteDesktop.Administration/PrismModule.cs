@@ -1,6 +1,7 @@
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using RemoteDesktop.Administration.Resources;
 using RemoteDesktop.Administration.ViewModels;
@@ -10,20 +11,17 @@ namespace RemoteDesktop.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("RemoteDesktop.Administration.Resources.RemoteDesktop.Translation.txd");
+        }
 
-            _registrar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => _icons.Monitor),
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            var registar = containerProvider.Resolve<IClientCommandRegistrar>();
+            var icons = containerProvider.Resolve<VisualStudioIcons>();
+
+            registar.Register<RemoteDesktopViewModel>("RemoteDesktop:Name", IconFactory.FromFactory(() => icons.Monitor),
                 CommandCategory.Surveillance);
         }
     }

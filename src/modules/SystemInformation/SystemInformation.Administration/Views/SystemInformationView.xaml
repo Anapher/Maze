@@ -10,7 +10,7 @@
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:value="clr-namespace:SystemInformation.Shared.Dtos.Value"
     xmlns:viewModels="clr-namespace:SystemInformation.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     d:DataContext="{d:DesignInstance viewModels:SystemInformationViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"

@@ -1,5 +1,4 @@
 using System.Windows;
-using Maze.Administration.Library.Views;
 using RegistryEditor.Administration.Resources;
 using RegistryEditor.Administration.ViewModels;
 
@@ -10,7 +9,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class CreateEditValueView
     {
-        public CreateEditValueView(IShellWindow viewManager, VisualStudioIcons icons) : base(viewManager)
+        public CreateEditValueView(VisualStudioIcons icons)
         {
             InitializeComponent();
             Icon = icons.Edit;

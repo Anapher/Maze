@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Reflection;
 using System.Windows;
-using Autofac;
 using Tasks.Infrastructure.Administration.Core;
 
 namespace Tasks.Common.Administration.ViewProvider
@@ -18,7 +17,7 @@ namespace Tasks.Common.Administration.ViewProvider
 
         public int Priority { get; set; } = 100;
 
-        public UIElement GetView(object viewModel, IComponentContext context)
+        public UIElement GetView(object viewModel, IServiceProvider serviceProvider)
         {
             var viewModelType = viewModel.GetType();
             if (viewModelType.Assembly != _currentAssembly)
@@ -28,7 +27,7 @@ namespace Tasks.Common.Administration.ViewProvider
             if (viewType == null)
                 return null;
 
-            var view = context.ResolveOptional(viewType);
+            var view = serviceProvider.GetService(viewType);
             if (view == null)
                 return null;
 

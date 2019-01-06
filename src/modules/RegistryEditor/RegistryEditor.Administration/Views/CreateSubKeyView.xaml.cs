@@ -1,5 +1,4 @@
 using System.Windows;
-using Maze.Administration.Library.Views;
 using RegistryEditor.Administration.Resources;
 
 namespace RegistryEditor.Administration.Views
@@ -9,7 +8,7 @@ namespace RegistryEditor.Administration.Views
     /// </summary>
     public partial class CreateSubKeyView
     {
-        public CreateSubKeyView(IShellWindow viewManager, VisualStudioIcons icons) : base(viewManager)
+        public CreateSubKeyView(VisualStudioIcons icons)
         {
             InitializeComponent();
             Icon = icons.NewSolutionFolder;

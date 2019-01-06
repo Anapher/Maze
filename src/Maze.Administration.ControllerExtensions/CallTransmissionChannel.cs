@@ -4,19 +4,19 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Autofac;
 using CodeElements.NetworkCall;
 using CodeElements.NetworkCall.NetSerializer;
 using Maze.Administration.Library.Channels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Maze.Administration.ControllerExtensions
 {
     public class CallTransmissionChannel<TInterface> : ChannelBase
     {
-        private readonly IComponentContext _serverProvider;
+        private readonly IServiceProvider _serverProvider;
         protected NetworkCallClient<TInterface> Client;
 
-        public CallTransmissionChannel(IComponentContext serverProvider)
+        public CallTransmissionChannel(IServiceProvider serverProvider)
         {
             _serverProvider = serverProvider;
         }
@@ -60,11 +60,11 @@ namespace Maze.Administration.ControllerExtensions
                 switch (serializer)
                 {
                     case var name when name.Equals("netserializer", StringComparison.OrdinalIgnoreCase):
-                        return _serverProvider.Resolve<NetSerializerNetworkSerializer>();
+                        return _serverProvider.GetRequiredService<NetSerializerNetworkSerializer>();
                 }
             }
 
-            return _serverProvider.Resolve<NetSerializerNetworkSerializer>(); //default
+            return _serverProvider.GetRequiredService<NetSerializerNetworkSerializer>(); //default
         }
 
         protected override void InternalDispose()

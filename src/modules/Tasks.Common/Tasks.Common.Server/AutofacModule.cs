@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Tasks.Common.Server.Triggers;
-using Tasks.Infrastructure.Core.Utilities;
+using Tasks.Infrastructure.Management.Utilities;
 
 namespace Tasks.Common.Server
 {

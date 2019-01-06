@@ -16,3 +16,6 @@
 [submodule "src/submodules/NuGet.Client"]
 	path = src/submodules/NuGet.Client
 	url = https://github.com/MazeAdmin/NuGet.Client
+[submodule "src/submodules/Anapher.Wpf.Toolkit"]
+	path = src/submodules/Anapher.Wpf.Toolkit
+	url = https://github.com/Anapher/Anapher.Wpf.Toolkit.git

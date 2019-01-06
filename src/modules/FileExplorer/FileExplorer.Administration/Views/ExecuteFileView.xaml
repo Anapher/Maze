@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     d:DataContext="{d:DesignInstance viewModels:ExecuteFileViewModel}"
     d:DesignWidth="500"
     DialogResult="{Binding DialogResult}"

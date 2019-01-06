@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Anapher.Wpf.Toolkit.Extensions;
 using FileExplorer.Administration.Resources;
 using FileExplorer.Administration.Rest;
 using FileExplorer.Administration.ViewModels;
@@ -10,7 +11,6 @@ using Microsoft.Win32;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Menu;
 using Maze.Administration.Library.Menu.MenuBase;
-using Maze.Administration.Library.StatusBar;
 using Maze.Administration.Library.ViewModels;
 using Maze.Utilities;
 using Unclassified.TxLib;

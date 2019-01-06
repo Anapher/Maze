@@ -16,7 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LibLog" Version="5.0.4">
+    <PackageReference Include="LibLog" Version="5.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -25,9 +25,9 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageReference Include="Maze.NuGet.Protocol" Version="1.0.0" />
-    <PackageReference Include="Prism.Autofac" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.4" />
     <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Unity.RegistrationByConvention" Version="2.1.9" />
     <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
 
@@ -42,7 +42,7 @@
     <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
     <ProjectReference Include="..\Maze.Sockets\Maze.Sockets.csproj" />
     <ProjectReference Include="..\Maze.Utilities\Maze.Utilities.csproj" />
-    <ProjectReference Include="..\submodules\Anapher.Swan.Wpf\Anapher.Wpf.Swan\Anapher.Wpf.Swan.csproj" />
+    <ProjectReference Include="..\submodules\Anapher.Wpf.Toolkit\Anapher.Wpf.Toolkit.Metro\Anapher.Wpf.Toolkit.Metro.csproj" />
     <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj" />
   </ItemGroup>
 

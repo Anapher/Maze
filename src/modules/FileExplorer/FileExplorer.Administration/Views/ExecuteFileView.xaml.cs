@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace FileExplorer.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace FileExplorer.Administration.Views
     /// </summary>
     public partial class ExecuteFileView
     {
-        public ExecuteFileView(IShellWindow viewManager) : base(viewManager)
+        public ExecuteFileView()
         {
             InitializeComponent();
         }

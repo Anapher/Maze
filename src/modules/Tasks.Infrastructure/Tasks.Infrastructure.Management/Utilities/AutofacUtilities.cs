@@ -5,7 +5,7 @@ using Tasks.Infrastructure.Core.Filter;
 using Tasks.Infrastructure.Core.StopEvents;
 using Tasks.Infrastructure.Core.Triggers;
 
-namespace Tasks.Infrastructure.Core.Utilities
+namespace Tasks.Infrastructure.Management.Utilities
 {
     public static class AutofacUtilities
     {

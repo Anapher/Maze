@@ -1,5 +1,5 @@
 ﻿using System;
-using Anapher.Wpf.Swan;
+using Anapher.Wpf.Toolkit.Utilities;
 using Prism.Mvvm;
 using Tasks.Infrastructure.Core.Dtos;
 

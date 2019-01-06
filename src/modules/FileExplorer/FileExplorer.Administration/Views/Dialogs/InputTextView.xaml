@@ -6,7 +6,7 @@
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:FileExplorer.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     d:DataContext="{d:DesignInstance viewModels:InputTextViewModel}"
     d:DesignHeight="100"
     d:DesignWidth="450"

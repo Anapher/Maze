@@ -10,7 +10,7 @@
     xmlns:registry="clr-namespace:RegistryEditor.Shared.Dtos"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:RegistryEditor.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance viewModels:CreateEditValueViewModel}"
     d:DesignHeight="450"

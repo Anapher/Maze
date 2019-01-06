@@ -6,7 +6,7 @@
     xmlns:groups="clr-namespace:Maze.Administration.ViewModels.Overview.Groups;assembly=Maze.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tx="http://unclassified.software/source/txtranslation"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     Title="{tx:T GroupsView:ChangeName}"
     d:DataContext="{d:DesignInstance groups:ChangeGroupNameViewModel}"
     d:DesignWidth="800"

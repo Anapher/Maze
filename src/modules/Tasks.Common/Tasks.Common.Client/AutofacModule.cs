@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Tasks.Infrastructure.Core.Utilities;
+using Tasks.Infrastructure.Management.Utilities;
 
 namespace Tasks.Common.Client
 {

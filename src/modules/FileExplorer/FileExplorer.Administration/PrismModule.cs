@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using FileExplorer.Administration.Menus;
 using FileExplorer.Administration.Resources;
+using FileExplorer.Administration.Utilities;
 using FileExplorer.Administration.ViewModels;
 using Maze.Administration.Library.Menu;
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -12,26 +15,33 @@ namespace FileExplorer.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IEnumerable<ContextMenuManager> _menuBuilders;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, IEnumerable<ContextMenuManager> menuBuilders,
-            VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _menuBuilders = menuBuilders;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("FileExplorer.Administration.Resources.FileExplorer.Translation.txd");
 
-            _registrar.Register<FileExplorerViewModel>("FileExplorer:FileExplorer", IconFactory.FromFactory(() => _icons.ListFolder),
+            containerRegistry.RegisterSingleton<FileExplorerContextMenu>();
+            containerRegistry.RegisterSingleton<ContextMenuManager, FileExplorerContextMenuManager>();
+
+            containerRegistry.RegisterSingleton<FileExplorerListDirectoryContextMenu>();
+            containerRegistry.RegisterSingleton<ContextMenuManager, ListDirectoryContextMenuManager>();
+
+            containerRegistry.RegisterSingleton<FileExplorerListFileContextMenu>();
+            containerRegistry.RegisterSingleton<ContextMenuManager, ListFileContextMenuManager>();
+
+            containerRegistry.RegisterSingleton<VisualStudioIcons>();
+            containerRegistry.RegisterSingleton<IImageProvider, ImageProvider>();
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            var registar = containerProvider.Resolve<IClientCommandRegistrar>();
+            var icons = containerProvider.Resolve<VisualStudioIcons>();
+            var builders = containerProvider.Resolve<IEnumerable<ContextMenuManager>>();
+
+            registar.Register<FileExplorerViewModel>("FileExplorer:FileExplorer", IconFactory.FromFactory(() => icons.ListFolder),
                 CommandCategory.System);
 
-            foreach (var contextMenuBuilder in _menuBuilders)
+            foreach (var contextMenuBuilder in builders)
                 contextMenuBuilder.Build();
         }
     }

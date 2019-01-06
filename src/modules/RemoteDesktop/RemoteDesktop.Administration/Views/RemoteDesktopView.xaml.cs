@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace RemoteDesktop.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace RemoteDesktop.Administration.Views
     /// </summary>
     public partial class RemoteDesktopView
     {
-        public RemoteDesktopView(IShellWindow viewManager) : base(viewManager)
+        public RemoteDesktopView()
         {
             InitializeComponent();
         }

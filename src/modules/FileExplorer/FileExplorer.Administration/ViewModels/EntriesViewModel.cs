@@ -10,14 +10,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using Anapher.Wpf.Swan;
-using Anapher.Wpf.Swan.Extensions;
+using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Extensions;
+using Anapher.Wpf.Toolkit.StatusBar;
+using Anapher.Wpf.Toolkit.Utilities;
 using FileExplorer.Administration.Models;
 using FileExplorer.Administration.ViewModels.Explorer;
 using FileExplorer.Administration.ViewModels.Explorer.Base;
 using FileExplorer.Shared.Dtos;
-using Maze.Administration.Library.StatusBar;
-using Maze.Administration.Library.Utilities;
 using Maze.Utilities;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -30,7 +30,7 @@ namespace FileExplorer.Administration.ViewModels
         private readonly TransactionalObservableCollection<EntryViewModel> _entryViewModels;
         private DelegateCommand<EntryViewModel> _enterNameEditingCommand;
         private FileExplorerViewModel _fileExplorerViewModel;
-        private AsyncRelayCommand<DirectoryViewModel> _openDirectoryCommand;
+        private AsyncDelegateCommand<DirectoryViewModel> _openDirectoryCommand;
         private DelegateCommand<IList> _removeEntriesCommand;
         private ListCollectionView _view;
         private DelegateCommand _refreshCommand;
@@ -53,12 +53,12 @@ namespace FileExplorer.Administration.ViewModels
             private set => SetProperty(ref _view, value);
         }
 
-        public AsyncRelayCommand<DirectoryViewModel> OpenDirectoryCommand
+        public AsyncDelegateCommand<DirectoryViewModel> OpenDirectoryCommand
         {
             get
             {
                 return _openDirectoryCommand ?? (_openDirectoryCommand =
-                           new AsyncRelayCommand<DirectoryViewModel>(parameter =>
+                           new AsyncDelegateCommand<DirectoryViewModel>(parameter =>
                                _fileExplorerViewModel.OpenPath(parameter.Source.Path)));
             }
         }

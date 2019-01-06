@@ -2,14 +2,16 @@ using System;
 using System.Linq;
 using System.Security;
 using System.Threading;
+using Anapher.Wpf.Toolkit;
 using NuGet.Frameworks;
 using Maze.Administration.Core;
 using Maze.Administration.Core.Modules;
 using Maze.Administration.Core.Rest;
 using Maze.Administration.Library.Exceptions;
+using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Rest.Modules.V1;
-using Maze.Administration.ViewModels.Utilities;
 using Maze.ModuleManagement;
+using Prism.Modularity;
 using Prism.Mvvm;
 using Unclassified.TxLib;
 
@@ -20,16 +22,15 @@ namespace Maze.Administration.ViewModels.Main
         private static readonly NuGetFramework
             Framework = FrameworkConstants.CommonFrameworks.MazeAdministration10; //TODO move somewhere else
 
-        private readonly Action<AppLoadContext> _loadAppAction;
         private string _errorMessage;
         private bool _isLoggingIn;
-        private AsyncRelayCommand<SecureString> _loginCommand;
+        private AsyncDelegateCommand<SecureString> _loginCommand;
         private string _statusMessage;
         private string _username;
 
-        public LoginViewModel(Action<AppLoadContext> loadAppAction)
+        public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog)
         {
-            _loadAppAction = loadAppAction;
+
         }
 
         public bool IsLoggingIn
@@ -56,11 +57,11 @@ namespace Maze.Administration.ViewModels.Main
             private set => SetProperty(ref _statusMessage, value);
         }
 
-        public AsyncRelayCommand<SecureString> LoginCommand
+        public AsyncDelegateCommand<SecureString> LoginCommand
         {
             get
             {
-                return _loginCommand ?? (_loginCommand = new AsyncRelayCommand<SecureString>(async parameter =>
+                return _loginCommand ?? (_loginCommand = new AsyncDelegateCommand<SecureString>(async parameter =>
                 {
                     IsLoggingIn = true;
 
@@ -93,18 +94,17 @@ namespace Maze.Administration.ViewModels.Main
                             await catalog.Load(modules);
                         }
 
-                        _loadAppAction(new AppLoadContext {ModulesCatalog = catalog, RestClient = client});
+                        //_loadAppAction(new AppLoadContext {ModulesCatalog = catalog, RestClient = client});
                     }
                     catch (RestAuthenticationException e)
                     {
-                        //ErrorMessage = e.GetRestExceptionMessage();
+                        ErrorMessage = e.GetRestExceptionMessage();
                         IsLoggingIn = false;
                     }
                     catch (Exception e)
                     {
                         ErrorMessage = e.Message;
                         IsLoggingIn = false;
-                        //e.ShowMessageBox();
                     }
                 }));
             }

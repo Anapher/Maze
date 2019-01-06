@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace SystemInformation.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace SystemInformation.Administration.Views
     /// </summary>
     public partial class SystemInformationView
     {
-        public SystemInformationView(IShellWindow viewManager) : base(viewManager)
+        public SystemInformationView()
         {
             InitializeComponent();
         }

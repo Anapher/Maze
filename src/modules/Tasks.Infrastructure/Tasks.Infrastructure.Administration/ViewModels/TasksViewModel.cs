@@ -6,15 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using Anapher.Wpf.Swan.Extensions;
-using Autofac;
+using Anapher.Wpf.Toolkit.Extensions;
 using MahApps.Metro.IconPacks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Services;
 using Maze.Administration.Library.ViewModels;
-using Maze.Administration.Library.Views;
 using Maze.Server.Connection.Utilities;
 using Maze.Utilities;
 using Prism.Commands;
@@ -24,6 +22,8 @@ using Tasks.Infrastructure.Administration.ViewModels.Overview;
 using Tasks.Infrastructure.Core;
 using Tasks.Infrastructure.Core.Dtos;
 using Unclassified.TxLib;
+using Anapher.Wpf.Toolkit.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Tasks.Infrastructure.Administration.ViewModels
 {
@@ -31,7 +31,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
     {
         private readonly IMazeRestClient _restClient;
         private readonly IAppDispatcher _dispatcher;
-        private readonly IComponentContext _services;
+        private readonly IServiceProvider _services;
         private readonly IWindowService _windowService;
         private DelegateCommand _createTaskCommand;
         private bool _isTasksLoaded;
@@ -46,7 +46,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
         private bool _isEventsInitialized;
         private DelegateCommand<PendingCommandViewModel> _openExecutionOverviewCommand;
 
-        public TasksViewModel(IWindowService windowService, IMazeRestClient restClient, IAppDispatcher dispatcher, IComponentContext services,
+        public TasksViewModel(IWindowService windowService, IMazeRestClient restClient, IAppDispatcher dispatcher, IServiceProvider services,
             CommandExecutionManager commandExecutionManager) : base(Tx.T("TasksInfrastructure:Tasks"), PackIconFontAwesomeKind.CalendarCheckRegular)
         {
             CommandExecutionManager = commandExecutionManager;
@@ -84,7 +84,7 @@ namespace Tasks.Infrastructure.Administration.ViewModels
                 return _openTaskSessionsCommand ?? (_openTaskSessionsCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
                     var sessions = await TasksResource.GetTaskSessions(parameter.Id, _restClient);
-                    using (var watcher = _services.Resolve<TaskActivityWatcher>())
+                    using (var watcher = _services.GetRequiredService<TaskActivityWatcher>())
                     {
                         watcher.InitializeWatch(parameter.Id, sessions);
 
@@ -144,8 +144,8 @@ namespace Tasks.Infrastructure.Administration.ViewModels
             {
                 return _updateTaskCommand ?? (_updateTaskCommand = new DelegateCommand<TaskViewModel>(async parameter =>
                 {
-                    var resolver = _services.Resolve<ITaskComponentResolver>();
-                    var xmlCache = _services.Resolve<IXmlSerializerCache>();
+                    var resolver = _services.GetRequiredService<ITaskComponentResolver>();
+                    var xmlCache = _services.GetRequiredService<IXmlSerializerCache>();
 
                     var task = await TasksResource.FetchTaskAsync(parameter.Id, resolver, xmlCache, _restClient);
                     _windowService.ShowDialog<CreateTaskViewModel>(vm => vm.UpdateTask(task));

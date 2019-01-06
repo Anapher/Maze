@@ -1,7 +1,7 @@
+using Anapher.Wpf.Toolkit.StatusBar;
+using Anapher.Wpf.Toolkit.Windows;
 using FileExplorer.Administration.Utilities;
 using Maze.Administration.Library.Services;
-using Maze.Administration.Library.StatusBar;
-using Maze.Administration.Library.Views;
 
 namespace FileExplorer.Administration.Models
 {

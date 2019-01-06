@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using Anapher.Wpf.Swan.ViewInterface;
+using Anapher.Wpf.Toolkit.Windows;
 using TaskDialogInterop;
 using Unclassified.TxLib;
 

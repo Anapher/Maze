@@ -1,9 +1,10 @@
 using System.Security;
-using Anapher.Wpf.Swan.ViewInterface;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Core.Modules;
 using Maze.Administration.ViewModels;
 using Maze.Administration.ViewModels.Main;
 using Maze.Administration.Views.Main;
+using Prism;
 using Prism.Mvvm;
 using Prism.Regions;
 
@@ -18,35 +19,32 @@ namespace Maze.Administration.Views
         {
             InitializeComponent();
 
-            var module = new PrismModule();
-            module.Initialize();
+//            DataContext = new LoginViewModel(LoadAppAction);
+//            MainContentControl.Content = new LoginView();
 
-            DataContext = new LoginViewModel(LoadAppAction);
-            MainContentControl.Content = new LoginView();
+//#if DEBUG
+//            var loginVm = (LoginViewModel) DataContext;
+//            loginVm.Username = "test";
+//            var pw = new SecureString();
+//            foreach (var c in "test")
+//                pw.AppendChar(c);
 
-#if DEBUG
-            var loginVm = (LoginViewModel) DataContext;
-            loginVm.Username = "test";
-            var pw = new SecureString();
-            foreach (var c in "test")
-                pw.AppendChar(c);
-
-            loginVm.LoginCommand.Execute(pw);
-#endif
+//            loginVm.LoginCommand.Execute(pw);
+//#endif
         }
 
-        private void LoadAppAction(AppLoadContext context)
-        {
-            MainContentControl.Content = null;
+        //private void LoadAppAction(AppLoadContext context)
+        //{
+        //    //MainContentControl.Content = null;
 
-            var bootstrapper = new Bootstrapper(context);
-            bootstrapper.Run();
-        }
+        //    //var bootstrapper = new Bootstrapper(context);
+        //    //bootstrapper.Run();
+        //}
 
-        public void InitializePrism()
-        {
-            ViewModelLocator.SetAutoWireViewModel(this, true);
-            RegionManager.SetRegionName(MainContentControl, "MainContent");
-        }
+        //public void InitializePrism()
+        //{
+        //    //ViewModelLocator.SetAutoWireViewModel(this, true);
+        //    //RegionManager.SetRegionName(MainContentControl, "MainContent");
+        //}
     }
 }

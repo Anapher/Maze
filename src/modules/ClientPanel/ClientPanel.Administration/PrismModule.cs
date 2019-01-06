@@ -1,4 +1,5 @@
-using Autofac;
+using Anapher.Wpf.Toolkit.Extensions;
+using Anapher.Wpf.Toolkit.Windows;
 using ClientPanel.Administration.Resources;
 using ClientPanel.Administration.ViewModels;
 using Maze.Administration.Library.Clients;
@@ -6,8 +7,8 @@ using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Menu.MenuBase;
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
-using Maze.Administration.Library.Views;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -49,6 +50,16 @@ namespace ClientPanel.Administration
                     }, null, out _);
                 })
             });
+        }
+
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

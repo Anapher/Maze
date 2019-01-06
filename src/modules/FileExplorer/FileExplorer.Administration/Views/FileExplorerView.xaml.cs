@@ -1,10 +1,10 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Autofac;
 using FileExplorer.Administration.Menus;
 using Maze.Administration.Library.Menu;
-using Maze.Administration.Library.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FileExplorer.Administration.Views
 {
@@ -13,9 +13,9 @@ namespace FileExplorer.Administration.Views
     /// </summary>
     public partial class FileExplorerView
     {
-        private readonly IComponentContext _scope;
+        private readonly IServiceProvider _scope;
 
-        public FileExplorerView(IShellWindow viewManager, IComponentContext scope) : base(viewManager)
+        public FileExplorerView(IServiceProvider scope)
         {
             InitializeComponent();
 
@@ -42,9 +42,9 @@ namespace FileExplorer.Administration.Views
                 ContextMenuExtensions.SetSelectedItems(fileContextMenu, EntriesView.EntriesGrid.SelectedItems);
                 ContextMenuExtensions.SetSelectedItems(directoryContextMenu, EntriesView.EntriesGrid.SelectedItems);
 
-                InitializeContextMenu(contextMenu, _scope.Resolve<FileExplorerContextMenuManager>());
-                InitializeContextMenu(fileContextMenu, _scope.Resolve<ListFileContextMenuManager>());
-                InitializeContextMenu(directoryContextMenu, _scope.Resolve<ListDirectoryContextMenuManager>());
+                InitializeContextMenu(contextMenu, _scope.GetRequiredService<FileExplorerContextMenuManager>());
+                InitializeContextMenu(fileContextMenu, _scope.GetRequiredService<ListFileContextMenuManager>());
+                InitializeContextMenu(directoryContextMenu, _scope.GetRequiredService<ListDirectoryContextMenuManager>());
                 ////InitializeStatusBar();
             }
         }

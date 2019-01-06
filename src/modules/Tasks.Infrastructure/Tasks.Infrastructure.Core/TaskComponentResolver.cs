@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Autofac;
 using Maze.Server.Connection.Extensions;
 using Tasks.Infrastructure.Core.Commands;
 using Tasks.Infrastructure.Core.Filter;
@@ -20,10 +19,8 @@ namespace Tasks.Infrastructure.Core
         private readonly IImmutableDictionary<string, Type> _stopEventTypes;
         private readonly IImmutableDictionary<string, Type> _triggerTypes;
 
-        public TaskComponentResolver(IComponentContext componentContext)
+        public TaskComponentResolver(IServiceProvider componentContext)
         {
-            var test = componentContext.Resolve<IEnumerable<CommandInfo>>();
-
             _filterTypes = ResolveTypes<FilterInfo>(componentContext);
             _triggerTypes = ResolveTypes<TriggerInfo>(componentContext);
             _stopEventTypes = ResolveTypes<StopEventInfo>(componentContext);
@@ -49,10 +46,11 @@ namespace Tasks.Infrastructure.Core
             throw new ArgumentException($"The type {type.FullName} is not supported.");
         }
 
-        private IImmutableDictionary<string, Type> ResolveTypes<T>(IComponentContext context)
+        private IImmutableDictionary<string, Type> ResolveTypes<T>(IServiceProvider context)
         {
             var name = typeof(T).Name;
-            return context.Resolve<IEnumerable<T>>()
+            var services = (IEnumerable<T>) context.GetService(typeof(IEnumerable<T>));
+            return services
                 .ToImmutableDictionary(x => x.GetType().Name.TrimEnd(name, StringComparison.Ordinal), x => x.GetType());
         }
     }

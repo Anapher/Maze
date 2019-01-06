@@ -4,17 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TreeViewEx.Controls;assembly=Anapher.TreeViewEx"
     xmlns:controls1="clr-namespace:RegistryEditor.Administration.Controls"
-    xmlns:converter="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan"
+    xmlns:converter="clr-namespace:Anapher.Wpf.Toolkit.Converter;assembly=Anapher.Wpf.Toolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:TreeViewEx.Extensions;assembly=Anapher.TreeViewEx"
-    xmlns:extensions1="clr-namespace:Maze.Administration.Library.Extensions;assembly=Maze.Administration.Library"
-    xmlns:listViewLayoutManager="clr-namespace:Anapher.Wpf.Swan.ListViewLayoutManager;assembly=Anapher.Wpf.Swan"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:TreeViewEx.Controls.Models;assembly=Anapher.TreeViewEx"
     xmlns:registryData="clr-namespace:RegistryEditor.Shared.Dtos"
+    xmlns:toolkitExt="clr-namespace:Anapher.Wpf.Toolkit.Extensions;assembly=Anapher.Wpf.Toolkit"
     xmlns:tx="http://unclassified.software/source/txtranslation"
     xmlns:viewModels="clr-namespace:RegistryEditor.Administration.ViewModels"
-    xmlns:views="clr-namespace:Maze.Administration.Library.Views;assembly=Maze.Administration.Library"
+    xmlns:views="clr-namespace:Anapher.Wpf.Toolkit.Metro.Views;assembly=Anapher.Wpf.Toolkit.Metro"
     d:DataContext="{d:DesignInstance viewModels:RegistryEditorViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -341,8 +340,8 @@
                 <DataGrid.RowStyle>
                     <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="DataGridRow">
                         <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                        <Setter Property="extensions1:ControlExtensions.DoubleClickCommand" Value="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.EditRegistryValueCommand}" />
-                        <Setter Property="extensions1:ControlExtensions.DoubleClickCommandParameter" Value="{Binding}" />
+                        <Setter Property="toolkitExt:ControlExtensions.DoubleClickCommand" Value="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.EditRegistryValueCommand}" />
+                        <Setter Property="toolkitExt:ControlExtensions.DoubleClickCommandParameter" Value="{Binding}" />
                     </Style>
                 </DataGrid.RowStyle>
             </DataGrid>

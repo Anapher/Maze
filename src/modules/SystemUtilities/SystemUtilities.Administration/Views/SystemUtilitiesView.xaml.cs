@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace SystemUtilities.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace SystemUtilities.Administration.Views
     /// </summary>
     public partial class SystemUtilitiesView
     {
-        public SystemUtilitiesView(IShellWindow viewManager) : base(viewManager)
+        public SystemUtilitiesView()
         {
             InitializeComponent();
         }

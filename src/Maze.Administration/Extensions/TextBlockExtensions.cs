@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Maze.Administration.Controls
+namespace Maze.Administration.Extensions
 {
     public static class TextBlockExtensions
     {

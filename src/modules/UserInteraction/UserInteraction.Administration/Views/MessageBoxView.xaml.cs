@@ -1,4 +1,3 @@
-using Maze.Administration.Library.Views;
 using UserInteraction.Administration.Resources;
 
 namespace UserInteraction.Administration.Views
@@ -8,7 +7,7 @@ namespace UserInteraction.Administration.Views
     /// </summary>
     public partial class MessageBoxView
     {
-        public MessageBoxView(IShellWindow viewManager, VisualStudioIcons icons) : base(viewManager)
+        public MessageBoxView(VisualStudioIcons icons)
         {
             InitializeComponent();
             Icon = icons.MessageBox;

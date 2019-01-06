@@ -3,6 +3,7 @@ using RegistryEditor.Administration.ViewModels;
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -10,20 +11,17 @@ namespace RegistryEditor.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("RegistryEditor.Administration.Resources.RegistryEditor.Translation.txd");
+        }
 
-            _registrar.Register<RegistryEditorViewModel>("RegistryEditor:Name", IconFactory.FromFactory(() => _icons.Registry), CommandCategory.System);
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            var registar = containerProvider.Resolve<IClientCommandRegistrar>();
+            var icons = containerProvider.Resolve<VisualStudioIcons>();
+
+            registar.Register<RegistryEditorViewModel>("RegistryEditor:Name", IconFactory.FromFactory(() => icons.Registry), CommandCategory.System);
         }
     }
 }

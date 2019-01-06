@@ -1,6 +1,7 @@
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
+using Prism.Ioc;
 using Prism.Modularity;
 using TaskManager.Administration.Resources;
 using TaskManager.Administration.ViewModels;
@@ -10,20 +11,19 @@ namespace TaskManager.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("TaskManager.Administration.Resources.TaskManager.Translation.txd");
 
-            _registrar.Register<TaskManagerViewModel>("TaskManager:TaskManager", IconFactory.FromFactory(() => _icons.Process),
+            containerRegistry.RegisterSingleton<VisualStudioIcons>();
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
+            var registrar = containerProvider.Resolve<IClientCommandRegistrar>();
+            var icons = containerProvider.Resolve<VisualStudioIcons>();
+
+            registrar.Register<TaskManagerViewModel>("TaskManager:TaskManager", IconFactory.FromFactory(() => icons.Process),
                 CommandCategory.System);
         }
     }

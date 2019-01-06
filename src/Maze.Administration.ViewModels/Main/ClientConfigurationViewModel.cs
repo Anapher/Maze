@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Rest.ClientConfigurations.V1;
-using Maze.Administration.Library.Views;
-using Maze.Administration.ViewModels.Utilities;
 using Maze.Server.Connection.Clients;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -19,7 +19,7 @@ namespace Maze.Administration.ViewModels.Main
         private int? _groupId;
         private DateTimeOffset? _lastUpdate;
         private bool? _dialogResult;
-        private AsyncRelayCommand<string> _okCommand;
+        private AsyncDelegateCommand<string> _okCommand;
 
         public ClientConfigurationViewModel(IRestClient restClient, IWindowService windowService)
         {
@@ -59,11 +59,11 @@ namespace Maze.Administration.ViewModels.Main
             Content = clientConfiguration.Content;
         }
 
-        public AsyncRelayCommand<string> OkCommand
+        public AsyncDelegateCommand<string> OkCommand
         {
             get
             {
-                return _okCommand ?? (_okCommand = new AsyncRelayCommand<string>(async parameter =>
+                return _okCommand ?? (_okCommand = new AsyncDelegateCommand<string>(async parameter =>
                 {
                     if (Content == parameter)
                     {
