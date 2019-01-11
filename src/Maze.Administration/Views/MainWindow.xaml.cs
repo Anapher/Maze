@@ -1,12 +1,4 @@
-using System.Security;
 using Anapher.Wpf.Toolkit.Windows;
-using Maze.Administration.Core.Modules;
-using Maze.Administration.ViewModels;
-using Maze.Administration.ViewModels.Main;
-using Maze.Administration.Views.Main;
-using Prism;
-using Prism.Mvvm;
-using Prism.Regions;
 
 namespace Maze.Administration.Views
 {
@@ -18,33 +10,6 @@ namespace Maze.Administration.Views
         public MainWindow()
         {
             InitializeComponent();
-
-//            DataContext = new LoginViewModel(LoadAppAction);
-//            MainContentControl.Content = new LoginView();
-
-//#if DEBUG
-//            var loginVm = (LoginViewModel) DataContext;
-//            loginVm.Username = "test";
-//            var pw = new SecureString();
-//            foreach (var c in "test")
-//                pw.AppendChar(c);
-
-//            loginVm.LoginCommand.Execute(pw);
-//#endif
         }
-
-        //private void LoadAppAction(AppLoadContext context)
-        //{
-        //    //MainContentControl.Content = null;
-
-        //    //var bootstrapper = new Bootstrapper(context);
-        //    //bootstrapper.Run();
-        //}
-
-        //public void InitializePrism()
-        //{
-        //    //ViewModelLocator.SetAutoWireViewModel(this, true);
-        //    //RegionManager.SetRegionName(MainContentControl, "MainContent");
-        //}
     }
 }

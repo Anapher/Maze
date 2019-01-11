@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Xml;
@@ -10,7 +11,6 @@ using Maze.Administration.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Unity;
 
 namespace Maze.Administration
@@ -41,6 +41,8 @@ namespace Maze.Administration
         {
             base.ConfigureModuleCatalog(moduleCatalog);
 
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+
             moduleCatalog.AddModule<PrismModule>();
             moduleCatalog.AddModule<ViewModule>();
         }
@@ -54,5 +56,11 @@ namespace Maze.Administration
         }
 
         protected override Window CreateShell() => new MainWindow();
+
+        private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var name = args.Name.Split(',').First();
+            return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.FullName.Split(',').First() == name);
+        }
     }
 }

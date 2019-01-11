@@ -61,7 +61,7 @@ namespace ModuleLocalUpdater
                     {
                         nugetFolderName = "admin10";
                         packagesDirectory =
-                            Path.Combine(solutionDirectory, "src\\Maze.Administration\\bin\\Debug\\packages");
+                            Path.Combine(solutionDirectory, "src\\Maze.Administration\\bin\\Debug\\net47\\packages");
                     }
                     else
                     {

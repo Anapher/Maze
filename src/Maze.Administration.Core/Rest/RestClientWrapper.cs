@@ -72,9 +72,10 @@ namespace Maze.Administration.Core.Rest
             return _restClient.SendChannelMessage(request, channel, cancellationToken);
         }
 
-        public void Initialize(IMazeRestClient restClient)
+        public void Initialize(MazeRestClient restClient)
         {
             _restClient = restClient;
+            restClient.ServiceProvider = ServiceProvider;
         }
     }
 }

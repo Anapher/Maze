@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading;
 using Anapher.Wpf.Toolkit;
+using Anapher.Wpf.Toolkit.Windows;
 using NuGet.Frameworks;
 using Maze.Administration.Core;
 using Maze.Administration.Core.Modules;
@@ -23,6 +25,7 @@ namespace Maze.Administration.ViewModels.Main
         private readonly IModuleManager _moduleManager;
         private readonly IModuleCatalog _catalog;
         private readonly IRegionManager _regionManager;
+        private readonly IWindowService _windowService;
         private readonly MazeRestClientWrapper _restClientWrapper;
 
         private static readonly NuGetFramework
@@ -34,11 +37,13 @@ namespace Maze.Administration.ViewModels.Main
         private string _statusMessage;
         private string _username;
 
-        public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog, IRegionManager regionManager, MazeRestClientWrapper restClientWrapper)
+        public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog, IRegionManager regionManager, IWindowService windowService,
+            MazeRestClientWrapper restClientWrapper)
         {
             _moduleManager = moduleManager;
             _catalog = catalog;
             _regionManager = regionManager;
+            _windowService = windowService;
             _restClientWrapper = restClientWrapper;
         }
 
@@ -78,7 +83,7 @@ namespace Maze.Administration.ViewModels.Main
                     {
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
-                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:54941/") };
+                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:54941/")};
                         var client = await MazeRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
@@ -87,8 +92,7 @@ namespace Maze.Administration.ViewModels.Main
 
                         var options = new ModulesOptions {LocalPath = "packages", TempPath = "temp"};
                         var directory = new ModulesDirectory(
-                            new VersionFolderPathResolverFlat(
-                                Environment.ExpandEnvironmentVariables(options.LocalPath)));
+                            new VersionFolderPathResolverFlat(Environment.ExpandEnvironmentVariables(options.LocalPath)));
                         var catalog = new ModulesCatalog(directory, Framework);
 
                         if (modules.Any())
@@ -104,7 +108,18 @@ namespace Maze.Administration.ViewModels.Main
 
                             foreach (var package in catalog.Packages)
                             {
-                                var moduleType = package.Assembly.GetExportedTypes().FirstOrDefault(x => typeof(IModule).IsAssignableFrom(x));
+                                Type moduleType;
+
+                                try
+                                {
+                                    moduleType = package.Assembly.GetExportedTypes().FirstOrDefault(x => typeof(IModule).IsAssignableFrom(x));
+                                }
+                                catch (FileLoadException e)
+                                {
+                                    _windowService.ShowErrorMessageBox($"{package.Context.Package}:\r\n{e.Message}");
+                                    return;
+                                }
+
                                 if (moduleType != null)
                                 {
                                     _catalog.AddModule(
@@ -124,11 +139,13 @@ namespace Maze.Administration.ViewModels.Main
                     catch (RestAuthenticationException e)
                     {
                         ErrorMessage = e.GetRestExceptionMessage();
-                        IsLoggingIn = false;
                     }
                     catch (Exception e)
                     {
                         ErrorMessage = e.Message;
+                    }
+                    finally
+                    {
                         IsLoggingIn = false;
                     }
                 }));
