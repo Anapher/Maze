@@ -13,12 +13,18 @@ using Maze.Administration.Library.Rest.Modules.V1;
 using Maze.ModuleManagement;
 using Prism.Modularity;
 using Prism.Mvvm;
+using Prism.Regions;
 using Unclassified.TxLib;
 
 namespace Maze.Administration.ViewModels.Main
 {
     public class LoginViewModel : BindableBase
     {
+        private readonly IModuleManager _moduleManager;
+        private readonly IModuleCatalog _catalog;
+        private readonly IRegionManager _regionManager;
+        private readonly MazeRestClientWrapper _restClientWrapper;
+
         private static readonly NuGetFramework
             Framework = FrameworkConstants.CommonFrameworks.MazeAdministration10; //TODO move somewhere else
 
@@ -28,9 +34,12 @@ namespace Maze.Administration.ViewModels.Main
         private string _statusMessage;
         private string _username;
 
-        public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog)
+        public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog, IRegionManager regionManager, MazeRestClientWrapper restClientWrapper)
         {
-
+            _moduleManager = moduleManager;
+            _catalog = catalog;
+            _regionManager = regionManager;
+            _restClientWrapper = restClientWrapper;
         }
 
         public bool IsLoggingIn
@@ -92,9 +101,25 @@ namespace Maze.Administration.ViewModels.Main
                             StatusMessage = Tx.T("LoginView:Status.LoadModules");
 
                             await catalog.Load(modules);
+
+                            foreach (var package in catalog.Packages)
+                            {
+                                var moduleType = package.Assembly.GetExportedTypes().FirstOrDefault(x => typeof(IModule).IsAssignableFrom(x));
+                                if (moduleType != null)
+                                {
+                                    _catalog.AddModule(
+                                        new ModuleInfo(package.Context.Package.Id, moduleType.AssemblyQualifiedName)
+                                        {
+                                            State = ModuleState.ReadyForInitialization
+                                        });
+
+                                    _moduleManager.LoadModule(package.Context.Package.Id);
+                                }
+                            }
                         }
 
-                        //_loadAppAction(new AppLoadContext {ModulesCatalog = catalog, RestClient = client});
+                        _restClientWrapper.Initialize(client);
+                        _regionManager.RequestNavigate(PrismModule.MainContent, PrismModule.MainContentOverviewView);
                     }
                     catch (RestAuthenticationException e)
                     {

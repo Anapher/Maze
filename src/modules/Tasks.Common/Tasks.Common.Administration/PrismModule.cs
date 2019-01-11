@@ -34,7 +34,7 @@ namespace Tasks.Common.Administration
                     type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ITaskServiceViewModel<>))),
                 type => type.GetInterfaces(), null, WithLifetime.Transient);
 
-            unityContainer.AsImplementedInterfaces<CommonViewProvider>(new TransientLifetimeManager());
+            unityContainer.AsImplementedInterfaces<CommonViewProvider, TransientLifetimeManager>();
 
             //RegisterTaskDtos
             unityContainer.RegisterAssemblyTypes<CommandInfo>(currentAssembly, WithLifetime.Transient);

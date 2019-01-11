@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace ClipboardManager.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace ClipboardManager.Administration.Views
     /// </summary>
     public partial class ClipboardManagerView
     {
-        public ClipboardManagerView(IShellWindow viewManager) : base(viewManager)
+        public ClipboardManagerView()
         {
             InitializeComponent();
         }

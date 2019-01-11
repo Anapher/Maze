@@ -52,7 +52,7 @@ namespace Maze.Administration.Library.Clients
 
         public string Username => _mazeRestClient.Username;
         public HubConnection HubConnection => _mazeRestClient.HubConnection;
-        public IContainerProvider ServiceProvider => _mazeRestClient.ServiceProvider;
+        public IServiceProvider ServiceProvider => _mazeRestClient.ServiceProvider;
 
         public async Task<HttpResponseMessage> SendMessage(HttpRequestMessage request, CancellationToken cancellationToken)
         {

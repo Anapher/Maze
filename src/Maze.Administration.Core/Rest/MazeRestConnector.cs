@@ -7,19 +7,12 @@ namespace Maze.Administration.Core.Rest
 {
     public static class MazeRestConnector
     {
-        private static HttpClient _cachedHttpClient;
-
         public static async Task<MazeRestClient> TryConnect(string username, SecureString password, IServerInfo serverInfo)
         {
-            if (_cachedHttpClient == null)
-                _cachedHttpClient =
-                    new HttpClient(new HttpClientHandler
-                    {
-                        AutomaticDecompression = DecompressionMethods.GZip,
-                    });
+            var httpClient =
+                new HttpClient(new HttpClientHandler {AutomaticDecompression = DecompressionMethods.GZip,}) {BaseAddress = serverInfo.ServerUri};
 
-            _cachedHttpClient.BaseAddress = serverInfo.ServerUri;
-            var client = new MazeRestClient(username, password, _cachedHttpClient);
+            var client = new MazeRestClient(username, password, httpClient);
             await client.Initialize();
             return client;
         }

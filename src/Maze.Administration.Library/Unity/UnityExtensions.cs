@@ -22,13 +22,14 @@ namespace Maze.Administration.Library.Unity
             unityContainer.RegisterTypes(assembly.ExportedTypes.Where(x => x.IsAssignableFrom(type)), _ => type.GetInterfaces(), null, lifetime);
         }
 
-        public static void AsImplementedInterfaces<TType>(this IUnityContainer unityContainer, LifetimeManager lifetimeManager)
+        public static void AsImplementedInterfaces<TType, TLifetimeManager>(this IUnityContainer unityContainer) where TLifetimeManager : LifetimeManager, new()
         {
             var type = typeof(TType);
             var interfaces = type.GetInterfaces();
 
-            unityContainer.RegisterType(type, type, null, lifetimeManager);
-            foreach (var implementedInterface in interfaces) unityContainer.RegisterType(type, implementedInterface, null, lifetimeManager);
+            unityContainer.RegisterType(type, type, null, new TLifetimeManager());
+            foreach (var implementedInterface in interfaces)
+                unityContainer.RegisterType(implementedInterface, type, null, new TLifetimeManager());
         }
     }
 }

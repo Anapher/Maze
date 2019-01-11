@@ -1,8 +1,6 @@
-using ClipboardManager.Administration.Resources;
-using ClipboardManager.Administration.ViewModels;
-using Maze.Administration.Library.Menus;
-using Maze.Administration.Library.Models;
-using Maze.Administration.Library.Services;
+using ClipboardManager.Administration.Utilities;
+using ClipboardManager.Shared.Utilities;
+using Prism.Ioc;
 using Prism.Modularity;
 using Unclassified.TxLib;
 
@@ -10,20 +8,16 @@ namespace ClipboardManager.Administration
 {
     public class PrismModule : IModule
     {
-        private readonly VisualStudioIcons _icons;
-        private readonly IClientCommandRegistrar _registrar;
-
-        public PrismModule(IClientCommandRegistrar registrar, VisualStudioIcons icons)
-        {
-            _registrar = registrar;
-            _icons = icons;
-        }
-
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("ClipboardManager.Administration.Resources.ClipboardManager.Translation.txd");
 
-            //_registrar.Register<ClipboardManagerViewModel>("ClipboardManager:Name", IconFactory.FromFactory(() => _icons.Icon), CommandCategory.System);
+            containerRegistry.RegisterSingleton<ClipboardWatcher>();
+            containerRegistry.Register<ClipboardSynchronizer>();
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
         }
     }
 }

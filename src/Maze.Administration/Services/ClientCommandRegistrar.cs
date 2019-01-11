@@ -1,29 +1,27 @@
 using System;
-using Autofac;
+using Anapher.Wpf.Toolkit.Windows;
 using Maze.Administration.Library.Clients;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Menu.MenuBase;
 using Maze.Administration.Library.Menus;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
-using Maze.Administration.Library.Views;
 using Prism.Commands;
 using Unclassified.TxLib;
+using Unity;
+using Unity.Injection;
 
 namespace Maze.Administration.Services
 {
     public class ClientCommandRegistrar : IClientCommandRegistrar
     {
         private readonly ClientsContextMenu _clientsContextMenu;
-        private readonly IMazeRestClient _mazeRestClient;
         private readonly IWindowService _windowService;
 
-        public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IWindowService windowService,
-            IMazeRestClient mazeRestClient)
+        public ClientCommandRegistrar(ClientsContextMenu clientsContextMenu, IWindowService windowService)
         {
             _clientsContextMenu = clientsContextMenu;
             _windowService = windowService;
-            _mazeRestClient = mazeRestClient;
         }
 
         public void Register<TViewModel>(string txLibResource, IIconFactory iconFactory, CommandCategory category)
@@ -37,8 +35,8 @@ namespace Maze.Administration.Services
                     _windowService.Show(typeof(TViewModel), builder =>
                     {
                         builder.RegisterInstance(model);
-                        builder.Register(_ => _mazeRestClient.CreateTargeted(model.ClientId))
-                            .SingleInstance();
+                        builder.RegisterSingleton<ITargetedRestClient>(new InjectionFactory(container =>
+                            container.Resolve<IMazeRestClient>().CreateTargeted(model.ClientId)));
                     }, window =>
                     {
                         window.TitleBarIcon = iconFactory.Create();

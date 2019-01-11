@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Maze.Administration.Library.Views;
 
 namespace Maze.Administration.Views.Main.Overview.Administrators
 {
@@ -8,7 +7,7 @@ namespace Maze.Administration.Views.Main.Overview.Administrators
     /// </summary>
     public partial class ChangeAdministratorPasswordView
     {
-        public ChangeAdministratorPasswordView(IShellWindow shellWindow) : base(shellWindow)
+        public ChangeAdministratorPasswordView()
         {
             InitializeComponent();
             Loaded += OnLoaded;

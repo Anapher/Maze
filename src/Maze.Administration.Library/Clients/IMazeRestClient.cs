@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Maze.Administration.Library.Channels;
 using Maze.Modules.Api;
-using Prism.Ioc;
 
 namespace Maze.Administration.Library.Clients
 {
@@ -13,7 +12,7 @@ namespace Maze.Administration.Library.Clients
     {
         string Username { get; }
         HubConnection HubConnection { get; }
-        IContainerProvider ServiceProvider { get; }
+        IServiceProvider ServiceProvider { get; }
         Task<TChannel> OpenChannel<TChannel>(HttpRequestMessage message, CancellationToken cancellationToken) where TChannel : IAwareDataChannel;
         Task<HttpResponseMessage> SendChannelMessage(HttpRequestMessage request, IDataChannel channel, CancellationToken cancellationToken);
     }

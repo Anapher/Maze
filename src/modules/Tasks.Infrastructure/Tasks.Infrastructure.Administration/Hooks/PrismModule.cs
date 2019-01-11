@@ -31,8 +31,8 @@ namespace Tasks.Infrastructure.Administration.Hooks
 
             unityContainer.RegisterAssemblyTypes<IPropertyEditorFactory>(currentAssembly, WithLifetime.Transient);
             unityContainer.RegisterType<IPropertyEditorFinder, DefaultPropertyEditorFinder>();
-            unityContainer.AsImplementedInterfaces<DefaultViewProvider>(new TransientLifetimeManager());
-            unityContainer.AsImplementedInterfaces<PropertyGridViewProvider>(new TransientLifetimeManager());
+            unityContainer.AsImplementedInterfaces<DefaultViewProvider, TransientLifetimeManager>();
+            unityContainer.AsImplementedInterfaces<PropertyGridViewProvider, TransientLifetimeManager>();
             unityContainer.RegisterSingleton<ITaskComponentResolver, TaskComponentResolver>();
             unityContainer.RegisterAssemblyTypes<ICommandResultViewProvider>(currentAssembly, WithLifetime.ContainerControlled);
             unityContainer.RegisterType<ICommandResultViewFactory, CommandResultViewFactory>();

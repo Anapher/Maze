@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +15,7 @@ using Maze.Administration.Library.Resources;
 using Maze.Administration.Library.Services;
 using Maze.Administration.Library.Unity;
 using Maze.Administration.Services;
+using Maze.Administration.ViewModels;
 using Maze.Administration.ViewModels.Overview.Groups;
 using Maze.Administration.Views.Main;
 using Maze.Administration.Views.Main.Overview;
@@ -31,58 +31,58 @@ namespace Maze.Administration
 {
     public class ViewModule : IModule
     {
-        private readonly IRegionManager _regionManager;
-        private readonly IClientManager _clientManager;
-        private readonly IWindowService _windowService;
-        private readonly IRestClient _restClient;
-
-        public ViewModule(IRegionManager regionManager, IClientManager clientManager, IWindowService windowService, IRestClient restClient)
-        {
-            _regionManager = regionManager;
-            _clientManager = clientManager;
-            _windowService = windowService;
-            _restClient = restClient;
-        }
-
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppDispatcher, AppDispatcher>();
             containerRegistry.RegisterSingleton<IMenuFactory, DefaultMenuFactory>();
+            containerRegistry.RegisterSingleton<IItemMenuFactory, ItemMenuFactory>();
             containerRegistry.RegisterSingleton<ClientsContextMenu>();
             containerRegistry.RegisterSingleton<OfflineClientsContextMenu>();
             containerRegistry.RegisterSingleton<IClientCommandRegistrar, ClientCommandRegistrar>();
             containerRegistry.RegisterSingleton<IShellWindowFactory, ShellWindowFactory>();
             containerRegistry.RegisterInstance<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
             containerRegistry.RegisterSingleton<ILibraryIcons, VisualStudioIcons>();
-            containerRegistry.GetContainer().AsImplementedInterfaces<UnityServiceProvider>(new TransientLifetimeManager());
+            containerRegistry.GetContainer().AsImplementedInterfaces<UnityServiceProvider, TransientLifetimeManager>();
+
+            containerRegistry.Register<object, LoginView>(PrismModule.MainContentLoginView);
+            containerRegistry.RegisterForNavigation<LoginView>(PrismModule.MainContent);
+
+            containerRegistry.Register<object, OverviewView>(PrismModule.MainContentOverviewView);
+            containerRegistry.RegisterForNavigation<OverviewView>(PrismModule.MainContent);
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _regionManager.RegisterViewWithRegion("MainContent", typeof(LoginView)); //OverviewView
+            var regionManager = containerProvider.Resolve<IRegionManager>();
 
-            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ClientsView));
-            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(GroupsView));
-            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ModulesView));
-            _regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(AdministratorsView));
+            regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ClientsView));
+            regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(GroupsView));
+            regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(ModulesView));
+            regionManager.RegisterViewWithRegion(RegionNames.OverviewTabs, typeof(AdministratorsView));
 
-            _regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));
+            regionManager.RegisterViewWithRegion(RegionNames.ClientListTabs, typeof(DefaultClientListView));
+
+            regionManager.RegisterViewWithRegion(PrismModule.MainContent, typeof(LoginView));
+
+            var windowService = containerProvider.Resolve<IWindowService>();
+            var restClient = containerProvider.Resolve<IRestClient>();
+            var clientManager = containerProvider.Resolve<IClientManager>();
 
             var clientsContextMenu = containerProvider.Resolve<ClientsContextMenu>();
-            InitializeGroupsContextMenu(clientsContextMenu);
+            InitializeGroupsContextMenu(clientsContextMenu, windowService, restClient, clientManager);
 
             var offlineClientsContextMenu = containerProvider.Resolve<OfflineClientsContextMenu>();
-            InitializeGroupsContextMenu(offlineClientsContextMenu);
+            InitializeGroupsContextMenu(offlineClientsContextMenu, windowService, restClient, clientManager);
         }
 
-        private void InitializeGroupsContextMenu(MenuSection<ItemCommand<ClientViewModel>> contextMenu)
+        private static void InitializeGroupsContextMenu(MenuSection<ItemCommand<ClientViewModel>> contextMenu, IWindowService windowService,
+            IRestClient restClient, IClientManager clientManager)
         {
             var menuItem = new MenuItem
             {
-                Style = (Style) Application.Current.Resources["ClientGroupsMenuItem"],
-                Tag = new GroupMenuItemViewModel(_windowService, _restClient)
+                Style = (Style) Application.Current.Resources["ClientGroupsMenuItem"], Tag = new GroupMenuItemViewModel(windowService, restClient)
             };
-            menuItem.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("GroupViewModels") {Source = _clientManager});
+            menuItem.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("GroupViewModels") {Source = clientManager});
 
             var section = new MenuSection<ItemCommand<ClientViewModel>> {new MenuItemEntry<ItemCommand<ClientViewModel>>(menuItem)};
             contextMenu.Add(section);

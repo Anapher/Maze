@@ -1,5 +1,3 @@
-using Maze.Administration.Library.Views;
-
 namespace ModuleTemplate.Administration.Views
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace ModuleTemplate.Administration.Views
     /// </summary>
     public partial class ModuleView
     {
-        public ModuleView(IShellWindow viewManager) : base(viewManager)
+        public ModuleView()
         {
             InitializeComponent();
         }

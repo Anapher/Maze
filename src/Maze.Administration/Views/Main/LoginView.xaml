@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="clr-namespace:Maze.Administration.Extensions"
+    xmlns:extensions="clr-namespace:Anapher.Wpf.Toolkit.Extensions;assembly=Anapher.Wpf.Toolkit"
     xmlns:main="clr-namespace:Maze.Administration.ViewModels.Main;assembly=Maze.Administration.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"

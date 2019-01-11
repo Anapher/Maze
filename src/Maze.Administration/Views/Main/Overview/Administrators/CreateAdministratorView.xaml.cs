@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Maze.Administration.Library.Views;
 
 namespace Maze.Administration.Views.Main.Overview.Administrators
 {
@@ -8,7 +7,7 @@ namespace Maze.Administration.Views.Main.Overview.Administrators
     /// </summary>
     public partial class CreateAdministratorView
     {
-        public CreateAdministratorView(IShellWindow window) : base(window)
+        public CreateAdministratorView()
         {
             InitializeComponent();
             Loaded += OnLoaded;

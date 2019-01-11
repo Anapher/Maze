@@ -11,7 +11,6 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Net.Http.Headers;
@@ -27,6 +26,7 @@ using Maze.Server.Connection.Error;
 using Maze.Sockets;
 using Maze.Sockets.Client;
 using Maze.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Maze.Administration.Core.Rest
 {
@@ -57,7 +57,7 @@ namespace Maze.Administration.Core.Rest
 
         public string Username { get; private set; }
         public HubConnection HubConnection { get; private set; }
-        public IComponentContext ServiceProvider { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         public async Task<TChannel> OpenChannel<TChannel>(HttpRequestMessage message, CancellationToken cancellationToken)
             where TChannel : IAwareDataChannel
@@ -69,7 +69,7 @@ namespace Maze.Administration.Core.Rest
                 throw new InvalidOperationException("The channel was not created");
 
             var channelId = int.Parse(response.Headers.Location.AbsolutePath.Trim('/'));
-            var channel = ServiceProvider.Resolve<TChannel>();
+            var channel = ServiceProvider.GetRequiredService<TChannel>();
             channel.CloseChannel += (sender, args) => OnCloseChannel(channelId);
             connection.AddChannel(channel, channelId);
 

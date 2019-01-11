@@ -5,6 +5,7 @@
     xmlns:converter="clr-namespace:Maze.Administration.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Maze.Administration.Extensions"
+    xmlns:extensions1="clr-namespace:Anapher.Wpf.Toolkit.Extensions;assembly=Anapher.Wpf.Toolkit"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modules="clr-namespace:Maze.Administration.ViewModels.Overview.Modules;assembly=Maze.Administration.ViewModels"
@@ -428,7 +429,7 @@
                                 FontWeight="Bold"
                                 Text="{tx:TC ModulesView:License}" />
                             <TextBlock>
-                                <Hyperlink extensions:HyperlinkExtensions.OpenInBrowser="True" NavigateUri="{Binding LicenseUri}">
+                                <Hyperlink extensions1:HyperlinkExtensions.OpenInBrowser="True" NavigateUri="{Binding LicenseUri}">
                                     <Run Text="{Binding LicenseUri, Mode=OneWay}" />
                                 </Hyperlink>
                             </TextBlock>
@@ -448,7 +449,7 @@
                                 FontWeight="Bold"
                                 Text="{tx:TC ModulesView:ProjectUrl}" />
                             <TextBlock>
-                                <Hyperlink extensions:HyperlinkExtensions.OpenInBrowser="True" NavigateUri="{Binding ProjectUri}">
+                                <Hyperlink extensions1:HyperlinkExtensions.OpenInBrowser="True" NavigateUri="{Binding ProjectUri}">
                                     <Run Text="{Binding ProjectUri, Mode=OneWay}" />
                                 </Hyperlink>
                             </TextBlock>

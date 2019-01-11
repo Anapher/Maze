@@ -10,6 +10,7 @@ using Maze.Administration.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Unity;
 
 namespace Maze.Administration
@@ -41,6 +42,7 @@ namespace Maze.Administration
             base.ConfigureModuleCatalog(moduleCatalog);
 
             moduleCatalog.AddModule<PrismModule>();
+            moduleCatalog.AddModule<ViewModule>();
         }
 
         protected override void InitializeShell(Window shell)

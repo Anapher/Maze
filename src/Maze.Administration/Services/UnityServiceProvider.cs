@@ -9,7 +9,7 @@ namespace Maze.Administration.Services
     {
         private IUnityContainer _container;
 
-        internal UnityServiceProvider(IUnityContainer container)
+        public UnityServiceProvider(IUnityContainer container)
         {
             _container = container;
             _container.RegisterInstance<IServiceScope>(this, new ExternallyControlledLifetimeManager());

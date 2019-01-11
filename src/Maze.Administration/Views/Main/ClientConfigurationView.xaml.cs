@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using Maze.Administration.Library.Views;
 using Maze.Administration.ViewModels.Main;
 
 namespace Maze.Administration.Views.Main
@@ -10,7 +9,7 @@ namespace Maze.Administration.Views.Main
     /// </summary>
     public partial class ClientConfigurationView
     {
-        public ClientConfigurationView(IShellWindow shellWindow) : base(shellWindow)
+        public ClientConfigurationView()
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;

@@ -4,14 +4,13 @@
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:controls="clr-namespace:Maze.Administration.Controls"
     xmlns:converter="clr-namespace:Maze.Administration.Converter"
-    xmlns:converter1="clr-namespace:Anapher.Wpf.Swan.Converter;assembly=Anapher.Wpf.Swan"
     xmlns:extensions="clr-namespace:Maze.Administration.Extensions"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:menu="clr-namespace:Maze.Administration.Library.Menu;assembly=Maze.Administration.Library"
-    xmlns:statusBar="clr-namespace:Maze.Administration.Library.StatusBar;assembly=Maze.Administration.Library"
+    xmlns:tkConverters="clr-namespace:Anapher.Wpf.Toolkit.Converter;assembly=Anapher.Wpf.Toolkit"
     xmlns:tx="http://unclassified.software/source/txtranslation">
 
-    <converter1:CloneConverter x:Key="CloneConverter" />
+    <tkConverters:CloneConverter x:Key="CloneConverter" />
 
     <!--#region HeadFooterTabControl-->
     <SolidColorBrush x:Key="TabControlBackgroundBrush" Color="#2b579a" />

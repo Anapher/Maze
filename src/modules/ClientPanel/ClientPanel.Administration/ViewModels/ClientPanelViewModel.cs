@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using SystemInformation.Administration.ViewModels;
 using SystemUtilities.Administration.Rest;
+using Anapher.Wpf.Toolkit.Windows;
 using ClientPanel.Administration.Rest;
 using ClipboardManager.Administration.Utilities;
 using Console.Administration.ViewModels;
@@ -22,6 +23,7 @@ using RemoteDesktop.Administration.Rest;
 using RemoteDesktop.Shared.Options;
 using TaskManager.Administration.ViewModels;
 using Unclassified.TxLib;
+using Unity;
 
 namespace ClientPanel.Administration.ViewModels
 {

@@ -1,5 +1,4 @@
 using System.Windows;
-using Maze.Administration.Library.Views;
 
 namespace Maze.Administration.Views.Main.Overview.Groups
 {
@@ -8,7 +7,7 @@ namespace Maze.Administration.Views.Main.Overview.Groups
     /// </summary>
     public partial class ChangeGroupNameView
     {
-        public ChangeGroupNameView(IShellWindow shellWindow) : base(shellWindow)
+        public ChangeGroupNameView()
         {
             InitializeComponent();
 

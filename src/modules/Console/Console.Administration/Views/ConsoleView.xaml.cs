@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using Console.Administration.ViewModels;
-using Maze.Administration.Library.Views;
 
 namespace Console.Administration.Views
 {
@@ -11,7 +10,7 @@ namespace Console.Administration.Views
     /// </summary>
     public partial class ConsoleView
     {
-        public ConsoleView(IShellWindow viewManager) : base(viewManager)
+        public ConsoleView()
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
