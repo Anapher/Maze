@@ -13,7 +13,6 @@
     DialogResult="{Binding DialogResult}"
     Icon="{StaticResource RenameIcon}"
     ResizeMode="NoResize"
-    ShowInTaskBar="False"
     WindowWidth="600"
     mc:Ignorable="d">
     <Grid>

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -12,6 +13,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Unity;
+using Unclassified.TxLib;
 
 namespace Maze.Administration
 {
@@ -20,6 +22,12 @@ namespace Maze.Administration
     /// </summary>
     public partial class App : PrismApplication
     {
+        public App()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("en");
+            Tx.SetCulture("en");
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

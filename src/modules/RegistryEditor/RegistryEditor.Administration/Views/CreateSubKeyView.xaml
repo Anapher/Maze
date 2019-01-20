@@ -15,7 +15,6 @@
     EscapeClosesWindow="True"
     FocusManager.FocusedElement="{Binding ElementName=NameTextBox}"
     ResizeMode="NoResize"
-    ShowInTaskBar="False"
     WindowWidth="480"
     mc:Ignorable="d">
     <StackPanel Margin="10" Orientation="Vertical">

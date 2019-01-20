@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Maze.Administration.Library.Unity;
 using Prism.Ioc;
@@ -19,6 +20,11 @@ namespace Tasks.Common.Administration
 {
     public class PrismModule : IModule
     {
+        private static bool IsTypeImplementingInterface(Type sourceType, Type genericInterface)
+        {
+            return sourceType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericInterface);
+        }
+
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             Tx.LoadFromEmbeddedResource("Tasks.Common.Administration.Resources.Tasks.Common.Translation.txd");
@@ -26,13 +32,14 @@ namespace Tasks.Common.Administration
             containerRegistry.RegisterSingleton<VisualStudioIcons>();
 
             var unityContainer = containerRegistry.GetContainer();
-            var currentAssembly = Assembly.GetCallingAssembly();
+            var currentAssembly = Assembly.GetExecutingAssembly();
 
             unityContainer.RegisterAssemblyTypesAsImplementedInterfaces<ITaskServiceDescription>(currentAssembly, WithLifetime.Transient);
+
             unityContainer.RegisterTypes(
-                currentAssembly.ExportedTypes.Where(type =>
-                    type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ITaskServiceViewModel<>))),
-                type => type.GetInterfaces(), null, WithLifetime.Transient);
+                currentAssembly.ExportedTypes.Where(type => IsTypeImplementingInterface(type, typeof(ITaskServiceViewModel<>))),
+                type => type.GetInterfaces().Where(x => IsTypeImplementingInterface(x, typeof(ITaskServiceViewModel<>))), null,
+                WithLifetime.Transient);
 
             unityContainer.AsImplementedInterfaces<CommonViewProvider, TransientLifetimeManager>();
 

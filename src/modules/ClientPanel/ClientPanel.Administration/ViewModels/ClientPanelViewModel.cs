@@ -196,7 +196,11 @@ namespace ClientPanel.Administration.ViewModels
             {
                 builder.RegisterInstance(_clientViewModel);
                 builder.RegisterInstance(_mazeRestClient.CreateTargeted(_clientViewModel));
-            }, null, null, out _);
+            }, window =>
+            {
+                window.Title = title;
+                window.ShowInTaskbar = true;
+            }, null, out _);
         }
 
         public override async void OnNavigatedTo(NavigationContext navigationContext)

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +27,8 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
+using Unity;
+using Unity.Injection;
 using Unity.Lifetime;
 
 namespace Maze.Administration
@@ -43,6 +47,11 @@ namespace Maze.Administration
             containerRegistry.RegisterInstance<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
             containerRegistry.RegisterSingleton<ILibraryIcons, VisualStudioIcons>();
             containerRegistry.GetContainer().AsImplementedInterfaces<UnityServiceProvider, TransientLifetimeManager>();
+
+            //enable IEnumerable resolving
+            containerRegistry.GetContainer().RegisterType(typeof(IEnumerable<>),
+                new InjectionFactory((container, type, name) =>
+                    container.ResolveAll(type.GetGenericArguments().Single())));
 
             containerRegistry.Register<object, LoginView>(PrismModule.MainContentLoginView);
             containerRegistry.RegisterForNavigation<LoginView>(PrismModule.MainContent);

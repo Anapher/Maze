@@ -9,7 +9,9 @@ using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Services;
 using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Unity;
 using Unclassified.TxLib;
+using Unity;
 
 namespace FileExplorer.Administration
 {
@@ -20,10 +22,12 @@ namespace FileExplorer.Administration
             Tx.LoadFromEmbeddedResource("FileExplorer.Administration.Resources.FileExplorer.Translation.txd");
 
             containerRegistry.RegisterSingleton<FileExplorerContextMenu>();
-            containerRegistry.RegisterSingleton<ContextMenuManager, FileExplorerContextMenuManager>();
+            //containerRegistry.RegisterSingleton<ContextMenuManager, FileExplorerContextMenuManager>();
+            containerRegistry.GetContainer().RegisterSingleton<ContextMenuManager, FileExplorerContextMenuManager>(nameof(FileExplorerContextMenuManager));
 
             containerRegistry.RegisterSingleton<FileExplorerListDirectoryContextMenu>();
-            containerRegistry.RegisterSingleton<ContextMenuManager, ListDirectoryContextMenuManager>();
+            containerRegistry.GetContainer().RegisterSingleton<ContextMenuManager, ListDirectoryContextMenuManager>(nameof(ListDirectoryContextMenuManager));
+            //containerRegistry.RegisterSingleton<ContextMenuManager, ListDirectoryContextMenuManager>();
 
             containerRegistry.RegisterSingleton<FileExplorerListFileContextMenu>();
             containerRegistry.RegisterSingleton<ContextMenuManager, ListFileContextMenuManager>();

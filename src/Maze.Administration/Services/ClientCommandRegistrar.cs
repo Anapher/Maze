@@ -41,6 +41,7 @@ namespace Maze.Administration.Services
                     {
                         window.TitleBarIcon = iconFactory.Create();
                         window.Title = Tx.T(txLibResource);
+                        window.ShowInTaskbar = true;
                     }, null, out _);
                 })
             });

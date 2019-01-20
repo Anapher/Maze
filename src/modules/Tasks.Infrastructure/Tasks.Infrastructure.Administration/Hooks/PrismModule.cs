@@ -27,12 +27,12 @@ namespace Tasks.Infrastructure.Administration.Hooks
             Tx.LoadFromEmbeddedResource("Tasks.Infrastructure.Administration.Resources.Tasks.Infrastructure.Translation.txd");
 
             var unityContainer = containerRegistry.GetContainer();
-            var currentAssembly = Assembly.GetCallingAssembly();
+            var currentAssembly = Assembly.GetExecutingAssembly();
 
             unityContainer.RegisterAssemblyTypes<IPropertyEditorFactory>(currentAssembly, WithLifetime.Transient);
             unityContainer.RegisterType<IPropertyEditorFinder, DefaultPropertyEditorFinder>();
-            unityContainer.AsImplementedInterfaces<DefaultViewProvider, TransientLifetimeManager>();
-            unityContainer.AsImplementedInterfaces<PropertyGridViewProvider, TransientLifetimeManager>();
+            unityContainer.AsImplementedInterfaces<DefaultViewProvider, TransientLifetimeManager>(nameof(DefaultViewProvider));
+            unityContainer.AsImplementedInterfaces<PropertyGridViewProvider, TransientLifetimeManager>(nameof(PropertyGridViewProvider));
             unityContainer.RegisterSingleton<ITaskComponentResolver, TaskComponentResolver>();
             unityContainer.RegisterAssemblyTypes<ICommandResultViewProvider>(currentAssembly, WithLifetime.ContainerControlled);
             unityContainer.RegisterType<ICommandResultViewFactory, CommandResultViewFactory>();

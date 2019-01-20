@@ -44,6 +44,7 @@ namespace ClientPanel.Administration
                     {
                         window.TitleBarIcon = icons.CodeDefinitionWindow;
                         window.Title = Tx.T("ClientPanel:ClientPanel");
+                        window.ShowInTaskbar = true;
                     }, null, out _);
                 })
             });

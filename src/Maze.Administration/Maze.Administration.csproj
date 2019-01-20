@@ -4,6 +4,7 @@
     <TargetFramework>net47</TargetFramework>
     <UseWPF>true</UseWPF>
     <Prefer32Bit>true</Prefer32Bit>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

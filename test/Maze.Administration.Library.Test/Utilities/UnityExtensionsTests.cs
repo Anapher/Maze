@@ -1,6 +1,10 @@
-﻿using Maze.Administration.Library.Unity;
+﻿using System;
+using System.Reflection;
+using Maze.Administration.Library.Unity;
 using Unity;
+using Unity.Exceptions;
 using Unity.Lifetime;
+using Unity.RegistrationByConvention;
 using Xunit;
 
 namespace Maze.Administration.Library.Test.Utilities
@@ -22,16 +26,51 @@ namespace Maze.Administration.Library.Test.Utilities
             Assert.Same(test1, cls);
         }
 
-        private class TestClass : ITestInterface1, ITestInterface2
+        [Fact]
+        public void TestRegisterAssemblyTypesAsImplementedInterfaces()
         {
+            var container = new UnityContainer();
+            container.RegisterAssemblyTypesAsImplementedInterfaces<ITestInterface1>(Assembly.GetExecutingAssembly(), WithLifetime.Transient);
+
+            var result = container.Resolve<ITestInterface1>();
+            Assert.NotNull(result);
+
+            var result2 = container.Resolve<ITestInterface2>();
+            Assert.NotNull(result2);
         }
 
-        public interface ITestInterface1
+        [Fact]
+        public void TestRegisterAssemblyTypes()
         {
+            var container = new UnityContainer();
+            container.RegisterAssemblyTypes<ITestInterface1>(Assembly.GetExecutingAssembly(), WithLifetime.Transient);
+
+            var result = container.Resolve<ITestInterface1>();
+            Assert.NotNull(result);
+
+            Assert.Throws<ResolutionFailedException>(() => container.Resolve<ITestInterface2>());
         }
 
-        public interface ITestInterface2
+        [Fact]
+        public void TestResolveEnumerable()
         {
+            var container = new UnityContainer();
+            container.RegisterInstance("Wtf1");
+            container.RegisterInstance("Wtf2");
+
+            container.resolve
         }
+    }
+
+    public class TestClass : ITestInterface1, ITestInterface2
+    {
+    }
+
+    public interface ITestInterface1
+    {
+    }
+
+    public interface ITestInterface2
+    {
     }
 }
