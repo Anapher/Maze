@@ -50,16 +50,6 @@ namespace Maze.Administration.Library.Test.Utilities
 
             Assert.Throws<ResolutionFailedException>(() => container.Resolve<ITestInterface2>());
         }
-
-        [Fact]
-        public void TestResolveEnumerable()
-        {
-            var container = new UnityContainer();
-            container.RegisterInstance("Wtf1");
-            container.RegisterInstance("Wtf2");
-
-            container.resolve
-        }
     }
 
     public class TestClass : ITestInterface1, ITestInterface2
