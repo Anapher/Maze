@@ -374,6 +374,7 @@
         <Setter Property="LineNumbersForeground" Value="#2b91af" />
         <Setter Property="Padding" Value="10,0,0,0" />
         <Setter Property="extensions:TextEditorExtensions.EnableNiceStyle" Value="True" />
+        <Setter Property="ContextMenu" Value="{StaticResource TextBoxMetroContextMenu}" />
     </Style>
     <!--#endregion-->
 </ResourceDictionary>

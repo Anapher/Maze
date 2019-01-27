@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://wixtoolset.org/schemas/v4/wxl">
+  <String Id="ProductName">Maze</String>
+  <String Id="CompanyName">Vincent</String>
+  <String Id="Language">1033</String>
+  <String Id="Description">Maze allows administrators to monitor and modify your system.</String>
+  <String Id="Keywords">dotnet,rat,application,remote,administration,tool</String>
+  <String Id="Comments">It's aMAZEing</String>
+  <String Id="DowngradeErrorMessage">A newer version of Maze is already installed.</String>
+</WixLocalization>

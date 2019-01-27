@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="Maze.Client:Description">Ein Windows Installationspaket (.msi), das den Client auf dem PC installiert.</text>
+		<text key="Maze.Client:Exceptions.NoLocationSelected">Es wurde kein Speicherort ausgewählt, an dem der Installer gespeichert werden soll.</text>
+		<text key="Maze.Client:SaveDialogFilter">Windows Installer Package (*.msi)|*.msi</text>
+		<text key="Maze.Client:SaveDialogTitle">Wählen Sie den Ort aus, an dem Sie den Maze Installer speichern wollen</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="Maze.Client:Description">A Windows installation package (.msi) that installs the client on the pc.</text>
+		<text key="Maze.Client:Exceptions.NoLocationSelected">No location to save the installer package selected.</text>
+		<text key="Maze.Client:SaveDialogFilter">Windows Installer Package (*.msi)|*.msi</text>
+		<text key="Maze.Client:SaveDialogTitle">Select the location where you want to save the Maze installer</text>
+	</culture>
+</translation>

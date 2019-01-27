@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?define ProductCode = "{B2FE16F5-D7B4-4350-BB37-CD108A23A70B}" ?>
+
+  <!-- Fixed upgrade Id -->
+  <?define UpgradeCode = "{DA21BD31-DD86-482A-8760-B35661E5CA69}" ?>
+
+  <Product Id="$(var.ProductCode)" Name="!(loc.ProductName)" Language="!(loc.Language)" Version="1.0.0.0" Manufacturer="!(loc.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
+		<Package
+			Comments="!(loc.Comments)"
+			InstallerVersion="200"
+			Compressed="yes"
+			InstallScope="perMachine"
+			Manufacturer="!(loc.Manufacturer)"
+			Description="!(loc.Description)"
+			Keywords="!(loc.Keywords)" />
+
+    <!-- Downgrade error message -->
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+
+    <!-- Include .cab file into .msi file -->
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Define main app icon -->
+    <Icon Id="icon.ico" SourceFile="$(var.CodeElements.Suite.ProjectDir)\Resources\icon.ico" />
+
+    <!-- Use the icon.ico icon for this installer (shows up in Add/Remove programs) -->
+    <Property Id="ARPPRODUCTICON">icon.ico</Property>
+
+    <!-- Help/Support website (shows in the Add/Remove programs) -->
+    <Property Id="ARPURLINFOABOUT">https://github.com/MazeAdmin/Maze</Property>
+
+    <!-- Create a basic UI for the installer -->
+    <UIRef Id="WixUI_InstallDir" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+    <WixVariable Id="WixUIDialogBmp" Value="Resources\WixUIDialogBmp.png" />
+
+		<Feature Id="ProductFeature" Title="Maze" Level="1">
+      <ComponentGroupRef Id="ReleaseComponents" />
+      <ComponentGroupRef Id="AppDataComponents" />
+		</Feature>
+	</Product>
+</Wix>

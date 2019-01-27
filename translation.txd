@@ -25,6 +25,7 @@
 		<text key="DefaultClientListView:Connected">Verbunden</text>
 		<text key="DefaultClientListView:IpAddress">IP-Adresse</text>
 		<text key="DefaultClientListView:SystemLanguage">Systemsprache</text>
+		<text key="DeployClientView:Build">Erstellen</text>
 		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
 		<text key="DoNotAskMeAgainForCurrentOperation">Für aktuelle Operation nicht erneut fragen</text>
@@ -302,6 +303,7 @@
 		<text key="DefaultClientListView:Connected">Connected</text>
 		<text key="DefaultClientListView:IpAddress">Ip Address</text>
 		<text key="DefaultClientListView:SystemLanguage">System Language</text>
+		<text key="DeployClientView:Build">Build</text>
 		<text key="Description">Description</text>
 		<text key="Done">Done</text>
 		<text key="DoNotAskMeAgainForCurrentOperation">Do not ask me again for the current operation</text>

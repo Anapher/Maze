@@ -5,7 +5,11 @@
     <UseWPF>true</UseWPF>
     <Prefer32Bit>true</Prefer32Bit>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Views\DeployClientView.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj" />
@@ -31,5 +35,11 @@
 
   <ItemGroup>
     <Resource Include="Resources\SyntaxHighlighting\Json.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\DeployClientView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

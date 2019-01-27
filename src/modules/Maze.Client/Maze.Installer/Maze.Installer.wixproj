@@ -6,8 +6,9 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>d68515c1-50cc-4403-a082-f603dd2d2b97</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Maze.Setup</OutputName>
+    <OutputName>Maze.Installer</OutputName>
     <OutputType>Package</OutputType>
+    <Name>Maze.Installer</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -19,7 +20,14 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Directories.wxs" />
     <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Common.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

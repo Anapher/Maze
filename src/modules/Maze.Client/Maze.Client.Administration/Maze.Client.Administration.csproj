@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <Description>Provides the client using a WiX installer</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.txd" />
+    <Content Include="../Maze.Installer/**/*.*" Link="wix/%(RecursiveDir)%(FileName)%(Extension)">
+      <Pack>true</Pack>
+      <PackagePath>lib/net47/wix</PackagePath>
+    </Content>
+    <Content Include="$(SolutionDir)src/Maze/bin/Release/*.*" Link="client/%(RecursiveDir)%(FileName)%(Extension)">
+      <Pack>true</Pack>
+      <PackagePath>lib/net47/client</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
+</Project>

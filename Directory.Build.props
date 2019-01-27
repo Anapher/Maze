@@ -4,10 +4,10 @@
     <Version>1.0</Version>
     <LangVersion>latest</LangVersion>
     <Authors>Anapher</Authors>
-    <Owners>MazeTechnologies</Owners>
-    <Copyright>Copyright 2018 Maze Technologies</Copyright>
-    <Company>Maze Technologies</Company>
-    <PackageProjectUrl>https://www.mazetechnologies.com/</PackageProjectUrl>
+    <Owners>Maze</Owners>
+    <Copyright>Copyright 2019 Vincent</Copyright>
+    <Company>Maze</Company>
+    <PackageProjectUrl>https://github.com/MazeAdmin</PackageProjectUrl>
     <PackageOutputPath>$(SolutionDir)artifacts</PackageOutputPath>
   </PropertyGroup>
 </Project>
