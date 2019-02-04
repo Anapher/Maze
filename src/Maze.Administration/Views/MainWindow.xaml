@@ -35,12 +35,8 @@
             </StackPanel>
         </DataTemplate>
     </mah:MetroWindow.TitleTemplate>
-    <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands>
-            <Button Command="{Binding DeployCommand}" Content="Deploy" />
-        </mah:WindowCommands>
-    </mah:MetroWindow.RightWindowCommands>
     <mah:TransitioningContentControl
+        x:Name="MainContentControl"
         regions:RegionManager.RegionName="{x:Static viewModels:PrismModule.MainContent}"
         Focusable="False"
         Transition="Down" />

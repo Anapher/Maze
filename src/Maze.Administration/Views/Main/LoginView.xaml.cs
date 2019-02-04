@@ -1,13 +1,13 @@
 using System.Security;
-using System.Windows.Controls;
 using Maze.Administration.ViewModels.Main;
+using Maze.Utilities;
 
 namespace Maze.Administration.Views.Main
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    ///     Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class LoginView
     {
         public LoginView()
         {
@@ -15,13 +15,13 @@ namespace Maze.Administration.Views.Main
 #if DEBUG
             Loaded += (sender, args) =>
             {
-                var loginVm = (LoginViewModel)DataContext;
+                var loginVm = (LoginViewModel) DataContext;
                 loginVm.Username = "test";
                 var pw = new SecureString();
                 foreach (var c in "test")
                     pw.AppendChar(c);
 
-                Utilities.TaskExtensions.Forget(loginVm.LoginCommand.Execute(pw));
+                TaskExtensions.Forget(loginVm.LoginCommand.Execute(pw));
             };
 #endif
         }
