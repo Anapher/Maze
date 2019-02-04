@@ -15,7 +15,9 @@ namespace Maze.Administration.ViewModels
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private DelegateCommand _cancelCommand;
+        private DelegateCommand _closeCommand;
         private bool? _dialogResult;
+        private bool _isFinished;
 
         public DeployClientBuildViewModel()
         {
@@ -30,16 +32,22 @@ namespace Maze.Administration.ViewModels
             set => SetProperty(ref _dialogResult, value);
         }
 
+        public bool IsFinished
+        {
+            get => _isFinished;
+            set => SetProperty(ref _isFinished, value);
+        }
+
+        public bool Succeeded { get; set; }
+
         public DelegateCommand CancelCommand
         {
-            get
-            {
-                return _cancelCommand ?? (_cancelCommand = new DelegateCommand(() =>
-                {
-                    _cancellationTokenSource.Cancel();
-                    DialogResult = true;
-                }));
-            }
+            get { return _cancelCommand ?? (_cancelCommand = new DelegateCommand(() => { _cancellationTokenSource.Cancel(); })); }
+        }
+
+        public DelegateCommand CloseCommand
+        {
+            get { return _closeCommand ?? (_closeCommand = new DelegateCommand(() => { DialogResult = Succeeded; })); }
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -57,18 +65,23 @@ namespace Maze.Administration.ViewModels
             try
             {
                 await clientDeployer.Deploy(groups, this, _cancellationTokenSource.Token);
+                this.Log(LogLevel.None, new EventId(1), null);
+                Succeeded = true;
             }
             catch (OperationCanceledException)
             {
-                this.LogError("The operating was cancelled.");
+                this.Log(LogLevel.None, new EventId(-1), null);
                 return false;
             }
             catch (Exception e)
             {
-                this.LogCritical(e, "An unexpected error occurred.");
+                this.Log(LogLevel.None, new EventId(-2), e, null);
                 return false;
             }
-
+            finally
+            {
+                IsFinished = true;
+            }
             return true;
         }
     }

@@ -97,9 +97,15 @@ namespace Maze.Client.Administration.Core
                     _wixExtensions, objFolder.FullName, wixMainFiles.Concat(new[] {releaseComponentsPath, packagesComponent, appDataComponent}),
                     logger, cancellationToken);
 
-                await _wixTools.Light.Compile(outputFilename, outputFilename + ".pdb", _wixExtensions,
-                    _fileSystem.Directory.GetFiles(_wixFilesDirectory, "*.wxl"), objFolder.GetFiles("*.wixobj").Select(x => x.FullName), logger,
-                    cancellationToken);
+                var compilationInfo = new WixLightCompilationInfo
+                {
+                    OutputFilename = outputFilename,
+                    Extensions = _wixExtensions,
+                    ObjectFiles = objFolder.GetFiles("*.wixobj").Select(x => x.FullName),
+                    LocalizationFiles = _fileSystem.Directory.GetFiles(_wixFilesDirectory, "*.wxl"),
+                    SuppressedICEs = new []{ "ICE38", "ICE64" }
+                };
+                await _wixTools.Light.Compile(compilationInfo, logger, cancellationToken);
             }
             finally
             {

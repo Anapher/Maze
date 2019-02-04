@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,17 +19,46 @@ namespace Maze.Client.Administration.Core.Wix.Tools
             _toolRunner = toolRunner;
         }
 
-        public Task Compile(string outputFilename, string pdbOutputFilename, IEnumerable<string> extensions, IEnumerable<string> localizationFiles,
-            IEnumerable<string> objFiles, ILogger logger, CancellationToken cancellationToken)
+        public Task Compile(WixLightCompilationInfo compilationInfo, ILogger logger, CancellationToken cancellationToken)
         {
             var arguments = new List<ICommandLinePart>
             {
-                new CliArgument("out", new CliPath(outputFilename)), new CliArgument("pdbout", new CliPath(pdbOutputFilename))
+                new CliArgument("out", new CliPath(compilationInfo.OutputFilename)),
+                new CliArgument("pdbout", new CliPath(compilationInfo.PdbOutputFilename))
             };
-            arguments.AddRange(extensions.Select(x => new CliArgument("ext", x)));
-            arguments.AddRange(localizationFiles.Select(x => new CliArgument("loc", new CliPath(x))));
-            arguments.AddRange(objFiles.Select(x => new CliPath(x)));
+
+            if (compilationInfo.Extensions != null)
+                arguments.AddRange(compilationInfo.Extensions.Select(x => new CliArgument("ext", x)));
+
+            if (compilationInfo.LocalizationFiles != null)
+                arguments.AddRange(compilationInfo.LocalizationFiles.Select(x => new CliArgument("loc", new CliPath(x))));
+
+            if (compilationInfo.SuppressedICEs != null)
+                arguments.AddRange(compilationInfo.SuppressedICEs.Select(x => new CliArgument("sice:" + x)));
+
+            if (compilationInfo.ObjectFiles != null)
+                arguments.AddRange(compilationInfo.ObjectFiles.Select(x => new CliPath(x)));
+
             return _toolRunner.Run(ToolName, logger, cancellationToken, arguments.ToArray());
+        }
+    }
+
+    public class WixLightCompilationInfo
+    {
+        private string _pdbOutputFilename;
+
+        public string OutputFilename { get; set; }
+        public IEnumerable<string> Extensions { get; set; }
+        public IEnumerable<string> LocalizationFiles { get; set; }
+        public IEnumerable<string> SuppressedICEs { get; set; }
+        public IEnumerable<string> ObjectFiles { get; set; }
+
+        public string PdbOutputFilename
+        {
+            get =>
+                _pdbOutputFilename ?? Path.Combine(Path.GetDirectoryName(OutputFilename),
+                    Path.GetFileNameWithoutExtension(OutputFilename) + "wixpdb");
+            set => _pdbOutputFilename = value;
         }
     }
 }

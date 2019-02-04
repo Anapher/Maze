@@ -39,9 +39,20 @@
             <Button
                 MinWidth="80"
                 Margin="10"
-                HorizontalAlignment="Right"
-                Command="{Binding CancelCommand}"
-                Content="{tx:T Cancel}" />
+                HorizontalAlignment="Right">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource MetroButton}" TargetType="Button">
+                        <Setter Property="Content" Value="{tx:T Cancel}" />
+                        <Setter Property="Command" Value="{Binding CancelCommand}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFinished}" Value="true">
+                                <Setter Property="Content" Value="{tx:T Close}" />
+                                <Setter Property="Command" Value="{Binding CloseCommand}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Border>
     </Grid>
 </views:WindowUserControl>

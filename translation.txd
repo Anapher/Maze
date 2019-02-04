@@ -19,6 +19,7 @@
 		<text key="ClientConfiguration:UpdateConfiguration">Konfiguration aktualisieren</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Close">Schließen</text>
 		<text key="Configuration">Konfiguration</text>
 		<text key="Copy">Kopieren</text>
 		<text key="Create">Erstellen</text>
@@ -28,6 +29,9 @@
 		<text key="DeployClientView:Build">Erstellen</text>
 		<text key="DeployClientView:BuildingClient">Erstelle Client...</text>
 		<text key="DeployClientView:ClientDeployment">Client Erstellen</text>
+		<text key="DeployClientView:Messages.BuildSucceeded">Erfolgreich erstellt</text>
+		<text key="DeployClientView:Messages.OperationCancelled">Vorgang abgebrochen</text>
+		<text key="DeployClientView:Messages.UnexpectedError">Ein unerwarteter Fehler ist aufgetreten</text>
 		<text key="DeployClientView:SelectClientDeployer">Bitte wählen Sie einen Client-Bereitsteller aus</text>
 		<text key="Description">Beschreibung</text>
 		<text key="Done">Abgeschlossen</text>
@@ -300,6 +304,7 @@
 		<text key="ClientConfiguration:UpdateConfiguration">Update configuration</text>
 		<text key="Clients">Clients</text>
 		<text key="Clients" count="1">Client</text>
+		<text key="Close">Close</text>
 		<text key="Configuration">Configuration</text>
 		<text key="Copy">Copy</text>
 		<text key="Create">Create</text>
@@ -309,6 +314,9 @@
 		<text key="DeployClientView:Build">Build</text>
 		<text key="DeployClientView:BuildingClient">Building Client...</text>
 		<text key="DeployClientView:ClientDeployment">Client Deployment</text>
+		<text key="DeployClientView:Messages.BuildSucceeded">Build succeeded</text>
+		<text key="DeployClientView:Messages.OperationCancelled">Operation cancelled</text>
+		<text key="DeployClientView:Messages.UnexpectedError">An unexpected error occurred</text>
 		<text key="DeployClientView:SelectClientDeployer">Please select a client deployer</text>
 		<text key="Description">Description</text>
 		<text key="Done">Done</text>

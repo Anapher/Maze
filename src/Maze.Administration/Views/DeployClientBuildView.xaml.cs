@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Maze.Administration.ViewModels;
 using Microsoft.Extensions.Logging;
+using Unclassified.TxLib;
 
 namespace Maze.Administration.Views
 {
@@ -28,6 +29,9 @@ namespace Maze.Administration.Views
         };
 
         private readonly Brush _timeBrush = new SolidColorBrush(Color.FromRgb(243, 156, 18));
+        private readonly Brush _succeededBrush = new SolidColorBrush(Color.FromRgb(46, 204, 113));
+        private readonly Brush _cancelledBrush = new SolidColorBrush(Color.FromRgb(52, 152, 219));
+        private readonly Brush _errorBrush = new SolidColorBrush(Color.FromRgb(231, 76, 60));
 
         public DeployClientBuildView()
         {
@@ -51,12 +55,40 @@ namespace Maze.Administration.Views
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
+                var now = DateTimeOffset.Now;
+                _paragraph.Inlines.Add(new Run(now.ToString("HH:mm:ss.ff") + " ") {Foreground = _timeBrush});
+
+                switch (eventId.Id)
+                {
+                    case 1:
+                        _paragraph.Inlines.Add(
+                            new Run(Tx.T("DeployClientView:Messages.BuildSucceeded")) {Foreground = _succeededBrush, FontWeight = FontWeights.Bold});
+                        return;
+                    case -1:
+                        _paragraph.Inlines.Add(
+                            new Run(Tx.T("DeployClientView:Messages.OperationCancelled"))
+                            {
+                                Foreground = _cancelledBrush, FontWeight = FontWeights.Bold
+                            });
+                        return;
+                    case -2:
+                        _paragraph.Inlines.Add(
+                            new Run(Tx.T("DeployClientView:Messages.UnexpectedError"))
+                            {
+                                Foreground = _errorBrush, FontWeight = FontWeights.Bold
+                            });
+                        if (exception != null)
+                        {
+                            _paragraph.Inlines.Add(new LineBreak());
+                            _paragraph.Inlines.Add(new Run(exception.ToString()));
+                        }
+                        return;
+                }
+
                 var brush = _logLevelBrushes[logLevel];
                 var prefix = logLevel.ToString().ToUpper();
-                var now = DateTimeOffset.Now;
 
-                _paragraph.Inlines.Add(new Run(now.ToString("HH:mm:ss.ff")) {Foreground = _timeBrush});
-                _paragraph.Inlines.Add(new Run($" [{prefix}] {formatter(state, exception)}") { Foreground = brush });
+                _paragraph.Inlines.Add(new Run($"[{prefix}] {formatter(state, exception)}") { Foreground = brush });
                 _paragraph.Inlines.Add(new LineBreak());
 
                 LogRichTextBox.ScrollToEnd();
