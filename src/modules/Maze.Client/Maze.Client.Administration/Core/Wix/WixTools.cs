@@ -4,17 +4,15 @@ namespace Maze.Client.Administration.Core.Wix
 {
     public class WixTools
     {
-        public string Directory { get; }
-
-        public WixTools(string directory)
+        public WixTools(IWixToolRunner toolRunner)
         {
-            Directory = directory;
-
-            Heat = new WixHeatTool(this);
-            Candle = new WixCandleTool(this);
+            Heat = new WixHeatTool(toolRunner);
+            Candle = new WixCandleTool(toolRunner);
+            Light = new WixLightTool(toolRunner);
         }
 
         public WixHeatTool Heat { get; }
         public WixCandleTool Candle { get; }
+        public WixLightTool Light { get; }
     }
 }

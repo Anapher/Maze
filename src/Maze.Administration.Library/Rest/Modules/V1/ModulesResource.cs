@@ -18,7 +18,7 @@ namespace Maze.Administration.Library.Rest.Modules.V1
         {
         }
 
-        public static Task<PackagesLock> FetchModules(NuGetFramework framework, IMazeRestClient client)
+        public static Task<PackagesLock> FetchModules(NuGetFramework framework, IRestClient client)
         {
             return CreateRequest().AddQueryParam("framework", framework.ToString()).Execute(client).Return<PackagesLock>();
         }

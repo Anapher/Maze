@@ -1,24 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-namespace Maze.Administration.Views
+﻿namespace Maze.Administration.Views
 {
     /// <summary>
-    /// Interaction logic for DeployClientView.xaml
+    ///     Interaction logic for DeployClientView.xaml
     /// </summary>
-    public partial class DeployClientView : UserControl
+    public partial class DeployClientView
     {
         public DeployClientView()
         {

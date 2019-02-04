@@ -13,6 +13,7 @@ using Maze.Administration.Library.Exceptions;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Rest.Modules.V1;
 using Maze.ModuleManagement;
+using NuGet.Packaging;
 using Prism.Modularity;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -26,6 +27,8 @@ namespace Maze.Administration.ViewModels.Main
         private readonly IModuleCatalog _catalog;
         private readonly IRegionManager _regionManager;
         private readonly IWindowService _windowService;
+        private readonly ModulesOptions _options;
+        private readonly VersionFolderPathResolver _versionResolver;
         private readonly MazeRestClientWrapper _restClientWrapper;
 
         private static readonly NuGetFramework
@@ -38,12 +41,14 @@ namespace Maze.Administration.ViewModels.Main
         private string _username;
 
         public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog, IRegionManager regionManager, IWindowService windowService,
-            MazeRestClientWrapper restClientWrapper)
+            ModulesOptions options, VersionFolderPathResolver versionResolver, MazeRestClientWrapper restClientWrapper)
         {
             _moduleManager = moduleManager;
             _catalog = catalog;
             _regionManager = regionManager;
             _windowService = windowService;
+            _options = options;
+            _versionResolver = versionResolver;
             _restClientWrapper = restClientWrapper;
         }
 
@@ -90,16 +95,14 @@ namespace Maze.Administration.ViewModels.Main
 
                         var modules = await ModulesResource.FetchModules(Framework, client);
 
-                        var options = new ModulesOptions {LocalPath = "packages", TempPath = "temp"};
-                        var directory = new ModulesDirectory(
-                            new VersionFolderPathResolverFlat(Environment.ExpandEnvironmentVariables(options.LocalPath)));
+                        var directory = new ModulesDirectory(_versionResolver);
                         var catalog = new ModulesCatalog(directory, Framework);
 
                         if (modules.Any())
                         {
                             StatusMessage = Tx.T("LoginView:Status.DownloadModules");
 
-                            var downloader = new ModuleDownloader(directory, options);
+                            var downloader = new ModuleDownloader(directory, _options);
                             await downloader.Load(modules, serverInfo, CancellationToken.None);
 
                             StatusMessage = Tx.T("LoginView:Status.LoadModules");

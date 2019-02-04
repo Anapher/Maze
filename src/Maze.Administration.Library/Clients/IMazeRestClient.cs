@@ -11,6 +11,7 @@ namespace Maze.Administration.Library.Clients
     public interface IMazeRestClient : IRestClient, IDisposable
     {
         string Username { get; }
+        IServerInfo Server { get; }
         HubConnection HubConnection { get; }
         IServiceProvider ServiceProvider { get; }
         Task<TChannel> OpenChannel<TChannel>(HttpRequestMessage message, CancellationToken cancellationToken) where TChannel : IAwareDataChannel;

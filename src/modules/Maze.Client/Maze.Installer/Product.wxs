@@ -6,13 +6,13 @@
   <!-- Fixed upgrade Id -->
   <?define UpgradeCode = "{DA21BD31-DD86-482A-8760-B35661E5CA69}" ?>
 
-  <Product Id="$(var.ProductCode)" Name="!(loc.ProductName)" Language="!(loc.Language)" Version="1.0.0.0" Manufacturer="!(loc.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
+  <Product Id="$(var.ProductCode)" Name="!(loc.ProductName)" Language="!(loc.Language)" Version="1.0.0.0" Manufacturer="!(loc.CompanyName)" UpgradeCode="$(var.UpgradeCode)">
 		<Package
 			Comments="!(loc.Comments)"
 			InstallerVersion="200"
 			Compressed="yes"
 			InstallScope="perMachine"
-			Manufacturer="!(loc.Manufacturer)"
+			Manufacturer="!(loc.CompanyName)"
 			Description="!(loc.Description)"
 			Keywords="!(loc.Keywords)" />
 
@@ -23,7 +23,7 @@
     <MediaTemplate EmbedCab="yes" />
 
     <!-- Define main app icon -->
-    <Icon Id="icon.ico" SourceFile="$(var.CodeElements.Suite.ProjectDir)\Resources\icon.ico" />
+    <!--<Icon Id="icon.ico" SourceFile="$(var.CodeElements.Suite.ProjectDir)\Resources\icon.ico" />-->
 
     <!-- Use the icon.ico icon for this installer (shows up in Add/Remove programs) -->
     <Property Id="ARPPRODUCTICON">icon.ico</Property>
@@ -36,11 +36,12 @@
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
-    <WixVariable Id="WixUIDialogBmp" Value="Resources\WixUIDialogBmp.png" />
+    <!--<WixVariable Id="WixUIDialogBmp" Value="Resources\WixUIDialogBmp.png" />-->
 
 		<Feature Id="ProductFeature" Title="Maze" Level="1">
       <ComponentGroupRef Id="ReleaseComponents" />
       <ComponentGroupRef Id="AppDataComponents" />
+      <ComponentGroupRef Id="PackageComponents" />
 		</Feature>
 	</Product>
 </Wix>

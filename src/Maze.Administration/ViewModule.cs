@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,6 +59,8 @@ namespace Maze.Administration
 
             containerRegistry.Register<object, OverviewView>(PrismModule.MainContentOverviewView);
             containerRegistry.RegisterForNavigation<OverviewView>(PrismModule.MainContent);
+
+            containerRegistry.RegisterSingleton<IFileSystem, FileSystem>();
         }
 
         public void OnInitialized(IContainerProvider containerProvider)

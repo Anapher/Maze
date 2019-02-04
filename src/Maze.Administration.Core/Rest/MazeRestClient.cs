@@ -39,9 +39,10 @@ namespace Maze.Administration.Core.Rest
         private MazeServer _mazeServer;
         private readonly SemaphoreSlim _mazeServerLock = new SemaphoreSlim(1, 1);
 
-        public MazeRestClient(string username, SecureString password, HttpClient httpClient)
+        public MazeRestClient(string username, IServerInfo serverInfo, SecureString password, HttpClient httpClient)
         {
             _password = password;
+            Server = serverInfo;
             _httpClient = httpClient;
             Username = username;
             _jwtHandler = new JwtSecurityTokenHandler();
@@ -56,6 +57,7 @@ namespace Maze.Administration.Core.Rest
         }
 
         public string Username { get; private set; }
+        public IServerInfo Server { get; private set; }
         public HubConnection HubConnection { get; private set; }
         public IServiceProvider ServiceProvider { get; set; }
 

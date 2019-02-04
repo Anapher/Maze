@@ -167,8 +167,13 @@ namespace ModulePacker
 
             foreach (var zipArchiveEntry in archive.Entries.Where(x => x.FullName.StartsWith("lib/")))
             {
-                using (var targetFileStream =
-                    File.Create(Path.Combine(targetDirectory.FullName, zipArchiveEntry.Name)))
+                var parts = zipArchiveEntry.FullName.Split('/');
+                var relativePath = string.Join("/", parts.Skip(2));
+
+                var fullname = Path.Combine(targetDirectory.FullName, relativePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(fullname));
+
+                using (var targetFileStream = File.Create(fullname))
                 using (var sourceStream = zipArchiveEntry.Open())
                     sourceStream.CopyTo(targetFileStream);
             }

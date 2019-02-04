@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Maze.Administration.Library.Models;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,6 @@ namespace Maze.Administration.Library.Deployment
         string Name { get; }
         string Description { get; }
 
-        Task Deploy(IEnumerable<ClientGroupViewModel> groups, ILogger logger);
+        Task Deploy(IEnumerable<ClientGroupViewModel> groups, ILogger logger, CancellationToken cancellationToken);
     }
 }

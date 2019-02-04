@@ -51,6 +51,7 @@ namespace Maze.Administration.Library.Clients
         }
 
         public string Username => _mazeRestClient.Username;
+        public IServerInfo Server => _mazeRestClient.Server;
         public HubConnection HubConnection => _mazeRestClient.HubConnection;
         public IServiceProvider ServiceProvider => _mazeRestClient.ServiceProvider;
 

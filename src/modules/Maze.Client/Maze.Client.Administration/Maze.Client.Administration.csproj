@@ -11,6 +11,8 @@
       <Pack>true</Pack>
       <PackagePath>lib/net47/wix</PackagePath>
     </Content>
+    <Content Include="..\..\..\Maze.Administration\icon.ico" Link="wix/icon.ico" />
+
     <Content Include="$(SolutionDir)src/Maze/bin/Release/*.*" Link="client/%(RecursiveDir)%(FileName)%(Extension)">
       <Pack>true</Pack>
       <PackagePath>lib/net47/client</PackagePath>
@@ -18,11 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
+    <Content Remove="$(SolutionDir)src/Maze/bin/Release/mazesettings.json" />
+    <Content Remove="..\Maze.Installer\Maze.Installer.wixproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
   </ItemGroup>
 
 </Project>

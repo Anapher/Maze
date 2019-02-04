@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
+using Maze.Administration.Library.Clients;
 
 namespace Maze.Administration.Core.Rest
 {
@@ -12,7 +13,7 @@ namespace Maze.Administration.Core.Rest
             var httpClient =
                 new HttpClient(new HttpClientHandler {AutomaticDecompression = DecompressionMethods.GZip,}) {BaseAddress = serverInfo.ServerUri};
 
-            var client = new MazeRestClient(username, password, httpClient);
+            var client = new MazeRestClient(username, serverInfo, password, httpClient);
             await client.Initialize();
             return client;
         }

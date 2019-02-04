@@ -42,6 +42,17 @@ namespace Maze.Administration.Core.Rest
             }
         }
 
+        public IServerInfo Server
+        {
+            get
+            {
+                if (_restClient == null)
+                    throw new RestClientNotConnectedException();
+
+                return _restClient.Server;
+            }
+        }
+
         public HubConnection HubConnection
         {
             get

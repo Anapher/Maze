@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Maze.Administration.Library.Clients;
 using NuGet.Common;
 using NuGet.Packaging;
 using NuGet.Packaging.PackageExtraction;
