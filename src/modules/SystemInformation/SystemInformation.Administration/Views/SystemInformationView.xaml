@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:SystemInformation.Administration.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Anapher.Wpf.Toolkit.Extensions;assembly=Anapher.Wpf.Toolkit"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:treeListView="clr-namespace:TreeListView;assembly=TreeListView"
@@ -43,6 +44,7 @@
         <TabControl.ItemContainerStyle>
             <Style BasedOn="{StaticResource MetroTabItem}" TargetType="TabItem">
                 <Setter Property="Header" Value="{Binding Name}" />
+                <Setter Property="mah:ControlsHelper.HeaderFontSize" Value="14" />
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type viewModels:SystemInfoGroupViewModel}">
@@ -113,6 +115,7 @@
                                     <Style BasedOn="{StaticResource MetroTreeListViewItem}" TargetType="treeListView:TreeListViewItem">
                                         <Setter Property="IsExpanded" Value="True" />
                                         <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                                        <Setter Property="extensions:FrameworkElementExtensions.SuppressBringIntoView" Value="true" />
                                     </Style>
                                 </treeListView:TreeListView.ItemContainerStyle>
                             </treeListView:TreeListView>
