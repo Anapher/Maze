@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Maze.Administration.Library.Clients;
+using Maze.Administration.Library.Exceptions;
 using Maze.Administration.Library.Models;
 using Maze.Administration.Library.Rest.ClientConfigurations.V1;
 using Maze.Administration.Library.Rest.Modules.V1;
@@ -81,7 +82,7 @@ namespace Maze.Client.Administration.Core
                 var releaseComponentsPath = await GenerateClientComponentFile(wixFiles.FullName, cancellationToken);
 
                 var configs = await Task.WhenAll(tasks);
-                var startupPackages = GetLoadOnStartupPackages(configs);
+                var startupPackages = GetLoadOnStartupPackages(configs.Where(x => x != null));
 
                 var modulesLock = await DownloadModuleLock(appDataFiles.FullName, startupPackages);
 
@@ -222,7 +223,17 @@ namespace Maze.Client.Administration.Core
                 _logger.LogInformation("Download client configuration of group {groupId} ({groupName})", group.ClientGroupId, group.Name);
             else _logger.LogInformation("Download global configuration");
 
-            var config = await ClientConfigurationsResource.GetClientConfiguration(group?.ClientGroupId, _restClient);
+            ClientConfigurationDto config;
+            try
+            {
+                config = await ClientConfigurationsResource.GetClientConfiguration(group?.ClientGroupId, _restClient);
+            }
+            catch (RestNotFoundException)
+            {
+                _logger.LogWarning("No configuration for {{groupName}} does exist, skip.", group?.Name);
+                return null;
+            }
+            
             var filename = $"mazesettings{group?.ClientGroupId}.json";
 
             _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(outputPath, filename), config.Content);
@@ -255,7 +266,7 @@ namespace Maze.Client.Administration.Core
             return requiredPackagesLock;
         }
 
-        public static IEnumerable<string> GetLoadOnStartupPackages(ClientConfigurationDto[] configs)
+        public static IEnumerable<string> GetLoadOnStartupPackages(IEnumerable<ClientConfigurationDto> configs)
         {
             var result = new HashSet<string>();
             foreach (var config in configs)

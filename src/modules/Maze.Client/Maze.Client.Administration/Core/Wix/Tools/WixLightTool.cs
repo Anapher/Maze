@@ -57,7 +57,7 @@ namespace Maze.Client.Administration.Core.Wix.Tools
         {
             get =>
                 _pdbOutputFilename ?? Path.Combine(Path.GetDirectoryName(OutputFilename),
-                    Path.GetFileNameWithoutExtension(OutputFilename) + "wixpdb");
+                    Path.GetFileNameWithoutExtension(OutputFilename) + ".wixpdb");
             set => _pdbOutputFilename = value;
         }
     }
