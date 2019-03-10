@@ -5,7 +5,7 @@ namespace ModuleTemplate.Administration.Views
     /// </summary>
     public partial class ModuleNamePlaceholderView
     {
-        public ModuleView()
+        public ModuleNamePlaceholderView()
         {
             InitializeComponent();
         }
