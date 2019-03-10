@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b8c0d5e6-c33c-4b36-a867-71055d337d67</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DeviceManager.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DeviceCategory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DeviceCategoryDisplayNameAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DeviceCategoryGuidAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dtos\DeviceInfoDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DeviceCategoryExtensions.cs" />
+  </ItemGroup>
+</Project>

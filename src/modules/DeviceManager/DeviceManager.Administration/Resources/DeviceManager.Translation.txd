@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="DeviceManager:Categories.AudioEndpoint">Audioeingänge und -ausgänge</text>
+		<text key="DeviceManager:Categories.CDROMDrives">DVD/CD-ROM Laufwerke</text>
+		<text key="DeviceManager:Categories.Computer">Computer</text>
+		<text key="DeviceManager:Categories.DiskDrives">Laufwerke</text>
+		<text key="DeviceManager:Categories.DisplayAdapters">Grafikkarte</text>
+		<text key="DeviceManager:Categories.HardDiskControllers">IDE ATA/ATAPI-Controller</text>
+		<text key="DeviceManager:Categories.HumanInterfaceDevicesHID">Eingabegeräte (Human Interface Devices)</text>
+		<text key="DeviceManager:Categories.ImagingDevice">Bildverarbeitungssoftware</text>
+		<text key="DeviceManager:Categories.Keyboard">Tastaturen</text>
+		<text key="DeviceManager:Categories.Monitor">Monitore</text>
+		<text key="DeviceManager:Categories.Mouse">Mäuse und andere Zeigegeräte</text>
+		<text key="DeviceManager:Categories.Multimedia">Audio-, Video- und Gamecontroller</text>
+		<text key="DeviceManager:Categories.NetworkAdapter">Netzwerkadapter</text>
+		<text key="DeviceManager:Categories.NetworkService">Netzwerkdienste</text>
+		<text key="DeviceManager:Categories.Other">Sonstiges</text>
+		<text key="DeviceManager:Categories.PortsCOM_LPTports">Anschlüsse (COM &amp; LPT)</text>
+		<text key="DeviceManager:Categories.Printers">Drucker</text>
+		<text key="DeviceManager:Categories.PrintQueue">Druckwarteschlange</text>
+		<text key="DeviceManager:Categories.Processors">Prozessoren</text>
+		<text key="DeviceManager:Categories.SCSIandRAIDControllers">Speichercontroller</text>
+		<text key="DeviceManager:Categories.Sensors">Sensoren</text>
+		<text key="DeviceManager:Categories.SoftwareDevices">Softwaregeräte</text>
+		<text key="DeviceManager:Categories.SystemDevices">Systemgeräte</text>
+		<text key="DeviceManager:Categories.USBDevice">USB-Controller</text>
+		<text key="DeviceManager:Categories.WindowsPortableDevices_WPD">Tragbare Geräte</text>
+		<text key="DeviceManager:Categories.WSDPrintDevice">WSD Druckanbieter</text>
+		<text key="DeviceManager:LoadDevices">Lade Geräte...</text>
+		<text key="DeviceManager:Name">DeviceManager</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="DeviceManager:Categories.AudioEndpoint">Audio inputs and outputs</text>
+		<text key="DeviceManager:Categories.CDROMDrives" acceptmissing="true">DVD/CD-ROM drives</text>
+		<text key="DeviceManager:Categories.Computer">Computer</text>
+		<text key="DeviceManager:Categories.DiskDrives" acceptmissing="true">Disk drives</text>
+		<text key="DeviceManager:Categories.DisplayAdapters">Display adapters</text>
+		<text key="DeviceManager:Categories.HardDiskControllers">IDE ATA/ATAPI controllers</text>
+		<text key="DeviceManager:Categories.HumanInterfaceDevicesHID">Human Interface Devices</text>
+		<text key="DeviceManager:Categories.ImagingDevice">Image editing device</text>
+		<text key="DeviceManager:Categories.Keyboard">Keyboards</text>
+		<text key="DeviceManager:Categories.Monitor">Monitors</text>
+		<text key="DeviceManager:Categories.Mouse">Mice and other pointing devices</text>
+		<text key="DeviceManager:Categories.Multimedia">Sound, video and game controllers</text>
+		<text key="DeviceManager:Categories.NetworkAdapter">Network adapters</text>
+		<text key="DeviceManager:Categories.NetworkService">Network services</text>
+		<text key="DeviceManager:Categories.Other">Other</text>
+		<text key="DeviceManager:Categories.PortsCOM_LPTports">Ports (COM &amp; LPT)</text>
+		<text key="DeviceManager:Categories.Printers">Printers</text>
+		<text key="DeviceManager:Categories.PrintQueue">Print queues</text>
+		<text key="DeviceManager:Categories.Processors">Processors</text>
+		<text key="DeviceManager:Categories.SCSIandRAIDControllers">Storage controllers</text>
+		<text key="DeviceManager:Categories.Sensors">Sensors</text>
+		<text key="DeviceManager:Categories.SoftwareDevices">Software devices</text>
+		<text key="DeviceManager:Categories.SystemDevices">System devices</text>
+		<text key="DeviceManager:Categories.USBDevice">USB controllers</text>
+		<text key="DeviceManager:Categories.WindowsPortableDevices_WPD">Portable devices</text>
+		<text key="DeviceManager:Categories.WSDPrintDevice">WSD print devices</text>
+		<text key="DeviceManager:LoadDevices">Load devices...</text>
+		<text key="DeviceManager:Name">DeviceManager</text>
+	</culture>
+</translation>
