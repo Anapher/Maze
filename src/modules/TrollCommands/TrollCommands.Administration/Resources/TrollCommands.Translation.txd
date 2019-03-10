@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
+<translation xml:space="preserve">
+	<culture name="de">
+		<text key="TrollCommands:Commands.CrazyCursor">Crazy Cursor</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Interval">{=TrollCommands:CommonProperties.Interval}</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Interval.Description">Die Verzögerung zwischen jedem Sprung.</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Power">{=TrollCommands:CommonProperties.Power}</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Power.Description">Ein Faktor für die Größe der Sprünge.</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Summary">Lässt den Cursor herumspringen.</text>
+		<text key="TrollCommands:Commands.Earthquake">Erdbeben</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Interval">{=TrollCommands:CommonProperties.Interval}</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Interval.Description">Die intervall zwischen jedem beben.</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Power">{=TrollCommands:CommonProperties.Power}</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Power.Description">Der Faktor für die Größe der Verschiebungen.</text>
+		<text key="TrollCommands:Commands.Earthquake.Summary">Rüttelt den Bildschirm.</text>
+		<text key="TrollCommands:CommonProperties.Interval">Intervall</text>
+		<text key="TrollCommands:CommonProperties.Power">Power</text>
+	</culture>
+	<culture name="en" primary="true">
+		<text key="TrollCommands:Commands.CrazyCursor">Crazy Cursor</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Interval">{=TrollCommands:CommonProperties.Interval}</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Interval.Description">The delay between each cursor jump.</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Power">{=TrollCommands:CommonProperties.Power}</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Properties.Power.Description">A factor for the range of the jumps.</text>
+		<text key="TrollCommands:Commands.CrazyCursor.Summary">Make the cursor jump around.</text>
+		<text key="TrollCommands:Commands.Earthquake">Earthquake</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Interval">{=TrollCommands:CommonProperties.Interval}</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Interval.Description">The interval between each quake.</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Power">{=TrollCommands:CommonProperties.Power}</text>
+		<text key="TrollCommands:Commands.Earthquake.Properties.Power.Description">The factor for the size of the displacements.</text>
+		<text key="TrollCommands:Commands.Earthquake.Summary">Shake the screen.</text>
+		<text key="TrollCommands:CommonProperties.Interval">Interval</text>
+		<text key="TrollCommands:CommonProperties.Power">Power</text>
+	</culture>
+</translation>

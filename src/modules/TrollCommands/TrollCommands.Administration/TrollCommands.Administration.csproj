@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.txd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Administration\Tasks.Infrastructure.Administration.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\TrollCommands.Shared\TrollCommands.Shared.projitems" Label="Shared" />
+
+</Project>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7532dd56-57c7-4e17-9532-a5442a767163</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TrollCommands.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CrazyCursorCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\EarthquakeCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\GlitchCommandInfo.cs" />
+  </ItemGroup>
+</Project>

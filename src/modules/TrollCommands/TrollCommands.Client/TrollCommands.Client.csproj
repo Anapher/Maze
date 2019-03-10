@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Client\Tasks.Infrastructure.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <Import Project="..\TrollCommands.Shared\TrollCommands.Shared.projitems" Label="Shared" />
+
+</Project>
