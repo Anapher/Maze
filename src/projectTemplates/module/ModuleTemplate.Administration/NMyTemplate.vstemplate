@@ -1,13 +1,11 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>ModuleTemplate.Administration</Name>
+    <Name>Maze Administration Module</Name>
     <Description>A basic Maze Administration Module</Description>
     <ProjectType>CSharp</ProjectType>
-    <ProjectSubType>
-    </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>ModuleTemplate.Administration</DefaultName>
+    <DefaultName>Module.Administration</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
@@ -15,29 +13,31 @@
     <Icon>__TemplateIcon.ico</Icon>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="ModuleTemplate.Administration.csproj" File="ModuleTemplate.Administration.csproj" ReplaceParameters="true">
-      <Folder Name="ModuleTemplate.Shared" TargetFolderName="ModuleTemplate.Shared">
+    <Project TargetFileName="ModuleNamePlaceholder.Administration.csproj" File="ModuleTemplate.Administration.csproj" ReplaceParameters="true">
+      <Folder Name="ModuleNamePlaceholder.Shared" TargetFolderName="ModuleNamePlaceholder.Shared">
         <Folder Name="Channels" TargetFolderName="Channels" />
         <Folder Name="Dtos" TargetFolderName="Dtos" />
       </Folder>
       <Folder Name="Resources" TargetFolderName="Resources">
-        <ProjectItem ReplaceParameters="false" TargetFileName="Module.Translation.txd">Module.Translation.txd</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholder.Translation.txd">Module.Translation.txd</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="VisualStudioIcons.cs">VisualStudioIcons.cs</ProjectItem>
         <ProjectItem ReplaceParameters="true" TargetFileName="VisualStudioIcons.xaml">VisualStudioIcons.xaml</ProjectItem>
       </Folder>
       <Folder Name="Rest" TargetFolderName="Rest">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleTemplateResource.cs">ModuleTemplateResource.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderResource.cs">ModuleTemplateResource.cs</ProjectItem>
       </Folder>
       <Folder Name="ViewModels" TargetFolderName="ViewModels">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleViewModel.cs">ModuleViewModel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderViewModel.cs">ModuleViewModel.cs</ProjectItem>
       </Folder>
       <Folder Name="Views" TargetFolderName="Views">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleView.xaml">ModuleView.xaml</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleView.xaml">vstg0003.xaml</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleView.xaml.cs">ModuleView.xaml.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderView.xaml">ModuleView.xaml</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderView.xaml.cs">ModuleView.xaml.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="AutofacModule.cs">AutofacModule.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="PrismModule.cs">PrismModule.cs</ProjectItem>
     </Project>
   </TemplateContent>
+  <WizardExtension>
+    <Assembly>MazeTemplates.Wizard, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=b644338bdbbd5b44</Assembly>
+    <FullClassName>MazeTemplates.Wizard.Administration.AdministrationModuleWizard</FullClassName>
+  </WizardExtension>
 </VSTemplate>

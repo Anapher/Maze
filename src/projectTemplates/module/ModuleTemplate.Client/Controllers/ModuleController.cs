@@ -3,12 +3,12 @@ using Maze.Modules.Api.Routing;
 
 namespace ModuleTemplate.Client.Controllers
 {
-    public class ModuleController : MazeController
+    public class ModuleNamePlaceholderController : MazeController
     {
         [MazeGet]
         public IActionResult TestAction()
         {
-            return Ok("Hello World!");
+            return Ok("Hello from ModuleNamePlaceholder!");
         }
     }
 }

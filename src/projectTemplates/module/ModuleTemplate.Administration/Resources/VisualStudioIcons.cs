@@ -6,7 +6,7 @@ namespace ModuleTemplate.Administration.Resources
 {
     public class VisualStudioIcons : ResourceDictionaryProvider
     {
-        public VisualStudioIcons() : base(new Uri("/ModuleTemplate.Administration;component/Resources/VisualStudioIcons.xaml", UriKind.Relative))
+        public VisualStudioIcons() : base(new Uri("/ModuleNamePlaceholder.Administration;component/Resources/VisualStudioIcons.xaml", UriKind.Relative))
         {
         }
 

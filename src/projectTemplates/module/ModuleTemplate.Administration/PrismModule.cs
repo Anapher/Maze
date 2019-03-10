@@ -13,7 +13,7 @@ namespace ModuleTemplate.Administration
     {
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            Tx.LoadFromEmbeddedResource("$safeprojectname$.Resources.Module.Translation.txd");
+            Tx.LoadFromEmbeddedResource("$safeprojectname$.Resources.ModuleNamePlaceholder.Translation.txd");
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
@@ -21,7 +21,7 @@ namespace ModuleTemplate.Administration
             var registrar = containerProvider.Resolve<IClientCommandRegistrar>();
             var icons = containerProvider.Resolve<VisualStudioIcons>();
 
-            registrar.Register<ModuleViewModel>("Module:Name", IconFactory.FromFactory(() => icons.Icon), CommandCategory.System);
+            registrar.Register<ModuleNamePlaceholderViewModel>("ModuleNamePlaceholder:Name", IconFactory.FromFactory(() => icons.Icon), CommandCategory.System);
         }
     }
 }

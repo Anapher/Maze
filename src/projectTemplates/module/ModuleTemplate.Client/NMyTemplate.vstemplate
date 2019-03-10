@@ -1,13 +1,11 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>ModuleTemplate.Client</Name>
+    <Name>Maze Client Module</Name>
     <Description>A basic Maze Client Module</Description>
     <ProjectType>CSharp</ProjectType>
-    <ProjectSubType>
-    </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>ModuleTemplate.Client</DefaultName>
+    <DefaultName>Module.Client</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
@@ -17,11 +15,15 @@
   <TemplateContent>
     <Project TargetFileName="ModuleTemplate.Client.csproj" File="ModuleTemplate.Client.csproj" ReplaceParameters="true">
       <Folder Name="Channels" TargetFolderName="Channels">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleChannel.cs">ModuleChannel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderChannel.cs">ModuleChannel.cs</ProjectItem>
       </Folder>
       <Folder Name="Controllers" TargetFolderName="Controllers">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleController.cs">ModuleController.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModuleNamePlaceholderController.cs">ModuleController.cs</ProjectItem>
       </Folder>
     </Project>
   </TemplateContent>
+  <WizardExtension>
+    <Assembly>MazeTemplates.Wizard, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=b644338bdbbd5b44</Assembly>
+    <FullClassName>MazeTemplates.Wizard.Client.ClientModuleWizard</FullClassName>
+  </WizardExtension>
 </VSTemplate>

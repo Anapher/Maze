@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
-    <Description>Module Description</Description>
+    <Description>$moduledescription$</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,12 +35,4 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\ModuleView.xaml.cs">
-      <DependentUpon>ModuleView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <Import Project="..\ModuleTemplate.Shared\ModuleTemplate.Shared.projitems" Label="Shared" />
 </Project>

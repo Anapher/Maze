@@ -2,9 +2,9 @@ using Maze.Administration.Library.Clients;
 
 namespace ModuleTemplate.Administration.Rest
 {
-    public class ModuleTemplateResource : ResourceBase<ModuleTemplateResource>
+    public class ModuleNamePlaceholderResource : ResourceBase<ModuleNamePlaceholderResource>
     {
-        public ModuleTemplateResource() : base(null)
+        public ModuleNamePlaceholderResource() : base(null)
         {
         }
     }

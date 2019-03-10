@@ -1,9 +1,9 @@
 namespace ModuleTemplate.Administration.Views
 {
     /// <summary>
-    ///     Interaction logic for ModuleView.xaml
+    ///     Interaction logic for ModuleNamePlaceholderView.xaml
     /// </summary>
-    public partial class ModuleView
+    public partial class ModuleNamePlaceholderView
     {
         public ModuleView()
         {

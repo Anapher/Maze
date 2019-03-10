@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -8,7 +8,4 @@
     <ProjectReference Include="..\..\..\Maze.Client.Library\Maze.Client.Library.csproj" />
     <ProjectReference Include="..\..\..\Maze.ControllerExtensions\Maze.ControllerExtensions.csproj" />
   </ItemGroup>
-
-  <Import Project="..\ModuleTemplate.Shared\ModuleTemplate.Shared.projitems" Label="Shared" />
-
 </Project>
