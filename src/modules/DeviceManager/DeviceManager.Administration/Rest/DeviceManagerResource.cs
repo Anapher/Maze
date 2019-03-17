@@ -8,7 +8,7 @@ namespace DeviceManager.Administration.Rest
 {
     public class DeviceManagerResource : ResourceBase<DeviceManagerResource>
     {
-        public DeviceManagerResource() : base(null)
+        public DeviceManagerResource() : base("DeviceManager")
         {
         }
 

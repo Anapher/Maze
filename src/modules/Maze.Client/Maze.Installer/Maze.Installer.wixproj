@@ -21,6 +21,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Directories.wxs" />
+    <Compile Include="Net47.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>

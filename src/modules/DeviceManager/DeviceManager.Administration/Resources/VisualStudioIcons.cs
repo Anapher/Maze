@@ -10,6 +10,6 @@ namespace DeviceManager.Administration.Resources
         {
         }
 
-        public Viewbox Icon => GetIcon();
+        public Viewbox PNPEntity => GetIcon();
     }
 }

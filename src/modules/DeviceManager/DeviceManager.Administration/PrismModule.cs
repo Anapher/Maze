@@ -21,7 +21,7 @@ namespace DeviceManager.Administration
             var registrar = containerProvider.Resolve<IClientCommandRegistrar>();
             var icons = containerProvider.Resolve<VisualStudioIcons>();
 
-            registrar.Register<DeviceManagerViewModel>("DeviceManager:Name", IconFactory.FromFactory(() => icons.Icon), CommandCategory.System);
+            registrar.Register<DeviceManagerViewModel>("DeviceManager:Name", IconFactory.FromFactory(() => icons.PNPEntity), CommandCategory.System);
         }
     }
 }

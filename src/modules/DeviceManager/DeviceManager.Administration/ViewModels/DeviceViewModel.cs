@@ -18,7 +18,7 @@ namespace DeviceManager.Administration.ViewModels
             StatusErrorMessage = DeviceErrorMessageUtilities.GetErrorMessage(device.StatusCode);
             DisplayWarning = device.StatusCode != 0;
             ChildDevices = new List<DeviceViewModel>(0);
-            Caption = device.Name;
+            Caption = device.Name.Trim();
         }
 
         public DeviceInfoDto DeviceInfo { get; }

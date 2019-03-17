@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using DeviceManager.Client.Native.SetupApi;
 using DeviceManager.Client.Utilities;
 using DeviceManager.Shared.Dtos;
 using DeviceManager.Shared.Utilities;
@@ -27,12 +28,12 @@ namespace DeviceManager.Client.Controllers
                     var device = new DeviceInfoDto
                     {
                         Name = managementObject.TryGetProperty<string>("Caption"),
-                        DeviceId = managementObject.TryGetProperty<string>("DeviceId"),
+                        DeviceId = managementObject.TryGetProperty<string>("DeviceID"),
                         Description = managementObject.TryGetProperty<string>("Description"),
                         Manufacturer = managementObject.TryGetProperty<string>("Manufacturer"),
                         StatusCode = managementObject.TryGetProperty<uint>("ConfigManagerErrorCode")
                     };
-                    var hardwareIds = managementObject.TryGetProperty<string[]>("HardWareID");
+                    var hardwareIds = managementObject.TryGetProperty<string[]>("HardwareID");
                     if (hardwareIds?.Length > 0)
                         device.HardwareId = hardwareIds[0];
 
@@ -43,7 +44,6 @@ namespace DeviceManager.Client.Controllers
                         classGuid = Guid.Empty;
 
                     device.Category = DeviceCategory.None;
-
 
                     foreach (var value in (DeviceCategory[]) Enum.GetValues(typeof(DeviceCategory)))
                         if (value.GetGuid() == classGuid)
@@ -85,6 +85,32 @@ namespace DeviceManager.Client.Controllers
             }
 
             return Ok(list);
+        }
+
+        [MazeGet("devices/{deviceId}/enable")]
+        public IActionResult EnableDevice(string deviceId)
+        {
+            SetDeviceStatus(deviceId, true);
+            return Ok();
+        }
+
+        [MazeGet("devices/{deviceId}/disable")]
+        public IActionResult DisableDevice(string deviceId)
+        {
+            SetDeviceStatus(deviceId, false);
+            return Ok();
+        }
+
+        private void SetDeviceStatus(string hardwareId, bool status)
+        {
+            foreach (var deviceInfo in HardwareHelper.EnumerateDevices())
+            {
+                if (deviceInfo.GetProperty(SPDRP.SPDRP_HARDWAREID) == hardwareId)
+                {
+                    HardwareHelper.EnableDevice(deviceInfo.HDevInfo, deviceInfo.DeviceData, status);
+                    return;
+                }
+            }
         }
     }
 }

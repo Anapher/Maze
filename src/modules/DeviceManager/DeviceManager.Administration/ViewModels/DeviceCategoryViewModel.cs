@@ -90,7 +90,10 @@ namespace DeviceManager.Administration.ViewModels
 
         private static string DeviceCategoryToString(DeviceCategory deviceCategory)
         {
-            return Tx.T($"DeviceManager:Categories.{deviceCategory}");
+            if (Tx.TryGetText($"DeviceManager:Categories.{deviceCategory}", out var text))
+                return text;
+
+            return deviceCategory.ToString();
         }
     }
 }

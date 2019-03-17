@@ -4,7 +4,7 @@ namespace ModuleTemplate.Administration.Rest
 {
     public class ModuleNamePlaceholderResource : ResourceBase<ModuleNamePlaceholderResource>
     {
-        public ModuleNamePlaceholderResource() : base(null)
+        public ModuleNamePlaceholderResource() : base("ModuleNamePlaceholder")
         {
         }
     }

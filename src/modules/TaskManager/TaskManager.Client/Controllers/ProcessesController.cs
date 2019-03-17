@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Maze.Modules.Api;
 using Maze.Modules.Api.Parameters;
 using Maze.Modules.Api.Routing;
-using TaskManager.Client.Channels;
 using TaskManager.Client.Utilities;
 using TaskManager.Shared.Dtos;
 
