@@ -10,8 +10,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Maze.NuGet.Commands" Version="1.0.0" />
-    <PackageReference Include="Maze.NuGet.Resolver" Version="1.0.0" />
+    <PackageReference Include="Maze.NuGet.Commands" Version="5.0.1-rtm" />
+    <PackageReference Include="Maze.NuGet.Resolver" Version="5.0.1-rtm" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
 
