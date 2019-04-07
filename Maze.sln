@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Server", "src\Maze.Server\Maze.Server.csproj", "{16E5D6DC-F93E-47F0-8F67-D2A1DA18E017}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Administration.Core", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2AB85A8-1B64-4C1F-8E1A-DE7FC872E7E7}"
 	ProjectSection(SolutionItems) = preProject
+		build.fsx = build.fsx
 		Directory.Build.props = Directory.Build.props
 		translation.txd = translation.txd
 	EndProjectSection
