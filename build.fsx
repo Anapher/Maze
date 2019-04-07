@@ -76,6 +76,18 @@ Target.create "Create VS Template for Module" (fun _ ->
       |> Trace.logItems "AppBuild-Output: "
 )
 
+Target.create "Build Server" (fun _ ->
+    let projectDir = "src/Maze.Server"
+    let output = Path.combine buildDir "server"
+
+    projectDir
+    |> DotNet.build (fun opts ->
+        { opts with
+            Configuration = DotNet.BuildConfiguration.Release
+            OutputPath = Some output
+    })
+)
+
 Target.create "Cleanup" (fun _ ->
     Shell.cleanDir buildDir
 )
@@ -84,8 +96,9 @@ Target.create "Cleanup" (fun _ ->
 open Fake.Core.TargetOperators
 
 "Cleanup"
-  //==> "Build Administration"
+  ==> "Build Administration"
   ==> "Create VS Template for Module"
+  ==> "Build Server"
 
 // start build
 Target.runOrDefault "Create VS Template for Module"
