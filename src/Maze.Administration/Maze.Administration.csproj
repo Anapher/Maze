@@ -7,10 +7,6 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Views\DeployClientBuildView.xaml" />
-    <None Remove="Views\DeployClientView.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Maze.Administration.Core\Maze.Administration.Core.csproj" />
@@ -36,20 +32,5 @@
 
   <ItemGroup>
     <Resource Include="Resources\SyntaxHighlighting\Json.xshd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\DeployClientBuildView.xaml.cs">
-      <DependentUpon>DeployClientBuildView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\DeployClientBuildView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\DeployClientView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
 </Project>

@@ -1,44 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
     <Description>Complete access to the file system. Browser the files, create directories, download and upload files, show file properties and compute hash values.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- XAML elements -->
-    <Page Include="**\*.xaml" Exclude="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </Page>
-
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
-
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-
+    <!-- Resources -->
+    <Resource Include="Resources\**\*.png" />
+    <EmbeddedResource Include="Resources\*.txd" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj" />
     <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <ProjectReference Include="..\..\..\submodules\TreeViewEx\src\TreeViewEx.csproj" />
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-
-    <!-- Resources -->
-    <Resource Include="Resources\**\*.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\FileExplorer.Translation.txd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="2.3.0" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
    <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />

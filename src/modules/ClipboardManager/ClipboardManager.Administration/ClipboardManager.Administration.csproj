@@ -1,47 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
     <TargetFramework>net47</TargetFramework>
     <Description>Module Description</Description>
     <DefineConstants>TRACE;WPF</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <UseWpf>true</UseWpf>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- XAML elements -->
-    <Page Include="**\*.xaml" Exclude="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </Page>
-
-    <ProjectReference Include="..\..\..\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-
     <!-- Resources -->
     <Resource Include="Resources\**\*.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\*.txd" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\..\..\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj" />
+    <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ClipboardManagerView.xaml.cs">
-      <DependentUpon>ClipboardManagerView.xaml</DependentUpon>
-    </Compile>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <Import Project="..\ClipboardManager.Shared\ClipboardManager.Shared.projitems" Label="Shared" />

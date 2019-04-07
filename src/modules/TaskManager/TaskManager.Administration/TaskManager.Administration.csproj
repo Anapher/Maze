@@ -1,41 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <Description>Access to the remote system's task manager. Show all running processes in a tree. Provides actions like killing processes, show properties, change priority and bring the window to front.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- XAML elements -->
-    <Page Include="**\*.xaml" Exclude="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </Page>
-
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-
     <!-- Resources -->
     <Resource Include="Resources\**\*.png" />
-
-    <!-- Settings -->
-
-  </ItemGroup>
-
-  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.txd" />
     <Resource Include="Resources\Images\Process.ico" />
-    <EmbeddedResource Include="Resources\TaskManager.Translation.txd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
 
   <ItemGroup>

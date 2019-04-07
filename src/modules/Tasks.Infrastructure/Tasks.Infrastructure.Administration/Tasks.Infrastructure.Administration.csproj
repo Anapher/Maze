@@ -1,58 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <Description>The task infrastructure provides the system used to create, deliver and execute tasks. This package as it is can not be used in a useful way. Other packages like Tasks.Common are required to actually create tasks with content.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- XAML elements -->
-    <Page Include="**\*.xaml" Exclude="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </Page>
-
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-
     <!-- Resources -->
     <Resource Include="Resources\**\*.png" />
-
-    <!-- Settings -->
-
+    <EmbeddedResource Include="Resources\*.txd" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Styles\PathBox.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\ButtonSpinner.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.ColorPicker.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.ComboBox.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.DateTimeUpDown.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.NumericUpDown.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.TextBoxMultiline.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\Editor.TimeSpanUpDown.xaml" />
-    <None Remove="Resources\Styles\PropertyGrid\PropertyGrid.xaml" />
-    <None Remove="Resources\Tasks.Infrastructure.Translation.txd" />
-    <None Remove="Resources\VisualStudioIcons.xaml" />
-    <None Remove="Views\CreateTask\AudienceView.xaml" />
-    <None Remove="Views\CreateTask\TaskCreateServiceView.xaml" />
-    <None Remove="Views\CreateTask\TaskSettingsView.xaml" />
-    <None Remove="Views\ExecuteCommandView.xaml" />
-    <None Remove="Views\TaskOverviewView.xaml" />
-    <None Remove="Views\TaskOverview\OverviewTreeView.xaml" />
-    <None Remove="Views\TaskOverview\ResultView\ExceptionView.xaml" />
-    <None Remove="Views\TaskOverview\ResultView\LogView.xaml" />
-    <None Remove="Views\TaskOverview\SessionStatisticsView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Tasks.Infrastructure.Translation.txd" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.4.0" />
     <PackageReference Include="LoadingIndicators.WPF" Version="0.0.1" />
@@ -63,90 +21,4 @@
     <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
     <ProjectReference Include="..\Tasks.Infrastructure.Core\Tasks.Infrastructure.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\CreateTask\AudienceView.xaml.cs">
-      <DependentUpon>AudienceView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Resources\Styles\PropertyGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\CreateTaskView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\CreateTask\TaskServicesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\CreateTask\TaskSingleServiceView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Resources\Styles\PathBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\ButtonSpinner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.ColorPicker.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.ComboBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.DateTimeUpDown.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.NumericUpDown.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.TextBoxMultiline.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid\Editor.TimeSpanUpDown.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Resources\Styles\PropertyGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateTask\AudienceView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateTask\TaskCreateServiceView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\CreateTask\TaskSettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\ExecuteCommandView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\TaskOverviewView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\TaskOverview\OverviewTreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\TaskOverview\ResultView\ExceptionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\TaskOverview\ResultView\LogView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\TaskOverview\SessionStatisticsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
 </Project>

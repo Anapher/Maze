@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -39,12 +39,6 @@
     <ProjectReference Include="..\Maze.Server.Data\Maze.Server.Data.csproj" />
     <ProjectReference Include="..\Maze.Server.Service\Maze.Server.Service.csproj" />
     <ProjectReference Include="..\submodules\CodeElements.BizRunner\CodeElements.BizRunner\CodeElements.BizRunner.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NuGet.Frameworks">
-      <HintPath>..\submodules\NuGet.Client\artifacts\NuGet.Frameworks\15.0\bin\Release\netstandard1.6\NuGet.Frameworks.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <PropertyGroup>
