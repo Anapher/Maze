@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Version>1.0</Version>
     <LangVersion>latest</LangVersion>
     <Authors>Anapher</Authors>
     <Owners>Maze</Owners>
     <Copyright>Copyright 2019 Vincent</Copyright>
     <Company>Maze</Company>
     <PackageProjectUrl>https://github.com/MazeAdmin</PackageProjectUrl>
-    <PackageOutputPath>$(SolutionDir)artifacts</PackageOutputPath>
   </PropertyGroup>
 </Project>

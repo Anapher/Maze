@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <VersionPrefix>0.0.1</VersionPrefix>
     <Description>The Maze Server Library that contains service code for modules. This package must be referenced by every module for a server.</Description>
   </PropertyGroup>
 

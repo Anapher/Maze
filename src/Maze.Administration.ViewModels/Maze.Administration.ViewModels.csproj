@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="../administration.props" />
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
   </PropertyGroup>
