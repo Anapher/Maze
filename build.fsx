@@ -5,7 +5,6 @@ nuget Fake.Tools.Git
 nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Cli
 nuget Fake.Api.GitHub
-nuget Fake.BuildServer.AppVeyor
 nuget Fake.Core.ReleaseNotes
 nuget Fake.Net.Http
 nuget Fake.Core.Target //"
@@ -19,15 +18,10 @@ open Fake.Core
 open Fake.Net
 
 open Fake.DotNet
-open Fake.BuildServer
 open Fake.Tools.Git.CommandHelper
 open Fake.Tools.Git
 
 open System.IO
-
-BuildServer.install [
-    AppVeyor.Installer
-]
 
 let buildDir = "./build/"
 let artifactsDir = "./artifacts/"
@@ -94,8 +88,6 @@ let buildProjectWithChangelog name versionFile =
     let artifactPath = artifactsDir </> (sprintf "Maze.%s.%s-%s.zip" name (projectVersion |> toString) suffix)
     !! (output + "/**/*")
         |> Zip.zip output artifactPath
-
-    Trace.publish ImportData.BuildArtifact artifactPath
     
 
 Target.create "Create NuGet Packages" (fun _ ->
@@ -107,11 +99,6 @@ Target.create "Create NuGet Packages" (fun _ ->
     buildNupkgWithChangelog "ModuleManagement"
     buildNupkgWithChangelog "Utilities"
     buildNupkgWithChangelog "Modules.Api"
-
-    let nupkgs = !! (artifactsDir </> "nupkgs")
-    nupkgs |> Seq.iter(fun artifactFile ->
-        Trace.publish ImportData.BuildArtifact artifactFile
-    )
 )
 
 Target.create "Build Administration" (fun _ ->

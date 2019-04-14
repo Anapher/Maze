@@ -6,4 +6,7 @@ install:
 build_script:
   - cmd: fake.exe run build.fsx --parallel 3
 
+artifacts:
+- path: \artifacts\**\*.*
+
 test: off
