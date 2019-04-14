@@ -54,6 +54,7 @@ namespace RequestTransmitter.Client.Hooks
                         {
                             if (responseCallbackName == null)
                             {
+                                await popTask;
                                 response.Dispose();
                                 continue;
                             }
@@ -63,12 +64,13 @@ namespace RequestTransmitter.Client.Hooks
                                 var responseCallbackType = Type.GetType(responseCallbackName);
                                 if (responseCallbackType == null)
                                 {
+                                    await popTask;
                                     response.Dispose();
                                     _logger.LogWarning("The callback class {className} was not found.", responseCallbackName);
                                     return;
                                 }
 
-                                var responseCallback = (IResponseCallback)scope.ServiceProvider.GetRequiredService(responseCallbackType);
+                                var responseCallback = (IResponseCallback) scope.ServiceProvider.GetRequiredService(responseCallbackType);
                                 try
                                 {
                                     await responseCallback.ResponseReceived(response);
@@ -79,11 +81,18 @@ namespace RequestTransmitter.Client.Hooks
                                         responseCallbackType.FullName);
                                 }
                             }
-                        }
-                        finally
-                        {
+
                             await popTask;
                         }
+                        catch (Exception)
+                        {
+                            await popTask;
+                            throw;
+                        }
+                        //finally https://github.com/dotnet/roslyn/issues/33542
+                        //{
+                        //    await popTask;
+                        //}
                     }
                     catch (TimeoutException)
                     {

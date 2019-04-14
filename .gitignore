@@ -338,3 +338,4 @@ src/Maze.Server/modules.lock
 *.sqlite
 src/projectTemplates/module/ModuleTemplateWizard/ProjectTemplates
 build/
+tools/

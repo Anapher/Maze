@@ -65,7 +65,7 @@ namespace ModulePacker
                 writer.WriteAttributeString("minClientVersion", "2.12");
 
                 writer.WriteElementString("id", id);
-                writer.WriteElementString("version", _version.ToString());
+                writer.WriteElementString("version", _version.OriginalVersion);
 
                 foreach (var metadata in _metadata)
                 {

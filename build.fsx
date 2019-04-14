@@ -7,6 +7,7 @@ nuget Fake.DotNet.Cli
 nuget Fake.Api.GitHub
 nuget Fake.BuildServer.AppVeyor
 nuget Fake.Core.ReleaseNotes
+nuget Fake.Net.Http
 nuget Fake.Core.Target //"
 
 #load "./.fake/build.fsx/intellisense.fsx"
@@ -15,6 +16,7 @@ open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Core
+open Fake.Net
 
 open Fake.DotNet
 open Fake.BuildServer
@@ -29,14 +31,17 @@ BuildServer.install [
 
 let buildDir = "./build/"
 let artifactsDir = "./artifacts/"
+let toolsDir = "./tools/"
 let branch = Information.getBranchName "."
-
 
 let latestGitCommitOfDir dir = runSimpleGitCommand "." <| sprintf """log -n 1 --format="%%h" -- "%s" """ dir
 let versionOfChangelog changelogPath = (File.read changelogPath |> Changelog.parse).LatestEntry.SemVer
 let getChangelog projectName = "changelogs" </> sprintf "%s.md" projectName
 let getVersionPrefix path = System.Text.RegularExpressions.Regex.Match(File.ReadAllText(path), "(?<=<VersionPrefix>).*?(?=<\\/VersionPrefix>)").Value;
 let toString o = o.ToString()
+
+let nugetUrl = "https://github.com/MazeAdmin/NuGet.Client/releases/download/5.0.1-rtm/NuGet.exe"
+let nugetPath = toolsDir </> "NuGet.5.0.1-rtm.exe"
 
 let buildNupkgWithChangelog name =
     let projectDir = "src" </> sprintf "Maze.%s" name
@@ -53,16 +58,17 @@ let buildNupkgWithChangelog name =
     let commit = latestGitCommitOfDir projectDir
     let suffix = sprintf "%s+%s" branch commit
 
-    projectDir |> DotNet.build (fun opts -> {opts with Configuration = DotNet.BuildConfiguration.Release
-                                                       NoRestore = true
-                                                       Common = DotNet.Options.Create().WithCommon(fun options ->
-                                                           {options with CustomParams = Some "--no-dependencies"}
-                                                       )
-                               })
+    //projectDir |> DotNet.build (fun opts -> {opts with Configuration = DotNet.BuildConfiguration.Release
+    //                                                   NoRestore = true
+    //                                                   Common = DotNet.Options.Create().WithCommon(fun options ->
+    //                                                       {options with CustomParams = Some "--no-dependencies"}
+    //                                                   )
+    //                           })
 
     projectDir |> DotNet.pack (fun opts -> { opts with VersionSuffix = Some suffix
                                                        OutputPath = Some artifact
-                                                       NoBuild = true
+                                                       Configuration = DotNet.BuildConfiguration.Release
+                                                       NoRestore = true
                                            })
 
 let buildProjectWithChangelog name versionFile =
@@ -116,7 +122,14 @@ Target.create "Build Server" (fun _ ->
     buildProjectWithChangelog "Server" ("src" </> "server.props")
 )
 
-Target.create "Build modules" (fun _ ->
+Target.create "Prepare Tools" (fun _ ->
+    if File.exists nugetPath = false then
+        Shell.mkdir toolsDir
+        Http.downloadFile nugetPath nugetUrl |> ignore
+        Trace.logfn "NuGet.exe downloaded at %s" nugetPath
+)
+
+Target.create "Build Modules" (fun _ ->
     let runDotnet options command args =
         let result = DotNet.exec options command args
         if result.ExitCode <> 0 then
@@ -124,30 +137,62 @@ Target.create "Build modules" (fun _ ->
             Trace.traceError <| System.String.Join(System.Environment.NewLine,result.Messages)
             failwithf "dotnet process exited with %d: %s" result.ExitCode errors
 
-    let modulesDir = "./src/modules"
+    let modulesDir = "src" </> "modules"
     let modules = System.IO.Directory.GetDirectories(path=modulesDir)
-    let modulesTargetDir = "./build/modules"
-    let packer = "./src/Module.Packer"
+    let modulesTargetDir = buildDir </> "modules"
+    let artifactsTargetDir = artifactsDir </> "modules"
+    let packer = "./src/ModulePacker/ModulePacker.csproj"
+
+    let executePowerShellScript scriptPath arguments =
+        CreateProcess.fromRawCommandLine "powershell.exe" <| sprintf """-NoProfile -ExecutionPolicy Bypass -File "%s" %s""" (Path.getFullName scriptPath) arguments
+        |> CreateProcess.withWorkingDirectory (Path.getDirectory scriptPath)
+        |> Proc.run // start with the above configuration
+        |> (fun x ->
+                if x.ExitCode <> 0 then
+                    failwith <| sprintf "Script exited with code %i" x.ExitCode)
+
+    Shell.cleanDir modulesTargetDir
+
+    Trace.log "Prebuild all modules"
+    modules |> Seq.iter (fun modulePath ->
+        if File.exists (modulePath </> "prebuild.ps1") then
+            Trace.logfn "Execute prebuild.ps1 in %s" modulePath
+            executePowerShellScript (modulePath </> "prebuild.ps1") ""
+    )
 
     modules |> Seq.iter (fun modulePath ->
         let moduleName = Path.GetFileName(modulePath)
-        let projectFiles = !! (modulePath </> "**/*.csproj") |> Seq.filter (fun x -> System.Text.RegularExpressions.Regex.IsMatch (x, (sprintf "^%s\\.(Administration|Client|Server)" moduleName)))
+
+        Trace.logfn "Process module %s at %s" moduleName modulePath
+
+        let projectFiles = !! (modulePath </> "**/*.csproj") |> Seq.filter (fun x -> System.Text.RegularExpressions.Regex.IsMatch (Path.GetFileName(x), (sprintf "^%s\.(Administration|Client|Server)\.csproj$" moduleName)))
         let targetDir = modulesTargetDir </> moduleName
 
         let changelogVersion = versionOfChangelog (modulePath </> "changelog.md") |> toString
-        let commitHash = latestGitCommitOfDir targetDir
+        let commitHash = latestGitCommitOfDir modulePath
+
         let version = changelogVersion + "+" + commitHash
+
+        Trace.logfn "Module %s has version %s" moduleName version
         
         projectFiles |> Seq.iter(fun projectFile ->
-            runDotnet (fun o -> {o with WorkingDirectory = Path.getDirectory projectFile }) "pack" <| sprintf """-c Release -o "%s" /p:Version=%s""" targetDir version
+            runDotnet (fun o -> o) "pack" <| sprintf """-c Release --no-restore -o "%s" /p:Version=%s %s""" targetDir version projectFile
         )
 
-        runDotnet (fun o -> {o with WorkingDirectory = packer}) "run" <| sprintf "-- %s --delete" targetDir
+        let packageDir = targetDir </> "package"
+        runDotnet (fun o -> o) "run" <| sprintf """--project "%s" --framework netcoreapp2.1 -- %s --name %s -o "%s" """ packer targetDir moduleName packageDir
 
-        let nupkgName = sprintf "%s.nupkg" moduleName
+        CreateProcess.fromRawCommandLine nugetPath <| sprintf """pack "%s" -OutputDirectory "%s" """ packageDir artifactsTargetDir
+        |> Proc.run // start with the above configuration
+        |> (fun x ->
+                if x.ExitCode <> 0 then
+                    failwith <| sprintf "NuGet exited with code %i" x.ExitCode)
 
-        File.Move((targetDir </> nupkgName), (modulesDir </> nupkgName))
-        Directory.delete targetDir
+        if File.exists (modulePath </> "postbuild.ps1") then
+            Trace.logfn "Execute postbuild.ps1"
+            executePowerShellScript (modulePath </> "postbuild.ps1") <| sprintf """-Package "%s" """ (artifactsTargetDir </> (sprintf "%s.%s.nupkg" moduleName version))
+
+        Trace.logfn "Module %s created" moduleName
     )
 )
 
@@ -169,7 +214,7 @@ Target.create "Create VS Template for Module" (fun _ ->
     createTemplate "ModuleTemplate.Client"
     createTemplate "ModuleTemplate.Administration"
 
-    let output = buildDir </> "templates/module"
+    let output = artifactsDir </> "templates" </> "module"
 
     MSBuild.runRelease id output "Build" [(projectDir </> "MazeTemplates.Wizard.csproj")]
       |> Trace.logItems "AppBuild-Output: "
@@ -192,9 +237,15 @@ open Fake.Core.TargetOperators
 "Cleanup"
   ==> "Restore Solution"
   ==> "Create NuGet Packages"
+  ==> "Build Modules"
+  ==> "Create VS Template for Module"
   ==> "Build Administration"
   ==> "Build Server"
   ==> "All"
+
+"Cleanup"
+  ==> "Prepare Tools"
+  ==> "Build Modules"
 
 // start build
 Target.runOrDefault "All"

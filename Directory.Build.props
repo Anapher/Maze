@@ -6,6 +6,7 @@
     <Owners>Maze</Owners>
     <Copyright>Copyright 2019 Vincent</Copyright>
     <Company>Maze</Company>
-    <PackageProjectUrl>https://github.com/MazeAdmin</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/MazeAdmin/Maze</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MazeAdmin/Maze.git</RepositoryUrl>
   </PropertyGroup>
 </Project>

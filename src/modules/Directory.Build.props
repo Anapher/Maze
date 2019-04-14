@@ -5,8 +5,4 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ConfigurationName)'=='Debug' AND '$(NoModule)' == ''">
     <Exec Command="$(SolutionDir)src\ModuleLocalUpdater\bin\Debug\net47\ModuleLocalUpdater.exe $(ProjectName) $(TargetDir) --solutionDir $(SolutionDir)" />
   </Target>
-  
-  <PropertyGroup>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
-  </PropertyGroup>
 </Project>
