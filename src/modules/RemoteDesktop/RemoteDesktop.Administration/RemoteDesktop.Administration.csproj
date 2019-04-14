@@ -15,7 +15,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Maze.Administration.ControllerExtensions\Maze.Administration.ControllerExtensions.csproj" />
     <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
-    <ProjectReference Include="..\libraries\OpenH264net\OpenH264Lib.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OpenH264Lib">
+      <HintPath>..\libraries\OpenH264net\Release\OpenH264Lib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Import Project="..\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems" Label="Shared" />

@@ -89,6 +89,13 @@ let buildProjectWithChangelog name versionFile =
     !! (output + "/**/*")
         |> Zip.zip output artifactPath
     
+let executePowerShellScript scriptPath arguments =
+    CreateProcess.fromRawCommandLine "powershell.exe" <| sprintf """-NoProfile -ExecutionPolicy Bypass -File "%s" %s""" (Path.getFullName scriptPath) arguments
+    |> CreateProcess.withWorkingDirectory (Path.getDirectory scriptPath)
+    |> Proc.run // start with the above configuration
+    |> (fun x ->
+            if x.ExitCode <> 0 then
+                failwith <| sprintf "Script exited with code %i" x.ExitCode)
 
 Target.create "Create NuGet Packages" (fun _ ->
     buildNupkgWithChangelog "Administration.ControllerExtensions"
@@ -130,14 +137,6 @@ Target.create "Build Modules" (fun _ ->
     let artifactsTargetDir = artifactsDir </> "modules"
     let packer = "./src/ModulePacker/ModulePacker.csproj"
 
-    let executePowerShellScript scriptPath arguments =
-        CreateProcess.fromRawCommandLine "powershell.exe" <| sprintf """-NoProfile -ExecutionPolicy Bypass -File "%s" %s""" (Path.getFullName scriptPath) arguments
-        |> CreateProcess.withWorkingDirectory (Path.getDirectory scriptPath)
-        |> Proc.run // start with the above configuration
-        |> (fun x ->
-                if x.ExitCode <> 0 then
-                    failwith <| sprintf "Script exited with code %i" x.ExitCode)
-
     Shell.cleanDir modulesTargetDir
 
     Trace.log "Prebuild all modules"
@@ -163,7 +162,7 @@ Target.create "Build Modules" (fun _ ->
         Trace.logfn "Module %s has version %s" moduleName version
         
         projectFiles |> Seq.iter(fun projectFile ->
-            runDotnet (fun o -> o) "pack" <| sprintf """-c Release --no-restore -o "%s" /p:Version=%s %s""" targetDir version projectFile
+            runDotnet (fun o -> o) "pack" <| sprintf """-c Release -o "%s" /p:Version=%s %s""" targetDir version projectFile
         )
 
         let packageDir = targetDir </> "package"
@@ -177,7 +176,7 @@ Target.create "Build Modules" (fun _ ->
 
         if File.exists (modulePath </> "postbuild.ps1") then
             Trace.logfn "Execute postbuild.ps1"
-            executePowerShellScript (modulePath </> "postbuild.ps1") <| sprintf """-Package "%s" """ (artifactsTargetDir </> (sprintf "%s.%s.nupkg" moduleName version))
+            executePowerShellScript (modulePath </> "postbuild.ps1") <| sprintf """-Package "%s" """ (Path.getFullName (artifactsTargetDir </> (sprintf "%s.%s.nupkg" moduleName changelogVersion)))
 
         Trace.logfn "Module %s created" moduleName
     )
@@ -216,6 +215,34 @@ Target.create "Cleanup" (fun _ ->
     Shell.cleanDir artifactsDir
 )
 
+Target.create "Test" (fun _ ->
+    let buildMode = Environment.environVarOrDefault "buildMode" "Release"
+    MSBuild.build (fun opts -> {opts with Properties =
+                                                    [
+                                                        "Optimize", "True"
+                                                        "DebugSymbols", "True"
+                                                        "Configuration", buildMode
+                                                    ]
+        }) "src\modules\RemoteDesktop\libraries\OpenH264net"
+)
+
+Target.create "Compile Native Projects" (fun _ ->
+    executePowerShellScript "src\\modules\\RemoteDesktop\\prebuild.ps1" ""
+
+    let buildMode = Environment.environVarOrDefault "buildMode" "Release"
+    let compile path = 
+        MSBuild.build (fun opts -> {opts with Properties =
+                                                        [
+                                                            "Optimize", "True"
+                                                            "DebugSymbols", "True"
+                                                            "Configuration", buildMode
+                                                        ]
+            }) path
+
+    compile "src\modules\RemoteDesktop\libraries\OpenH264net"
+    compile "src\modules\RemoteDesktop\libraries\\x264net"
+)
+
 Target.create "All" ignore
 
 // Dependencies
@@ -233,6 +260,8 @@ open Fake.Core.TargetOperators
 "Cleanup"
   ==> "Prepare Tools"
   ==> "Build Modules"
+
+"Compile Native Projects" ==> "Build Modules"
 
 // start build
 Target.runOrDefault "All"

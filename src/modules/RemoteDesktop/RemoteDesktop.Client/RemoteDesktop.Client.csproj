@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -12,11 +12,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Maze.Client.Library\Maze.Client.Library.csproj" />
     <ProjectReference Include="..\..\..\Maze.ControllerExtensions\Maze.ControllerExtensions.csproj" />
-    <ProjectReference Include="..\libraries\x264net\x264net.vcxproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="x264net">
+      <HintPath>..\libraries\x264net\Release\x264net.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Import Project="..\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems" Label="Shared" />
