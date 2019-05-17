@@ -9,10 +9,12 @@ using NuGet.Frameworks;
 using Maze.Administration.Core;
 using Maze.Administration.Core.Modules;
 using Maze.Administration.Core.Rest;
+using Maze.Administration.Core.Settings;
 using Maze.Administration.Library.Exceptions;
 using Maze.Administration.Library.Extensions;
 using Maze.Administration.Library.Rest.Modules.V1;
 using Maze.ModuleManagement;
+using Newtonsoft.Json;
 using NuGet.Packaging;
 using Prism.Modularity;
 using Prism.Mvvm;
@@ -39,6 +41,9 @@ namespace Maze.Administration.ViewModels.Main
         private AsyncDelegateCommand<SecureString> _loginCommand;
         private string _statusMessage;
         private string _username;
+        private string _serverUrl;
+
+        private const string SettingsFilename = "settings.json";
 
         public LoginViewModel(IModuleManager moduleManager, IModuleCatalog catalog, IRegionManager regionManager, IWindowService windowService,
             ModulesOptions options, VersionFolderPathResolver versionResolver, MazeRestClientWrapper restClientWrapper)
@@ -50,12 +55,26 @@ namespace Maze.Administration.ViewModels.Main
             _options = options;
             _versionResolver = versionResolver;
             _restClientWrapper = restClientWrapper;
+
+            var settingsFile = new FileInfo(SettingsFilename);
+            if (settingsFile.Exists)
+            {
+                var settings = JsonConvert.DeserializeObject<ServerConnectionInfo>(File.ReadAllText(settingsFile.FullName));
+                ServerUrl = settings.ServerUrl;
+                Username = settings.Username;
+            }
         }
 
         public bool IsLoggingIn
         {
             get => _isLoggingIn;
             set => SetProperty(ref _isLoggingIn, value);
+        }
+
+        public string ServerUrl
+        {
+            get => _serverUrl;
+            set => SetProperty(ref _serverUrl, value);
         }
 
         public string Username
@@ -88,7 +107,7 @@ namespace Maze.Administration.ViewModels.Main
                     {
                         StatusMessage = Tx.T("LoginView:Status.Authenticating");
 
-                        var serverInfo = new ServerInfo {ServerUri = new Uri("http://localhost:54941/")};
+                        var serverInfo = new ServerInfo {ServerUri = new Uri(ServerUrl)};
                         var client = await MazeRestConnector.TryConnect(Username, parameter, serverInfo);
 
                         StatusMessage = Tx.T("LoginView:Status.RetrieveModules");
@@ -138,6 +157,9 @@ namespace Maze.Administration.ViewModels.Main
 
                         _restClientWrapper.Initialize(client);
                         _regionManager.RequestNavigate(PrismModule.MainContent, PrismModule.MainContentOverviewView);
+
+                        File.WriteAllText(SettingsFilename,
+                            JsonConvert.SerializeObject(new ServerConnectionInfo {ServerUrl = ServerUrl, Username = Username}));
                     }
                     catch (RestAuthenticationException e)
                     {

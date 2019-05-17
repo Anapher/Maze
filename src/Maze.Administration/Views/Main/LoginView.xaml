@@ -104,11 +104,7 @@
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ComboBox />
-                <Button
-                    Grid.Column="2"
-                    Content="{StaticResource AddIcon}"
-                    Style="{StaticResource IconButton}" />
+                <TextBox Text="{Binding ServerUrl}" />
             </Grid>
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
