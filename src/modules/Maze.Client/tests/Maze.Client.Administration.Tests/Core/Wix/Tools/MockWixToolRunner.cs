@@ -12,6 +12,9 @@ namespace Maze.Client.Administration.Tests.Core.Wix.Tools
         public string CommandLine { get; set; }
         public bool IsExecuted { get; set; }
 
+        public bool IsAvailable { get; } = true;
+        public string Path { get; set; }
+
         public Task Run(string toolName, ILogger logger, CancellationToken cancellationToken, params ICommandLinePart[] parts)
         {
             cancellationToken.ThrowIfCancellationRequested();

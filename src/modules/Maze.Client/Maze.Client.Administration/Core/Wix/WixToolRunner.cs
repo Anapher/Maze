@@ -20,6 +20,9 @@ namespace Maze.Client.Administration.Core.Wix
             _wixToolsDirectory = wixToolsDirectory;
         }
 
+        public bool IsAvailable => Directory.Exists(_wixToolsDirectory);
+        string IWixToolRunner.Path => _wixToolsDirectory;
+
         public async Task Run(string toolName, ILogger logger, CancellationToken cancellationToken, params ICommandLinePart[] parts)
         {
             var arguments = string.Join(" ", parts.Select(x => x.GetArgument()));

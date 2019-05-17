@@ -42,6 +42,7 @@ namespace Maze.Client.Administration.Core
         private const string PackagesComponentsFilename = "Components.Packages.Generated.wxs";
 
         private readonly string _clientFilesDirectory;
+        private readonly IWixToolRunner _wixToolRunner;
         private readonly IMazeRestClient _restClient;
         private readonly IFileSystem _fileSystem;
         private readonly VersionFolderPathResolver _versionFolderPathResolver;
@@ -54,6 +55,7 @@ namespace Maze.Client.Administration.Core
         public MazeWixBuilder(IWixToolRunner wixToolRunner, IMazeRestClient restClient, IFileSystem fileSystem, VersionFolderPathResolver versionFolderPathResolver)
         {
             _wixTools = new WixTools(wixToolRunner);
+            _wixToolRunner = wixToolRunner;
             _restClient = restClient;
             _fileSystem = fileSystem;
             _versionFolderPathResolver = versionFolderPathResolver;
@@ -67,6 +69,13 @@ namespace Maze.Client.Administration.Core
         public async Task Build(IEnumerable<ClientGroupViewModel> groups, string outputFilename, ILogger logger, CancellationToken cancellationToken)
         {
             _logger = logger;
+
+            if (!_wixToolRunner.IsAvailable)
+            {
+                logger.LogCritical("Please install WiX Toolset v3.11.1 from this url {url}",
+                    "https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311.exe");
+                throw new FileNotFoundException($"WiX Tools was not found in {_wixToolRunner.Path}");
+            }
 
             var tempDirectory = _fileSystem.DirectoryInfo.FromDirectoryName(_fileSystem.Path.Combine(_fileSystem.Path.GetTempPath(), Guid.NewGuid().ToString("N")));
             tempDirectory.Create();
