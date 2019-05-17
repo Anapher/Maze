@@ -200,10 +200,14 @@ Target.create "Create VS Template for Module" (fun _ ->
     createTemplate "ModuleTemplate.Client"
     createTemplate "ModuleTemplate.Administration"
 
-    let output = artifactsDir </> "templates" </> "module"
+    let output = buildDir </> "templates" </> "module"
 
     MSBuild.runRelease id output "Build" [(projectDir </> "MazeTemplates.Wizard.csproj")]
       |> Trace.logItems "AppBuild-Output: "
+
+    let artifactsOutput = artifactsDir </> "templates" </> "module";
+    Shell.mkdir artifactsOutput;
+    Shell.moveFile (output </> "MazeTemplates.Wizard.vsix") (artifactsOutput </> "MazeTemplates.Wizard.vsix");
 )
 
 Target.create "Restore Solution" (fun _ ->
@@ -261,7 +265,7 @@ open Fake.Core.TargetOperators
   ==> "Prepare Tools"
   ==> "Build Modules"
 
-"Compile Native Projects" ==> "Build Modules"
+"Compile Native Projects" ==> "Restore Solution" ==> "Build Modules"
 
 // start build
 Target.runOrDefault "All"
