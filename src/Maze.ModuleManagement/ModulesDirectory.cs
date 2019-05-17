@@ -19,7 +19,7 @@ namespace Maze.ModuleManagement
 
         public bool ModuleExists(PackageIdentity packageIdentity)
         {
-            var path = VersionFolderPathResolver.GetPackageFilePath(packageIdentity.Id, packageIdentity.Version);
+            var path = VersionFolderPathResolver.GetManifestFilePath(packageIdentity.Id, packageIdentity.Version);
             return File.Exists(path);
         }
 

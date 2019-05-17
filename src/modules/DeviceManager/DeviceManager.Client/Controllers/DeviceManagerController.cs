@@ -22,7 +22,7 @@ namespace DeviceManager.Client.Controllers
             {
                 foreach (var managementObject in collection.Cast<ManagementObject>())
                 {
-                    if (managementObject.TryGetProperty<string>("DeviceId") == @"HTREE\ROOT\0")
+                    if (managementObject.TryGetProperty<string>("DeviceID") == @"HTREE\ROOT\0")
                         continue;
 
                     var device = new DeviceInfoDto
