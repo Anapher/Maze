@@ -13,6 +13,7 @@ using Maze.Core.Startup;
 using Maze.ModuleManagement;
 using Maze.Options;
 using Maze.Server.Connection.Modules;
+using Maze.Visibility;
 using Microsoft.Extensions.Options;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -24,6 +25,7 @@ namespace Maze
     public class AppContext : ApplicationContext, IApplicationInfo, IStaSynchronizationContext, IMazeProcessController
     {
         private bool _shutdownTriggered;
+        private readonly NotificationIcon _notificationIcon = new NotificationIcon();
 
         public AppContext(ContainerBuilder builder)
         {
@@ -36,6 +38,8 @@ namespace Maze
             StartConnecting();
 
             Container.Resolve<IStartupActionInvoker>().Load(CancellationToken.None);
+
+            _notificationIcon.InitializeComponent();
 
             Application.Idle += ApplicationOnIdle;
             Application.ApplicationExit += ApplicationOnApplicationExit;
@@ -71,14 +75,14 @@ namespace Maze
                 try
                 {
                     packagesLock = JsonConvert.DeserializeObject<PackagesLock>(File.ReadAllText(lockFile.FullName));
+
+                    var loadContext = loader.Load(packagesLock).Result;
+                    if (loadContext.PackagesLoaded) return RootContainer.BeginLifetimeScope(builder => loadContext.Configure(builder));
                 }
                 catch (Exception)
                 {
                     return RootContainer;
                 }
-
-                var loadContext = loader.Load(packagesLock).Result;
-                if (loadContext.PackagesLoaded) return RootContainer.BeginLifetimeScope(builder => loadContext.Configure(builder));
             }
 
             return RootContainer;
@@ -130,6 +134,8 @@ namespace Maze
                 _shutdownTriggered = true;
                 Container.Execute<IShutdownAction, ShutdownContext>(new ShutdownContext(ShutdownTrigger.MainThreadShutdown));
             }
+
+            _notificationIcon.ApplicationExit();
         }
 
         private void SystemEventsOnSessionEnding(object sender, SessionEndingEventArgs e)
