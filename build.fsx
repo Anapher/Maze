@@ -207,7 +207,7 @@ Target.create "Create VS Template for Module" (fun _ ->
 
     let artifactsOutput = artifactsDir </> "templates" </> "module";
     Shell.mkdir artifactsOutput;
-    Shell.moveFile (output </> "MazeTemplates.Wizard.vsix") (artifactsOutput </> "MazeTemplates.Wizard.vsix");
+    Shell.moveFile (artifactsOutput </> "MazeTemplates.Wizard.vsix") (output </> "MazeTemplates.Wizard.vsix");
 )
 
 Target.create "Restore Solution" (fun _ ->
