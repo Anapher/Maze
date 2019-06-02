@@ -250,30 +250,10 @@ Target.create "Compile Native Projects" (fun _ ->
     compile ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "x264net")
 )
 
-Target.create "Publish packages" (fun _ ->
-    let apiKey = Environment.environVar "NUGET_KEY"
-    if (System.String.IsNullOrEmpty apiKey) = false then
-        let setNugetPushParams (defaults:NuGet.NuGetPushParams) =
-            { defaults with
-                DisableBuffering = true
-                ApiKey = Some apiKey
-                Source = Some "https://nuget.mazeadmin.com/api/v3/index.json"
-             }
-        let setParams (defaults:DotNet.NuGetPushOptions) =
-            { defaults with
-                PushParams = setNugetPushParams defaults.PushParams
-             }
-
-        !! ("artifacts" </> "**/*.nupkg") |> Seq.iter (DotNet.nugetPush setParams)
-)
-
 Target.create "All" ignore
 
 // Dependencies
 open Fake.Core.TargetOperators
-
-"Publish Packages" ==> "All"
-
 
 "Cleanup" ==> "Restore Solution" ==> "Build Administration" ==> "All"
 "Cleanup" ==> "Restore Solution" ==> "Build Server" ==> "All"
@@ -287,9 +267,6 @@ open Fake.Core.TargetOperators
 "Prepare Tools" ==> "Build Modules"
 
 "Compile Native Projects" ==> "Restore Solution" ==> "Build Modules"
-
-"Create NuGet Packages" ==> "Publish Packages"
-"Build Modules" ==> "Publish Packages"
 
 // start build
 Target.runOrDefault "All"
