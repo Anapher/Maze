@@ -11,10 +11,10 @@ artifacts:
 
 deploy:
   provider: NuGet
-  server: https://nuget.mazeadmin.com/api/v3/index.json
+  server: https://nuget.mazeadmin.com/
   api_key:
     secure: gg1uXcoqC9ziCVpB5LmhIB3e6U4/s2gStEnicsKWuik=
-  artifact: /artifacts/.*\.nupkg/
+  artifact: /.*\.nupkg/
 
 
 test: off
