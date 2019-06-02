@@ -5,6 +5,7 @@ nuget Fake.Tools.Git
 nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Cli
 nuget Fake.Api.GitHub
+nuget Fake.DotNet.NuGet
 nuget Fake.Core.ReleaseNotes
 nuget Fake.Net.Http
 nuget Fake.Core.Target //"
@@ -19,6 +20,7 @@ open Fake.Net
 
 open Fake.DotNet
 open Fake.Tools.Git.CommandHelper
+open Fake.DotNet.NuGet
 open Fake.Tools.Git
 
 open System.IO
@@ -26,7 +28,8 @@ open System.IO
 let buildDir = "./build/"
 let artifactsDir = "./artifacts/"
 let toolsDir = "./tools/"
-let branch = Information.getBranchName "."
+
+let branch = Environment.environVarOrDefault "APPVEYOR_REPO_BRANCH" (Information.getBranchName ".")
 
 let latestGitCommitOfDir dir = runSimpleGitCommand "." <| sprintf """log -n 1 --format="%%h" -- "%s" """ dir
 let versionOfChangelog changelogPath = (File.read changelogPath |> Changelog.parse).LatestEntry.SemVer
@@ -227,11 +230,11 @@ Target.create "Test" (fun _ ->
                                                         "DebugSymbols", "True"
                                                         "Configuration", buildMode
                                                     ]
-        }) "src\modules\RemoteDesktop\libraries\OpenH264net"
+        }) ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "OpenH264net")
 )
 
 Target.create "Compile Native Projects" (fun _ ->
-    executePowerShellScript "src\\modules\\RemoteDesktop\\prebuild.ps1" ""
+    executePowerShellScript ("src" </> "modules" </> "RemoteDesktop" </> "prebuild.ps1") ""
 
     let buildMode = Environment.environVarOrDefault "buildMode" "Release"
     let compile path = 
@@ -243,8 +246,24 @@ Target.create "Compile Native Projects" (fun _ ->
                                                         ]
             }) path
 
-    compile "src\modules\RemoteDesktop\libraries\OpenH264net"
-    compile "src\modules\RemoteDesktop\libraries\\x264net"
+    compile ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "OpenH264net")
+    compile ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "x264net")
+)
+
+Target.create "Publish packages" (fun _ ->
+    let apiKey = Environment.environVar "NUGET_KEY"
+    if (System.String.IsNullOrEmpty apiKey) = false then
+        let setNugetPushParams (defaults:NuGet.NuGetPushParams) =
+            { defaults with
+                DisableBuffering = true
+                ApiKey = Some apiKey
+             }
+        let setParams (defaults:DotNet.NuGetPushOptions) =
+            { defaults with
+                PushParams = setNugetPushParams defaults.PushParams
+             }
+
+        !! ("artifacts" </> "**/*.nupkg") |> Seq.iter (DotNet.nugetPush setParams)
 )
 
 Target.create "All" ignore
@@ -252,20 +271,24 @@ Target.create "All" ignore
 // Dependencies
 open Fake.Core.TargetOperators
 
-"Cleanup"
-  ==> "Restore Solution"
-  ==> "Create NuGet Packages"
-  ==> "Build Modules"
-  ==> "Create VS Template for Module"
-  ==> "Build Administration"
-  ==> "Build Server"
-  ==> "All"
+"Publish Packages" ==> "All"
 
-"Cleanup"
-  ==> "Prepare Tools"
-  ==> "Build Modules"
+
+"Cleanup" ==> "Restore Solution" ==> "Build Administration" ==> "All"
+"Cleanup" ==> "Restore Solution" ==> "Build Server" ==> "All"
+"Cleanup" ==> "Restore Solution" ==> "Create NuGet Packages" ==> "All"
+"Cleanup" ==> "Restore Solution" ==> "Create VS Template for Module" ==> "All"
+
+"Restore Solution" ==> "Build Modules"
+"Restore Solution" ==> "Create NuGet Packages"
+
+"Cleanup" ==> "Build Modules" ==> "All"
+"Prepare Tools" ==> "Build Modules"
 
 "Compile Native Projects" ==> "Restore Solution" ==> "Build Modules"
+
+"Create NuGet Packages" ==> "Publish Packages"
+"Build Modules" ==> "Publish Packages"
 
 // start build
 Target.runOrDefault "All"
