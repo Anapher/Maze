@@ -257,6 +257,7 @@ Target.create "Publish packages" (fun _ ->
             { defaults with
                 DisableBuffering = true
                 ApiKey = Some apiKey
+                Source = Some "https://nuget.mazeadmin.com/api/v3/index.json"
              }
         let setParams (defaults:DotNet.NuGetPushOptions) =
             { defaults with
