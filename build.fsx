@@ -20,7 +20,6 @@ open Fake.Net
 
 open Fake.DotNet
 open Fake.Tools.Git.CommandHelper
-open Fake.DotNet.NuGet
 open Fake.Tools.Git
 
 open System.IO
@@ -44,23 +43,17 @@ let buildNupkgWithChangelog name =
     let projectDir = "src" </> sprintf "Maze.%s" name
     let artifact = artifactsDir </> "nupkgs"
 
-    let changelogVersion = versionOfChangelog <| getChangelog name
-    let projectVersion = getVersionPrefix (projectDir </> (sprintf "Maze.%s.csproj" name)) |> SemVer.parse
+    let changelogPath = getChangelog name
+    if File.exists changelogPath then
+        let changelogVersion = versionOfChangelog changelogPath
+        let projectVersion = getVersionPrefix (projectDir </> (sprintf "Maze.%s.csproj" name))
 
-    if projectVersion > changelogVersion then
-        let projectVersionString = projectVersion.ToString()
-        let changelogVersionString = changelogVersion.ToString()
-        failwithf "%s has the version %s defined in project, but the changelog has the version %s" name projectVersionString changelogVersionString
+        if String.isNotNullOrEmpty projectVersion && (projectVersion |> SemVer.parse) > changelogVersion then
+            let changelogVersionString = changelogVersion.ToString()
+            failwithf "%s has the version %s defined in project, but the changelog has the version %s" name projectVersion changelogVersionString
 
     let commit = latestGitCommitOfDir projectDir
     let suffix = sprintf "%s+%s" branch commit
-
-    //projectDir |> DotNet.build (fun opts -> {opts with Configuration = DotNet.BuildConfiguration.Release
-    //                                                   NoRestore = true
-    //                                                   Common = DotNet.Options.Create().WithCommon(fun options ->
-    //                                                       {options with CustomParams = Some "--no-dependencies"}
-    //                                                   )
-    //                           })
 
     projectDir |> DotNet.pack (fun opts -> { opts with VersionSuffix = Some suffix
                                                        OutputPath = Some artifact
@@ -109,6 +102,12 @@ Target.create "Create NuGet Packages" (fun _ ->
     buildNupkgWithChangelog "ModuleManagement"
     buildNupkgWithChangelog "Utilities"
     buildNupkgWithChangelog "Modules.Api"
+    buildNupkgWithChangelog "Server.Library"
+    buildNupkgWithChangelog "Sockets"
+    buildNupkgWithChangelog "Server.Data"
+    buildNupkgWithChangelog "Server.Connection"
+    buildNupkgWithChangelog "Server.BusinessLogic"
+    buildNupkgWithChangelog "Server.BusinessDataAccess"
 )
 
 Target.create "Build Administration" (fun _ ->

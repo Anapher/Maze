@@ -8,5 +8,6 @@
     <Company>Maze</Company>
     <PackageProjectUrl>https://github.com/MazeAdmin/Maze</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MazeAdmin/Maze.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 </Project>
