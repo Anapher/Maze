@@ -1,14 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <VersionPrefix>0.0.1</VersionPrefix>
     <DefineConstants>LIBLOG_PUBLIC</DefineConstants>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\VisualStudioIcons.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
@@ -33,12 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Resources\VisualStudioIcons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Maze.ModuleManagement\Maze.ModuleManagement.csproj" />
     <ProjectReference Include="..\Maze.Modules.Api\Maze.Modules.Api.csproj" />
     <ProjectReference Include="..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
@@ -46,13 +37,6 @@
     <ProjectReference Include="..\Maze.Utilities\Maze.Utilities.csproj" />
     <ProjectReference Include="..\submodules\Anapher.Wpf.Toolkit\Anapher.Wpf.Toolkit.Metro\Anapher.Wpf.Toolkit.Metro.csproj" />
     <ProjectReference Include="..\submodules\TxTranslation\TxLib\TxLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
 
 </Project>
