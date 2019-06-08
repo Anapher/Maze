@@ -34,11 +34,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NuGet.Packaging">
-      <HintPath>C:\Users\anaph\.nuget\packages\nuget.packaging\4.7.0\lib\netstandard1.6\NuGet.Packaging.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression.FileSystem" />

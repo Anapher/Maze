@@ -251,7 +251,17 @@ Target.create "Compile Native Projects" (fun _ ->
 )
 
 Target.create "Build Client" (fun _ ->
-    MSBuild.runRelease id ("src" </> "Maze" </> "bin" </> "Release") "Build" [|"src" </> "Maze" </> "Maze.csproj"|] |> Trace.logItems "AppBuild-Output: "
+    let buildMode = Environment.environVarOrDefault "buildMode" "Release"
+    let compile path = 
+        MSBuild.build (fun opts -> {opts with Properties =
+                                                        [
+                                                            "Optimize", "True"
+                                                            "DebugSymbols", "True"
+                                                            "Configuration", buildMode
+                                                        ]
+            }) path
+
+    compile ("src" </> "Maze")
 )
 
 Target.create "All" ignore
