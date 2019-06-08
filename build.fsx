@@ -261,6 +261,7 @@ open Fake.Core.TargetOperators
 
 "Cleanup" ==> "Restore Solution" ==> "Build Administration" ==> "All"
 "Cleanup" ==> "Restore Solution" ==> "Build Server" ==> "All"
+"Cleanup" ==> "Restore Solution" ==> "Build Client"
 "Cleanup" ==> "Restore Solution" ==> "Create NuGet Packages" ==> "All"
 "Cleanup" ==> "Restore Solution" ==> "Create VS Template for Module" ==> "All"
 
