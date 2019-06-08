@@ -267,7 +267,20 @@ namespace Maze.Client.Administration.Core
                 }
             }
 
-            AddPackages(loadOnStartup.Select(x => modulesLock.First(y => y.Key.Id.Equals(x, StringComparison.OrdinalIgnoreCase)).Key));
+            var loadOnStartupPackages = new List<PackageIdentity>();
+            foreach (var module in loadOnStartup)
+            {
+                var lockedPackage = modulesLock.Where(y => y.Key.Id.Equals(module, StringComparison.OrdinalIgnoreCase));
+                if (!lockedPackage.Any())
+                {
+                    _logger.LogWarning($"The module {module} is not installed on the server and cannot be loaded on startup. Please remove it from the config.");
+                    continue;
+                }
+
+                loadOnStartupPackages.Add(lockedPackage.First().Key);
+            }
+
+            AddPackages(loadOnStartupPackages);
 
             var requiredPackagesLock = new PackagesLock(requiredPackages);
             _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(outputPath, "modules.lock"), JsonConvert.SerializeObject(requiredPackagesLock));
