@@ -2,6 +2,7 @@
 using Maze.Server.AppStart;
 using Maze.Server.Data.EfCode;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -14,15 +15,17 @@ namespace Maze.Server
             using (var scope = host.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
+                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
                 try
                 {
                     var database = serviceProvider.GetRequiredService<AppDbContext>();
-                    database.EnsureDataSeeded();
+                    database.Database.Migrate();
+
+                    database.EnsureDataSeeded(logger);
                 }
                 catch (Exception ex)
                 {
-                    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the Db.");
                     throw;
                 }

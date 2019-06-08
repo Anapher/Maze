@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Maze.Server.Data.EfClasses;
 using Maze.Server.Data.Extensions;
+using Maze.Server.Data.EfCode.Configurations;
 
 namespace Maze.Server.Data.EfCode
 {

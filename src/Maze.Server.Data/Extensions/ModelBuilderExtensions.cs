@@ -9,7 +9,7 @@ namespace Maze.Server.Data.Extensions
     {
         public static void ApplyAllConfigurations(this ModelBuilder modelBuilder)
         {
-            var implementedConfigTypes = Assembly.GetCallingAssembly()
+            var implementedConfigTypes = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(t => !t.IsAbstract
                             && !t.IsGenericTypeDefinition

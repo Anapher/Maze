@@ -116,14 +116,6 @@ namespace Maze.Server
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-            else
-            {
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var appContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    appContext.Database.Migrate();
-                }
-            }
 
             app.UseAuthentication();
             app.UseMvc();
