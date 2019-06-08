@@ -296,6 +296,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maze.Client", "Maze.Client", "{8FE1F107-6956-4206-8AE4-45F608C8A85F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze.Client.Administration", "src\modules\Maze.Client\Maze.Client.Administration\Maze.Client.Administration.csproj", "{08F0058F-2F5C-48B8-BBEE-915F87D1C025}"
+	ProjectSection(ProjectDependencies) = postProject
+		{860BFB06-4FCD-494F-B7C3-1D53683FA988} = {860BFB06-4FCD-494F-B7C3-1D53683FA988}
+	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Maze.Installer", "src\modules\Maze.Client\Maze.Installer\Maze.Installer.wixproj", "{D68515C1-50CC-4403-A082-F603DD2D2B97}"
 EndProject

@@ -250,6 +250,10 @@ Target.create "Compile Native Projects" (fun _ ->
     compile ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "x264net")
 )
 
+Target.create "Build Client" (fun _ ->
+    MSBuild.runRelease id ("src" </> "Maze" </> "bin" </> "Release") "Build" [|"src" </> "Maze" </> "Maze.csproj"|] |> Trace.logItems "AppBuild-Output: "
+)
+
 Target.create "All" ignore
 
 // Dependencies
@@ -265,6 +269,8 @@ open Fake.Core.TargetOperators
 
 "Cleanup" ==> "Build Modules" ==> "All"
 "Prepare Tools" ==> "Build Modules"
+
+"Build Client" ==> "Build Modules"
 
 "Compile Native Projects" ==> "Restore Solution" ==> "Build Modules"
 
