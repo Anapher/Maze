@@ -28,7 +28,8 @@ let buildDir = "./build/"
 let artifactsDir = "./artifacts/"
 let toolsDir = "./tools/"
 
-let branch = Environment.environVarOrDefault "APPVEYOR_REPO_BRANCH" (Information.getBranchName ".")
+let gitBranch = Environment.environVarOrDefault "APPVEYOR_REPO_BRANCH" (Information.getBranchName ".")
+let getSuffix commitHash = if gitBranch = "master" then None else Some <| sprintf "%s+%s" gitBranch commitHash
 
 let latestGitCommitOfDir dir = runSimpleGitCommand "." <| sprintf """log -n 1 --format="%%h" -- "%s" """ dir
 let versionOfChangelog changelogPath = (File.read changelogPath |> Changelog.parse).LatestEntry.SemVer
@@ -53,9 +54,9 @@ let buildNupkgWithChangelog name =
             failwithf "%s has the version %s defined in project, but the changelog has the version %s" name projectVersion changelogVersionString
 
     let commit = latestGitCommitOfDir projectDir
-    let suffix = sprintf "%s+%s" branch commit
+    let suffix = getSuffix commit
 
-    projectDir |> DotNet.pack (fun opts -> { opts with VersionSuffix = Some suffix
+    projectDir |> DotNet.pack (fun opts -> { opts with VersionSuffix = suffix
                                                        OutputPath = Some artifact
                                                        Configuration = DotNet.BuildConfiguration.Release
                                                        NoRestore = true
@@ -74,14 +75,14 @@ let buildProjectWithChangelog name versionFile =
         failwithf "%s has the version %s defined in project, but the changelog has the version %s" name projectVersionString changelogVersionString
 
     let commit = latestGitCommitOfDir projectDir
-    let suffix = sprintf "%s+%s" branch commit
+    let suffix = getSuffix commit
 
-    projectDir |> DotNet.publish (fun opts -> {opts with VersionSuffix = Some suffix
+    projectDir |> DotNet.publish (fun opts -> {opts with VersionSuffix = suffix
                                                          NoRestore = true
                                                          OutputPath = Some output
                                })
 
-    let artifactPath = artifactsDir </> (sprintf "Maze.%s.%s-%s.zip" name (projectVersion |> toString) suffix)
+    let artifactPath = artifactsDir </> (sprintf "Maze.%s.%s%s.zip" name (projectVersion |> toString) (if suffix.IsSome then "-" + suffix.Value else ""))
     !! (output + "/**/*")
         |> Zip.zip output artifactPath
     
