@@ -39,7 +39,7 @@ namespace Maze.Server.Service.Modules
                 return packages;
 
             if (!libraryVersions.Any(x => x.IsSameId(libraryPackage) && x.Version.Equals(libraryPackage.Version)))
-                throw new InvalidOperationException("The required library version was not found");
+                throw new InvalidOperationException($"The required library version was not found ({libraryPackage}).");
 
             return packages.Where(x => !x.IsSameId(libraryPackage) || x.Version.Equals(libraryPackage.Version));
         }

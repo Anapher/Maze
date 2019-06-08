@@ -36,6 +36,9 @@ namespace Maze.Administration.ViewModels.Overview.Modules
         {
             PackageIdentity = packageIdentity;
             Status = status;
+
+            if (status != ModuleStatus.None)
+                Version = packageIdentity.Version;
         }
 
         public PackageIdentity PackageIdentity { get; }
@@ -151,7 +154,6 @@ namespace Maze.Administration.ViewModels.Overview.Modules
         {
             Title = metadata.Title;
             Authors = metadata.Authors;
-            Version = metadata.Identity.Version;
             ImageUri = metadata.IconUrl;
             Summary = metadata.Summary;
             Description = metadata.Description;
@@ -206,7 +208,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
         public void OnUpdateVersions(List<NuGetVersion> versions)
         {
             Versions = versions;
-            if (versions != null && Status != ModuleStatus.None)
+            if (versions != null)
             {
                 IEnumerable<NuGetVersion> actualVersions = versions;
                 if (!IncludePrerelease)

@@ -69,11 +69,16 @@ namespace Maze.Administration.ViewModels.Overview
             set
             {
                 if (SetProperty(ref _selectedModule, value) && value != null)
+                {
                     LoadVersions(value, new SourceCacheContext(), CancellationToken.None).ContinueWith(x =>
                     {
                         if (_selectedModule == value)
-                            SelectedVersion = value.Version;
+                            SelectedVersion = value.NewestVersion;
                     });
+
+                    if (value.IsLoaded)
+                        LoadModuleMetadata(value).Forget();
+                }
             }
         }
 
@@ -132,8 +137,8 @@ namespace Maze.Administration.ViewModels.Overview
             {
                 return _installVersionCommand ?? (_installVersionCommand =
                            new DelegateCommand<NuGetVersion>(
-                               parameter => { InstallModule(new PackageIdentity(SelectedModule.PackageIdentity.Id, parameter)).Forget(); },
-                               version => version != null && version != SelectedModule.Version)).ObservesProperty(() => SelectedVersion);
+                               parameter => { InstallModule(new PackageIdentity(SelectedModule.PackageIdentity.Id, SelectedVersion)).Forget(); },
+                               version => SelectedVersion != null && SelectedModule.Version != SelectedVersion)).ObservesProperty(() => SelectedVersion).ObservesProperty(() => SelectedModule);
             }
         }
 
@@ -281,6 +286,7 @@ namespace Maze.Administration.ViewModels.Overview
                 {
                     viewModel = new ModuleViewModel(packageIdentity, ModuleStatus.ToBeInstalled);
                     LoadModuleMetadata(viewModel).Forget();
+                    viewModel.OnUpdateVersion(packageIdentity.Version);
                     InstalledModules.Add(viewModel);
                 }
             }));

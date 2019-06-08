@@ -73,22 +73,11 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
             try
             {
-                if (string.IsNullOrWhiteSpace(searchText))
-                {
-                    var packages = await _listResource.ListAsync(0, 30, token);
-                    if (token.IsCancellationRequested)
-                        return;
+                var packages = await _searchResource.SearchAsync(searchText, new SearchFilter(IncludePrerelease), 0, 30, token);
+                if (token.IsCancellationRequested)
+                    return;
 
-                    Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
-                }
-                else
-                {
-                    var packages = await _searchResource.SearchAsync(searchText, new SearchFilter(IncludePrerelease), 0, 30, token);
-                    if (token.IsCancellationRequested)
-                        return;
-
-                    Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
-                }
+                Modules = new ListCollectionView(new ObservableCollection<ModuleViewModel>(packages.Select(CreateModuleViewModel)));
             }
             catch (Exception)
             {
@@ -109,6 +98,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
             viewModel.Initialize(metadata);
             return viewModel;
         }
+
         public async void Initialize(IModuleService service)
         {
             _service = service;

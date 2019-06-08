@@ -193,11 +193,12 @@ namespace Maze.Server.Service.Modules
                 prunedAvailablePackages =
                     PrunePackageTreeExtensions.PruneDowngrades(prunedAvailablePackages, frameworkRelevantPackages);
 
+            // TODO: Uncomment when the NuGet Packages are out of prerelease
             //4. remove prereleases
-            if (!resolutionContext.IncludePrerelease)
-                prunedAvailablePackages =
-                    PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, frameworkRelevantPackages,
-                        frameworkRelevantTargets);
+            //if (!resolutionContext.IncludePrerelease)
+            //    prunedAvailablePackages =
+            //        PrunePackageTree.PrunePreleaseForStableTargets(prunedAvailablePackages, frameworkRelevantPackages,
+            //            frameworkRelevantTargets);
 
             /* ===> PackageResolverContext
              * TargetIds            New packages to install or update. These will prefer the highest version.
