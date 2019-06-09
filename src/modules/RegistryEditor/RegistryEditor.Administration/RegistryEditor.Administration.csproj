@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <Description>Module Description</Description>
+    <Description>Access the Windows Registry, create keys aswell as all types of values.</Description>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

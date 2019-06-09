@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <Description>Module Description</Description>
+    <Description>Synchronize the clipboard of the admin and the client system</Description>
     <DefineConstants>TRACE;WPF</DefineConstants>
     <UseWpf>true</UseWpf>
   </PropertyGroup>

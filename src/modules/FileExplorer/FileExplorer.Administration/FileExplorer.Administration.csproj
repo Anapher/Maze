@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <Description>Complete access to the file system. Browser the files, create directories, download and upload files, show file properties and compute hash values.</Description>
+    <Description>Access to the file system. Browse the files, create directories, download and upload files, show file properties and compute hash values.</Description>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

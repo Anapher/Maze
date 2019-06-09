@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <Description>TOD</Description>
+    <Description>Provide a panel that displays the screen of the user and allows mouse and keyboard interaction. Also links to important system tools like task manager, file explorer and registry editor.</Description>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

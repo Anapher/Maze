@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <Description>Module Description</Description>
+    <Description>Gather and display important information about the remote system and hardware.</Description>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
