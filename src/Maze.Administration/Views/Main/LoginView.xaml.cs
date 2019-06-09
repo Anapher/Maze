@@ -16,9 +16,9 @@ namespace Maze.Administration.Views.Main
             Loaded += (sender, args) =>
             {
                 var loginVm = (LoginViewModel) DataContext;
-                loginVm.Username = "test";
+                loginVm.Username = "admin";
                 var pw = new SecureString();
-                foreach (var c in "test")
+                foreach (var c in "admin")
                     pw.AppendChar(c);
 
                 TaskExtensions.Forget(loginVm.LoginCommand.Execute(pw));
