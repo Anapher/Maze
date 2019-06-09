@@ -30,6 +30,7 @@ using Maze.Server.Service.Modules;
 using Maze.Sockets;
 using Serilog;
 using System.Reflection;
+using Maze.Server.Hooks;
 
 namespace Maze.Server
 {
@@ -86,6 +87,9 @@ namespace Maze.Server
             containerBuilder.RegisterType<ModulePackageManager>().As<IModulePackageManager>().SingleInstance();
             containerBuilder.RegisterType<CommandDistributor>().As<ICommandDistributer>().SingleInstance();
             containerBuilder.RegisterType<XmlSerializerCache>().As<IXmlSerializerCache>().SingleInstance();
+
+            containerBuilder.RegisterType<ClientConnectedAction>().As<IClientConnectedAction>();
+            containerBuilder.RegisterType<ClientDisconnectedAction>().As<IClientDisconnectedAction>();
 
             containerBuilder
                 .RegisterModule<DataAccessModule>()
