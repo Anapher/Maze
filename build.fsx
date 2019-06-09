@@ -77,9 +77,15 @@ let buildProjectWithChangelog name versionFile =
     let commit = latestGitCommitOfDir projectDir
     let suffix = getSuffix commit
 
+    let customParams =
+        [ (sprintf "/p:InformationalVersion=\"%s-%s+%s\"" (projectVersion.ToString()) gitBranch commit) ]
+        |> String.concat " "
+
     projectDir |> DotNet.publish (fun opts -> {opts with VersionSuffix = suffix
                                                          NoRestore = true
                                                          OutputPath = Some output
+                                                         Common = DotNet.Options.withCustomParams (Some customParams) opts.Common
+                                                         
                                })
 
     let artifactPath = artifactsDir </> (sprintf "Maze.%s.%s%s.zip" name (projectVersion |> toString) (if suffix.IsSome then "-" + suffix.Value else ""))
@@ -220,17 +226,6 @@ Target.create "Restore Solution" (fun _ ->
 Target.create "Cleanup" (fun _ ->
     Shell.cleanDir buildDir
     Shell.cleanDir artifactsDir
-)
-
-Target.create "Test" (fun _ ->
-    let buildMode = Environment.environVarOrDefault "buildMode" "Release"
-    MSBuild.build (fun opts -> {opts with Properties =
-                                                    [
-                                                        "Optimize", "True"
-                                                        "DebugSymbols", "True"
-                                                        "Configuration", buildMode
-                                                    ]
-        }) ("src" </> "modules" </> "RemoteDesktop" </> "libraries" </> "OpenH264net")
 )
 
 Target.create "Compile Native Projects" (fun _ ->

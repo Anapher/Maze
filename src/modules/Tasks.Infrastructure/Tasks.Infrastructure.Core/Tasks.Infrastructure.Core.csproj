@@ -1,16 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../tasks.infrastructure.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoModule>true</NoModule>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Maze.Server.Connection\Maze.Server.Connection.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <Import Project="../tasks.infrastructure.props" />
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <Description>The task infrastructure provides the system used to create, deliver and execute tasks. This package as it is can not be used in a useful way. Other packages like Tasks.Common are required to actually create tasks with content.</Description>

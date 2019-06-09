@@ -29,6 +29,7 @@ using Maze.Server.Service.Connection;
 using Maze.Server.Service.Modules;
 using Maze.Sockets;
 using Serilog;
+using System.Reflection;
 
 namespace Maze.Server
 {
@@ -47,6 +48,7 @@ namespace Maze.Server
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger();
+            Log.Information("Maze.Server Version {0}", Assembly.GetEntryAssembly().GetInformationalVersion());
             Log.Information("Starting web host");
 
             services.Configure<ModulesOptions>(Configuration.GetSection("Modules"));

@@ -244,6 +244,9 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ClipboardManager.Shared", "src\modules\ClipboardManager\ClipboardManager.Shared\ClipboardManager.Shared.shproj", "{5E5EB0C8-F6AC-4B95-8E00-7CA0E27DE731}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks.Infrastructure", "Tasks.Infrastructure", "{4661B427-AB6D-4D32-9C24-997000CE74D7}"
+	ProjectSection(SolutionItems) = preProject
+		src\modules\Tasks.Infrastructure\tasks.infrastructure.props = src\modules\Tasks.Infrastructure\tasks.infrastructure.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks.Common", "Tasks.Common", "{D62BDE9B-2915-4AC6-9386-464B59D429B6}"
 EndProject
