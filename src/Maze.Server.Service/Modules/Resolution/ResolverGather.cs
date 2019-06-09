@@ -447,7 +447,7 @@ namespace Maze.Server.Service.Modules.Resolution
             }
         }
 
-        private bool IsPrimarySource(SourceResource sourceResource) => _primaryResources.Contains(sourceResource);
+        private bool IsPrimarySource(SourceResource sourceResource) => _primaryResources.Any(x => x.Source.PackageSource.SourceUri == sourceResource.Source.PackageSource.SourceUri);
 
         /// <summary>
         /// Get the current request id number, and increment it for the next count
