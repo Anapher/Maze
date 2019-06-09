@@ -202,7 +202,8 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
         public void OnUninstall()
         {
-            Version = NewestVersion;
+            Version = null;
+            Status = ModuleStatus.None;
         }
 
         public void OnUpdateVersions(List<NuGetVersion> versions)

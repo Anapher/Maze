@@ -73,7 +73,7 @@ namespace Maze.Administration.ViewModels.Overview.Modules
 
             try
             {
-                var packages = await _searchResource.SearchAsync(searchText, new SearchFilter(IncludePrerelease), 0, 30, token);
+                var packages = await _searchResource.SearchAsync(searchText, new SearchFilter(IncludePrerelease), 0, 100, token);
                 if (token.IsCancellationRequested)
                     return;
 
