@@ -7,6 +7,7 @@ using Maze.Server.Library.Interfaces;
 using Tasks.Infrastructure.Server.Core;
 using Tasks.Infrastructure.Server.Migrations;
 using Tasks.Infrastructure.Server.Options;
+using System.IO;
 
 namespace Tasks.Infrastructure.Server.Hooks
 {
@@ -23,6 +24,8 @@ namespace Tasks.Infrastructure.Server.Hooks
 
         public Task Execute(PipelineInfo context)
         {
+            Directory.CreateDirectory(_options.Directory);
+
             var serviceProvider = CreateServices();
 
             using (var scope = serviceProvider.CreateScope())
