@@ -22,5 +22,5 @@
   </ItemGroup>
 
   <Import Project="..\RemoteDesktop.Shared\RemoteDesktop.Shared.projitems" Label="Shared" />
-
+  <Import Project="..\version.props"/>
 </Project>

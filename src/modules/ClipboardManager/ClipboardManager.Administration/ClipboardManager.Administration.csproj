@@ -22,4 +22,5 @@
   </ItemGroup>
 
   <Import Project="..\ClipboardManager.Shared\ClipboardManager.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

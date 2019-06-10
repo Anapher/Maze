@@ -9,4 +9,5 @@
     <ProjectReference Include="..\..\..\Maze.Client.Library\Maze.Client.Library.csproj" />
   </ItemGroup>
 
+  <Import Project="..\version.props"/>
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
@@ -15,4 +15,5 @@
   </ItemGroup>
 
   <Import Project="..\TaskManager.Shared\TaskManager.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

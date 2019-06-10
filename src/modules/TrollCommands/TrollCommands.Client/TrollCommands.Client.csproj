@@ -13,5 +13,5 @@
   </ItemGroup>
 
   <Import Project="..\TrollCommands.Shared\TrollCommands.Shared.projitems" Label="Shared" />
-
+  <Import Project="..\version.props"/>
 </Project>

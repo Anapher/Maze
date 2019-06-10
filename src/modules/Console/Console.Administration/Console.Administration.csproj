@@ -22,4 +22,5 @@
   </ItemGroup>
 
   <Import Project="..\Console.Shared\Console.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

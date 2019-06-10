@@ -13,4 +13,5 @@
   </ItemGroup>
 
   <Import Project="..\DeviceManager.Shared\DeviceManager.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

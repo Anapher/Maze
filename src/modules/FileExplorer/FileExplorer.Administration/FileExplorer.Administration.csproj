@@ -23,4 +23,5 @@
   </ItemGroup>
 
    <Import Project="..\FileExplorer.Shared\FileExplorer.Shared.projitems" Label="Shared" />
+   <Import Project="..\version.props"/>
 </Project>

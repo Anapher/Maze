@@ -16,4 +16,5 @@
   </ItemGroup>
 
   <Import Project="..\Tasks.Common.Shared\Tasks.Common.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

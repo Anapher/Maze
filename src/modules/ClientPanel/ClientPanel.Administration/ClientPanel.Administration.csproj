@@ -29,4 +29,5 @@
   </ItemGroup>
 
   <Import Project="..\ClientPanel.Shared\ClientPanel.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

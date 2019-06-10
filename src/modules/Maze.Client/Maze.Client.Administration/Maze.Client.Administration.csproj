@@ -31,4 +31,5 @@
     <ProjectReference Include="..\..\..\Maze.Administration.Library\Maze.Administration.Library.csproj" />
   </ItemGroup>
 
+  <Import Project="..\version.props"/>
 </Project>

@@ -20,4 +20,5 @@
   </ItemGroup>
 
   <Import Project="..\UserInteraction.Dtos\Maze.Modules.UserInteraction.Dtos.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

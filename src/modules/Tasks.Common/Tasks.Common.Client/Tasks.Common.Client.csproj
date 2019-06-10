@@ -13,4 +13,5 @@
     <ProjectReference Include="..\..\Tasks.Infrastructure\Tasks.Infrastructure.Client\Tasks.Infrastructure.Client.csproj" />
   </ItemGroup>
 
+  <Import Project="..\version.props"/>
 </Project>

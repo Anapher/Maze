@@ -27,4 +27,5 @@
   </ItemGroup>
 
   <Import Project="..\RegistryEditor.Shared\RegistryEditor.Shared.projitems" Label="Shared" />
+  <Import Project="..\version.props"/>
 </Project>

@@ -23,6 +23,7 @@ open Fake.Tools.Git.CommandHelper
 open Fake.Tools.Git
 
 open System.IO
+open System.Text.RegularExpressions
 
 let buildDir = "./build/"
 let artifactsDir = "./artifacts/"
@@ -153,6 +154,13 @@ Target.create "Build Modules" (fun _ ->
         if File.exists (modulePath </> "prebuild.ps1") then
             Trace.logfn "Execute prebuild.ps1 in %s" modulePath
             executePowerShellScript (modulePath </> "prebuild.ps1") ""
+
+        let changelogVersion = versionOfChangelog (modulePath </> "changelog.md") |> toString
+        let versionFile = modulePath </> "version.props"
+        let projectVersion = Regex.Match(File.readAsString versionFile, "(?<=\<VersionPrefix\>).+(?=\<\/VersionPrefix\>)").Value
+
+        if not (changelogVersion = projectVersion) then
+            failwithf "The module %s has unmatching versions defined. Changelog version: %s, project version: %s" modulePath changelogVersion projectVersion
     )
 
     modules |> Seq.iter (fun modulePath ->
@@ -160,18 +168,16 @@ Target.create "Build Modules" (fun _ ->
 
         Trace.logfn "Process module %s at %s" moduleName modulePath
 
-        let projectFiles = !! (modulePath </> "**/*.csproj") |> Seq.filter (fun x -> System.Text.RegularExpressions.Regex.IsMatch (Path.GetFileName(x), (sprintf "^%s\.(Administration|Client|Server)\.csproj$" moduleName)))
+        let projectFiles = !! (modulePath </> "**/*.csproj") |> Seq.filter (fun x -> Regex.IsMatch (Path.GetFileName(x), (sprintf "^%s\.(Administration|Client|Server)\.csproj$" moduleName)))
         let targetDir = modulesTargetDir </> moduleName
 
         let changelogVersion = versionOfChangelog (modulePath </> "changelog.md") |> toString
         let commitHash = latestGitCommitOfDir modulePath
 
-        let version = changelogVersion + "+" + commitHash
-
-        Trace.logfn "Module %s has version %s" moduleName version
+        Trace.logfn "Module %s has version %s" moduleName changelogVersion
         
         projectFiles |> Seq.iter(fun projectFile ->
-            runDotnet (fun o -> o) "pack" <| sprintf """-c Release -o "%s" /p:Version=%s %s""" targetDir version projectFile
+            runDotnet (fun o -> o) "pack" <| sprintf """-c Release -o "%s" %s""" targetDir projectFile
         )
 
         let packageDir = targetDir </> "package"
