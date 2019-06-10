@@ -335,6 +335,7 @@ src/Maze.Server/tmp/
 src/Maze.Server/tasks/
 src/Maze.Server/modules.json
 src/Maze.Server/modules.lock
+src/Maze.Server/appsettings.Production.json
 *.sqlite
 src/projectTemplates/module/ModuleTemplateWizard/ProjectTemplates
 build/

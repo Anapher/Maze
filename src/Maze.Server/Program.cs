@@ -1,4 +1,5 @@
 using System;
+using Maze.Server.AppStart;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
@@ -28,6 +29,7 @@ namespace Maze.Server
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                .GenerateProductionSettings()
                 .UseStartup<Startup>()
                 .UseSerilog()
                 .Build();
