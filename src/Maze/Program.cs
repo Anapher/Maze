@@ -25,15 +25,18 @@ namespace Maze
             configBuilder.AddJsonFile("mazesettings.json");
 #endif
             var configurationDirectory = new DirectoryInfo(Environment.ExpandEnvironmentVariables(ConfigDirectory));
+#if !DEBUG
             if (!configurationDirectory.Exists)
             {
                 Log.Logger.Fatal("The directory {configDirectory} was not found so no configuration could be loaded", ConfigDirectory);
                 Environment.Exit(-1);
                 return;
             }
+#endif
 
-            foreach (var fileInfo in configurationDirectory.GetFiles("mazesettings*.json"))
-                configBuilder.AddJsonFile(fileInfo.FullName, optional: true, reloadOnChange: true);
+            if (configurationDirectory.Exists)
+                foreach (var fileInfo in configurationDirectory.GetFiles("mazesettings*.json"))
+                    configBuilder.AddJsonFile(fileInfo.FullName, true, true);
 
             var config = configBuilder.Build();
             var startup = new Startup(config);
