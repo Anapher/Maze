@@ -37,7 +37,3 @@ Simple but fully featured, the Registry Editor allows to create, update and dele
 ### Client Panel
 Even if all tools are easily reachable by the context menu, a TeamViewer like overview that shows the current screen aswell as provide access to the important features can be an advantage. Also, the Client Panel is a nice demonstration about how the modules can depend on each other.
 ![Client Panel](https://i.imgur.com/75bmzKy.png)
-
-# No License
-I have no yet decided how I will publish this project. Until then, this project is under [no license](https://choosealicense.com/no-permission/).
-You have no permission from the creators of the software to use, modify, or share the software. Although a code host such as GitHub may allow you to view and fork the code, this does not imply that you are permitted to use, modify, or share the software for any purpose.
