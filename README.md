@@ -1,12 +1,12 @@
 # Maze
-Maze is a Remote Administration Tool for Windows aiming to give Administrators access to the Windows machines they must manage. Maze is solely intended for legal and ethical usage and I will do anything to fight against malicious usage.
+Maze is a Remote Administration Tool for Windows aiming to give administrators access to the Windows machines they manage. Maze is solely intended for legal and ethical usage and I will do anything to fight against malicious usage.
 
 ## Building the project
 It is very important that you build the project once before you open it in Visual Studio, as the build process will also download required files.
 
 ### Clone the repository
 Clone recursivly using
-`git clone --recurse-submodules -j8 https://github.com/MazeAdmin/Maze.git`
+`git clone --recurse-submodules https://github.com/Anapher/Maze.git`
 
 ### Build the project
 Build using [Fake](https://fake.build): `dotnet fake build` (execute this in the root of the repository). Please note that you need to have Visual Studio 2019 installed and you need the packages
